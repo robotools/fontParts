@@ -1,7 +1,9 @@
 import weakref
-from errors import FontPartsError
-from base import BaseObject, TransformationMixin, dynamicProperty
+
+from .errors import FontPartsError
+from .base import BaseObject, TransformationMixin, dynamicProperty
 import validators
+
 
 class BaseSegment(BaseObject, TransformationMixin):
 

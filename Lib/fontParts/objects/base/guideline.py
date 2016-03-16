@@ -1,8 +1,9 @@
 import math
 import weakref
 from fontTools.misc import transform
-from errors import FontPartsError
-from base import BaseObject, TransformationMixin, dynamicProperty
+
+from .errors import FontPartsError
+from .base import BaseObject, TransformationMixin, dynamicProperty
 import validators
 
 

@@ -2,11 +2,13 @@ import os
 import weakref
 from copy import deepcopy
 import fontMath
-from errors import FontPartsError
-from base import BaseObject, TransformationMixin, dynamicProperty, interpolate
-from image import BaseImage
+
+from .errors import FontPartsError
+from .base import BaseObject, TransformationMixin, dynamicProperty, interpolate
+from .image import BaseImage
 import validators
-from color import Color
+from .color import Color
+
 
 class BaseGlyph(BaseObject, TransformationMixin):
 
@@ -25,7 +27,7 @@ class BaseGlyph(BaseObject, TransformationMixin):
         Copy the glyph into a new glyph that does not
         belong to a glyph.
 
-            >>> copiedGlyph = glyph.copy()
+            >>> copiedGlyph = glyph.copy()  # doctest: +SKIP
 
         This will copy:
 
@@ -77,7 +79,7 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         The glyph's parent layer.
 
-            >>> layer = glyph.layer
+            >>> layer = glyph.layer  # doctest: +SKIP
         """
     )
 
@@ -96,7 +98,7 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         The glyph's parent font.
 
-            >>> font = glyph.font
+            >>> font = glyph.font  # doctest: +SKIP
         """
     )
 
@@ -116,9 +118,9 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         The glyph's name.
 
-            >>> glyph.name
+            >>> glyph.name            # doctest: +SKIP
             "A"
-            >>> glyph.name = "A.alt"
+            >>> glyph.name = "A.alt"  # doctest: +SKIP
         """
     )
 
@@ -162,13 +164,13 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         The glyph's unicode values in order from most to least important.
 
-            >>> glyph.unicodes
+            >>> glyph.unicodes               # doctest: +SKIP
             [65]
-            >>> glyph.unicodes = [65, 0x42]
-            >>> glyph.unicodes = []
+            >>> glyph.unicodes = [65, 0x42]  # doctest: +SKIP
+            >>> glyph.unicodes = []          # doctest: +SKIP
 
         The values in the returned list will be integers.
-        When setting you may send int or hex values. 
+        When setting you may send int or hex values.
         """
     )
 
@@ -206,12 +208,12 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         The glyph's primary unicode value.
 
-            >>> glyph.unicode
+            >>> glyph.unicode         # doctest: +SKIP
             65
-            >>> glyph.unicode = None
+            >>> glyph.unicode = None  # doctest: +SKIP
 
         The returned value will be an integer or None.
-        When setting you may send int or hex values or None. 
+        When setting you may send int or hex values or None.
         """
     )
 
@@ -255,7 +257,7 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         Use heuristics to set the Unicode values in the glyph.
 
-            >>> glyph.autoUnicodes()
+            >>> glyph.autoUnicodes()  # doctest: +SKIP
 
         Environments will define their own heuristics for
         automatically determining values.
@@ -279,9 +281,9 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         The glyph's width.
 
-            >>> glyph.width
+            >>> glyph.width        # doctest: +SKIP
             500
-            >>> glyph.width = 200
+            >>> glyph.width = 200  # doctest: +SKIP
         """
     )
 
@@ -315,9 +317,9 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         The glyph's left margin.
 
-            >>> glyph.leftMargin
+            >>> glyph.leftMargin       # doctest: +SKIP
             35
-            >>> glyph.leftMargin = 45
+            >>> glyph.leftMargin = 45  # doctest: +SKIP
         """
     )
 
@@ -361,9 +363,9 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         The glyph's right margin.
 
-            >>> glyph.rightMargin
+            >>> glyph.rightMargin       # doctest: +SKIP
             35
-            >>> glyph.rightMargin = 45
+            >>> glyph.rightMargin = 45  # doctest: +SKIP
         """
     )
 
@@ -403,7 +405,7 @@ class BaseGlyph(BaseObject, TransformationMixin):
             self.width = value
         else:
             xMin, yMin, xMax, yMax = bounds
-            self.width = xMax + value            
+            self.width = xMax + value
 
     # vertical
 
@@ -412,9 +414,9 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         The glyph's height.
 
-            >>> glyph.height
+            >>> glyph.height        # doctest: +SKIP
             500
-            >>> glyph.height = 200
+            >>> glyph.height = 200  # doctest: +SKIP
         """
     )
 
@@ -448,9 +450,9 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         The glyph's bottom margin.
 
-            >>> glyph.bottomMargin
+            >>> glyph.bottomMargin       # doctest: +SKIP
             35
-            >>> glyph.bottomMargin = 45
+            >>> glyph.bottomMargin = 45  # doctest: +SKIP
         """
     )
 
@@ -494,9 +496,9 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         The glyph's top margin.
 
-            >>> glyph.topMargin
+            >>> glyph.topMargin       # doctest: +SKIP
             35
-            >>> glyph.topMargin = 45
+            >>> glyph.topMargin = 45  # doctest: +SKIP
         """
     )
 
@@ -546,7 +548,7 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         Return a Pen object for modifying the glyph.
 
-            >>> pen = glyph.getPen()
+            >>> pen = glyph.getPen()  # doctest: +SKIP
         """
         self.raiseNotImplementedError()
 
@@ -554,7 +556,7 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         Return a PointPen object for modifying the glyph.
 
-            >>> pointPen = glyph.getPointPen()
+            >>> pointPen = glyph.getPointPen()  # doctest: +SKIP
         """
         self.raiseNotImplementedError()
 
@@ -562,8 +564,8 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         Draw the glyph with the given Pen.
 
-            >>> glyph.draw(pen)
-            >>> glyph.draw(pen, contours=True, components=False)
+            >>> glyph.draw(pen)                                   # doctest: +SKIP
+            >>> glyph.draw(pen, contours=True, components=False)  # doctest: +SKIP
         """
         if contours:
             for contour in self:
@@ -576,8 +578,8 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         Draw the glyph with the given PointPen.
 
-            >>> glyph.drawPoints(pointPen)
-            >>> glyph.drawPoints(pointPen, contours=True, components=False)
+            >>> glyph.drawPoints(pointPen)                                   # doctest: +SKIP
+            >>> glyph.drawPoints(pointPen, contours=True, components=False)  # doctest: +SKIP
         """
         if contours:
             for contour in self:
@@ -594,7 +596,7 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         Clear the glyph.
 
-            >>> glyph.clear()
+            >>> glyph.clear()  # doctest: +SKIP
 
         This clears:
 
@@ -629,8 +631,8 @@ class BaseGlyph(BaseObject, TransformationMixin):
         Append copies of the contours, components,
         anchors and guidelines from other.
 
-            >>> glyph.appendGlyph(otherGlyph)
-            >>> glyph.appendGlyph(otherGlyph, (100, 0))
+            >>> glyph.appendGlyph(otherGlyph)            # doctest: +SKIP
+            >>> glyph.appendGlyph(otherGlyph, (100, 0))  # doctest: +SKIP
 
         offset indicates the offset that should
         be applied to the appended data. The default
@@ -670,8 +672,8 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         An immutable list of contours in the glyph.
 
-            >>> for contour in glyph.contours:
-            ...     contour.bounds
+            >>> for contour in glyph.contours:  # doctest: +SKIP
+            ...     contour.bounds              # doctest: +SKIP
             (10, 15, 57, 36)
             (875, 35, 926, 647)
         """
@@ -687,7 +689,7 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         The number of contours in the glyph.
 
-            >>> len(glyph)
+            >>> len(glyph)  # doctest: +SKIP
             2
         """
         return self._lenContours()
@@ -704,8 +706,8 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         Iterate through the contours in the glyph.
 
-            >>> for contour in glyph:
-            ...     contour.bounds
+            >>> for contour in glyph:  # doctest: +SKIP
+            ...     contour.bounds     # doctest: +SKIP
             (10, 15, 57, 36)
             (875, 35, 926, 647)
         """
@@ -728,7 +730,7 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         Get the contour located at index from the glyph.
 
-            >>> contour = glyph[0]
+            >>> contour = glyph[0]  # doctest: +SKIP
         """
         index = validators.validateContourIndex(index)
         if index >= len(self):
@@ -751,8 +753,8 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         A copy of the given contour to the glyph.
 
-            >>> contour = glyph.appendContour(contour)
-            >>> contour = glyph.appendContour(contour, (100, 0))
+            >>> contour = glyph.appendContour(contour)            # doctest: +SKIP
+            >>> contour = glyph.appendContour(contour, (100, 0))  # doctest: +SKIP
 
         offset indicates the distance that the
         contour should be offset when added to
@@ -785,8 +787,8 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         Remove the contour from the glyph.
 
-            >>> glyph.removeContour(contour)
-            >>> glyph.removeContour(0)
+            >>> glyph.removeContour(contour)  # doctest: +SKIP
+            >>> glyph.removeContour(0)        # doctest: +SKIP
 
         Contour may be a contour object or a contour index.
         """
@@ -807,7 +809,7 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         Clear all contours.
 
-            >>> glyph.clearContours()
+            >>> glyph.clearContours()  # doctest: +SKIP
         """
         self._clearContours()
 
@@ -822,7 +824,7 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         Perform a remove overlap operation on the contours.
 
-            >>> glyph.removeOverlap()
+            >>> glyph.removeOverlap()  # doctest: +SKIP
         """
 
     def _removeOverlap(self):
@@ -842,8 +844,8 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         An immutable list of components in the glyph.
 
-            >>> for component in glyph.components:
-            ...     component.baseGlyph
+            >>> for component in glyph.components:  # doctest: +SKIP
+            ...     component.baseGlyph             # doctest: +SKIP
             "A"
             "acute"
         """
@@ -895,8 +897,8 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         Append a new component to the glyph.
 
-            >>> component = glyph.appendComponent("A")
-            >>> component = glyph.appendComponent("acute", offset=(20, 200))
+            >>> component = glyph.appendComponent("A")                        # doctest: +SKIP
+            >>> component = glyph.appendComponent("acute", offset=(20, 200))  # doctest: +SKIP
 
         baseGlyph indicates the glyph that the
         component will reference.
@@ -941,8 +943,8 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         Remove component from the glyph.
 
-            >>> glyph.removeComponent(component)
-            >>> glyph.removeComponent(1)
+            >>> glyph.removeComponent(component)  # doctest: +SKIP
+            >>> glyph.removeComponent(1)          # doctest: +SKIP
 
         component can be a component object or an
         integer representing the component index.
@@ -968,7 +970,7 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         Clear all components.
 
-            >>> glyph.clearComponents()
+            >>> glyph.clearComponents()  # doctest: +SKIP
         """
         self._clearComponents()
 
@@ -983,7 +985,7 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         Decompose all components.
 
-            >>> glyph.decompose()
+            >>> glyph.decompose()  # doctest: +SKIP
         """
         self._decompose()
 
@@ -1005,8 +1007,8 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         An immutable list of anchors in the glyph.
 
-            >>> for anchor in glyph.anchors:
-            ...     anchor.name
+            >>> for anchor in glyph.anchors:  # doctest: +SKIP
+            ...     anchor.name               # doctest: +SKIP
             "top"
         """
     )
@@ -1057,8 +1059,8 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         Append a new anchor to the glyph.
 
-            >>> anchor = glyph.appendAnchor("top", (50, 500))
-            >>> anchor = glyph.appendAnchor("top", (50, 500), (1, 0, 0, 0.5))
+            >>> anchor = glyph.appendAnchor("top", (50, 500))                  # doctest: +SKIP
+            >>> anchor = glyph.appendAnchor("top", (50, 500), (1, 0, 0, 0.5))  # doctest: +SKIP
 
         name indicates the name that should be
         assigned to the anchor.
@@ -1088,8 +1090,8 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         Remove anchor from the glyph.
 
-            >>> glyph.removeAnchor(anchor)
-            >>> glyph.removeAnchor(2)
+            >>> glyph.removeAnchor(anchor)  # doctest: +SKIP
+            >>> glyph.removeAnchor(2)       # doctest: +SKIP
 
         anchor can be a anchor object or an
         integer representing the anchor index.
@@ -1115,7 +1117,7 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         Clear all anchors.
 
-            >>> glyph.clearAnchors()
+            >>> glyph.clearAnchors()  # doctest: +SKIP
         """
         self._clearAnchors()
 
@@ -1139,8 +1141,8 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         An immutable list of font-level guidelines.
 
-            >>> for guideline in glyph.guidelines:
-            ...     guideline.angle
+            >>> for guideline in glyph.guidelines:  # doctest: +SKIP
+            ...     guideline.angle                 # doctest: +SKIP
             0
             45
             90
@@ -1193,8 +1195,8 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         Append a new guideline to the glyph.
 
-            >>> guideline = glyph.appendGuideline((50, 0), 90)
-            >>> guideline = glyph.appendGuideline((0, 540), 0, name="overshoot", color=(0, 0, 0, 0.2))
+            >>> guideline = glyph.appendGuideline((50, 0), 90)                                          # doctest: +SKIP
+            >>> guideline = glyph.appendGuideline((0, 540), 0, name="overshoot", color=(0, 0, 0, 0.2))  # doctest: +SKIP
 
         position (x, y) indicates the position of the guideline.
         angle indicates the angle of the guideline.
@@ -1226,8 +1228,8 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         Remove guideline from the glyph.
 
-            >>> glyph.removeGuideline(guideline)
-            >>> glyph.removeGuideline(2)
+            >>> glyph.removeGuideline(guideline)  # doctest: +SKIP
+            >>> glyph.removeGuideline(2)          # doctest: +SKIP
 
         guideline can be a guideline object or an
         integer representing the guideline index.
@@ -1253,7 +1255,7 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         Clear all guidelines.
 
-            >>> glyph.clearGuidelines()
+            >>> glyph.clearGuidelines()  # doctest: +SKIP
         """
         self._clearGuidelines()
 
@@ -1272,7 +1274,7 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         Round coordinates.
 
-            >>> glyph.round()
+            >>> glyph.round()  # doctest: +SKIP
 
         This applies to the following:
 
@@ -1303,7 +1305,7 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         Correct the direction of the contours in the glyph.
 
-            >>> glyph.correctDirection()
+            >>> glyph.correctDirection()  # doctest: +SKIP
         """
         self._correctDirection(trueType=trueType)
 
@@ -1324,7 +1326,7 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         Sort the contours based on their centers.
 
-            >>> glyph.autoContourOrder()
+            >>> glyph.autoContourOrder()  # doctest: +SKIP
         """
         self._autoContourOrder()
 
@@ -1486,8 +1488,8 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         Interpolate all possible data in the glyph.
 
-            >>> glyph.interpolate(0.5, otherGlyph1, otherGlyph2)
-            >>> glyph.interpolate((0.5, 2.0), otherGlyph1, otherGlyph2, round=False)
+            >>> glyph.interpolate(0.5, otherGlyph1, otherGlyph2)                      # doctest: +SKIP
+            >>> glyph.interpolate((0.5, 2.0), otherGlyph1, otherGlyph2, round=False)  # doctest: +SKIP
 
         The interpolation occurs on a 0 to 1.0 range where minGlyph
         is located at 0 and maxGlyph is located at 1.0.
@@ -1533,10 +1535,10 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         Evaluate interpolation compatibility with other.
 
-            >>> compat, report = self.isCompatible(otherFont)
-            >>> compat
+            >>> compat, report = self.isCompatible(otherFont)  # doctest: +SKIP
+            >>> compat                                         # doctest: +SKIP
             False
-            >>> report
+            >>> report                                         # doctest: +SKIP
             [Fatal] The glyphs do not contain the same number of contours.
 
         Returns a boolean indicating if the glyph is compatible for
@@ -1595,7 +1597,7 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         Determine if point is in the black or white of the glyph.
 
-            >>> glyph.pointInside((40, 65))
+            >>> glyph.pointInside((40, 65))  # doctest: +SKIP
             True
 
         point must be an (x, y) tuple.
@@ -1617,7 +1619,7 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         The bounds of the glyph: (xMin, yMin, xMax, yMax) or None.
 
-            >>> glyph.bounds
+            >>> glyph.bounds  # doctest: +SKIP
             (10, 30, 765, 643)
         """
     )
@@ -1646,8 +1648,8 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         Immutable list of the glyph's layers.
 
-            >>> for glyphLayer in glyph.layers:
-            ...     len(glyphLayer)
+            >>> for glyphLayer in glyph.layers:  # doctest: +SKIP
+            ...     len(glyphLayer)              # doctest: +SKIP
             3
             2
         """
@@ -1669,7 +1671,7 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         Get the glyph layer with name in this glyph.
 
-            >>> glyphLayer = glyph.getLayer("foreground")
+            >>> glyphLayer = glyph.getLayer("foreground")  # doctest: +SKIP
         """
         name = validators.validateLayerName(name)
         return self._getLayer(name)
@@ -1693,7 +1695,7 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         Make a new layer with name in this glyph.
 
-            >>> glyphLayer = glyph.newLayer("background")
+            >>> glyphLayer = glyph.newLayer("background")  # doctest: +SKIP
 
         This is the equivalent of using the newGlyph
         method on a named layer. If the glyph already
@@ -1731,7 +1733,7 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         Remove the layer from the glyph (not the font).
 
-            >>> glyph.removeLayer("background")
+            >>> glyph.removeLayer("background")  # doctest: +SKIP
 
         Layer can be a glyph layer or a layer name.
         """
@@ -1779,7 +1781,7 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         Set the image in the glyph.
 
-            >>> image = glyph.addImage(path="/path/to/my/image.png", color=(1, 0, 0, 0.5))
+            >>> image = glyph.addImage(path="/path/to/my/image.png", color=(1, 0, 0, 0.5))  # doctest: +SKIP
 
         path is a path to an image file.
         data is the raw image data.
@@ -1834,7 +1836,7 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         Remove the image from the glyph.
 
-            >>> glyph.clearImage()
+            >>> glyph.clearImage()  # doctest: +SKIP
         """
         if self.image is not None:
             self._clearImage()
@@ -1854,9 +1856,9 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         The mark color for the glyph.
 
-            >>> glyph.markColor
+            >>> glyph.markColor                   # doctest: +SKIP
             None
-            >>> glyph.markColor = (1, 0, 0, 0.5)
+            >>> glyph.markColor = (1, 0, 0, 0.5)  # doctest: +SKIP
         """
     )
 
@@ -1893,9 +1895,9 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         A note for the glyph as a string or None.
 
-            >>> glyph.note
+            >>> glyph.note                                      # doctest: +SKIP
             None
-            >>> glyph.note = "P.B. said this looks 'awesome.'"
+            >>> glyph.note = "P.B. said this looks 'awesome.'"  # doctest: +SKIP
         """
     )
 
@@ -1931,7 +1933,7 @@ class BaseGlyph(BaseObject, TransformationMixin):
         """
         The lib for the glyph.
 
-            >>> glyph.lib["org.robofab.hello"]
+            >>> glyph.lib["org.robofab.hello"]  # doctest: +SKIP
             "world"
         """
     )

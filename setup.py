@@ -15,6 +15,10 @@ setup(
     license='LICENSE.txt',
     description='Tools to manipulate font sources',
     long_description='Tools to manipulate font sources',
-    install_requires=[],
+    install_requires=[
+        'fontMath',
+        'fontTools',
+        'ufoLib'
+    ],
     package_dir={'': 'Lib'}
 )

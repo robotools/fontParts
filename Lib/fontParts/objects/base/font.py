@@ -1,9 +1,11 @@
 import os
 import fontMath
-from errors import FontPartsError
-from base import BaseObject, dynamicProperty
-from layer import _BaseGlyphVendor
+
+from .errors import FontPartsError
+from .base import BaseObject, dynamicProperty
+from .layer import _BaseGlyphVendor
 import validators
+
 
 class BaseFont(_BaseGlyphVendor):
 
@@ -40,7 +42,7 @@ class BaseFont(_BaseGlyphVendor):
         """
         Copy the font into a new font.
 
-            >>> copiedFont = font.copy()
+            >>> copiedFont = font.copy()  # doctest: +SKIP
 
         This will copy:
 
@@ -88,7 +90,7 @@ class BaseFont(_BaseGlyphVendor):
         """
         The path to the file this object represents.
 
-            >>> print font.path
+            >>> print font.path  # doctest: +SKIP
             "/path/to/my/font.ufo"
         """
     )
@@ -114,8 +116,8 @@ class BaseFont(_BaseGlyphVendor):
         """
         Save the font to path.
 
-            >>> font.save()
-            >>> font.save("/path/to/my/font-2.ufo")
+            >>> font.save()                          # doctest: +SKIP
+            >>> font.save("/path/to/my/font-2.ufo")  # doctest: +SKIP
 
         If path is None, use the font's original location. The
         file type must be inferred from the file extension on
@@ -170,7 +172,7 @@ class BaseFont(_BaseGlyphVendor):
         """
         Close the font.
 
-            >>> font.close()
+            >>> font.close()  # doctest: +SKIP
 
         If save is True, call the save method
         is called with no arguments.
@@ -191,8 +193,8 @@ class BaseFont(_BaseGlyphVendor):
         """
         Generate the font to another format.
 
-            >>> font.generate("otfcff")
-            >>> font.generate("otfcff", "/path/to/my/font.otf")
+            >>> font.generate("otfcff")                          # doctest: +SKIP
+            >>> font.generate("otfcff", "/path/to/my/font.otf")  # doctest: +SKIP
 
         format defines the file format to output. These are the
         standard format identifiers.
@@ -266,7 +268,7 @@ class BaseFont(_BaseGlyphVendor):
                 raise FontPartsError("The file cannot be generated because the file does not have a path.")
             fileName = os.path.basename(self.path)
             fileName += ext
-            path = os.path.join(path, fileName) 
+            path = os.path.join(path, fileName)
         path = validators.validateFilePath(path)
         self._generate(format=format, path=path)
 
@@ -290,7 +292,7 @@ class BaseFont(_BaseGlyphVendor):
         """
         The font's info object.
 
-            >>> font.info.familyName
+            >>> font.info.familyName  # doctest: +SKIP
             "My Family"
         """
     )
@@ -313,7 +315,7 @@ class BaseFont(_BaseGlyphVendor):
         """
         The font's groups object.
 
-            >>> font.groups["myGroup"]
+            >>> font.groups["myGroup"]  # doctest: +SKIP
             ["A", "B", "C"]
         """
     )
@@ -336,7 +338,7 @@ class BaseFont(_BaseGlyphVendor):
         """
         The font's kerning object.
 
-            >>> font.kerning["A", "B"]
+            >>> font.kerning["A", "B"]  # doctest: +SKIP
             -100
         """
     )
@@ -359,7 +361,7 @@ class BaseFont(_BaseGlyphVendor):
         """
         The font's features object.
 
-            >>> font.features.text
+            >>> font.features.text  # doctest: +SKIP
             "include(features/substitutions.fea);"
         """
     )
@@ -382,7 +384,7 @@ class BaseFont(_BaseGlyphVendor):
         """
         The font's lib object.
 
-            >>> font.lib["org.robofab.hello"]
+            >>> font.lib["org.robofab.hello"]  # doctest: +SKIP
             "world"
         """
     )
@@ -407,8 +409,8 @@ class BaseFont(_BaseGlyphVendor):
         """
         The font's layer objects.
 
-            >>> for layer in font.layers:
-            ...     layer.name
+            >>> for layer in font.layers:  # doctest: +SKIP
+            ...     layer.name             # doctest: +SKIP
             "My Layer 1"
             "My Layer 2"
         """
@@ -433,8 +435,8 @@ class BaseFont(_BaseGlyphVendor):
         """
         A list of layer names indicating order of the layers in the font.
 
-            >>> font.layerOrder = ["My Layer 2", "My Layer 1"]
-            >>> font.layerOrder
+            >>> font.layerOrder = ["My Layer 2", "My Layer 1"]  # doctest: +SKIP
+            >>> font.layerOrder                                 # doctest: +SKIP
             ["My Layer 2", "My Layer 1"]
         """
     )
@@ -473,8 +475,8 @@ class BaseFont(_BaseGlyphVendor):
         """
         The name of the font's default layer.
 
-            >>> font.defaultLayer = "My Layer 2"
-            >>> font.defaultLayer
+            >>> font.defaultLayer = "My Layer 2"  # doctest: +SKIP
+            >>> font.defaultLayer                 # doctest: +SKIP
             "My Layer 2"
         """
     )
@@ -510,7 +512,7 @@ class BaseFont(_BaseGlyphVendor):
         """
         Get the layer with name.
 
-            >>> layer = font.getLayer("My Layer 2")
+            >>> layer = font.getLayer("My Layer 2")  # doctest: +SKIP
         """
         name = validators.validateLayerName(name)
         layer = self._getLayer(name)
@@ -536,7 +538,7 @@ class BaseFont(_BaseGlyphVendor):
         """
         Make a new layer with name and color.
 
-            >>> layer = font.newLayer("My Layer 3")
+            >>> layer = font.newLayer("My Layer 3")  # doctest: +SKIP
 
         The will return the new layer.
         """
@@ -569,7 +571,7 @@ class BaseFont(_BaseGlyphVendor):
         """
         Remove the layer with name from the font.
 
-            >>> font.removeLayer("My Layer 3")
+            >>> font.removeLayer("My Layer 3")  # doctest: +SKIP
         """
         name = validators.validateLayerName(name)
         if name not in self.layerOrder:
@@ -652,9 +654,9 @@ class BaseFont(_BaseGlyphVendor):
         """
         The preferred order of the glyphs in the font.
 
-            >>> font.glyphOrder
+            >>> font.glyphOrder                    # doctest: +SKIP
             ["C", "B", "A"]
-            >>> font.glyphOrder = ["A", "B", "C"]
+            >>> font.glyphOrder = ["A", "B", "C"]  # doctest: +SKIP
         """
     )
 
@@ -687,7 +689,7 @@ class BaseFont(_BaseGlyphVendor):
         """
         Round all approriate data to integers.
 
-            >>> font.round()
+            >>> font.round()  # doctest: +SKIP
 
         This is the equivalent of calling the round method on:
 
@@ -715,7 +717,7 @@ class BaseFont(_BaseGlyphVendor):
         """
         Use heuristics to set Unicode values in all glyphs.
 
-            >>> font.autoUnicodes()
+            >>> font.autoUnicodes()  # doctest: +SKIP
 
         Environments will define their own heuristics for
         automatically determining values.
@@ -744,8 +746,8 @@ class BaseFont(_BaseGlyphVendor):
         """
         An immutable list of font-level guidelines.
 
-            >>> for guideline in font.guidelines:
-            ...     guideline.angle
+            >>> for guideline in font.guidelines:  # doctest: +SKIP
+            ...     guideline.angle                # doctest: +SKIP
             0
             45
             90
@@ -798,8 +800,8 @@ class BaseFont(_BaseGlyphVendor):
         """
         Append a new guideline to the font.
 
-            >>> guideline = font.appendGuideline((50, 0), 90)
-            >>> guideline = font.appendGuideline((0, 540), 0, name="overshoot", color=(0, 0, 0, 0.2))
+            >>> guideline = font.appendGuideline((50, 0), 90)                                          # doctest: +SKIP
+            >>> guideline = font.appendGuideline((0, 540), 0, name="overshoot", color=(0, 0, 0, 0.2))  # doctest: +SKIP
 
         position (x, y) indicates the position of the guideline.
         angle indicates the angle of the guideline.
@@ -831,8 +833,8 @@ class BaseFont(_BaseGlyphVendor):
         """
         Remove guideline from the font.
 
-            >>> font.removeGuideline(guideline)
-            >>> font.removeGuideline(2)
+            >>> font.removeGuideline(guideline)  # doctest: +SKIP
+            >>> font.removeGuideline(2)          # doctest: +SKIP
 
         guideline can be a guideline object or an
         integer representing the guideline index.
@@ -858,7 +860,7 @@ class BaseFont(_BaseGlyphVendor):
         """
         Clear all guidelines.
 
-            >>> font.clearGuidelines()
+            >>> font.clearGuidelines()  # doctest: +SKIP
         """
         self._clearGuidelines()
 
@@ -877,8 +879,8 @@ class BaseFont(_BaseGlyphVendor):
         """
         Interpolate all possible data in the font.
 
-            >>> font.interpolate(0.5, otherFont1, otherFont2)
-            >>> font.interpolate((0.5, 2.0), otherFont1, otherFont2, round=False)
+            >>> font.interpolate(0.5, otherFont1, otherFont2)                      # doctest: +SKIP
+            >>> font.interpolate((0.5, 2.0), otherFont1, otherFont2, round=False)  # doctest: +SKIP
 
         The interpolation occurs on a 0 to 1.0 range where minFont
         is located at 0 and maxFont is located at 1.0.
@@ -926,10 +928,10 @@ class BaseFont(_BaseGlyphVendor):
         """
         Evaluate interpolation compatibility with other.
 
-            >>> compat, report = self.isCompatible(otherFont)
-            >>> compat
+            >>> compat, report = self.isCompatible(otherFont)  # doctest: +SKIP
+            >>> compat                                         # doctest: +SKIP
             False
-            >>> report
+            >>> report                                         # doctest: +SKIP
             A
             -
             [Fatal] The glyphs do not contain the same number of contours.

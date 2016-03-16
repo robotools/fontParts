@@ -1,8 +1,9 @@
 import weakref
-from errors import FontPartsError
-from base import BaseObject, TransformationMixin, dynamicProperty
+
+from .errors import FontPartsError
+from .base import BaseObject, TransformationMixin, dynamicProperty
 import validators
-from bPoint import absoluteBCPIn, absoluteBCPOut
+from .bPoint import absoluteBCPIn, absoluteBCPOut
 
 
 class BaseContour(BaseObject, TransformationMixin):
@@ -150,7 +151,7 @@ class BaseContour(BaseObject, TransformationMixin):
         # The try: ... except TypeError: ...
         # handles backwards compatibility with
         # point pens that have not been upgraded
-        # to point pen protocol 2. 
+        # to point pen protocol 2.
         try:
             pen.beginPath(self.identifier)
         except TypeError:
@@ -621,7 +622,7 @@ class BaseContour(BaseObject, TransformationMixin):
             prevAnchor = prevSegment.onCurve
             if (prevAnchor.x, prevAnchor.y) == (newA.x, newA.y) and (newAnchor.x, newAnchor.y) == (newB.x, newB.y):
                 newSegment.type = LINE
-            # the user wants a smooth segment        
+            # the user wants a smooth segment
             if type == "curve":
                 newSegment.smooth = True
 
