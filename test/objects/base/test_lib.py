@@ -1,9 +1,9 @@
-from fontParts.objects.abstract.lib import Lib
+from fontParts.objects.base.lib import BaseLib
 
 
 class TestLib(object):
 
     def test_initializes(arg):
-        lib = Lib()
+        lib = BaseLib()
         lib.foo = "bar"
         assert lib.foo is "bar"

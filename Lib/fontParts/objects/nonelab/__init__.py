@@ -1,1 +1,1 @@
-from font import RFont
+from .font import RFont

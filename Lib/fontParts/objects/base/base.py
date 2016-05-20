@@ -1,7 +1,8 @@
 import math
 from copy import deepcopy
 from fontTools.misc import transform
-from errors import FontPartsError
+
+from .errors import FontPartsError
 import validators
 
 # ------------
@@ -72,14 +73,14 @@ class BaseObject(object):
         the object. The behavior of this method will vary
         from environment to environment.
 
-            >>> obj.update()
+            >>> obj.update()  # doctest: +SKIP
         """
 
     def naked(self):
         """
         Return the wrapped object.
 
-            >>> loweLevelObj = obj.naked()
+            >>> lowLevelObj = obj.naked()  # doctest: +SKIP
         """
         self.raiseNotImplementedError()
 
@@ -274,8 +275,8 @@ class TransformationMixin(object):
         """
         Transform the object with the transformation matrix.
 
-            >>> obj.transformBy((0.5, 0, 0, 2.0, 10, 0))
-            >>> obj.transformBy((0.5, 0, 0, 2.0, 10, 0), origin=(500, 500))
+            >>> obj.transformBy((0.5, 0, 0, 2.0, 10, 0))                     # doctest: +SKIP
+            >>> obj.transformBy((0.5, 0, 0, 2.0, 10, 0), origin=(500, 500))  # doctest: +SKIP
 
         The matrix must be a tuple defining a 2x2 transformation
         plus offset, aka Affine transform.
@@ -317,7 +318,7 @@ class TransformationMixin(object):
         """
         Move the object by value.
 
-            >>> obj.transformBy((10, 0))
+            >>> obj.transformBy((10, 0))  # doctest: +SKIP
 
         Value must be a tuple defining x and y values.
         """
@@ -340,8 +341,8 @@ class TransformationMixin(object):
         """
         Scale the object by value.
 
-            >>> obj.transformBy(2.0)
-            >>> obj.transformBy((0.5, 2.0), origin=(500, 500))
+            >>> obj.transformBy(2.0)                            # doctest: +SKIP
+            >>> obj.transformBy((0.5, 2.0), origin=(500, 500))  # doctest: +SKIP
 
         value must be a tuple defining x and y values or a number.
 
@@ -370,8 +371,8 @@ class TransformationMixin(object):
         """
         Rotate the object by value.
 
-            >>> obj.transformBy(45)
-            >>> obj.transformBy(45, origin=(500, 500))
+            >>> obj.transformBy(45)                     # doctest: +SKIP
+            >>> obj.transformBy(45, origin=(500, 500))  # doctest: +SKIP
 
         origin, (x, y) or None, defines the point at which the
         transformation should orginate. The default is (0, 0).
@@ -398,8 +399,8 @@ class TransformationMixin(object):
         """
         Skew the object by value.
 
-            >>> obj.skewBy(11)
-            >>> obj.skewBy((25, 10), origin=(500, 500))
+            >>> obj.skewBy(11)                           # doctest: +SKIP
+            >>> obj.skewBy((25, 10), origin=(500, 500))  # doctest: +SKIP
 
         value can be a single number indicating an x skew or
         a tuple indicating an x, y skew.
@@ -433,33 +434,30 @@ class TransformationMixin(object):
 # Helpers
 # -------
 
-class dynamicProperty(object):
-
+class dynamicProperty(property):
     """
     This implements functionality that is very similar
     to Python's built in property function, but makes
     it much easier for subclassing. Here is an example
     of why this is needed:
 
-        class BaseObject(object):
-
-            _foo = 1
-
-            def _get_foo(self):
-                return self._foo
-
-            def _set_foo(self, value):
-                self._foo = value
-
-            foo = property(_get_foo, _set_foo)
-
-
-        class MyObject(BaseObject):
-
-            def _set_foo(self, value):
-                self._foo = value * 100
-
-
+        >>> class ParentObject(object):
+        ...
+        ...     _foo = 1
+        ...
+        ...     def _get_foo(self):
+        ...         return self._foo
+        ...
+        ...     def _set_foo(self, value):
+        ...         self._foo = value
+        ...
+        ...     foo = property(_get_foo, _set_foo)
+        ...
+        >>> class MyObject(ParentObject):
+        ...
+        ...     def _set_foo(self, value):
+        ...         self._foo = value * 100
+        ...
         >>> m = MyObject()
         >>> m.foo
         1
@@ -475,26 +473,24 @@ class dynamicProperty(object):
 
     Using dynamicProperty solves this.
 
-        class BaseObject(object):
-
-            _foo = 1
-
-            foo = dynamicProperty("foo")
-
-            def _get_foo(self):
-                return self._foo
-
-            def _set_foo(self, value):
-                self._foo = value
-
-
-        class MyObject(BaseObject):
-
-            def _set_foo(self, value):
-                self._foo = value * 100
-
-
-        >>> m = MyObject()
+        >>> class DynamicParentObject(object):
+        ...
+        ...     _foo = 1
+        ...
+        ...     foo = dynamicProperty("foo")
+        ...
+        ...     def _get_foo(self):
+        ...         return self._foo
+        ...
+        ...     def _set_foo(self, value):
+        ...         self._foo = value
+        ...
+        >>> class MyDynamicObject(DynamicParentObject):
+        ...
+        ...     def _set_foo(self, value):
+        ...         self._foo = value * 100
+        ...
+        >>> m = MyDynamicObject()
         >>> m.foo
         1
         >>> m.foo = 2
@@ -522,6 +518,7 @@ class dynamicProperty(object):
         else:
             raise AttributeError("no setter for %r" % self.name)
 
+    def __call__(self, *args, **kwargs): pass
 
 def interpolate(a, b, v):
     return a + (b - a) * v

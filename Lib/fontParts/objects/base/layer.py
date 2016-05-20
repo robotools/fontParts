@@ -1,8 +1,9 @@
 import weakref
-from errors import FontPartsError
-from base import BaseObject, dynamicProperty
+
+from .errors import FontPartsError
+from .base import BaseObject, dynamicProperty
 import validators
-from color import Color
+from .color import Color
 
 
 class _BaseGlyphVendor(BaseObject):
@@ -29,7 +30,7 @@ class _BaseGlyphVendor(BaseObject):
         """
         The number of glyphs in the layer.
 
-            >>> len(layer)
+            >>> len(layer)  # doctest: +SKIP
             256
         """
         return self._len()
@@ -50,11 +51,11 @@ class _BaseGlyphVendor(BaseObject):
         """
         Iterate through the glyphs in the layer.
 
-            >>> for glyph in layer:
-            ...     glyph.name
+            >>> for glyph in layer:  # doctest: +SKIP
+            ...     glyph.name       # doctest: +SKIP
             "A"
             "B"
-            "C" 
+            "C"
         """
         return self._iter()
 
@@ -78,7 +79,7 @@ class _BaseGlyphVendor(BaseObject):
         """
         Get the glyph with name from the  layer.
 
-            >>> glyph = layer["A"]
+            >>> glyph = layer["A"]  # doctest: +SKIP
         """
         name = validators.validateGlyphName(name)
         if name not in self:
@@ -108,7 +109,7 @@ class _BaseGlyphVendor(BaseObject):
         """
         Get a list of all glyphs in the layer of the font.
 
-            >>> layer.keys()
+            >>> layer.keys()  # doctest: +SKIP
             ["B", "C", "A"]
 
         The order of the glyphs is undefined.
@@ -133,7 +134,7 @@ class _BaseGlyphVendor(BaseObject):
         """
         Test if the layer contains a glyph with name.
 
-            >>> "A" in layer
+            >>> "A" in layer  # doctest: +SKIP
             True
         """
         name = validators.validateGlyphName(name)
@@ -159,7 +160,7 @@ class _BaseGlyphVendor(BaseObject):
         """
         Make a new glyph in the layer.
 
-            >>> glyph = layer.newGlyph("A")
+            >>> glyph = layer.newGlyph("A")  # doctest: +SKIP
 
         The glyph will be returned.
         """
@@ -192,7 +193,7 @@ class _BaseGlyphVendor(BaseObject):
         """
         Remove the glyph with name from the layer.
 
-            >>> layer.removeGlyph("A")
+            >>> layer.removeGlyph("A")  # doctest: +SKIP
 
         """
         name = validators.validateGlyphName(name)
@@ -219,7 +220,7 @@ class _BaseGlyphVendor(BaseObject):
         """
         Insert a new glyph into the layer.
 
-            >>> glyph = layer.insertGlyph(otherGlyph, name="A")
+            >>> glyph = layer.insertGlyph(otherGlyph, name="A")  # doctest: +SKIP
 
         The glyph will be returned.
 
@@ -319,7 +320,7 @@ class BaseLayer(_BaseGlyphVendor):
         Copy the layer into a new layer that does not
         belong to a font.
 
-            >>> copiedLayer = layer.copy()
+            >>> copiedLayer = layer.copy()  # doctest: +SKIP
 
         This will copy:
 
@@ -355,7 +356,7 @@ class BaseLayer(_BaseGlyphVendor):
         """
         The layer's parent font.
 
-            >>> font = layer.font
+            >>> font = layer.font  # doctest: +SKIP
         """
         )
 
@@ -381,9 +382,9 @@ class BaseLayer(_BaseGlyphVendor):
         """
         The name of the layer.
 
-            >>> layer.name
+            >>> layer.name          # doctest: +SKIP
             "foreground"
-            >>> layer.name = "top"
+            >>> layer.name = "top"  # doctest: +SKIP
         """
     )
 
@@ -438,9 +439,9 @@ class BaseLayer(_BaseGlyphVendor):
         """
         The layer's color.
 
-            >>> layer.color
+            >>> layer.color                   # doctest: +SKIP
             None
-            >>> layer.color = (1, 0, 0, 0.5)
+            >>> layer.color = (1, 0, 0, 0.5)  # doctest: +SKIP
         """
     )
 
@@ -495,7 +496,7 @@ class BaseLayer(_BaseGlyphVendor):
         """
         The layer's lib object.
 
-            >>> layer.lib["org.robofab.hello"]
+            >>> layer.lib["org.robofab.hello"]  # doctest: +SKIP
             "world"
         """
     )
@@ -523,7 +524,7 @@ class BaseLayer(_BaseGlyphVendor):
         """
         Round all approriate data to integers.
 
-            >>> layer.round()
+            >>> layer.round()  # doctest: +SKIP
 
         This is the equivalent of calling the round method on:
 
@@ -545,7 +546,7 @@ class BaseLayer(_BaseGlyphVendor):
         """
         Use heuristics to set Unicode values in all glyphs.
 
-            >>> layer.autoUnicodes()
+            >>> layer.autoUnicodes()  # doctest: +SKIP
 
         Environments will define their own heuristics for
         automatically determining values.
@@ -570,8 +571,8 @@ class BaseLayer(_BaseGlyphVendor):
         """
         Interpolate all possible data in the layer.
 
-            >>> layer.interpolate(0.5, otherLayer1, otherLayer2)
-            >>> layer.interpolate((0.5, 2.0), otherLayer1, otherLayer2, round=False)
+            >>> layer.interpolate(0.5, otherLayer1, otherLayer2)                      # doctest: +SKIP
+            >>> layer.interpolate((0.5, 2.0), otherLayer1, otherLayer2, round=False)  # doctest: +SKIP
 
         The interpolation occurs on a 0 to 1.0 range where minLayer
         is located at 0 and maxLayer is located at 1.0.
@@ -617,10 +618,10 @@ class BaseLayer(_BaseGlyphVendor):
         """
         Evaluate interpolation compatibility with other.
 
-            >>> compat, report = self.isCompatible(otherLayer)
-            >>> compat
+            >>> compat, report = self.isCompatible(otherLayer)  # doctest: +SKIP
+            >>> compat                                          # doctest: +SKIP
             False
-            >>> report
+            >>> report                                          # doctest: +SKIP
             A
             -
             [Fatal] The glyphs do not contain the same number of contours.

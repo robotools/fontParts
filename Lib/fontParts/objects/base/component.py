@@ -1,7 +1,9 @@
 import weakref
+
 import validators
-from errors import FontPartsError
-from base import BaseObject, TransformationMixin, dynamicProperty
+from .errors import FontPartsError
+from .base import BaseObject, TransformationMixin, dynamicProperty
+
 
 class BaseComponent(BaseObject, TransformationMixin):
 
@@ -253,7 +255,7 @@ class BaseComponent(BaseObject, TransformationMixin):
         # The try: ... except TypeError: ...
         # handles backwards compatibility with
         # point pens that have not been upgraded
-        # to point pen protocol 2. 
+        # to point pen protocol 2.
         try:
             pen.addComponent(self.baseGlyph, self.transformation, identifier=self.identifier)
         except TypeError:

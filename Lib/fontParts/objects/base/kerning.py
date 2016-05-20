@@ -1,7 +1,8 @@
 import weakref
 import fontMath
-from errors import FontPartsError
-from base import BaseDict, dynamicProperty, interpolate
+
+from .errors import FontPartsError
+from .base import BaseDict, dynamicProperty, interpolate
 import validators
 
 

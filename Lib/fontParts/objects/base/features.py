@@ -1,7 +1,9 @@
 import weakref
-from errors import FontPartsError
-from base import BaseObject, dynamicProperty
+
+from .errors import FontPartsError
+from .base import BaseObject, dynamicProperty
 import validators
+
 
 class BaseFeatures(BaseObject):
 

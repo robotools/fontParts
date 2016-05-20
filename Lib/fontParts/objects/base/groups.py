@@ -1,7 +1,9 @@
 import weakref
-from errors import FontPartsError
-from base import BaseDict, dynamicProperty
+
+from .errors import FontPartsError
+from .base import BaseDict, dynamicProperty
 import validators
+
 
 class BaseGroups(BaseDict):
 

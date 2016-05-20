@@ -1,7 +1,8 @@
 import weakref
 from fontTools.misc import transform
-from errors import FontPartsError
-from base import BaseObject, TransformationMixin, dynamicProperty
+
+from .errors import FontPartsError
+from .base import BaseObject, TransformationMixin, dynamicProperty
 import validators
 
 class BaseBPoint(BaseObject, TransformationMixin):
@@ -225,7 +226,7 @@ class BaseBPoint(BaseObject, TransformationMixin):
         if nextSegment.type == "move":
             if value == (0, 0) and self.bcpIn == (0, 0):
                 pass
-            else:               
+            else:
                 # we need to insert a new "curve" segment on top of the move
                 contour = self.contour
                 nextOn = nextSegment.onCurve

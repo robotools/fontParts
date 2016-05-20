@@ -1,0 +1,5 @@
+git+https://github.com/behdad/fonttools
+git+git://github.com/unified-font-object/ufoLib.git#egg=ufoLib
+git+git://github.com/robofab-developers/robofab.git#egg=robofab
+git+git://github.com/typesupply/defcon.git@ufo3#egg=defcon
+git+git://github.com/typesupply/fontMath.git@ufo3#egg=fontMath
