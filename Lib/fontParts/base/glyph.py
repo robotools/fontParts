@@ -1796,7 +1796,12 @@ class BaseGlyph(BaseObject, TransformationMixin, DeprecatedGlyph):
     # Image
     # -----
 
-    image = dynamicProperty("base_image", "The image for the glyph.")
+    image = dynamicProperty(
+        "base_image", 
+        """
+        The image for the glyph.
+        """
+    )
 
     def _get_base_image(self):
         image = self._get_image()
@@ -1966,7 +1971,7 @@ class BaseGlyph(BaseObject, TransformationMixin, DeprecatedGlyph):
     # ---
 
     lib = dynamicProperty(
-        "lib",
+        "base_lib",
         """
         The lib for the glyph.
 
@@ -1980,7 +1985,19 @@ class BaseGlyph(BaseObject, TransformationMixin, DeprecatedGlyph):
         lib.font = self
         return lib
 
+    def _set_base_lib(self, value):
+        lib = self._get_lib()
+        lib.clear()
+        lib.update(value)
+        return lib
+
     def _get_lib(self):
+        """
+        Subclasses must override this method.
+        """
+        self.raiseNotImplementedError()
+
+    def _set_lib(self, value):
         """
         Subclasses must override this method.
         """
