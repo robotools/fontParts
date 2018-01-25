@@ -63,3 +63,13 @@ class RLayer(RBaseObject, BaseLayer):
     def _removeGlyph(self, name, **kwargs):
         layer = self.naked()
         del layer[name]
+
+    # -------
+    # mapping
+    # -------
+
+    def _getReverseComponentMapping(self):
+        return self.naked().componentReferences
+
+    def _getCharacterMapping(self):
+        return self.naked().unicodeData

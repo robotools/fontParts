@@ -13,6 +13,8 @@ FontParts scripts are built on with objects that represent fonts, glyphs, contou
 Objects
 *******
 
+.. image:: ../_static/fontparts-map.png
+
 .. toctree::
    :maxdepth: 1
 

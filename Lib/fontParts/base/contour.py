@@ -290,7 +290,7 @@ class BaseContour(BaseObject, TransformationMixin, DeprecatedContour):
         Subclasses may override this method.
         """
         if self.clockwise != value:
-            self.reverseContour()
+            self.reverse()
 
     def reverse(self, **kwargs):
         """
@@ -384,6 +384,9 @@ class BaseContour(BaseObject, TransformationMixin, DeprecatedContour):
             segment.append(segments[0][0])
             del segments[0]
             segments.append(segment)
+        if not lastWasOffCurve and not firstIsMove:
+            segment = segments.pop(0)
+            segments.append(segment)
         # wrap into segments
         wrapped = []
         for points in segments:
@@ -457,8 +460,8 @@ class BaseContour(BaseObject, TransformationMixin, DeprecatedContour):
         onCurve = points[-1]
         offCurve = points[:-1]
         self.insertPoint(index, onCurve, type=type, smooth=smooth)
-        for point in reversed(offCurve):
-            self.insertPoint(index, offCurve, type="offcurve")
+        for offCurvePoint in reversed(offCurve):
+            self.insertPoint(index, offCurvePoint, type="offcurve")
 
     def removeSegment(self, segment, **kwargs):
         """
@@ -547,12 +550,12 @@ class BaseContour(BaseObject, TransformationMixin, DeprecatedContour):
 
     def _get_bPoints(self):
         bPoints = []
-        for segment in self.segments:
-            if segment.type not in ("move", "line", "curve"):
-                raise FontPartsError("A %s point can not be converted to a bPoint." % segment.type)
+        for point in self.points:
+            if point.type not in ("move", "line", "curve"):
+                continue
             bPoint = self.bPointClass()
             bPoint.contour = self
-            bPoint._setPoint(segment.onCurve)
+            bPoint._setPoint(point)
             bPoints.append(bPoint)
         return tuple(bPoints)
 

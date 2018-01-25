@@ -341,11 +341,11 @@ class BaseKerning(BaseDict, DeprecatedKerning):
 
     def update(self, otherKerning):
         """
-        Updates the Kerning based on **otherKerning**. *otherKerning** is a ``dict`` of
+        Updates the Kerning based on **otherKerning**. **otherKerning** is a ``dict`` of
         kerning information. If a pair from **otherKerning** is in Kerning, the pair
         value will be replaced by the value from **otherKerning**. If a pair
         from **otherKerning** is not in the Kerning, it is added to the pairs. If Kerning
-        contains a pair that is not in *otherKerning**, it is not changed.
+        contains a pair that is not in **otherKerning**, it is not changed.
 
             >>> font.kerning.update(newKerning)
         """

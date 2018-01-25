@@ -134,7 +134,7 @@ class BaseComponent(BaseObject, TransformationMixin, DeprecatedComponent):
 
     def _set_base_offset(self, value):
         value = normalizers.normalizeTransformationOffset(value)
-        self._set_scale(value)
+        self._set_offset(value)
 
     def _get_offset(self):
         """

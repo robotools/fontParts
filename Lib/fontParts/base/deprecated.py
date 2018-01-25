@@ -227,7 +227,7 @@ class DeprecatedKerning(DeprecatedTransformation):
         warnings.warn("Kerning.getExtremes()", DeprecationWarning)
 
     def add(self, value):
-        warnings.warn("Kerning.self()", DeprecationWarning)
+        warnings.warn("Kerning.add()", DeprecationWarning)
 
     def minimize(self, minimum=10):
         warnings.warn("Kerning.minimize()", DeprecationWarning)
@@ -301,20 +301,6 @@ class DeprecatedFont(DeprecatedBase):
     def getGlyph(self, glyphName):
         warnings.warn("'Font.getGlyph(): use Font[glyphName]'", DeprecationWarning)
         return self[glyphName]
-
-    def getReverseComponentMapping(self):
-        """
-        Todo:
-        * move this to layer as this is actually a very usefull method.
-        """
-        warnings.warn("'Font.getReverseComponentMapping()'", DeprecationWarning)
-
-    def getCharacterMapping(self):
-        """
-        Todo:
-        * move this to layer as this is actually a very usefull method.
-        """
-        warnings.warn("'Font.getCharacterMapping()'", DeprecationWarning)
 
     def getGlyphNameToFileNameFunc(self):
         warnings.warn("'Font.getGlyphNameToFileNameFunc()'", DeprecationWarning)

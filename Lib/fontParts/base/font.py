@@ -1150,3 +1150,47 @@ class BaseFont(_BaseGlyphVendor, DeprecatedFont):
                 r = "\n" + header + "\n" + marker + "\n" + r
                 report.append(r)
         return compatable, "\n".join(report)
+
+    # -------
+    # mapping
+    # -------
+
+    def getReverseComponentMapping(self):
+        """
+        Create a dictionary of unicode -> [glyphname, ...] mappings.
+        All glyphs are loaded. Note that one glyph can have multiple unicode values,
+        and a unicode value can have multiple glyphs pointing to it.
+        """
+        return self._getReverseComponentMapping()
+
+    def _getReverseComponentMapping(self):
+        """
+        This is the environment implementation of
+        :meth:`BaseFont.getReverseComponentMapping`.
+
+        Subclasses may override this method.
+        """
+        layer = self.getLayer(self.defaultLayer())
+        return layer.getReverseComponentMapping()
+
+    def getCharacterMapping(self):
+        """
+        Get a reversed map of component references in the font.
+        {
+        'A' : ['Aacute', 'Aring']
+        'acute' : ['Aacute']
+        'ring' : ['Aring']
+        etc.
+        }
+        """
+        return self._getCharacterMapping()
+
+    def _getCharacterMapping(self):
+        """
+        This is the environment implementation of
+        :meth:`BaseFont.getCharacterMapping`.
+
+        Subclasses may override this method.
+        """
+        layer = self.getLayer(self.defaultLayer())
+        return layer.getCharacterMapping()

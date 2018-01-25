@@ -25,7 +25,7 @@ class BaseAnchor(BaseObject, TransformationMixin, DeprecatedAnchor):
         if self.name is not None:
             contents.append("name='%s'" % self.name)
         if self.color:
-            contents.append("color='%r'" % self.color)
+            contents.append("color=%r" % str(self.color))
         return contents
 
     # ----

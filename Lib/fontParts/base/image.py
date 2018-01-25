@@ -20,7 +20,7 @@ class BaseImage(BaseObject, TransformationMixin):
             "offset='({x}, {y})'".format(x=self.offset[0], y=self.offset[1]),
         ]
         if self.color:
-            contents.append("color='%r'" % self.color)
+            contents.append("color=%r" % str(self.color))
         if self.glyph is not None:
             contents.append("in glyph")
             contents += self.glyph._reprContents()

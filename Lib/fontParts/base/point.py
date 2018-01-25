@@ -371,7 +371,7 @@ class BasePoint(BaseObject, TransformationMixin, DeprecatedPoint):
         "base_identifier",
         """
         The unique identifier for the point.
-        This value will be an :ref:`type-identifier` or aNone`.
+        This value will be an :ref:`type-identifier` or a ``None``.
         This attribute is read only. ::
 
             >>> point.identifier

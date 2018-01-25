@@ -4,14 +4,14 @@ python:
   - "2.7"
   - "3.4"
   - "3.5"
+  - "3.6"
   - "pypy"
 before_install:
-  - git clone --depth=1 https://github.com/behdad/fonttools.git
   - git clone --depth=1 https://github.com/typesupply/fontMath.git
   - git clone --depth=1 https://github.com/unified-font-object/ufoLib.git
   - git clone --depth=1 https://github.com/typesupply/defcon.git
 install:
-  - cd fonttools; python setup.py install; cd ..
+  - pip install fonttools
   - cd fontMath; python setup.py install; cd ..
   - cd ufoLib; python setup.py install; cd ..
   - cd defcon; python setup.py install; cd ..

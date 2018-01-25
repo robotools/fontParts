@@ -34,6 +34,34 @@ class BaseBPoint(BaseObject, TransformationMixin):
         """
         return self.contour
 
+    # identifier
+
+    identifier = dynamicProperty("base_identifier", "The unique identifier for the bPoint.")
+
+    def _get_base_identifier(self):
+        value = self._get_identifier()
+        value = normalizers.normalizeIdentifier(value)
+        return value
+
+    def _get_identifier(self):
+        """
+        Subclasses may override this method.
+        """
+        return self._point.identifier
+
+    def generateIdentifier(self):
+        """
+        Create a new, unique identifier for and assign it to the bPoint.
+        If the point already has an identifier, the existing one should be returned.
+        """
+        return self._generateIdentifier()
+
+    def _generateIdentifier(self):
+        """
+        Subclasses may override this method.
+        """
+        return self._point.generateIdentifier()
+
     # Segment
 
     _segment = dynamicProperty("base_segment")
@@ -78,16 +106,16 @@ class BaseBPoint(BaseObject, TransformationMixin):
     glyph = dynamicProperty("glyph", "The bPoint's parent glyph.")
 
     def _get_glyph(self):
-        if self._glyph is None:
+        if self._contour is None:
             return None
-        return self._glyph()
+        return self.contour.glyph
 
     # Layer
 
     layer = dynamicProperty("layer", "The bPoint's parent layer.")
 
     def _get_layer(self):
-        if self._glyph is None:
+        if self._contour is None:
             return None
         return self.glyph.layer
 
@@ -96,7 +124,7 @@ class BaseBPoint(BaseObject, TransformationMixin):
     font = dynamicProperty("font", "The bPoint's parent font.")
 
     def _get_font(self):
-        if self._glyph is None:
+        if self._contour is None:
             return None
         return self.glyph.font
 
@@ -195,6 +223,7 @@ class BaseBPoint(BaseObject, TransformationMixin):
                     offCurves[-1].y = y
             elif value != (0, 0):
                 segment.type = "curve"
+                offCurves = segment.offCurve
                 offCurves[-1].x = x
                 offCurves[-1].y = y
 
@@ -256,6 +285,7 @@ class BaseBPoint(BaseObject, TransformationMixin):
                     offCurves[0].y = y
             elif value != (0, 0):
                 nextSegment.type = "curve"
+                offCurves = segment.offCurve
                 offCurves[0].x = x
                 offCurves[0].y = y
 

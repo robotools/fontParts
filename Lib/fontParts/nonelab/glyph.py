@@ -189,7 +189,7 @@ class RGlyph(RBaseObject, BaseGlyph):
         layerName = name
         glyphName = self.name
         font = self.font
-        layer = font.getLayer[layerName]
+        layer = font.getLayer(layerName)
         layer.removeGlyph(glyphName)
 
     # -----
