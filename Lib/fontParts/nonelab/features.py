@@ -12,3 +12,9 @@ class RFeatures(RBaseObject, BaseFeatures):
 
     def _set_text(self, value):
         self.naked().text = value
+
+    def _readFeaturesFromString(self, featuresFea):
+        
+
+    def _writeFeaturesToString(self):
+        

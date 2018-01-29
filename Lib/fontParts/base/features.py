@@ -87,3 +87,31 @@ class BaseFeatures(BaseObject, DeprecatedFeatures):
         Subclasses must override this method.
         """
         self.raiseNotImplementedError()
+
+    # -------------
+    # API
+    # -------------
+
+    def readFeaturesFromString(self, featuresFea):
+        """
+        Reads feature code into a feature object.
+        """
+        self._readFeaturesFromString(featuresFea)
+
+    def _readFeaturesFromString(self, featuresFea):
+        """
+        Subclasses must override this method.
+        """
+        self.raiseNotImplementedError()
+
+    def writeFeaturesToString(self):
+        """
+        Writes features data to an UFO XML string.
+        """
+        self._writeFeaturesToString()
+
+    def _writeFeaturesToString(self):
+        """
+        Subclasses must override this method.
+        """
+        self.raiseNotImplementedError()

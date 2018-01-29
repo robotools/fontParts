@@ -352,6 +352,19 @@ def normalizeGlyphTopMargin(value):
         raise FontPartsError("Glyph top margin must be an :ref:`type-int-float`, not %s." % type(value).__name__)
     return value
 
+def normalizeGlyphFormatVersion(value):
+    """
+    Normalizes glyph format version for saving to XML string.
+
+    * **value** must be a :ref:`type-int-float` of either 1 or 2.
+    * Returned value will be an int.
+    """
+    if not isinstance(value, (int, float)):
+        raise FontPartsError("Glyph Format Version must be an :ref:`type-int-float`, not %s." % type(value).__name__)
+    value = int(value)
+    if value not in (1, 2):
+        raise FontPartsError("Glyph Format Version must be either 1 or 2, not %s." % value)
+    return value
 
 # -------
 # Contour

@@ -231,3 +231,13 @@ class RGlyph(RBaseObject, BaseGlyph):
 
     def _get_lib(self):
         return self.libClass(wrap=self.naked().lib)
+
+    # ---
+    # API
+    # ---
+
+    def _readGlyphFromString(self, glifData):
+        g
+
+    def _writeGlyphToString(self, glyphFormatVersion):
+        return 
