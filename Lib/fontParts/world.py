@@ -84,6 +84,9 @@ def AllFonts():
 def RFont(path=None, showInterface=True):
     return dispatcher["RFont"](path=path, showInterface=showInterface)
 
+def RGlyph():
+    return dispatcher["RGlyph"]()
+
 # ----------
 # Dispatcher
 # ----------
