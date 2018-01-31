@@ -1347,7 +1347,7 @@ class BaseGlyph(BaseObject, TransformationMixin, DeprecatedGlyph, RemovedGlyph):
 
         This could be ported from RoboFab, however
         that algorithm is not robust enough. Specifically
-        it relies on boundses and hit testing to
+        it relies on bounds and hit testing to
         determine nesting.
 
         XXX
@@ -1395,6 +1395,14 @@ class BaseGlyph(BaseObject, TransformationMixin, DeprecatedGlyph, RemovedGlyph):
     # Interpolation & Math
     # --------------------
 
+    def toMathGlyph(self):
+        """
+        Returns the glyph as a MathGlyph.
+
+            >>> mg = glyph.toMathGlyph()
+        """
+        return _toMathGlyph()
+
     def _toMathGlyph(self):
         mathGlyph = fontMath.MathGlyph(None)
         pen = mathGlyph.getPointPen()
@@ -1433,6 +1441,16 @@ class BaseGlyph(BaseObject, TransformationMixin, DeprecatedGlyph, RemovedGlyph):
         mathGlyph.height = self.height
         mathGlyph.note = self.note
         return mathGlyph
+
+    def fromMathGlyph(self, mathGlyph):
+        """
+        Replaces the glyph with the contents of a MathGlyph.
+
+            >>> glyph = glyph.fromMathGlyph(mg)
+
+        mathGlyph is the mathGlyph to put into the current glyph.
+        """
+        return _fromMathGlyph(mathGlyph, toThisGlyph=True):
 
     def _fromMathGlyph(self, mathGlyph, toThisGlyph=False):
         # make the destination
