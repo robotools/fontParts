@@ -1,5 +1,4 @@
 import defcon
-from ufoLib.glifLib import readGlyphFromString, writeGlyphToString
 from fontParts.base import BaseGlyph
 from fontParts.base.errors import FontPartsError
 from fontParts.nonelab.base import RBaseObject
@@ -9,6 +8,7 @@ from fontParts.nonelab.anchor import RAnchor
 from fontParts.nonelab.guideline import RGuideline
 from fontParts.nonelab.image import RImage
 from fontParts.nonelab.lib import RLib
+from ufoLib.glifLib import readGlyphFromString, writeGlyphToString
 
 
 class RGlyph(RBaseObject, BaseGlyph):

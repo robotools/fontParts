@@ -106,7 +106,7 @@ class BaseFeatures(BaseObject, DeprecatedFeatures):
 
     def writeFeaturesToString(self):
         """
-        Writes features data to an UFO XML string.
+        Writes features data to a string.
         """
         self._writeFeaturesToString()
 

@@ -294,7 +294,7 @@ class BaseGroups(BaseDict, DeprecatedGroups):
 
     def writeGroupsToString(self):
         """
-        Writes groups data to an UFO XML string.
+        Writes groups data to an XML string.
         """
         self._writeGroupsToString()
 

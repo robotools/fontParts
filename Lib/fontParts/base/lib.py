@@ -92,3 +92,33 @@ class BaseLib(BaseDict, DeprecatedLib):
         for k, v in self.items():
             d[k] = v
         return d
+
+    # -------------
+    # API
+    # -------------
+
+    def readLibFromString(self, libXML):
+        """
+        Reads info data into a info object.
+        """
+        self._readInfoFromString(libXML)
+
+    def _readLibFromString(self, libXML):
+        """
+        Subclasses must override this method.
+        """
+        self.raiseNotImplementedError()
+
+    def writeLibToString(self):
+        """
+        Writes info data to an XML string.
+        
+        """
+        self._writeLibToString()
+
+    def _writeLibToString(self):
+        """
+        Subclasses must override this method.
+        """
+        self.raiseNotImplementedError()
+
