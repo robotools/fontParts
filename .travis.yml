@@ -1,24 +1,10 @@
 language: python
-sudo: required
+sudo: false
 python:
   - "2.7"
-  - "3.4"
   - "3.5"
   - "3.6"
   - "pypy"
-before_install:
-  - git clone --depth=1 https://github.com/typesupply/fontMath.git
-  - git clone --depth=1 https://github.com/unified-font-object/ufoLib.git
-  - git clone --depth=1 https://github.com/typesupply/defcon.git
 install:
-  - pip install fonttools
-  - cd fontMath; python setup.py install; cd ..
-  - cd ufoLib; python setup.py install; cd ..
-  - cd defcon; python setup.py install; cd ..
-  - python setup.py install
-script:
-  - python -c "import fontTools"
-  - python -c "import fontMath"
-  - python -c "import ufoLib"
-  - python -c "import defcon"
-  - python Lib/fontParts/nonelab/test.py
+  - pip install --upgrade tox-travis
+script: tox -- --verbose
