@@ -599,6 +599,12 @@ def interpolate(a, b, v):
 
 
 class PointPositionMixin(object):
+    
+    """
+    This adds a ``position`` attribute as a dyanmicProperty,
+    for use as a mixin with objects that have ``x`` and ``y`` 
+    attributes.
+    """
 
     position = dynamicProperty("base_position", "The point position.")
 
@@ -612,9 +618,15 @@ class PointPositionMixin(object):
         self._set_position(value)
 
     def _get_position(self):
+        """
+        Subclasses may override this method.
+        """
         return (self.x, self.y)
 
     def _set_position(self, value):
+        """
+        Subclasses may override this method.
+        """
         pX, pY = self.position
         x, y = value
         dX = x - pX

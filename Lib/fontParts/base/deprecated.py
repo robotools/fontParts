@@ -127,18 +127,6 @@ class RemovedAnchor(RemovedBase):
 
 class DeprecatedAnchor(DeprecatedBase, DeprecatedTransformation):
 
-    def _get_position(self):
-        warnings.warn("'Anchor.position': use Anchor.x, Anchor.y", DeprecationWarning)
-        return self.x, self.y
-
-    def _set_position(self, position):
-        warnings.warn("'Anchor.position': use Anchor.x, Anchor.y", DeprecationWarning)
-        x, y = position
-        self.x = x
-        self.y = y
-
-    position = property(_get_position, _set_position, doc="Deprecated Anchor.position")
-
     def _generateIdentifier(self):
         warnings.warn("'Anchor._generateIdentifier()': use 'Anchor._getIdentifier()'", DeprecationWarning)
         return self._getIdentifier()
