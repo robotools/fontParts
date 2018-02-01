@@ -142,7 +142,7 @@ with open('README.md', 'r') as f:
 
 setup_params = dict(
     name='fontParts',
-    version="0.1.0.dev0",
+    version="0.1.0",
     description=("An API for interacting with the parts of fonts "
                  "during the font development process."),
     author='Just van Rossum, Tal Leming, Erik van Blokland, others',
