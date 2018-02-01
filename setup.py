@@ -3,6 +3,7 @@ import sys
 from setuptools import setup, find_packages, Command
 from distutils import log
 
+
 class bump_version(Command):
 
     description = "increment the package version and commit the changes"
@@ -141,8 +142,9 @@ with open('README.md', 'r') as f:
 
 setup_params = dict(
     name='fontParts',
-    version="0.0.1",
-    description="An API for interacting with the parts of fonts during the font development process.",
+    version="0.1.0.dev0",
+    description=("An API for interacting with the parts of fonts "
+                 "during the font development process."),
     author='Just van Rossum, Tal Leming, Erik van Blokland, others',
     author_email='info@robofab.com',
     maintainer="Just van Rossum, Tal Leming, Erik van Blokland",
