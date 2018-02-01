@@ -275,31 +275,3 @@ class BaseGroups(BaseDict, DeprecatedGroups):
             [["A", "B", "C"], ["D", "E", "F"]]
         """
         return super(BaseGroups, self).values()
-
-    # -------------
-    # API
-    # -------------
-
-    def readGroupsFromString(self, groupsXML):
-        """
-        Reads groups data into a groups object.
-        """
-        self._readGroupsFromString(groupsXML)
-
-    def _readGroupsFromString(self, groupsXML):
-        """
-        Subclasses must override this method.
-        """
-        self.raiseNotImplementedError()
-
-    def writeGroupsToString(self):
-        """
-        Writes groups data to an XML string.
-        """
-        self._writeGroupsToString()
-
-    def _writeGroupsToString(self):
-        """
-        Subclasses must override this method.
-        """
-        self.raiseNotImplementedError()

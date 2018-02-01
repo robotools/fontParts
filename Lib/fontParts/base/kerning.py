@@ -361,31 +361,3 @@ class BaseKerning(BaseDict, DeprecatedKerning):
             [-20, -15, 5, 3.5]
         """
         return super(BaseKerning, self).values()
-
-    # -------------
-    # API
-    # -------------
-
-    def readKerningFromString(self, kerningXML):
-        """
-        Reads kerning data into a kerning object.
-        """
-        self._readKerningFromString(kerningXML)
-
-    def _readKerningFromString(self, kerningXML):
-        """
-        Subclasses must override this method.
-        """
-        self.raiseNotImplementedError()
-
-    def writeKerningToString(self):
-        """
-        Writes kerning data to an UFO XML string.
-        """
-        self._writeKerningToString()
-
-    def _writeKerningToString(self):
-        """
-        Subclasses must override this method.
-        """
-        self.raiseNotImplementedError()

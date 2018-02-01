@@ -260,32 +260,3 @@ class BaseInfo(BaseObject, DeprecatedInfo):
         if round:
             result = result.round()
         self._fromMathInfo(result)
-
-    # -------------
-    # API
-    # -------------
-
-    def readInfoFromString(self, infoXML):
-        """
-        Reads info data into a info object.
-        """
-        self._readInfoFromString(infoXML)
-
-    def _readInfoFromString(self, infoXML):
-        """
-        Subclasses must override this method.
-        """
-        self.raiseNotImplementedError()
-
-    def writeInfoToString(self):
-        """
-        Writes info data to an UFO XML string.
-        
-        """
-        self._writeInfoToString()
-
-    def _writeInfoToString(self):
-        """
-        Subclasses must override this method.
-        """
-        self.raiseNotImplementedError()

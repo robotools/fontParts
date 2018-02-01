@@ -2008,6 +2008,9 @@ class BaseGlyph(BaseObject, TransformationMixin, DeprecatedGlyph):
     def readGlyphFromString(self, glifData):
         """
         Reads glif data into a glyph object.
+        
+        XML formatting of glif data must follow the
+        Unified Font Object specification.
         """
         self._readGlyphFromString(glifData)
 
