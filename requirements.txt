@@ -1,0 +1,4 @@
+FontTools==3.21.2
+ufoLib==2.1.1
+fontMath==0.4.4
+defcon==0.3.5
