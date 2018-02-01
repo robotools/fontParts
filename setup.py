@@ -136,7 +136,7 @@ wheel = ['wheel'] if needs_wheel else []
 needs_bump2version = {'release', 'bump_version'}.intersection(sys.argv)
 bump2version = ['bump2version'] if needs_bump2version else []
 
-with open('README.rst', 'r') as f:
+with open('README.md', 'r') as f:
     long_description = f.read()
 
 setup_params = dict(
