@@ -2,10 +2,10 @@ import weakref
 from fontParts.base.errors import FontPartsError
 from fontParts.base.base import BaseDict, dynamicProperty
 from fontParts.base import normalizers
-from fontParts.base.deprecated import DeprecatedGroups
+from fontParts.base.deprecated import DeprecatedGroups, RemovedGroups
 
 
-class BaseGroups(BaseDict, DeprecatedGroups):
+class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
 
     """
     A Groups object. This object normally created as part of a :class:`BaseFont`. An

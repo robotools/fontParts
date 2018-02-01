@@ -2,10 +2,10 @@ import weakref
 from fontParts.base.errors import FontPartsError
 from fontParts.base.base import BaseDict, dynamicProperty
 from fontParts.base import normalizers
-from fontParts.base.deprecated import DeprecatedLib
+from fontParts.base.deprecated import DeprecatedLib, RemovedLib
 
 
-class BaseLib(BaseDict, DeprecatedLib):
+class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
 
     keyNormalizer = normalizers.normalizeLibKey
     valueNormalizer = normalizers.normalizeLibValue

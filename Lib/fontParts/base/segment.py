@@ -3,10 +3,10 @@ from fontParts.base.errors import FontPartsError
 from fontParts.base.base import (
     BaseObject, TransformationMixin, dynamicProperty)
 from fontParts.base import normalizers
-from fontParts.base.deprecated import DeprecatedSegment
+from fontParts.base.deprecated import DeprecatedSegment, RemovedSegment
 
 
-class BaseSegment(BaseObject, TransformationMixin, DeprecatedSegment):
+class BaseSegment(BaseObject, TransformationMixin, DeprecatedSegment, RemovedSegment):
 
     def _setPoints(self, points):
         assert not hasattr(self, "_points")

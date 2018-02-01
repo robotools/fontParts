@@ -2,10 +2,10 @@ import weakref
 from fontParts.base.errors import FontPartsError
 from fontParts.base.base import BaseObject, dynamicProperty
 from fontParts.base import normalizers
-from fontParts.base.deprecated import DeprecatedFeatures
+from fontParts.base.deprecated import DeprecatedFeatures, RemovedFeatures
 
 
-class BaseFeatures(BaseObject, DeprecatedFeatures):
+class BaseFeatures(BaseObject, DeprecatedFeatures, RemovedFeatures):
 
     copyAttributes = ("text",)
 

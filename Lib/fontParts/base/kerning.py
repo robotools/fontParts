@@ -3,10 +3,10 @@ import fontMath
 from fontParts.base.errors import FontPartsError
 from fontParts.base.base import BaseDict, dynamicProperty, interpolate
 from fontParts.base import normalizers
-from fontParts.base.deprecated import DeprecatedKerning
+from fontParts.base.deprecated import DeprecatedKerning, RemovedKerning
 
 
-class BaseKerning(BaseDict, DeprecatedKerning):
+class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
 
     """
     A Kerning object. This object normally created as part of a :class:`BaseFont`. An

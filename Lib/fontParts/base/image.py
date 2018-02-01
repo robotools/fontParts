@@ -2,12 +2,12 @@ import weakref
 from fontTools.misc import transform
 from fontParts.base.errors import FontPartsError
 from fontParts.base.base import (
-    BaseObject, TransformationMixin, dynamicProperty)
+    BaseObject, TransformationMixin, dynamicProperty, PointPositionMixin)
 from fontParts.base import normalizers
 from fontParts.base.color import Color
 
 
-class BaseImage(BaseObject, TransformationMixin):
+class BaseImage(BaseObject, TransformationMixin, PointPositionMixin):
 
     copyAttributes = (
         "transformation",
@@ -25,6 +25,14 @@ class BaseImage(BaseObject, TransformationMixin):
             contents.append("in glyph")
             contents += self.glyph._reprContents()
         return contents
+
+    def __bool__(self):
+        if len(self.data) == 0 or self.data == None:
+            return False
+        else:
+            return True
+
+    __nonzero__ = __bool__
 
     # -------
     # Parents

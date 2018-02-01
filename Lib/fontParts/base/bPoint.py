@@ -4,10 +4,10 @@ from fontParts.base.errors import FontPartsError
 from fontParts.base.base import (
     BaseObject, TransformationMixin, dynamicProperty)
 from fontParts.base import normalizers
-from fontParts.base.deprecated import DeprecatedBPoint
+from fontParts.base.deprecated import DeprecatedBPoint, RemovedBPoint
 
 
-class BaseBPoint(BaseObject, TransformationMixin, DeprecatedBPoint):
+class BaseBPoint(BaseObject, TransformationMixin, DeprecatedBPoint, RemovedBPoint):
 
     def _reprContents(self):
         contents = [

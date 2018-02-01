@@ -13,4 +13,5 @@ dist/*
 documentation/build/*
 
 doc/*
-lastfailed
+.pytest_cache
+

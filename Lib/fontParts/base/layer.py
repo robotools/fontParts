@@ -150,18 +150,26 @@ class _BaseGlyphVendor(BaseObject):
         """
         return name in self.keys()
 
-    def newGlyph(self, name):
+    def newGlyph(self, name, clear=True):
         """
         Make a new glyph with **name** in the layer. ::
 
             >>> glyph = layer.newGlyph("A")
 
         The newly created :class:`BaseGlyph` will be returned.
+        
+        If the glyph exists in the layer and clear is set to ``False``,
+        the existing glyph will be returned, otherwise the default
+        behavior is to clear the exisiting glyph.
         """
         name = normalizers.normalizeGlyphName(name)
-        if name in self:
+        if name not in self:
+            glyph = self._newGlyph(name)
+        elif clear:
             self.removeGlyph(name)
-        glyph = self._newGlyph(name)
+            glyph = self._newGlyph(name)
+        else:
+            glyph = self._getItem(name)
         self._setLayerInGlyph(glyph)
         return glyph
 

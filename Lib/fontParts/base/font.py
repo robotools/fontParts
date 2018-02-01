@@ -5,10 +5,10 @@ from fontParts.base.errors import FontPartsError
 from fontParts.base.base import BaseObject, dynamicProperty
 from fontParts.base.layer import _BaseGlyphVendor
 from fontParts.base import normalizers
-from fontParts.base.deprecated import DeprecatedFont
+from fontParts.base.deprecated import DeprecatedFont, RemovedFont
 
 
-class BaseFont(_BaseGlyphVendor, DeprecatedFont):
+class BaseFont(_BaseGlyphVendor, DeprecatedFont, RemovedFont):
 
     """
     A font object. This object is almost always
@@ -773,7 +773,7 @@ class BaseFont(_BaseGlyphVendor, DeprecatedFont):
         # clear is False here because the base newFont
         # that has called this method will have already
         # handled the clearing as specified by the caller.
-        return layer.newGlyph(name)
+        return layer.newGlyph(name, clear=False)
 
     def _removeGlyph(self, name, **kwargs):
         """

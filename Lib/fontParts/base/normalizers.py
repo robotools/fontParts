@@ -100,10 +100,10 @@ def normalizeKerningKey(value):
             raise FontPartsError("Kerning key items must be strings, not %s." % type(v).__name__)
         if len(v) < 1:
             raise FontPartsError("Kerning key items must be one character long")
-    if value[0].startswith("@") and not value[0].startswith("@public.kern1."):
-        raise FontPartsError("Left Kerning key group must start with @public.kern1.")
-    if value[1].startswith("@") and not value[1].startswith("@public.kern2."):
-        raise FontPartsError("Right Kerning key group must start with @public.kern2.")
+    if value[0].startswith("public.") and not value[0].startswith("public.kern1."):
+        raise FontPartsError("Left Kerning key group must start with public.kern1.")
+    if value[1].startswith("public.") and not value[1].startswith("public.kern2."):
+        raise FontPartsError("Right Kerning key group must start with public.kern2.")
     return tuple([unicode(v) for v in value])
 
 

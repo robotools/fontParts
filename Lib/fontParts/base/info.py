@@ -4,11 +4,11 @@ from ufoLib import fontInfoAttributesVersion3, validateFontInfoVersion3ValueForA
 from fontParts.base.errors import FontPartsError
 from fontParts.base.base import BaseObject, dynamicProperty, interpolate
 from fontParts.base import normalizers
-from fontParts.base.deprecated import DeprecatedInfo
+from fontParts.base.deprecated import DeprecatedInfo, RemovedInfo
 
 
 
-class BaseInfo(BaseObject, DeprecatedInfo):
+class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
 
     copyAttributes = set(fontInfoAttributesVersion3)
     copyAttributes.remove("guidelines")

@@ -4,10 +4,10 @@ from fontParts.base.base import (
     BaseObject, TransformationMixin, dynamicProperty)
 from fontParts.base import normalizers
 from fontParts.base.bPoint import absoluteBCPIn, absoluteBCPOut
-from fontParts.base.deprecated import DeprecatedContour
+from fontParts.base.deprecated import DeprecatedContour, RemovedContour
 
 
-class BaseContour(BaseObject, TransformationMixin, DeprecatedContour):
+class BaseContour(BaseObject, TransformationMixin, DeprecatedContour, RemovedContour):
 
     segmentClass = None
     bPointClass = None

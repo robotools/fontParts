@@ -1,5 +1,6 @@
 import unittest
 from fontParts.base import FontPartsError
+from fontParts.base.deprecated import RemovedWarning
 from fontTools.misc.py23 import basestring
 
 
@@ -252,3 +253,20 @@ class TestAnchor(unittest.TestCase):
         anchor.round()
         self.assertEqual(anchor.x, 1)
         self.assertEqual(anchor.y, 2)
+
+    # ----------
+    # Deprecated
+    # ----------
+
+    def test_draw(self):
+        glyph, unrequested = self.getAnchor_index()
+        pen = glyph.getPen()
+        anchor = glyph.anchors[0]
+        with self.assertRaises(RemovedWarning):
+            anchor.draw(pen)
+    def test_drawPoints(self):
+        glyph, unrequested = self.getAnchor_index()
+        pen = glyph.getPen()
+        anchor = glyph.anchors[0]
+        with self.assertRaises(RemovedWarning):
+            anchor.drawPoints(pen)
