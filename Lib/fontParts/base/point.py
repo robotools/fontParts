@@ -1,12 +1,12 @@
 import weakref
 from fontTools.misc import transform
 from fontParts.base.base import (
-    BaseObject, TransformationMixin, dynamicProperty)
+    BaseObject, TransformationMixin, dynamicProperty, PointPositionMixin)
 from fontParts.base import normalizers
 from fontParts.base.deprecated import DeprecatedPoint, RemovedPoint
 
 
-class BasePoint(BaseObject, TransformationMixin, DeprecatedPoint, RemovedPoint):
+class BasePoint(BaseObject, TransformationMixin, DeprecatedPoint, RemovedPoint, PointPositionMixin):
 
     """
     A point object. This object is almost always

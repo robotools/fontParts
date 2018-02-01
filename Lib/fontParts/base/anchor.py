@@ -2,13 +2,13 @@ import weakref
 from fontTools.misc import transform
 from fontParts.base import normalizers
 from fontParts.base.base import (
-    BaseObject, TransformationMixin, dynamicProperty)
+    BaseObject, TransformationMixin, dynamicProperty, PointPositionMixin)
 from fontParts.base.errors import FontPartsError
 from fontParts.base.color import Color
 from fontParts.base.deprecated import DeprecatedAnchor, RemovedAnchor
 
 
-class BaseAnchor(BaseObject, TransformationMixin, DeprecatedAnchor, RemovedAnchor):
+class BaseAnchor(BaseObject, TransformationMixin, DeprecatedAnchor, RemovedAnchor, PointPositionMixin):
 
     """
     An anchor object. This object is almost always

@@ -3,13 +3,13 @@ import weakref
 from fontTools.misc import transform
 from fontParts.base.errors import FontPartsError
 from fontParts.base.base import (
-    BaseObject, TransformationMixin, dynamicProperty)
+    BaseObject, TransformationMixin, dynamicProperty, PointPositionMixin)
 from fontParts.base import normalizers
 from fontParts.base.color import Color
 from fontParts.base.deprecated import DeprecatedGuideline, RemovedGuideline
 
 
-class BaseGuideline(BaseObject, TransformationMixin, DeprecatedGuideline, RemovedGuideline):
+class BaseGuideline(BaseObject, TransformationMixin, DeprecatedGuideline, RemovedGuideline, PointPositionMixin):
 
     """
     A guideline object. This object is almost always
