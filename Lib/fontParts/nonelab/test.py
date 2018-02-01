@@ -41,4 +41,9 @@ def noneLabObjectGenerator(cls):
     return obj, []
 
 if __name__ == "__main__":
-    testEnvironment(noneLabObjectGenerator)
+    import sys
+    if {"-v", "--verbose"}.intersection(sys.argv):
+        verbosity = 2
+    else:
+        verbosity = 1
+    testEnvironment(noneLabObjectGenerator, verbosity=verbosity)
