@@ -1,8 +1,7 @@
-import weakref
 import fontMath
 from ufoLib import fontInfoAttributesVersion3, validateFontInfoVersion3ValueForAttribute
 from fontParts.base.errors import FontPartsError
-from fontParts.base.base import BaseObject, dynamicProperty, interpolate
+from fontParts.base.base import BaseObject, dynamicProperty, interpolate, reference
 from fontParts.base import normalizers
 from fontParts.base.deprecated import DeprecatedInfo, RemovedInfo
 
@@ -45,7 +44,7 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
     def _set_font(self, font):
         assert self._font is None or self._font() == font
         if font is not None:
-            font = weakref.ref(font)
+            font = reference(font)
         self._font = font
 
     # ----------

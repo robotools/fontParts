@@ -1,8 +1,7 @@
-import weakref
 from fontTools.misc import transform
 from fontParts.base.errors import FontPartsError
 from fontParts.base.base import (
-    BaseObject, TransformationMixin, dynamicProperty, PointPositionMixin)
+    BaseObject, TransformationMixin, dynamicProperty, PointPositionMixin, reference)
 from fontParts.base import normalizers
 from fontParts.base.color import Color
 
@@ -58,7 +57,7 @@ class BaseImage(BaseObject, TransformationMixin, PointPositionMixin):
     def _set_glyph(self, glyph):
         assert self._glyph is None
         if glyph is not None:
-            glyph = weakref.ref(glyph)
+            glyph = reference(glyph)
         self._glyph = glyph
 
     # Layer

@@ -1,7 +1,6 @@
-import weakref
 import fontMath
 from fontParts.base.errors import FontPartsError
-from fontParts.base.base import BaseDict, dynamicProperty, interpolate
+from fontParts.base.base import BaseDict, dynamicProperty, interpolate, reference
 from fontParts.base import normalizers
 from fontParts.base.deprecated import DeprecatedKerning, RemovedKerning
 
@@ -59,7 +58,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
     def _set_font(self, font):
         assert self._font is None or self._font() == font
         if font is not None:
-            font = weakref.ref(font)
+            font = reference(font)
         self._font = font
 
     # --------------

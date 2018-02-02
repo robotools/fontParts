@@ -1,5 +1,4 @@
 import os
-import weakref
 from copy import deepcopy
 import fontMath
 from fontTools.misc.py23 import basestring
@@ -2026,7 +2025,7 @@ class BaseGlyph(BaseObject, TransformationMixin, DeprecatedGlyph, RemovedGlyph):
     def readGlyphFromString(self, glifData):
         """
         Reads glif data into a glyph object.
-        
+
         XML formatting of glif data must follow the
         Unified Font Object specification.
         """
@@ -2041,9 +2040,9 @@ class BaseGlyph(BaseObject, TransformationMixin, DeprecatedGlyph, RemovedGlyph):
     def writeGlyphToString(self, glyphFormatVersion=2):
         """
         Writes glif data to an UFO XML string.
-        
+
         XML formatting must follow the glyph formating specified by
-        the Unified Font Object specification, defaulting to 
+        the Unified Font Object specification, defaulting to
         glyph format version 2.
         """
         glyphFormatVersion = normalizers.normalizeGlyphFormatVersion(glyphFormatVersion)

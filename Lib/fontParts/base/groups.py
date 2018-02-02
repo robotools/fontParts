@@ -1,6 +1,5 @@
-import weakref
 from fontParts.base.errors import FontPartsError
-from fontParts.base.base import BaseDict, dynamicProperty
+from fontParts.base.base import BaseDict, dynamicProperty, reference
 from fontParts.base import normalizers
 from fontParts.base.deprecated import DeprecatedGroups, RemovedGroups
 
@@ -58,7 +57,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
     def _set_font(self, font):
         assert self._font is None or self._font() == font
         if font is not None:
-            font = weakref.ref(font)
+            font = reference(font)
         self._font = font
 
     # ---------
