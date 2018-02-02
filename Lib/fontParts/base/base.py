@@ -496,8 +496,8 @@ class TransformationMixin(object):
         y = math.radians(y)
         t = transform.Identity.skew(x=x, y=y)
         self.transformBy(tuple(t), origin=origin)
-        
-        
+
+
 
 # -------
 # Helpers
@@ -595,14 +595,14 @@ class dynamicProperty(object):
 
 def interpolate(a, b, v):
     return a + (b - a) * v
-    
+
 
 
 class PointPositionMixin(object):
-    
+
     """
     This adds a ``position`` attribute as a dyanmicProperty,
-    for use as a mixin with objects that have ``x`` and ``y`` 
+    for use as a mixin with objects that have ``x`` and ``y``
     attributes.
     """
 
@@ -632,3 +632,11 @@ class PointPositionMixin(object):
         dX = x - pX
         dY = y - pY
         self.moveBy((dX, dY))
+
+
+def reference(obj):
+    # import weakref
+    # return weakref.ref(obj)
+    def wrapper():
+        return obj
+    return wrapper
