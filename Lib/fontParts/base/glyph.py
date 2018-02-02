@@ -176,6 +176,52 @@ class BaseGlyph(BaseObject, TransformationMixin, DeprecatedGlyph, RemovedGlyph):
         """
         self.raiseNotImplementedError()
 
+    # Layer Name
+
+    layerName = dynamicProperty(
+        "base_layerName",
+        """
+        The glyph's layer's name.
+
+            >>> glyph.layerName
+            "background"
+            >>> glyph.layerName = "sketch"
+        """
+    )
+
+    def _get_base_layerName(self):
+        value = self._get_layerName()
+        if value is not None:
+            value = normalizers.normalizeLayerName(value)
+        return value
+
+    def _set_base_layerName(self, value):
+        if value == self.layer.name:
+            return
+        value = normalizers.normalizeLayerName(value)
+        if value is not None and value not in self.layers:
+            raise FontPartsError("A glyph with the name '%s' already exists in layer '%s'." % (self.name, value))
+        self._set_name(value)
+
+    def _get_layerName(self):
+        """
+        Get the name of the glyph's layer.
+        This must return a unicode string.
+
+        Subclasses must override this method.
+        """
+        self.raiseNotImplementedError()
+
+    def _set_layerName(self, value):
+        """
+        Set the name of the glyph's layer.
+        This will be a unicode string.
+
+        Subclasses must override this method.
+        """
+        self.raiseNotImplementedError()
+
+
     # Unicodes
 
     unicodes = dynamicProperty(
