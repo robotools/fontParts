@@ -176,7 +176,7 @@ class BaseGlyph(BaseObject, TransformationMixin, DeprecatedGlyph, RemovedGlyph):
         """
         self.raiseNotImplementedError()
 
-    # Name
+    # Layer Name
 
     layerName = dynamicProperty(
         "base_layerName",
