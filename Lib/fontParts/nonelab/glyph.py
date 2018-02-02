@@ -33,6 +33,14 @@ class RGlyph(RBaseObject, BaseGlyph):
     def _set_name(self, value):
         self.naked().name = value
 
+    # Layer Name
+
+    def _get_layerName(self):
+        return self.naked().layer.name
+
+    def _set_layerName(self, value, **kwargs):
+        self.naked().layer.name = value
+
     # Unicodes
 
     def _get_unicodes(self):
