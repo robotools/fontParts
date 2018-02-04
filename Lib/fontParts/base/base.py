@@ -53,6 +53,18 @@ class BaseObject(object):
         return []
 
     # ----
+    # hash
+    # ----
+
+    def __hash__(self):
+        return id(self.naked())
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self.naked() is other.naked()
+        return False
+
+    # ----
     # Copy
     # ----
 
