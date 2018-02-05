@@ -60,12 +60,17 @@ Python 3 `venv <https://docs.python.org/3/library/venv.html>`__ module.
 Testing
 ~~~~~~~
 
-fontParts testing is setup so that each environment that includes fontParts
-can run their own tests. This means that testing is different than other 
-python packages. Automated testing is done in the nonelab environment.
+Testing is setup so that each environment that includes fontParts
+can provides the objects needed to run a common set of tests. 
+This makes testing very easy for environments that use fontParts (for
+example, see the noneLab 
+`test.py <https://github.com/robofab-developers/fontParts/blob/master/Lib/fontParts/nonelab/test.py>`__ 
+script), but it means testing is different than other python packages. 
+
+Automated testing of the package is done in the nonelab environment.
 nonelab is fontParts for the commandline, implemented with 
-`defcon <https://github.com/typesupply/defcon>`__ and comes as part of the
-package.
+`defcon <https://github.com/typesupply/defcon>`__ and is included
+as part of the fontParts package.
 
 To run the test suite, you can do:
 
@@ -73,7 +78,7 @@ To run the test suite, you can do:
 
     python Lib/fontParts/nonelab/test.py
 
-To test in other environments, run the test script for that environment.
+To test in other environments, run the test script provided by that environment.
 
 You can also use `tox <https://testrun.org/tox/latest/>`__ to
 automatically run tests on different Python versions in isolated virtual
