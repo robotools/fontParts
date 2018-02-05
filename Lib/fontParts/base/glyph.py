@@ -1400,7 +1400,7 @@ class BaseGlyph(BaseObject, TransformationMixin, DeprecatedGlyph, RemovedGlyph):
 
             >>> mg = glyph.toMathGlyph()
         """
-        return _toMathGlyph()
+        return self._toMathGlyph()
 
     def _toMathGlyph(self):
         mathGlyph = fontMath.MathGlyph(None)
@@ -1449,7 +1449,7 @@ class BaseGlyph(BaseObject, TransformationMixin, DeprecatedGlyph, RemovedGlyph):
 
         mathGlyph is the mathGlyph to put into the current glyph.
         """
-        return _fromMathGlyph(mathGlyph, toThisGlyph=True)
+        return self._fromMathGlyph(mathGlyph, toThisGlyph=True)
 
     def _fromMathGlyph(self, mathGlyph, toThisGlyph=False):
         # make the destination
