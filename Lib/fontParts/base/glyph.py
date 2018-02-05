@@ -1505,7 +1505,7 @@ class BaseGlyph(BaseObject, TransformationMixin, DeprecatedGlyph, RemovedGlyph):
 
     __rmul__ = __mul__
 
-    def __div__(self, factor):
+    def __truediv__(self, factor):
         """
         Subclasses may override this method.
         """
@@ -1513,6 +1513,9 @@ class BaseGlyph(BaseObject, TransformationMixin, DeprecatedGlyph, RemovedGlyph):
         result = mathGlyph / factor
         copied = self._fromMathGlyph(result)
         return copied
+
+    # py2 support
+    __div__ = __truediv__
 
     def __add__(self, other):
         """
