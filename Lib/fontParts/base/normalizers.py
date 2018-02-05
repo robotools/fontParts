@@ -319,13 +319,10 @@ def normalizeGlyphHeight(value):
     Normalizes glyph height.
 
     * **value** must be a :ref:`type-int-float`.
-    * **value** cannot be negative.
     * Returned value is the same type as the input value.
     """
     if not isinstance(value, (int, float)):
         raise FontPartsError("Glyph height must be an :ref:`type-int-float`, not %s." % type(value).__name__)
-    if value < 0:
-        raise FontPartsError("Glyph height must be be 0 or greater.")
     return value
 
 
