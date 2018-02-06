@@ -1,5 +1,4 @@
 import os
-import weakref
 from copy import deepcopy
 import fontMath
 from fontTools.misc.py23 import basestring
@@ -1401,7 +1400,7 @@ class BaseGlyph(BaseObject, TransformationMixin, DeprecatedGlyph, RemovedGlyph):
 
             >>> mg = glyph.toMathGlyph()
         """
-        return _toMathGlyph()
+        return self._toMathGlyph()
 
     def _toMathGlyph(self):
         mathGlyph = fontMath.MathGlyph(None)
@@ -1450,7 +1449,7 @@ class BaseGlyph(BaseObject, TransformationMixin, DeprecatedGlyph, RemovedGlyph):
 
         mathGlyph is the mathGlyph to put into the current glyph.
         """
-        return _fromMathGlyph(mathGlyph, toThisGlyph=True)
+        return self._fromMathGlyph(mathGlyph, toThisGlyph=True)
 
     def _fromMathGlyph(self, mathGlyph, toThisGlyph=False):
         # make the destination
@@ -1506,7 +1505,7 @@ class BaseGlyph(BaseObject, TransformationMixin, DeprecatedGlyph, RemovedGlyph):
 
     __rmul__ = __mul__
 
-    def __div__(self, factor):
+    def __truediv__(self, factor):
         """
         Subclasses may override this method.
         """
@@ -1514,6 +1513,9 @@ class BaseGlyph(BaseObject, TransformationMixin, DeprecatedGlyph, RemovedGlyph):
         result = mathGlyph / factor
         copied = self._fromMathGlyph(result)
         return copied
+
+    # py2 support
+    __div__ = __truediv__
 
     def __add__(self, other):
         """
@@ -2026,7 +2028,7 @@ class BaseGlyph(BaseObject, TransformationMixin, DeprecatedGlyph, RemovedGlyph):
     def readGlyphFromString(self, glifData):
         """
         Reads glif data into a glyph object.
-        
+
         XML formatting of glif data must follow the
         Unified Font Object specification.
         """
@@ -2041,9 +2043,9 @@ class BaseGlyph(BaseObject, TransformationMixin, DeprecatedGlyph, RemovedGlyph):
     def writeGlyphToString(self, glyphFormatVersion=2):
         """
         Writes glif data to an UFO XML string.
-        
+
         XML formatting must follow the glyph formating specified by
-        the Unified Font Object specification, defaulting to 
+        the Unified Font Object specification, defaulting to
         glyph format version 2.
         """
         glyphFormatVersion = normalizers.normalizeGlyphFormatVersion(glyphFormatVersion)

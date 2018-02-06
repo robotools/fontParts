@@ -1,9 +1,9 @@
 import math
-import weakref
+
 from fontTools.misc import transform
 from fontParts.base.errors import FontPartsError
 from fontParts.base.base import (
-    BaseObject, TransformationMixin, dynamicProperty, PointPositionMixin)
+    BaseObject, TransformationMixin, dynamicProperty, PointPositionMixin, reference)
 from fontParts.base import normalizers
 from fontParts.base.color import Color
 from fontParts.base.deprecated import DeprecatedGuideline, RemovedGuideline
@@ -64,7 +64,7 @@ class BaseGuideline(BaseObject, TransformationMixin, DeprecatedGuideline, Remove
         assert self._font is None
         assert self._glyph is None
         if glyph is not None:
-            glyph = weakref.ref(glyph)
+            glyph = reference(glyph)
         self._glyph = glyph
 
     # Layer
@@ -93,7 +93,7 @@ class BaseGuideline(BaseObject, TransformationMixin, DeprecatedGuideline, Remove
         assert self._font is None
         assert self._glyph is None
         if font is not None:
-            font = weakref.ref(font)
+            font = reference(font)
         self._font = font
 
     # --------

@@ -1,6 +1,5 @@
-import weakref
 from fontParts.base.errors import FontPartsError
-from fontParts.base.base import BaseObject, dynamicProperty
+from fontParts.base.base import BaseObject, dynamicProperty, reference
 from fontParts.base import normalizers
 from fontParts.base.color import Color
 
@@ -157,7 +156,7 @@ class _BaseGlyphVendor(BaseObject):
             >>> glyph = layer.newGlyph("A")
 
         The newly created :class:`BaseGlyph` will be returned.
-        
+
         If the glyph exists in the layer and clear is set to ``False``,
         the existing glyph will be returned, otherwise the default
         behavior is to clear the exisiting glyph.
@@ -351,7 +350,7 @@ class BaseLayer(_BaseGlyphVendor):
     def _set_font(self, font):
         assert self._font is None
         if font is not None:
-            font = weakref.ref(font)
+            font = reference(font)
         self._font = font
 
     # --------------

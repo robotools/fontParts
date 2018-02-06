@@ -1,8 +1,7 @@
-import weakref
 from fontTools.misc import transform
 from fontParts.base.errors import FontPartsError
 from fontParts.base.base import (
-    BaseObject, TransformationMixin, dynamicProperty)
+    BaseObject, TransformationMixin, dynamicProperty, reference)
 from fontParts.base import normalizers
 from fontParts.base.deprecated import DeprecatedBPoint, RemovedBPoint
 
@@ -99,7 +98,7 @@ class BaseBPoint(BaseObject, TransformationMixin, DeprecatedBPoint, RemovedBPoin
     def _set_contour(self, contour):
         assert self._contour is None
         if contour is not None:
-            contour = weakref.ref(contour)
+            contour = reference(contour)
         self._contour = contour
 
     # Glyph

@@ -1,7 +1,6 @@
-import weakref
 from fontParts.base.errors import FontPartsError
 from fontParts.base.base import (
-    BaseObject, TransformationMixin, dynamicProperty)
+    BaseObject, TransformationMixin, dynamicProperty, reference)
 from fontParts.base import normalizers
 from fontParts.base.bPoint import absoluteBCPIn, absoluteBCPOut
 from fontParts.base.deprecated import DeprecatedContour, RemovedContour
@@ -52,7 +51,7 @@ class BaseContour(BaseObject, TransformationMixin, DeprecatedContour, RemovedCon
     def _set_glyph(self, glyph):
         assert self._glyph is None
         if glyph is not None:
-            glyph = weakref.ref(glyph)
+            glyph = reference(glyph)
         self._glyph = glyph
 
     # Font

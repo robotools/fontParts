@@ -1,6 +1,5 @@
-import weakref
 from fontParts.base.errors import FontPartsError
-from fontParts.base.base import BaseDict, dynamicProperty
+from fontParts.base.base import BaseDict, dynamicProperty, reference
 from fontParts.base import normalizers
 from fontParts.base.deprecated import DeprecatedLib, RemovedLib
 
@@ -48,7 +47,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         assert self._font is None
         assert self._glyph is None or self._glyph() == glyph
         if glyph is not None:
-            glyph = weakref.ref(glyph)
+            glyph = reference(glyph)
         self._glyph = glyph
 
     # Font
@@ -68,7 +67,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         assert self._font is None or self._font() == font
         assert self._glyph is None
         if font is not None:
-            font = weakref.ref(font)
+            font = reference(font)
         self._font = font
 
     # Layer
