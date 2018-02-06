@@ -36,3 +36,27 @@ class TestInfo(unittest.TestCase):
             info.unitsPerEm = -1000
         with self.assertRaises(FontPartsError):
             info.unitsPerEm = "abc"
+
+    # ----
+    # Hash
+    # ----
+
+    def test_hash(self):
+        info_one, unrequested = self.getInfo_generic()
+        info_two, unrequested = self.getInfo_generic()
+        self.assertEqual(
+            info_one,
+            info_one
+        )
+        self.assertEqual(
+            hash(info_one),
+            hash(info_one)
+        )
+        self.assertNotEqual(
+            info_one,
+            info_two
+        )
+        self.assertNotEqual(
+            hash(info_one),
+            hash(info_two)
+        )

@@ -52,3 +52,27 @@ class TestPoint(unittest.TestCase):
             point.type = "xxx"
         with self.assertRaises(FontPartsError):
             point.type = 123
+
+    # ----
+    # Hash
+    # ----
+
+    def test_hash(self):
+        point_one, unrequested = self.getPoint_generic()
+        point_two, unrequested = self.getPoint_generic()
+        self.assertEqual(
+            point_one,
+            point_one
+        )
+        self.assertEqual(
+            hash(point_one),
+            hash(point_one)
+        )
+        self.assertNotEqual(
+            point_one,
+            point_two
+        )
+        self.assertNotEqual(
+            hash(point_one),
+            hash(point_two)
+        )

@@ -150,3 +150,28 @@ class TestKerning(unittest.TestCase):
             len(kerning),
             0
         )
+
+    # ----
+    # Hash
+    # ----
+
+    def test_hash(self):
+        kerning_one, unrequested = self.getKerning_generic()
+        kerning_two, unrequested = self.getKerning_generic()
+        self.assertEqual(
+            kerning_one,
+            kerning_one
+        )
+        self.assertEqual(
+            hash(kerning_one),
+            hash(kerning_one)
+        )
+        self.assertNotEqual(
+            kerning_one,
+            kerning_two
+        )
+        self.assertNotEqual(
+            hash(kerning_one),
+            hash(kerning_two)
+        )
+

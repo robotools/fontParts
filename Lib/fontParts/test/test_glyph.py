@@ -49,3 +49,37 @@ class TestGlyph(unittest.TestCase):
             glyph.width = "abc"
         with self.assertRaises(FontPartsError):
             glyph.width = None
+
+    # ----
+    # Hash
+    # ----
+
+    def test_hash(self):
+        glyph_one, unrequested = self.getGlyph_generic()
+        glyph_two, unrequested = self.getGlyph_generic()
+        self.assertEqual(
+            glyph_one,
+            glyph_one
+        )
+        glyph_one.name = "Test"
+        self.assertEqual(
+            glyph_one,
+            glyph_one
+        )
+        self.assertEqual(
+            hash(glyph_one),
+            hash(glyph_one)
+        )
+        self.assertNotEqual(
+            glyph_one,
+            glyph_two
+        )
+        glyph_two.name = "Test"
+        self.assertNotEqual(
+            glyph_one,
+            glyph_two
+        )
+        self.assertNotEqual(
+            hash(glyph_one),
+            hash(glyph_two)
+        )

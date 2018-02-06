@@ -51,3 +51,27 @@ class TestGuideline(unittest.TestCase):
         # set: invalid
         with self.assertRaises(FontPartsError):
             guideline.x = "ABC"
+
+    # ----
+    # Hash
+    # ----
+
+    def test_hash(self):
+        guideline_one, unrequested = self.getGuideline_generic()
+        guideline_two, unrequested = self.getGuideline_generic()
+        self.assertEqual(
+            guideline_one,
+            guideline_one
+        )
+        self.assertEqual(
+            hash(guideline_one),
+            hash(guideline_one)
+        )
+        self.assertNotEqual(
+            guideline_one,
+            guideline_two
+        )
+        self.assertNotEqual(
+            hash(guideline_one),
+            hash(guideline_two)
+        )

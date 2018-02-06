@@ -23,3 +23,27 @@ class TestBPoint(unittest.TestCase):
             bPoint.type,
             "corner"
         )
+
+    # ----
+    # Hash
+    # ----
+
+    def test_hash(self):
+        bPoint_one, unrequested = self.getBPoint_corner()
+        bPoint_two, unrequested = self.getBPoint_corner()
+        self.assertEqual(
+            bPoint_one,
+            bPoint_one
+        )
+        self.assertEqual(
+            hash(bPoint_one),
+            hash(bPoint_one)
+        )
+        self.assertNotEqual(
+            bPoint_one,
+            bPoint_two
+        )
+        self.assertNotEqual(
+            hash(bPoint_one),
+            hash(bPoint_two)
+        )

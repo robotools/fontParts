@@ -30,3 +30,27 @@ class TestFont(unittest.TestCase):
             len(font),
             4
         )
+
+    # ----
+    # Hash
+    # ----
+
+    def test_hash(self):
+        font_one, unrequested = self.getFont_glyphs()
+        font_two, unrequested = self.getFont_glyphs()
+        self.assertEqual(
+            font_one,
+            font_one
+        )
+        self.assertEqual(
+            hash(font_one),
+            hash(font_one)
+        )
+        self.assertNotEqual(
+            font_one,
+            font_two
+        )
+        self.assertNotEqual(
+            hash(font_one),
+            hash(font_two)
+        )

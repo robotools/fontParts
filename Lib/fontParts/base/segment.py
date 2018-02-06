@@ -16,6 +16,9 @@ class BaseSegment(BaseObject, TransformationMixin, DeprecatedSegment, RemovedSeg
             return self.points == other.points
         return False
 
+    def __hash__(self):
+        return id(self)
+
     def _reprContents(self):
         contents = [
             "%s" % self.type,

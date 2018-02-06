@@ -49,3 +49,27 @@ class TestContour(unittest.TestCase):
         # set
         with self.assertRaises(FontPartsError):
             contour.bounds = (1, 2, 3, 4)
+
+    # ----
+    # Hash
+    # ----
+
+    def test_hash(self):
+        contour_one, unrequested = self.getContour_bounds()
+        contour_two, unrequested = self.getContour_bounds()
+        self.assertEqual(
+            contour_one,
+            contour_one
+        )
+        self.assertEqual(
+            hash(contour_one),
+            hash(contour_one)
+        )
+        self.assertNotEqual(
+            contour_one,
+            contour_two
+        )
+        self.assertNotEqual(
+            hash(contour_one),
+            hash(contour_two)
+        )

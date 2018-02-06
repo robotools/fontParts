@@ -57,9 +57,15 @@ class BaseObject(object):
     # ----
 
     def __hash__(self):
+        """
+        Subclasses may override this method.
+        """
         return id(self.naked())
 
     def __eq__(self, other):
+        """
+        Subclasses may override this method.
+        """
         if isinstance(other, self.__class__):
             return self.naked() is other.naked()
         return False

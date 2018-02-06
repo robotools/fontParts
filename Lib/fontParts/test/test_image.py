@@ -284,3 +284,27 @@ class TestImage(unittest.TestCase):
         # set: invalid
         with self.assertRaises(FontPartsError):
             image.data = 123
+
+    # ----
+    # Hash
+    # ----
+
+    def test_hash(self):
+        image_one, unrequested = self.getImage_generic()
+        image_two, unrequested = self.getImage_generic()
+        self.assertEqual(
+            image_one,
+            image_one
+        )
+        self.assertEqual(
+            hash(image_one),
+            hash(image_one)
+        )
+        self.assertNotEqual(
+            image_one,
+            image_two
+        )
+        self.assertNotEqual(
+            hash(image_one),
+            hash(image_two)
+        )

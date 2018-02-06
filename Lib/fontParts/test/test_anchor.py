@@ -270,3 +270,27 @@ class TestAnchor(unittest.TestCase):
         anchor = glyph.anchors[0]
         with self.assertRaises(RemovedWarning):
             anchor.drawPoints(pen)
+
+    # ----
+    # Hash
+    # ----
+
+    def test_hash(self):
+        anchor_one, unrequested = self.getAnchor_generic()
+        anchor_two, unrequested = self.getAnchor_generic()
+        self.assertEqual(
+            anchor_one,
+            anchor_one
+        )
+        self.assertEqual(
+            hash(anchor_one),
+            hash(anchor_one)
+        )
+        self.assertNotEqual(
+            anchor_one,
+            anchor_two
+        )
+        self.assertNotEqual(
+            hash(anchor_one),
+            hash(anchor_two)
+        )
