@@ -53,11 +53,17 @@ class DeprecatedTransformation(object):
     def scale(self, *args, **kwargs):
         objName = self.__class__.__name__.replace("Deprecated", "")
         warnings.warn("'%s.scale()': use %s.scaleBy()" % (objName, objName), DeprecationWarning)
+        if "center" in kwargs:
+            kwargs["origin"] = kwargs["center"]
+            del kwargs["center"]
         self.scaleBy(*args, **kwargs)
 
     def rotate(self, *args, **kwargs):
         objName = self.__class__.__name__.replace("Deprecated", "")
         warnings.warn("'%s.rotate()': use %s.rotateBy()" % (objName, objName), DeprecationWarning)
+        if "offset" in kwargs:
+            kwargs["origin"] = kwargs["offset"]
+            del kwargs["offset"]
         self.rotateBy(*args, **kwargs)
 
     def transform(self, *args, **kwargs):
@@ -68,6 +74,9 @@ class DeprecatedTransformation(object):
     def skew(self, *args, **kwargs):
         objName = self.__class__.__name__.replace("Deprecated", "")
         warnings.warn("'%s.skew()': use %s.skewBy()" % (objName, objName), DeprecationWarning)
+        if "offset" in kwargs:
+            kwargs["origin"] = kwargs["offset"]
+            del kwargs["offset"]
         self.skewBy(*args, **kwargs)
 
 
@@ -397,7 +406,7 @@ class DeprecatedFeatures(DeprecatedBase):
 # ========
 
 class RemovedFont(RemovedBase):
-    
+
     def getParent(self):
         raise RemovedWarning("'Font.getParent()'")
 
