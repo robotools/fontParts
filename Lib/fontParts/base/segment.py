@@ -21,8 +21,8 @@ class BaseSegment(BaseObject, TransformationMixin, DeprecatedSegment, RemovedSeg
 
     def __eq__(self, other):
         if hasattr(other, "points"):
-            return self.points == other.points
-        return False
+            return self.points is other.points
+        return NotImplemented
 
     def __ne__(self, other):
         if hasattr(other, "points"):
