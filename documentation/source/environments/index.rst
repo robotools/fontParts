@@ -109,10 +109,20 @@ Each of these require their own specific environment overrides, but the general 
         # It must return a boolean indicating if the lower level
         # objects are the same object. This does not mean that two
         # objects that have the same content should be considered
-        # equal. It means that the object must be the same.
+        # equal. It means that the object must be the same. The 
+        # corrilary __ne__ also needs to be defined for Python 2.7.
+        # It is not necessary for a Python 3.
+        #
+        # Note that the base implentation of fontParts provides
+        # __eq__ and __ne__ methods that test the naked objects 
+        # for equality. Depending on environmental needs this can 
+        # be overridden.
 
         def __eq__(self, other):
             return self.myObj == other.myObj
+
+        def __ne__(self, other):
+            return self.myObj != other.myObj
 
         # Properties.
         # Properties are get and set through standard method names.
