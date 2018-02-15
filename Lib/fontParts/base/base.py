@@ -68,7 +68,7 @@ class BaseObject(object):
         """
         if isinstance(other, self.__class__):
             return self.naked() is other.naked()
-        return NotImplemented
+        return False
 
     def __ne__(self, other):
         """
