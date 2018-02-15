@@ -22,15 +22,15 @@ class BaseBPoint(BaseObject, TransformationMixin, DeprecatedBPoint, RemovedBPoin
     def __eq__(self, other):
         if hasattr(other, "_point"):
             return self._point == other._point
-        return False
+        return NotImplemented
 
     def __ne__(self, other):
         if hasattr(other, "_point"):
-            return self._point != other._point
-        return False
+            return not self._point == other._point
+        return NotImplemented
 
     def __hash__(self):
-        return id(self)
+        return hash(self._point)
 
     # -------
     # Parents
