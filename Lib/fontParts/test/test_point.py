@@ -61,18 +61,40 @@ class TestPoint(unittest.TestCase):
         point_one, unrequested = self.getPoint_generic()
         point_two, unrequested = self.getPoint_generic()
         self.assertEqual(
-            point_one,
-            point_one
-        )
-        self.assertEqual(
             hash(point_one),
             hash(point_one)
+        )
+        self.assertNotEqual(
+            hash(point_one),
+            hash(point_two)
+        )
+        a = point_one
+        self.assertEqual(
+            hash(point_one),
+            hash(a)
+        )
+        self.assertNotEqual(
+            hash(point_two),
+            hash(a)
+        )
+
+    def test_equal(self):
+        point_one, unrequested = self.getPoint_generic()
+        point_two, unrequested = self.getPoint_generic()
+        self.assertEqual(
+            point_one,
+            point_one
         )
         self.assertNotEqual(
             point_one,
             point_two
         )
+        a = point_one
+        self.assertEqual(
+            point_one,
+            a
+        )
         self.assertNotEqual(
-            hash(point_one),
-            hash(point_two)
+            point_two,
+            a
         )

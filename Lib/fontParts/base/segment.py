@@ -16,6 +16,11 @@ class BaseSegment(BaseObject, TransformationMixin, DeprecatedSegment, RemovedSeg
             return self.points == other.points
         return False
 
+    def __ne__(self, other):
+        if hasattr(other, "points"):
+            return self.points != other.points
+        return False
+
     def __hash__(self):
         return id(self)
 

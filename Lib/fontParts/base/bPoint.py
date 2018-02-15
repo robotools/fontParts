@@ -24,6 +24,11 @@ class BaseBPoint(BaseObject, TransformationMixin, DeprecatedBPoint, RemovedBPoin
             return self._point == other._point
         return False
 
+    def __ne__(self, other):
+        if hasattr(other, "_point"):
+            return self._point != other._point
+        return False
+
     def __hash__(self):
         return id(self)
 

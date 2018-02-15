@@ -32,18 +32,40 @@ class TestBPoint(unittest.TestCase):
         bPoint_one, unrequested = self.getBPoint_corner()
         bPoint_two, unrequested = self.getBPoint_corner()
         self.assertEqual(
-            bPoint_one,
-            bPoint_one
-        )
-        self.assertEqual(
             hash(bPoint_one),
             hash(bPoint_one)
+        )
+        self.assertNotEqual(
+            hash(bPoint_one),
+            hash(bPoint_two)
+        )
+        a = bPoint_one
+        self.assertEqual(
+            hash(bPoint_one),
+            hash(a)
+        )
+        self.assertNotEqual(
+            hash(bPoint_two),
+            hash(a)
+        )
+
+    def test_equal(self):
+        bPoint_one, unrequested = self.getBPoint_corner()
+        bPoint_two, unrequested = self.getBPoint_corner()
+        self.assertEqual(
+            bPoint_one,
+            bPoint_one
         )
         self.assertNotEqual(
             bPoint_one,
             bPoint_two
         )
+        a = bPoint_one
+        self.assertEqual(
+            bPoint_one,
+            a
+        )
         self.assertNotEqual(
-            hash(bPoint_one),
-            hash(bPoint_two)
+            bPoint_two,
+            a
         )

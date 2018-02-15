@@ -45,18 +45,40 @@ class TestInfo(unittest.TestCase):
         info_one, unrequested = self.getInfo_generic()
         info_two, unrequested = self.getInfo_generic()
         self.assertEqual(
-            info_one,
-            info_one
-        )
-        self.assertEqual(
             hash(info_one),
             hash(info_one)
+        )
+        self.assertNotEqual(
+            hash(info_one),
+            hash(info_two)
+        )
+        a = info_one
+        self.assertEqual(
+            hash(info_one),
+            hash(a)
+        )
+        self.assertNotEqual(
+            hash(info_two),
+            hash(a)
+        )
+
+    def test_equal(self):
+        info_one, unrequested = self.getInfo_generic()
+        info_two, unrequested = self.getInfo_generic()
+        self.assertEqual(
+            info_one,
+            info_one
         )
         self.assertNotEqual(
             info_one,
             info_two
         )
+        a = info_one
+        self.assertEqual(
+            info_one,
+            a
+        )
         self.assertNotEqual(
-            hash(info_one),
-            hash(info_two)
+            info_two,
+            a
         )

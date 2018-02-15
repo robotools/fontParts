@@ -39,18 +39,40 @@ class TestFont(unittest.TestCase):
         font_one, unrequested = self.getFont_glyphs()
         font_two, unrequested = self.getFont_glyphs()
         self.assertEqual(
-            font_one,
-            font_one
-        )
-        self.assertEqual(
             hash(font_one),
             hash(font_one)
+        )
+        self.assertNotEqual(
+            hash(font_one),
+            hash(font_two)
+        )
+        a = font_one
+        self.assertEqual(
+            hash(font_one),
+            hash(a)
+        )
+        self.assertNotEqual(
+            hash(font_two),
+            hash(a)
+        )
+
+    def test_equal(self):
+        font_one, unrequested = self.getFont_glyphs()
+        font_two, unrequested = self.getFont_glyphs()
+        self.assertEqual(
+            font_one,
+            font_one
         )
         self.assertNotEqual(
             font_one,
             font_two
         )
+        a = font_one
+        self.assertEqual(
+            font_one,
+            a
+        )
         self.assertNotEqual(
-            hash(font_one),
-            hash(font_two)
+            font_two,
+            a
         )

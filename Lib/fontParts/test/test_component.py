@@ -84,18 +84,40 @@ class TestComponent(unittest.TestCase):
         component_one, unrequested = self.getComponent_generic()
         component_two, unrequested = self.getComponent_generic()
         self.assertEqual(
-            component_one,
-            component_one
-        )
-        self.assertEqual(
             hash(component_one),
             hash(component_one)
+        )
+        self.assertNotEqual(
+            hash(component_one),
+            hash(component_two)
+        )
+        a = component_one
+        self.assertEqual(
+            hash(component_one),
+            hash(a)
+        )
+        self.assertNotEqual(
+            hash(component_two),
+            hash(a)
+        )
+
+    def test_equal(self):
+        component_one, unrequested = self.getComponent_generic()
+        component_two, unrequested = self.getComponent_generic()
+        self.assertEqual(
+            component_one,
+            component_one
         )
         self.assertNotEqual(
             component_one,
             component_two
         )
+        a = component_one
+        self.assertEqual(
+            component_one,
+            a
+        )
         self.assertNotEqual(
-            hash(component_one),
-            hash(component_two)
+            component_two,
+            a
         )

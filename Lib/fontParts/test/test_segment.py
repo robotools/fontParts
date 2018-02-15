@@ -98,18 +98,40 @@ class TestSegment(unittest.TestCase):
         segment_one, unrequested = self.getSegment_line()
         segment_two, unrequested = self.getSegment_line()
         self.assertEqual(
-            segment_one,
-            segment_one
-        )
-        self.assertEqual(
             hash(segment_one),
             hash(segment_one)
+        )
+        self.assertNotEqual(
+            hash(segment_one),
+            hash(segment_two)
+        )
+        a = segment_one
+        self.assertEqual(
+            hash(segment_one),
+            hash(a)
+        )
+        self.assertNotEqual(
+            hash(segment_two),
+            hash(a)
+        )
+
+    def test_equal(self):
+        segment_one, unrequested = self.getSegment_line()
+        segment_two, unrequested = self.getSegment_line()
+        self.assertEqual(
+            segment_one,
+            segment_one
         )
         self.assertNotEqual(
             segment_one,
             segment_two
         )
+        a = segment_one
+        self.assertEqual(
+            segment_one,
+            a
+        )
         self.assertNotEqual(
-            hash(segment_one),
-            hash(segment_two)
+            segment_two,
+            a
         )

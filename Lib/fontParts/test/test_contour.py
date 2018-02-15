@@ -58,18 +58,40 @@ class TestContour(unittest.TestCase):
         contour_one, unrequested = self.getContour_bounds()
         contour_two, unrequested = self.getContour_bounds()
         self.assertEqual(
-            contour_one,
-            contour_one
-        )
-        self.assertEqual(
             hash(contour_one),
             hash(contour_one)
+        )
+        self.assertNotEqual(
+            hash(contour_one),
+            hash(contour_two)
+        )
+        a = contour_one
+        self.assertEqual(
+            hash(contour_one),
+            hash(a)
+        )
+        self.assertNotEqual(
+            hash(contour_two),
+            hash(a)
+        )
+
+    def test_equal(self):
+        contour_one, unrequested = self.getContour_bounds()
+        contour_two, unrequested = self.getContour_bounds()
+        self.assertEqual(
+            contour_one,
+            contour_one
         )
         self.assertNotEqual(
             contour_one,
             contour_two
         )
+        a = contour_one
+        self.assertEqual(
+            contour_one,
+            a
+        )
         self.assertNotEqual(
-            hash(contour_one),
-            hash(contour_two)
+            contour_two,
+            a
         )

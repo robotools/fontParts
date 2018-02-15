@@ -40,18 +40,40 @@ class TestFeatures(unittest.TestCase):
         features_one, unrequested = self.getFeatures_generic()
         features_two, unrequested = self.getFeatures_generic()
         self.assertEqual(
-            features_one,
-            features_one
-        )
-        self.assertEqual(
             hash(features_one),
             hash(features_one)
+        )
+        self.assertNotEqual(
+            hash(features_one),
+            hash(features_two)
+        )
+        a = features_one
+        self.assertEqual(
+            hash(features_one),
+            hash(a)
+        )
+        self.assertNotEqual(
+            hash(features_two),
+            hash(a)
+        )
+
+    def test_equal(self):
+        features_one, unrequested = self.getFeatures_generic()
+        features_two, unrequested = self.getFeatures_generic()
+        self.assertEqual(
+            features_one,
+            features_one
         )
         self.assertNotEqual(
             features_one,
             features_two
         )
+        a = features_one
+        self.assertEqual(
+            features_one,
+            a
+        )
         self.assertNotEqual(
-            hash(features_one),
-            hash(features_two)
+            features_two,
+            a
         )

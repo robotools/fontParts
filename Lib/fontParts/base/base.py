@@ -70,6 +70,14 @@ class BaseObject(object):
             return self.naked() is other.naked()
         return False
 
+    def __ne__(self, other):
+        """
+        Subclasses may override this method.
+        """
+        if isinstance(other, self.__class__):
+            return self.naked() is not other.naked()
+        return False
+
     # ----
     # Copy
     # ----

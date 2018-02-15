@@ -57,18 +57,33 @@ class TestGlyph(unittest.TestCase):
     def test_hash(self):
         glyph_one, unrequested = self.getGlyph_generic()
         glyph_two, unrequested = self.getGlyph_generic()
+        glyph_one.name = "Test"
         self.assertEqual(
-            glyph_one,
-            glyph_one
+            hash(glyph_one),
+            hash(glyph_one)
         )
+        glyph_two.name = "Test"
+        self.assertNotEqual(
+            hash(glyph_one),
+            hash(glyph_two)
+        )
+        a = glyph_one
+        self.assertEqual(
+            hash(glyph_one),
+            hash(a)
+        )
+        self.assertNotEqual(
+            hash(glyph_two),
+            hash(a)
+        )
+
+    def test_equal(self):
+        glyph_one, unrequested = self.getGlyph_generic()
+        glyph_two, unrequested = self.getGlyph_generic()
         glyph_one.name = "Test"
         self.assertEqual(
             glyph_one,
             glyph_one
-        )
-        self.assertEqual(
-            hash(glyph_one),
-            hash(glyph_one)
         )
         self.assertNotEqual(
             glyph_one,
@@ -79,7 +94,12 @@ class TestGlyph(unittest.TestCase):
             glyph_one,
             glyph_two
         )
+        a = glyph_one
+        self.assertEqual(
+            glyph_one,
+            a
+        )
         self.assertNotEqual(
-            hash(glyph_one),
-            hash(glyph_two)
+            glyph_two,
+            a
         )

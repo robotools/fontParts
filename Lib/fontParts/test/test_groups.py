@@ -58,18 +58,40 @@ class TestGroups(unittest.TestCase):
         groups_one, unrequested = self.getGroups_generic()
         groups_two, unrequested = self.getGroups_generic()
         self.assertEqual(
-            groups_one,
-            groups_one
-        )
-        self.assertEqual(
             hash(groups_one),
             hash(groups_one)
+        )
+        self.assertNotEqual(
+            hash(groups_one),
+            hash(groups_two)
+        )
+        a = groups_one
+        self.assertEqual(
+            hash(groups_one),
+            hash(a)
+        )
+        self.assertNotEqual(
+            hash(groups_two),
+            hash(a)
+        )
+
+    def test_equal(self):
+        groups_one, unrequested = self.getGroups_generic()
+        groups_two, unrequested = self.getGroups_generic()
+        self.assertEqual(
+            groups_one,
+            groups_one
         )
         self.assertNotEqual(
             groups_one,
             groups_two
         )
+        a = groups_one
+        self.assertEqual(
+            groups_one,
+            a
+        )
         self.assertNotEqual(
-            hash(groups_one),
-            hash(groups_two)
+            groups_two,
+            a
         )

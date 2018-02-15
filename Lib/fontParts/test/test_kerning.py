@@ -159,19 +159,40 @@ class TestKerning(unittest.TestCase):
         kerning_one, unrequested = self.getKerning_generic()
         kerning_two, unrequested = self.getKerning_generic()
         self.assertEqual(
-            kerning_one,
-            kerning_one
-        )
-        self.assertEqual(
             hash(kerning_one),
             hash(kerning_one)
-        )
-        self.assertNotEqual(
-            kerning_one,
-            kerning_two
         )
         self.assertNotEqual(
             hash(kerning_one),
             hash(kerning_two)
         )
+        a = kerning_one
+        self.assertEqual(
+            hash(kerning_one),
+            hash(a)
+        )
+        self.assertNotEqual(
+            hash(kerning_two),
+            hash(a)
+        )
 
+    def test_equal(self):
+        kerning_one, unrequested = self.getKerning_generic()
+        kerning_two, unrequested = self.getKerning_generic()
+        self.assertEqual(
+            kerning_one,
+            kerning_one
+        )
+        self.assertNotEqual(
+            kerning_one,
+            kerning_two
+        )
+        a = kerning_one
+        self.assertEqual(
+            kerning_one,
+            a
+        )
+        self.assertNotEqual(
+            kerning_two,
+            a
+        )

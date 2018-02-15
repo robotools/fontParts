@@ -293,18 +293,40 @@ class TestImage(unittest.TestCase):
         image_one, unrequested = self.getImage_generic()
         image_two, unrequested = self.getImage_generic()
         self.assertEqual(
-            image_one,
-            image_one
-        )
-        self.assertEqual(
             hash(image_one),
             hash(image_one)
+        )
+        self.assertNotEqual(
+            hash(image_one),
+            hash(image_two)
+        )
+        a = image_one
+        self.assertEqual(
+            hash(image_one),
+            hash(a)
+        )
+        self.assertNotEqual(
+            hash(image_two),
+            hash(a)
+        )
+
+    def test_equal(self):
+        image_one, unrequested = self.getImage_generic()
+        image_two, unrequested = self.getImage_generic()
+        self.assertEqual(
+            image_one,
+            image_one
         )
         self.assertNotEqual(
             image_one,
             image_two
         )
+        a = image_one
+        self.assertEqual(
+            image_one,
+            a
+        )
         self.assertNotEqual(
-            hash(image_one),
-            hash(image_two)
+            image_two,
+            a
         )
