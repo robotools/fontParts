@@ -23,6 +23,42 @@ class TestBPoint(unittest.TestCase):
             bPoint.type,
             "corner"
         )
+        bPoint.type = "curve"
+        self.assertEqual(
+            bPoint.type,
+            "curve"
+        )
+        self.assertNotEqual(
+            bPoint.type,
+            "corner"
+        )
+
+    # ------
+    # Anchor
+    # ------
+
+    def test_anchor(self):
+        bPoint, unrequested = self.getBPoint_corner()
+        self.assertEqual(
+            bPoint.anchor,
+            (101, 202)
+        )
+        bPoint.anchor = (51,45)
+        self.assertEqual(
+            bPoint.anchor,
+            (51, 45)
+        )
+
+    # -----
+    # Index
+    # -----
+
+    def test_index(self):
+        bPoint, unrequested = self.getBPoint_corner()
+        self.assertEqual(
+            bPoint.index,
+            1
+        )
 
     # ----
     # Hash

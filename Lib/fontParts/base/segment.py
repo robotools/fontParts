@@ -21,7 +21,7 @@ class BaseSegment(BaseObject, TransformationMixin, DeprecatedSegment, RemovedSeg
 
     def __eq__(self, other):
         if hasattr(other, "points"):
-            return self.points is other.points
+            return self.points == other.points
         return NotImplemented
 
     def __ne__(self, other):
@@ -30,7 +30,7 @@ class BaseSegment(BaseObject, TransformationMixin, DeprecatedSegment, RemovedSeg
         return NotImplemented
 
     def __hash__(self):
-        return id(self.points)
+        return id(self._points)
 
     # -------
     # Parents
