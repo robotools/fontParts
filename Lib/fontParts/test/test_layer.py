@@ -1,4 +1,5 @@
 import unittest
+import collections
 from fontParts.base import FontPartsError
 
 
@@ -21,6 +22,16 @@ class TestLayer(unittest.TestCase):
         self.assertEqual(
             len(layer),
             4
+        )
+
+    # ----
+    # Hash
+    # ----
+    def test_hash(self):
+        layer, unrequested = self.getLayer_glyphs()
+        self.assertEqual(
+            isinstance(layer, collections.Hashable),
+            False
         )
 
     # --------

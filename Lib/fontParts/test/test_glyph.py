@@ -1,4 +1,5 @@
 import unittest
+import collections
 from fontParts.base import FontPartsError
 
 
@@ -75,6 +76,10 @@ class TestGlyph(unittest.TestCase):
         self.assertNotEqual(
             hash(glyph_two),
             hash(a)
+        )
+        self.assertEqual(
+            isinstance(glyph_one, collections.Hashable),
+            True
         )
 
     # --------

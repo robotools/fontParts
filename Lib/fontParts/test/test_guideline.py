@@ -1,4 +1,5 @@
 import unittest
+import collections
 from fontParts.base import FontPartsError
 
 
@@ -51,6 +52,16 @@ class TestGuideline(unittest.TestCase):
         # set: invalid
         with self.assertRaises(FontPartsError):
             guideline.x = "ABC"
+
+    # ----
+    # Hash
+    # ----
+    def test_hash(self):
+        guideline, unrequested = self.getGuideline_generic()
+        self.assertEqual(
+            isinstance(guideline, collections.Hashable),
+            False
+        )
 
     # --------
     # Equality

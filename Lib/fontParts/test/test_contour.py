@@ -1,4 +1,5 @@
 import unittest
+import collections
 from fontParts.base import FontPartsError
 
 
@@ -49,6 +50,16 @@ class TestContour(unittest.TestCase):
         # set
         with self.assertRaises(FontPartsError):
             contour.bounds = (1, 2, 3, 4)
+
+    # ----
+    # Hash
+    # ----
+    def test_hash(self):
+        contour, unrequested = self.getContour_bounds()
+        self.assertEqual(
+            isinstance(contour, collections.Hashable),
+            False
+        )
 
     # --------
     # Equality

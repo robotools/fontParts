@@ -1,4 +1,5 @@
 import unittest
+import collections
 from fontParts.base import FontPartsError
 
 
@@ -49,6 +50,16 @@ class TestGroups(unittest.TestCase):
         # find: invalid
         with self.assertRaises(FontPartsError):
             groups.findGlyph(5)
+
+    # ----
+    # Hash
+    # ----
+    def test_hash(self):
+        groups, unrequested = self.getGroups_generic()
+        self.assertEqual(
+            isinstance(groups, collections.Hashable),
+            False
+        )
 
     # --------
     # Equality

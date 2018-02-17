@@ -1,4 +1,5 @@
 import unittest
+import collections
 from fontParts.base import FontPartsError
 
 
@@ -58,6 +59,16 @@ class TestBPoint(unittest.TestCase):
         self.assertEqual(
             bPoint.index,
             1
+        )
+
+    # ----
+    # Hash
+    # ----
+    def test_hash(self):
+        bPoint, unrequested = self.getBPoint_corner()
+        self.assertEqual(
+            isinstance(bPoint, collections.Hashable),
+            False
         )
 
     # --------

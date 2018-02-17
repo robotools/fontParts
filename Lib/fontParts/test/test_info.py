@@ -1,4 +1,5 @@
 import unittest
+import collections
 from fontParts.base import FontPartsError
 
 
@@ -36,6 +37,16 @@ class TestInfo(unittest.TestCase):
             info.unitsPerEm = -1000
         with self.assertRaises(FontPartsError):
             info.unitsPerEm = "abc"
+
+    # ----
+    # Hash
+    # ----
+    def test_hash(self):
+        info, unrequested = self.getInfo_generic()
+        self.assertEqual(
+            isinstance(info, collections.Hashable),
+            False
+        )
 
     # --------
     # Equality

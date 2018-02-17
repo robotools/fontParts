@@ -72,6 +72,12 @@ class BaseObject(object):
         return NotImplemented if equal is NotImplemented else not equal
 
     # ----
+    # Hash
+    # ----
+    
+    __hash__ = None
+
+    # ----
     # Copy
     # ----
 

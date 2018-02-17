@@ -1,4 +1,5 @@
 import unittest
+import collections
 from fontParts.base import FontPartsError
 from fontParts.base.deprecated import RemovedWarning
 from fontTools.misc.py23 import basestring
@@ -270,6 +271,16 @@ class TestAnchor(unittest.TestCase):
         anchor = glyph.anchors[0]
         with self.assertRaises(RemovedWarning):
             anchor.drawPoints(pen)
+
+    # ----
+    # Hash
+    # ----
+    def test_hash(self):
+        anchor, unrequested = self.getAnchor_generic()
+        self.assertEqual(
+            isinstance(anchor, collections.Hashable),
+            False
+        )
 
     # --------
     # Equality

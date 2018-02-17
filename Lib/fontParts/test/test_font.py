@@ -1,4 +1,5 @@
 import unittest
+import collections
 from fontParts.base import FontPartsError
 
 
@@ -54,6 +55,10 @@ class TestFont(unittest.TestCase):
         self.assertNotEqual(
             hash(font_two),
             hash(a)
+        )
+        self.assertEqual(
+            isinstance(font_one, collections.Hashable),
+            True
         )
 
     # --------
