@@ -271,31 +271,10 @@ class TestAnchor(unittest.TestCase):
         with self.assertRaises(RemovedWarning):
             anchor.drawPoints(pen)
 
-    # ----
-    # Hash
-    # ----
+    # --------
+    # Equality
+    # --------
 
-    def test_hash(self):
-        anchor_one, unrequested = self.getAnchor_generic()
-        anchor_two, unrequested = self.getAnchor_generic()
-        self.assertEqual(
-            hash(anchor_one),
-            hash(anchor_one)
-        )
-
-        self.assertNotEqual(
-            hash(anchor_one),
-            hash(anchor_two)
-        )
-        a = anchor_one
-        self.assertEqual(
-            hash(anchor_one),
-            hash(a)
-        )
-        self.assertNotEqual(
-            hash(anchor_two),
-            hash(a)
-        )
     def test_equal(self):
         anchor_one, unrequested = self.getAnchor_generic()
         anchor_two, unrequested = self.getAnchor_generic()

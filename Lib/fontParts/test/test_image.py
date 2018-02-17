@@ -285,30 +285,9 @@ class TestImage(unittest.TestCase):
         with self.assertRaises(FontPartsError):
             image.data = 123
 
-    # ----
-    # Hash
-    # ----
-
-    def test_hash(self):
-        image_one, unrequested = self.getImage_generic()
-        image_two, unrequested = self.getImage_generic()
-        self.assertEqual(
-            hash(image_one),
-            hash(image_one)
-        )
-        self.assertNotEqual(
-            hash(image_one),
-            hash(image_two)
-        )
-        a = image_one
-        self.assertEqual(
-            hash(image_one),
-            hash(a)
-        )
-        self.assertNotEqual(
-            hash(image_two),
-            hash(a)
-        )
+    # --------
+    # Equality
+    # --------
 
     def test_equal(self):
         image_one, unrequested = self.getImage_generic()

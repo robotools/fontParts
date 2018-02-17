@@ -76,30 +76,9 @@ class TestComponent(unittest.TestCase):
         with self.assertRaises(FontPartsError):
             component.bounds = (0, 0, 100, 100)
 
-    # ----
-    # Hash
-    # ----
-
-    def test_hash(self):
-        component_one, unrequested = self.getComponent_generic()
-        component_two, unrequested = self.getComponent_generic()
-        self.assertEqual(
-            hash(component_one),
-            hash(component_one)
-        )
-        self.assertNotEqual(
-            hash(component_one),
-            hash(component_two)
-        )
-        a = component_one
-        self.assertEqual(
-            hash(component_one),
-            hash(a)
-        )
-        self.assertNotEqual(
-            hash(component_two),
-            hash(a)
-        )
+    # --------
+    # Equality
+    # --------
 
     def test_equal(self):
         component_one, unrequested = self.getComponent_generic()

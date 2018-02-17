@@ -56,6 +56,10 @@ class TestFont(unittest.TestCase):
             hash(a)
         )
 
+    # --------
+    # Equality
+    # --------
+
     def test_equal(self):
         font_one, unrequested = self.getFont_glyphs()
         font_two, unrequested = self.getFont_glyphs()

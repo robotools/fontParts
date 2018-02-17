@@ -60,30 +60,9 @@ class TestBPoint(unittest.TestCase):
             1
         )
 
-    # ----
-    # Hash
-    # ----
-
-    def test_hash(self):
-        bPoint_one, unrequested = self.getBPoint_corner()
-        bPoint_two, unrequested = self.getBPoint_corner()
-        self.assertEqual(
-            hash(bPoint_one),
-            hash(bPoint_one)
-        )
-        self.assertNotEqual(
-            hash(bPoint_one),
-            hash(bPoint_two)
-        )
-        a = bPoint_one
-        self.assertEqual(
-            hash(bPoint_one),
-            hash(a)
-        )
-        self.assertNotEqual(
-            hash(bPoint_two),
-            hash(a)
-        )
+    # --------
+    # Equality
+    # --------
 
     def test_equal(self):
         bPoint_one, unrequested = self.getBPoint_corner()

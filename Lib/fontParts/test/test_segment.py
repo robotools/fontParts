@@ -90,30 +90,9 @@ class TestSegment(unittest.TestCase):
         with self.assertRaises(FontPartsError):
             segment.type = 123
 
-    # ----
-    # Hash
-    # ----
-
-    def test_hash(self):
-        segment_one, unrequested = self.getSegment_line()
-        segment_two, unrequested = self.getSegment_line()
-        self.assertEqual(
-            hash(segment_one),
-            hash(segment_one)
-        )
-        self.assertNotEqual(
-            hash(segment_one),
-            hash(segment_two)
-        )
-        a = segment_one
-        self.assertEqual(
-            hash(segment_one),
-            hash(a)
-        )
-        self.assertNotEqual(
-            hash(segment_two),
-            hash(a)
-        )
+    # --------
+    # Equality
+    # --------
 
     def test_equal(self):
         segment_one, unrequested = self.getSegment_line()

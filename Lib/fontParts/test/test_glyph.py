@@ -77,6 +77,10 @@ class TestGlyph(unittest.TestCase):
             hash(a)
         )
 
+    # --------
+    # Equality
+    # --------
+
     def test_equal(self):
         glyph_one, unrequested = self.getGlyph_generic()
         glyph_two, unrequested = self.getGlyph_generic()

@@ -23,30 +23,9 @@ class TestLayer(unittest.TestCase):
             4
         )
 
-    # ----
-    # Hash
-    # ----
-
-    def test_hash(self):
-        layer_one, unrequested = self.getLayer_glyphs()
-        layer_two, unrequested = self.getLayer_glyphs()
-        self.assertEqual(
-            hash(layer_one),
-            hash(layer_one)
-        )
-        self.assertNotEqual(
-            hash(layer_one),
-            hash(layer_two)
-        )
-        a = layer_one
-        self.assertEqual(
-            hash(layer_one),
-            hash(a)
-        )
-        self.assertNotEqual(
-            hash(layer_two),
-            hash(a)
-        )
+    # --------
+    # Equality
+    # --------
 
     def test_equal(self):
         layer_one, unrequested = self.getLayer_glyphs()

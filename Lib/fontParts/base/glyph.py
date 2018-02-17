@@ -35,6 +35,15 @@ class BaseGlyph(BaseObject, TransformationMixin, DeprecatedGlyph, RemovedGlyph):
             contents.append("('%s')" % self.layer.name)
         return contents
 
+    def __hash__(self):
+        """
+        Allow glyph object to be used as a key
+        in a dictionary.
+        
+        Subclasses may override this method.
+        """
+        return id(self.naked())
+
     def copy(self):
         """
         Copy the glyph into a new glyph that does not

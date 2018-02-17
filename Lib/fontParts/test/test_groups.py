@@ -50,30 +50,9 @@ class TestGroups(unittest.TestCase):
         with self.assertRaises(FontPartsError):
             groups.findGlyph(5)
 
-    # ----
-    # Hash
-    # ----
-
-    def test_hash(self):
-        groups_one, unrequested = self.getGroups_generic()
-        groups_two, unrequested = self.getGroups_generic()
-        self.assertEqual(
-            hash(groups_one),
-            hash(groups_one)
-        )
-        self.assertNotEqual(
-            hash(groups_one),
-            hash(groups_two)
-        )
-        a = groups_one
-        self.assertEqual(
-            hash(groups_one),
-            hash(a)
-        )
-        self.assertNotEqual(
-            hash(groups_two),
-            hash(a)
-        )
+    # --------
+    # Equality
+    # --------
 
     def test_equal(self):
         groups_one, unrequested = self.getGroups_generic()
