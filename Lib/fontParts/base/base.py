@@ -52,15 +52,9 @@ class BaseObject(object):
         """
         return []
 
-    # ----
-    # hash
-    # ----
-
-    def __hash__(self):
-        """
-        Subclasses may override this method.
-        """
-        return id(self.naked())
+    # --------
+    # equality
+    # --------
 
     def __eq__(self, other):
         """
@@ -72,11 +66,10 @@ class BaseObject(object):
 
     def __ne__(self, other):
         """
-        Subclasses may override this method.
+        Subclasses must not override this method.
         """
-        if isinstance(other, self.__class__):
-            return not self.naked() is other.naked()
-        return NotImplemented
+        equal = self.__eq__(other)
+        return NotImplemented if equal is NotImplemented else not equal
 
     # ----
     # Copy

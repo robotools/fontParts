@@ -24,14 +24,6 @@ class BaseSegment(BaseObject, TransformationMixin, DeprecatedSegment, RemovedSeg
             return self.points == other.points
         return NotImplemented
 
-    def __ne__(self, other):
-        if hasattr(other, "points"):
-            return not self.points == other.points
-        return NotImplemented
-
-    def __hash__(self):
-        return id(self._points)
-
     # -------
     # Parents
     # -------
