@@ -265,6 +265,7 @@ class TestAnchor(unittest.TestCase):
         anchor = glyph.anchors[0]
         with self.assertRaises(RemovedWarning):
             anchor.draw(pen)
+
     def test_drawPoints(self):
         glyph, unrequested = self.getAnchor_index()
         pen = glyph.getPen()
