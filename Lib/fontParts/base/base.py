@@ -523,6 +523,30 @@ class TransformationMixin(object):
         self.transformBy(tuple(t), origin=origin)
 
 
+class InterpolationMixin(object):
+
+    # -------------
+    # Compatibility
+    # -------------
+
+    compatibilityReporterClass = None
+
+    def isCompatible(self, other, cls):
+        """
+        Evaluate interpolation compatibility with other.
+        """
+        if not isinstance(other, cls):
+            raise FontPartsError("Compatibility between an instance of %r and an instance of %r can not be checked." % (cls.__name__, other.__class__.__name__))
+        reporter = self.compatibilityReporterClass(self, other)
+        self._isCompatible(other, reporter)
+        return not reporter.fatal, reporter
+
+    def _isCompatible(self, other, reporter):
+        """
+        Subclasses must override this method.
+        """
+        self.raiseNotImplementedError()
+
 
 # -------
 # Helpers

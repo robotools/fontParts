@@ -1,11 +1,12 @@
 from fontParts.base.errors import FontPartsError
 from fontParts.base.base import (
-    BaseObject, TransformationMixin, dynamicProperty, reference)
+    BaseObject, TransformationMixin, InterpolationMixin, dynamicProperty, reference)
 from fontParts.base import normalizers
 from fontParts.base.deprecated import DeprecatedSegment, RemovedSegment
+from fontParts.base.compatibility import SegmentCompatibilityReporter
 
 
-class BaseSegment(BaseObject, TransformationMixin, DeprecatedSegment, RemovedSegment):
+class BaseSegment(BaseObject, TransformationMixin, DeprecatedSegment, RemovedSegment, InterpolationMixin):
 
     def _setPoints(self, points):
         assert not hasattr(self, "_points")
@@ -263,6 +264,31 @@ class BaseSegment(BaseObject, TransformationMixin, DeprecatedSegment, RemovedSeg
         """
         for point in self.points:
             point.transformBy(matrix, origin=origin)
+
+    # -------------
+    # Interpolation
+    # -------------
+
+    compatibilityReporterClass = SegmentCompatibilityReporter
+
+    def isCompatible(self, other):
+        """
+        Evaluate interpolation compatibility with other.
+        """
+        return super(BaseSegment, self).isCompatible(other, BaseSegment)
+
+    def _isCompatible(self, other, reporter):
+        """
+        Subclasses may override this method.
+        """
+        segment1 = self
+        segment2 = other
+        # type
+        if segment1.type != segment2.type:
+            # line <-> curve can be converted
+            if set((segment1.type, segment2.type)) != set(("curve", "line")):
+                reporter.typeDifference = True
+                reporter.fatal = True
 
     # ----
     # Misc
