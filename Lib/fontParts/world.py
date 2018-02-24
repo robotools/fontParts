@@ -93,16 +93,8 @@ def RGlyph():
 
 class _EnvironmentDispatcher(object):
 
-    def __init__(self):
-        self._registry = {
-            "OpenFont" : None,
-            "NewFont" : None,
-            "CurrentFont" : None,
-            "CurrentGlyph" : None,
-            "AllFonts" : None,
-            "RFont" : None,
-            "RGlyph" : None
-        }
+    def __init__(self, registryItems):
+        self._registry = {item: None for item in registryItems}
 
     def __setitem__(self, name, func):
         self._registry[name] = func
@@ -113,7 +105,15 @@ class _EnvironmentDispatcher(object):
             raise NotImplementedError
         return func
 
-dispatcher = _EnvironmentDispatcher()
+dispatcher = _EnvironmentDispatcher([
+    "OpenFont",
+    "NewFont",
+    "CurrentFont",
+    "CurrentGlyph",
+    "AllFonts",
+    "RFont",
+    "RGlyph",
+])
 
 # -------
 # NoneLab
