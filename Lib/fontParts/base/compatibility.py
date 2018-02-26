@@ -102,7 +102,46 @@ class BaseCompatibilityReporter(object):
 
 class FontCompatibilityReporter(BaseCompatibilityReporter):
 
-    pass
+    objectName = "Font"
+
+    def __init__(self, font1, font2):
+        super(FontCompatibilityReporter, self).__init__(font1, font2)
+        self.guidelineCountDifference = False
+        self.layerCountDifference = False
+        self.layers = []
+
+    font1 = dynamicProperty("object1")
+    font1Name = dynamicProperty("object1Name")
+    font2 = dynamicProperty("object2")
+    font2Name = dynamicProperty("object2Name")
+
+    def report(self, showOK=True, showWarnings=True):
+        font1 = self.font1
+        font2 = self.font2
+        report = []
+        if self.guidelineCountDifference:
+            text = self.reportCountDifference(
+                subObjectName="guidelines",
+                object1Name=self.font1Name,
+                object1Count=len(font1.guidelines),
+                object2Name=self.font2Name,
+                object2Count=len(font2.guidelines)
+            )
+            report.append(self.formatWarningString(text))
+        if self.layerCountDifference:
+            text = self.reportCountDifference(
+                subObjectName="layers",
+                object1Name=self.font1Name,
+                object1Count=len(font1.layerOrder),
+                object2Name=self.font2Name,
+                object2Count=len(font2.layerOrder)
+            )
+            report.append(self.formatWarningString(text))
+        report += self.reportSubObjects(self.layers, showOK=showOK, showWarnings=showWarnings)
+
+        if report or showOK:
+            report.insert(0, self.title)
+        return "\n".join(report)
 
 
 # -----
@@ -111,7 +150,37 @@ class FontCompatibilityReporter(BaseCompatibilityReporter):
 
 class LayerCompatibilityReporter(BaseCompatibilityReporter):
 
-    pass
+    objectName = "Layer"
+
+    def __init__(self, layer1, layer2):
+        super(LayerCompatibilityReporter, self).__init__(layer1, layer2)
+        self.glyphCountDifference = False
+        self.glyphs = []
+
+    layer1 = dynamicProperty("object1")
+    layer1Name = dynamicProperty("object1Name")
+    layer2 = dynamicProperty("object2")
+    layer2Name = dynamicProperty("object2Name")
+
+    def report(self, showOK=True, showWarnings=True):
+        layer1 = self.layer1
+        layer2 = self.layer2
+        report = []
+        if self.glyphCountDifference:
+            text = self.reportCountDifference(
+                subObjectName="glyphs",
+                object1Name=self.layer1Name,
+                object1Count=len(layer1),
+                object2Name=self.layer2Name,
+                object2Count=len(layer2)
+            )
+            report.append(self.formatWarningString(text))
+
+        report += self.reportSubObjects(self.glyphs, showOK=showOK, showWarnings=showWarnings)
+
+        if report or showOK:
+            report.insert(0, self.title)
+        return "\n".join(report)
 
 
 # -----
@@ -166,7 +235,7 @@ class GlyphCompatibilityReporter(BaseCompatibilityReporter):
             )
             report.append(self.formatFatalString(text))
         report += self.reportSubObjects(self.components, showOK=showOK, showWarnings=showWarnings)
-        
+
         # Anchor test
         if self.anchorCountDifference:
             text = self.reportCountDifference(
@@ -178,7 +247,7 @@ class GlyphCompatibilityReporter(BaseCompatibilityReporter):
             )
             report.append(self.formatWarningString(text))
         report += self.reportSubObjects(self.anchors, showOK=showOK, showWarnings=showWarnings)
-        
+
         # Guideline test
         if self.guidelineCountDifference:
             text = self.reportCountDifference(
@@ -190,7 +259,7 @@ class GlyphCompatibilityReporter(BaseCompatibilityReporter):
             )
             report.append(self.formatWarningString(text))
         report += self.reportSubObjects(self.guidelines, showOK=showOK, showWarnings=showWarnings)
-        
+
         if report or showOK:
             report.insert(0, self.title)
         return "\n".join(report)
