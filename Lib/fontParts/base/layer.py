@@ -606,7 +606,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin):
         layer1 = self
         layer2 = other
         # incompatible glyphs
-        if sorted(layer1.keys()) != sorted(layer2.keys()):
+        if len(layer1) != len(layer2):
             reporter.glyphCountDifference = True
             reporter.warning = True
         # test glyphs
