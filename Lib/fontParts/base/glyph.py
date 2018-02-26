@@ -919,7 +919,7 @@ class BaseGlyph(BaseObject, TransformationMixin, InterpolationMixin, DeprecatedG
 
     def _getComponent(self, index, **kwargs):
         """
-        This must return a wrapped contour.
+        This must return a wrapped component.
 
         index will be a valid index.
 
@@ -1596,6 +1596,15 @@ class BaseGlyph(BaseObject, TransformationMixin, InterpolationMixin, DeprecatedG
 
     compatibilityReporterClass = GlyphCompatibilityReporter
 
+    def _checkPairs(self, object1, object2, reporter, reporterObject):
+        compatibility = object1.isCompatible(object2)[1]
+        if compatibility.fatal or compatibility.warning:
+            if compatibility.fatal:
+                reporter.fatal = True
+            if compatibility.warning:
+                reporter.warning = True
+            reporterObject.append(compatibility)
+
     def isCompatible(self, other):
         """
         Evaluate interpolation compatibility with other.
@@ -1616,13 +1625,56 @@ class BaseGlyph(BaseObject, TransformationMixin, InterpolationMixin, DeprecatedG
         for i in range(min(len(glyph1), len(glyph2))):
             contour1 = glyph1[i]
             contour2 = glyph2[i]
-            contourCompatibility = contour1.isCompatible(contour2)[1]
-            if contourCompatibility.fatal or contourCompatibility.warning:
-                if contourCompatibility.fatal:
-                    reporter.fatal = True
-                if contourCompatibility.warning:
-                    reporter.warning = True
-                reporter.contours.append(contourCompatibility)
+            _checkPairs(contour1, contour2, reporter, reporter.contours)
+        # component count
+        if len(self.components) != len(glyph2.components):
+            reporter.fatal = True
+            reporter.componentCountDifference = True
+        # component check
+        if len(self.components) != 0:
+            selfComponentBases = []
+            otherComponentBases = []
+            for source, bases in ((self, selfComponentBases), (other, otherComponentBases)):
+                for i, component in enumerate(source.components):
+                    bases.append((component.baseGlyph, i))
+                bases.sort()
+            for i in range(min(len(selfComponentBases), len(otherComponentBases))):
+                component1 = glyph1.components[selfComponentBases[i][1]]
+                component2 = glyph2.components[otherComponentBases[i][1]]
+                _checkPairs(component1, component2, reporter, reporter.components)
+        # guideline count
+        if len(self.guidelines) != len(glyph2.guidelines):
+            reporter.warning = True
+            reporter.guidelineCountDifference = True
+        # guideline check
+        if len(self.guidelines) != 0:
+            selfGuidelines = []
+            otherGuidelines = []
+            for source, names in ((self, selfGuidelines), (other, otherGuidelines)):
+                for i, guideline in enumerate(source.guidelines):
+                    names.append((guideline.name, i))
+                names.sort()
+            for i in range(min(len(selfGuidelines), len(otherGuidelines))):
+                guideline1 = glyph1.guidelines[selfGuidelines[i][1]]
+                guideline2 = glyph2.guidelines[otherGuidelines[i][1]]
+                _checkPairs(guideline1, guideline2, reporter, reporter.guidelines)
+        # anchor count
+        if len(self.anchors) != len(glyph2.anchors):
+            reporter.warning = True
+            reporter.anchorCountDifference = True
+        # anchor check
+        if len(self.anchors) != 0:
+            selfAnchors = []
+            otherAnchors = []
+            for source, names in ((self, selfAnchors), (other, otherAnchors)):
+                for i, anchor in enumerate(source.anchors):
+                    names.append((anchor.name, i))
+                names.sort()
+            for i in range(min(len(selfAnchors), len(otherAnchors))):
+                anchor1 = glyph1.anchors[selfAnchors[i][1]]
+                anchor2 = glyph2.anchors[otherAnchors[i][1]]
+                _checkPairs(anchor1, anchor2, reporter, reporter.anchors)
+
 
     # ------------
     # Data Queries

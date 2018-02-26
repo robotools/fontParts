@@ -4,8 +4,6 @@ from fontParts.base.base import dynamicProperty
 # Base
 # ----
 
-import weakref
-
 class BaseCompatibilityReporter(object):
 
     objectName = "Base"
@@ -127,7 +125,13 @@ class GlyphCompatibilityReporter(BaseCompatibilityReporter):
     def __init__(self, glyph1, glyph2):
         super(GlyphCompatibilityReporter, self).__init__(glyph1, glyph2)
         self.contourCountDifference = False
+        self.componentCountDifference = False
+        self.guidelineCountDifference = False
+        self.anchorCountDifference = False
         self.contours = []
+        self.components = []
+        self.guidelines = []
+        self.anchors = []
 
     glyph1 = dynamicProperty("object1")
     glyph1Name = dynamicProperty("object1Name")
@@ -138,6 +142,8 @@ class GlyphCompatibilityReporter(BaseCompatibilityReporter):
         glyph1 = self.glyph1
         glyph2 = self.glyph2
         report = []
+
+        # Contour test
         if self.contourCountDifference:
             text = self.reportCountDifference(
                 subObjectName="contours",
@@ -148,6 +154,43 @@ class GlyphCompatibilityReporter(BaseCompatibilityReporter):
             )
             report.append(self.formatFatalString(text))
         report += self.reportSubObjects(self.contours, showOK=showOK, showWarnings=showWarnings)
+
+        # Component test
+        if self.componentCountDifference:
+            text = self.reportCountDifference(
+                subObjectName="components",
+                object1Name=self.glyph1Name,
+                object1Count=len(glyph1.components),
+                object2Name=self.glyph2Name,
+                object2Count=len(glyph2.components)
+            )
+            report.append(self.formatFatalString(text))
+        report += self.reportSubObjects(self.components, showOK=showOK, showWarnings=showWarnings)
+        
+        # Anchor test
+        if self.anchorCountDifference:
+            text = self.reportCountDifference(
+                subObjectName="anchors",
+                object1Name=self.glyph1Name,
+                object1Count=len(glyph1.anchors),
+                object2Name=self.glyph2Name,
+                object2Count=len(glyph2.anchors)
+            )
+            report.append(self.formatWarningString(text))
+        report += self.reportSubObjects(self.anchors, showOK=showOK, showWarnings=showWarnings)
+        
+        # Guideline test
+        if self.guidelineCountDifference:
+            text = self.reportCountDifference(
+                subObjectName="guidelines",
+                object1Name=self.glyph1Name,
+                object1Count=len(glyph1.guidelines),
+                object2Name=self.glyph2Name,
+                object2Count=len(glyph2.guidelines)
+            )
+            report.append(self.formatWarningString(text))
+        report += self.reportSubObjects(self.guidelines, showOK=showOK, showWarnings=showWarnings)
+        
         if report or showOK:
             report.insert(0, self.title)
         return "\n".join(report)
@@ -259,8 +302,34 @@ class SegmentCompatibilityReporter(BaseCompatibilityReporter):
 
 class ComponentCompatibilityReporter(BaseCompatibilityReporter):
 
-    pass
+    objectName = "Component"
 
+    def __init__(self, component1, component2):
+        super(ComponentCompatibilityReporter, self).__init__(component1, component2)
+        self.baseDifference = False
+
+    component1 = dynamicProperty("object1")
+    component1Name = dynamicProperty("object1Name")
+    component2 = dynamicProperty("object2")
+    component2Name = dynamicProperty("object2Name")
+
+    def report(self, showOK=True, showWarnings=True):
+        component1 = self.component1
+        component2 = self.component2
+        report = []
+        if self.baseDifference:
+            name1 = component1.baseName
+            name2 = component2.baseName
+            text = "{component1Name} has base glyph {name1} | {component2Name} has base glyph {name2}".format(
+                component1Name=self.component1Name,
+                name1=name1,
+                component2Name=self.component2Name,
+                name2=name2
+            )
+            report.append(self.formatWarningString(text))
+        if report or showOK:
+            report.insert(0, self.title)
+        return "\n".join(report)
 
 # ------
 # Anchor
@@ -268,7 +337,34 @@ class ComponentCompatibilityReporter(BaseCompatibilityReporter):
 
 class AnchorCompatibilityReporter(BaseCompatibilityReporter):
 
-    pass
+    objectName = "Anchor"
+
+    def __init__(self, anchor1, anchor2):
+        super(AnchorCompatibilityReporter, self).__init__(anchor1, anchor2)
+        self.nameDifference = False
+
+    anchor1 = dynamicProperty("object1")
+    anchor1Name = dynamicProperty("object1Name")
+    anchor2 = dynamicProperty("object2")
+    anchor2Name = dynamicProperty("object2Name")
+
+    def report(self, showOK=True, showWarnings=True):
+        anchor1 = self.anchor1
+        anchor2 = self.anchor2
+        report = []
+        if self.nameDifference:
+            name1 = anchor1.name
+            name2 = anchor2.name
+            text = "{anchor1Name} has name {name1} | {anchor2Name} has name {name2}".format(
+                anchor1Name=self.anchor1Name,
+                name1=name1,
+                anchor2Name=self.anchor2Name,
+                name2=name2
+            )
+            report.append(self.formatWarningString(text))
+        if report or showOK:
+            report.insert(0, self.title)
+        return "\n".join(report)
 
 
 # ---------
@@ -277,4 +373,31 @@ class AnchorCompatibilityReporter(BaseCompatibilityReporter):
 
 class GuidelineCompatibilityReporter(BaseCompatibilityReporter):
 
-    pass
+    objectName = "Guideline"
+
+    def __init__(self, guideline1, guideline2):
+        super(GuidelineCompatibilityReporter, self).__init__(guideline1, guideline2)
+        self.nameDifference = False
+
+    guideline1 = dynamicProperty("object1")
+    guideline1Name = dynamicProperty("object1Name")
+    guideline2 = dynamicProperty("object2")
+    guideline2Name = dynamicProperty("object2Name")
+
+    def report(self, showOK=True, showWarnings=True):
+        guideline1 = self.guideline1
+        guideline2 = self.guideline2
+        report = []
+        if self.nameDifference:
+            name1 = guideline1.name
+            name2 = guideline2.name
+            text = "{guideline1Name} has name {name1} | {guideline2Name} has name {name2}".format(
+                guideline1Name=self.guideline1Name,
+                name1=name1,
+                guideline2Name=self.guideline2Name,
+                name2=name2
+            )
+            report.append(self.formatWarningString(text))
+        if report or showOK:
+            report.insert(0, self.title)
+        return "\n".join(report)
