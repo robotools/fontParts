@@ -6,6 +6,7 @@ from fontParts.base.base import (
     BaseObject, TransformationMixin, InterpolationMixin, dynamicProperty, 
     PointPositionMixin, reference)
 from fontParts.base import normalizers
+from fontParts.base.compatibility import GuidelineCompatibilityReporter
 from fontParts.base.color import Color
 from fontParts.base.deprecated import DeprecatedGuideline, RemovedGuideline
 

@@ -4,6 +4,7 @@ from fontParts.base.errors import FontPartsError
 from fontParts.base.base import (
     BaseObject, TransformationMixin, InterpolationMixin, dynamicProperty, 
     PointPositionMixin, reference)
+from fontParts.base.compatibility import ComponentCompatibilityReporter
 from fontParts.base.deprecated import DeprecatedComponent, RemovedComponent
 
 

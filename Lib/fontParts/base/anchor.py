@@ -4,6 +4,7 @@ from fontParts.base.base import (
     BaseObject, TransformationMixin, InterpolationMixin, 
     dynamicProperty, PointPositionMixin, reference)
 from fontParts.base.errors import FontPartsError
+from fontParts.base.compatibility import AnchorCompatibilityReporter
 from fontParts.base.color import Color
 from fontParts.base.deprecated import DeprecatedAnchor, RemovedAnchor
 
