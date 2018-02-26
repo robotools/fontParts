@@ -605,7 +605,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin):
         """
         layer1 = self
         layer2 = other
-        # incompatible glyphs
+        # incompatible number of glyphs
         if len(layer1) != len(layer2):
             reporter.glyphCountDifference = True
             reporter.warning = True
