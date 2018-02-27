@@ -95,6 +95,15 @@ class BaseCompatibilityReporter(object):
         )
         return text
 
+    def reportDifferences(self, object1Name, subObjectName, subObjectID, object2Name):
+        text = "{object1Name} contains {subObjectName} {subObjectID} not in {object2Name}".format(
+            object1Name=object1Name,
+            subObjectName=subObjectName,
+            subObjectID=subObjectID,
+            object2Name=object2Name,
+        )
+        return text
+
 
 # ----
 # Font
@@ -108,6 +117,10 @@ class FontCompatibilityReporter(BaseCompatibilityReporter):
         super(FontCompatibilityReporter, self).__init__(font1, font2)
         self.guidelineCountDifference = False
         self.layerCountDifference = False
+        self.guidelinesMissingFromFont2 = []
+        self.guidelinesMissingInFont1 = []
+        self.layersMissingFromFont2 = []
+        self.layersMissingInFont1 = []
         self.layers = []
 
     font1 = dynamicProperty("object1")
@@ -128,6 +141,24 @@ class FontCompatibilityReporter(BaseCompatibilityReporter):
                 object2Count=len(font2.guidelines)
             )
             report.append(self.formatWarningString(text))
+        if len(self.guidelinesMissingFromFont2) != 0:
+            for name in self.guidelinesMissingFromFont2:
+                text = self.reportDifferences(
+                    object1Name=self.font1Name,
+                    subObjectName="guideline",
+                    subObjectID=name,
+                    object2Name=self.font2Name,
+                )
+                report.append(self.formatWarningString(text))
+        if len(self.guidelinesMissingInFont1) != 0:
+            for name in self.guidelinesMissingInFont1:
+                text = self.reportDifferences(
+                    object1Name=self.font2Name,
+                    subObjectName="guideline",
+                    subObjectID=name,
+                    object2Name=self.font1Name,
+                )
+                report.append(self.formatWarningString(text))
         if self.layerCountDifference:
             text = self.reportCountDifference(
                 subObjectName="layers",
@@ -137,6 +168,24 @@ class FontCompatibilityReporter(BaseCompatibilityReporter):
                 object2Count=len(font2.layerOrder)
             )
             report.append(self.formatWarningString(text))
+        if len(self.layersMissingFromFont2) != 0:
+            for name in self.layersMissingFromFont2:
+                text = self.reportDifferences(
+                    object1Name=self.font1Name,
+                    subObjectName="layer",
+                    subObjectID=name,
+                    object2Name=self.font2Name,
+                )
+                report.append(self.formatWarningString(text))
+        if len(self.layersMissingInFont1) != 0:
+            for name in self.layersMissingInFont1:
+                text = self.reportDifferences(
+                    object1Name=self.font2Name,
+                    subObjectName="layer",
+                    subObjectID=name,
+                    object2Name=self.font1Name,
+                )
+                report.append(self.formatWarningString(text))
         report += self.reportSubObjects(self.layers, showOK=showOK, showWarnings=showWarnings)
 
         if report or showOK:
@@ -155,6 +204,8 @@ class LayerCompatibilityReporter(BaseCompatibilityReporter):
     def __init__(self, layer1, layer2):
         super(LayerCompatibilityReporter, self).__init__(layer1, layer2)
         self.glyphCountDifference = False
+        self.glyphsMissingFromLayer2 = []
+        self.glyphsMissingInLayer1 =[]
         self.glyphs = []
 
     layer1 = dynamicProperty("object1")
@@ -175,7 +226,24 @@ class LayerCompatibilityReporter(BaseCompatibilityReporter):
                 object2Count=len(layer2)
             )
             report.append(self.formatWarningString(text))
-
+        if len(self.glyphsMissingFromLayer2) != 0:
+            for name in self.glyphsMissingFromLayer2:
+                text = self.reportDifferences(
+                    object1Name=self.layer1Name,
+                    subObjectName="glyph",
+                    subObjectID=name,
+                    object2Name=self.layer2Name,
+                )
+                report.append(self.formatWarningString(text))
+        if len(self.glyphsMissingInLayer1) != 0:
+            for name in self.glyphsMissingInLayer1:
+                text = self.reportDifferences(
+                    object1Name=self.layer2Name,
+                    subObjectName="glyph",
+                    subObjectID=name,
+                    object2Name=self.layer1Name,
+                )
+                report.append(self.formatWarningString(text))
         report += self.reportSubObjects(self.glyphs, showOK=showOK, showWarnings=showWarnings)
 
         if report or showOK:

@@ -1141,19 +1141,33 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         font2 = other
 
         # incompatible guidelines
-        if len(self.guidelines) != len(other.guidelines):
+        guidelines1 = set(font1.guidelines)
+        guidelines2 = set(font2.guidelines)
+        if len(guidelines1) != len(guidelines2):
             reporter.warning = True
             reporter.guidelineCountDifference = True
+        if len(guidelines1.difference(guidelines2)) != 0:
+            reporter.warning = True
+            reporter.guidelinesMissingFromFont2 = list(guidelines1.difference(guidelines2))
+        if len(guidelines2.difference(guidelines1)) != 0:
+            reporter.warning = True
+            reporter.guidelinesMissingInFont1 = list(guidelines2.difference(guidelines1))
         # incompatible layers
-        if len(self.layerOrder) != len(other.layerOrder):
+        layers1 = set(font1.layerOrder)
+        layers2 = set(font2.layerOrder)
+        if len(layers1) != len(layers2):
             reporter.warning = True
             reporter.layerCountDifference = True
+        if len(layers1.difference(layers2)) != 0:
+            reporter.warning = True
+            reporter.layersMissingFromFont2 = list(layers1.difference(layers2))
+        if len(layers2.difference(layers1)) != 0:
+            reporter.warning = True
+            reporter.layersMissingInFont1 = list(layers2.difference(layers1))
         # test layers
-        for layerName in sorted(self.layerOrder):
-            if layerName not in other.layerOrder:
-                continue
-            layer1 = self.getLayer(layerName)
-            layer2 = other.getLayer(layerName)
+        for layerName in sorted(layers1.intersection(layers2)):
+            layer1 = font1.getLayer(layerName)
+            layer2 = font2.getLayer(layerName)
             layerCompatibility = layer1.isCompatible(layer2)[1]
             if layerCompatibility.fatal or layerCompatibility.warning:
                 if layerCompatibility.fatal:

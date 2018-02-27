@@ -605,14 +605,21 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin):
         """
         layer1 = self
         layer2 = other
+
         # incompatible number of glyphs
-        if len(layer1) != len(layer2):
+        glyphs1 = set(layer1.keys())
+        glyphs2 = set(layer2.keys())
+        if len(glyphs1) != len(glyphs2):
             reporter.glyphCountDifference = True
             reporter.warning = True
+        if len(glyphs1.difference(glyphs2)) != 0:
+            reporter.warning = True
+            reporter.glyphsMissingFromLayer2 = list(glyphs1.difference(glyphs2))
+        if len(glyphs2.difference(glyphs1)) != 0:
+            reporter.warning = True
+            reporter.glyphsMissingInLayer1 = list(glyphs2.difference(glyphs1))
         # test glyphs
-        for glyphName in sorted(layer1.keys()):
-            if glyphName not in layer2:
-                continue
+        for glyphName in sorted(glyphs1.intersection(glyphs2)):
             glyph1 = layer1[glyphName]
             glyph2 = layer2[glyphName]
             glyphCompatibility = glyph1.isCompatible(glyph2)[1]
