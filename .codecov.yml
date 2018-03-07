@@ -1,0 +1,6 @@
+# disable PR comments and status checks
+comment: false
+coverage:
+    status:
+        project: off
+        patch: off

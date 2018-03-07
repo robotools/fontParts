@@ -138,6 +138,7 @@ class RFont(RBaseObject, BaseFont):
         layers = self.naked().layers
         del layers[name]
 
+    # ------
     # Glyphs
     # ------
 
