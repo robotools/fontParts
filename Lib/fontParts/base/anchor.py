@@ -391,12 +391,26 @@ class BaseAnchor(BaseObject, TransformationMixin, DeprecatedAnchor,
 
     def isCompatible(self, other):
         """
-        Evaluate interpolation compatibility with other.
+        Evaluate interpolation compatibility with **other**. ::
+
+            >>> compatible, report = self.isCompatible(otherAnchor)
+            >>> compatible
+            True
+            >>> compatible
+            [Warning] Anchor: "left" + "right"
+            [Warning] Anchor: "left" has name left | "right" has name right
+
+        This will return a ``bool`` indicating if the anchor is
+        compatible for interpolation with **other** and a
+        :ref:`type-string` of compatibility notes.
         """
         return super(BaseAnchor, self).isCompatible(other, BaseAnchor)
 
     def _isCompatible(self, other, reporter):
         """
+        This is the environment implementation of
+        :meth:`BaseAnchor.isCompatible`.
+
         Subclasses may override this method.
         """
         anchor1 = self

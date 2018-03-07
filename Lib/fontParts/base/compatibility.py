@@ -265,10 +265,13 @@ class GlyphCompatibilityReporter(BaseCompatibilityReporter):
         self.componentCountDifference = False
         self.guidelineCountDifference = False
         self.anchorCountDifference = False
+        self.anchorsMissingFromGlyph1 = []
+        self.anchorsMissingFromGlyph2 = []
+        self.componentsMissingFromGlyph1 = []
+        self.componentsMissingFromGlyph2 = []
+        self.guidelinesMissingFromGlyph1 = []
+        self.guidelinesMissingFromGlyph2 = []
         self.contours = []
-        self.components = []
-        self.guidelines = []
-        self.anchors = []
 
     glyph1 = dynamicProperty("object1")
     glyph1Name = dynamicProperty("object1Name")
@@ -302,7 +305,24 @@ class GlyphCompatibilityReporter(BaseCompatibilityReporter):
                 object2Count=len(glyph2.components)
             )
             report.append(self.formatFatalString(text))
-        report += self.reportSubObjects(self.components, showOK=showOK, showWarnings=showWarnings)
+        if len(self.componentsMissingFromGlyph2) != 0:
+            for name in self.componentsMissingFromGlyph2:
+                text = self.reportDifferences(
+                    object1Name=self.glyph1Name,
+                    subObjectName="component",
+                    subObjectID=name,
+                    object2Name=self.glyph2Name,
+                )
+                report.append(self.formatWarningString(text))
+        if len(self.componentsMissingFromGlyph1) != 0:
+            for name in self.componentsMissingFromGlyph1:
+                text = self.reportDifferences(
+                    object1Name=self.glyph2Name,
+                    subObjectName="component",
+                    subObjectID=name,
+                    object2Name=self.glyph1Name,
+                )
+                report.append(self.formatWarningString(text))
 
         # Anchor test
         if self.anchorCountDifference:
@@ -314,7 +334,24 @@ class GlyphCompatibilityReporter(BaseCompatibilityReporter):
                 object2Count=len(glyph2.anchors)
             )
             report.append(self.formatWarningString(text))
-        report += self.reportSubObjects(self.anchors, showOK=showOK, showWarnings=showWarnings)
+        if len(self.anchorsMissingFromGlyph2) != 0:
+            for name in self.anchorsMissingFromGlyph2:
+                text = self.reportDifferences(
+                    object1Name=self.glyph1Name,
+                    subObjectName="anchor",
+                    subObjectID=name,
+                    object2Name=self.glyph2Name,
+                )
+                report.append(self.formatWarningString(text))
+        if len(self.anchorsMissingFromGlyph1) != 0:
+            for name in self.anchorsMissingFromGlyph1:
+                text = self.reportDifferences(
+                    object1Name=self.glyph2Name,
+                    subObjectName="anchor",
+                    subObjectID=name,
+                    object2Name=self.glyph1Name,
+                )
+                report.append(self.formatWarningString(text))
 
         # Guideline test
         if self.guidelineCountDifference:
@@ -326,7 +363,24 @@ class GlyphCompatibilityReporter(BaseCompatibilityReporter):
                 object2Count=len(glyph2.guidelines)
             )
             report.append(self.formatWarningString(text))
-        report += self.reportSubObjects(self.guidelines, showOK=showOK, showWarnings=showWarnings)
+        if len(self.guidelinesMissingFromGlyph2) != 0:
+            for name in self.guidelinesMissingFromGlyph2:
+                text = self.reportDifferences(
+                    object1Name=self.glyph1Name,
+                    subObjectName="guideline",
+                    subObjectID=name,
+                    object2Name=self.glyph2Name,
+                )
+                report.append(self.formatWarningString(text))
+        if len(self.guidelinesMissingFromGlyph1) != 0:
+            for name in self.guidelinesMissingFromGlyph1:
+                text = self.reportDifferences(
+                    object1Name=self.glyph2Name,
+                    subObjectName="guideline",
+                    subObjectID=name,
+                    object2Name=self.glyph1Name,
+                )
+                report.append(self.formatWarningString(text))
 
         if report or showOK:
             report.insert(0, self.title)

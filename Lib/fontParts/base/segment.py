@@ -273,12 +273,28 @@ class BaseSegment(BaseObject, TransformationMixin, DeprecatedSegment, RemovedSeg
 
     def isCompatible(self, other):
         """
-        Evaluate interpolation compatibility with other.
+        Evaluate interpolation compatibility with **other**. ::
+
+            >>> compatible, report = self.isCompatible(otherSegment)
+            >>> compatible
+            False
+            >>> compatible
+            [Fatal] Segment: [0] + [0]
+            [Fatal] Segment: [0] is line | [0] is move
+            [Fatal] Segment: [1] + [1]
+            [Fatal] Segment: [1] is line | [1] is qcurve
+
+        This will return a ``bool`` indicating if the segment is
+        compatible for interpolation with **other** and a
+        :ref:`type-string` of compatibility notes.
         """
         return super(BaseSegment, self).isCompatible(other, BaseSegment)
 
     def _isCompatible(self, other, reporter):
         """
+        This is the environment implementation of
+        :meth:`BaseSegment.isCompatible`.
+
         Subclasses may override this method.
         """
         segment1 = self

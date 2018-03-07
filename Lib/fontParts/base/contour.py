@@ -255,12 +255,27 @@ class BaseContour(BaseObject, TransformationMixin, InterpolationMixin, Deprecate
 
     def isCompatible(self, other):
         """
-        Evaluate interpolation compatibility with other.
+        Evaluate interpolation compatibility with **other**. ::
+
+            >>> compatible, report = self.isCompatible(otherContour)
+            >>> compatible
+            False
+            >>> compatible
+            [Fatal] Contour: [0] + [0]
+            [Fatal] Contour: [0] contains 4 segments | [0] contains 3 segments
+            [Fatal] Contour: [0] is closed | [0] is open
+
+        This will return a ``bool`` indicating if the contour is
+        compatible for interpolation with **other** and a
+        :ref:`type-string` of compatibility notes.
         """
         return super(BaseContour, self).isCompatible(other, BaseContour)
 
     def _isCompatible(self, other, reporter):
         """
+        This is the environment implementation of
+        :meth:`BaseContour.isCompatible`.
+
         Subclasses may override this method.
         """
         contour1 = self

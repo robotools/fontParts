@@ -344,12 +344,26 @@ class BaseComponent(BaseObject, TransformationMixin, DeprecatedComponent,
 
     def isCompatible(self, other):
         """
-        Evaluate interpolation compatibility with other.
+        Evaluate interpolation compatibility with **other**. ::
+
+            >>> compatible, report = self.isCompatible(otherComponent)
+            >>> compatible
+            True
+            >>> compatible
+            [Warning] Component: "A" + "B"
+            [Warning] Component: "A" has name A | "B" has name B
+
+        This will return a ``bool`` indicating if the component is
+        compatible for interpolation with **other** and a
+        :ref:`type-string` of compatibility notes.
         """
         return super(BaseComponent, self).isCompatible(other, BaseComponent)
 
     def _isCompatible(self, other, reporter):
         """
+        This is the environment implementation of
+        :meth:`BaseComponent.isCompatible`.
+
         Subclasses may override this method.
         """
         component1 = self

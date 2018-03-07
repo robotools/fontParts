@@ -494,12 +494,26 @@ class BaseGuideline(BaseObject, TransformationMixin, DeprecatedGuideline,
 
     def isCompatible(self, other):
         """
-        Evaluate interpolation compatibility with other.
+        Evaluate interpolation compatibility with **other**. ::
+
+            >>> compatible, report = self.isCompatible(otherGuideline)
+            >>> compatible
+            True
+            >>> compatible
+            [Warning] Guideline: "xheight" + "cap_height"
+            [Warning] Guideline: "xheight" has name xheight | "cap_height" has name cap_height
+
+        This will return a ``bool`` indicating if the guideline is
+        compatible for interpolation with **other** and a
+        :ref:`type-string` of compatibility notes.
         """
         return super(BaseGuideline, self).isCompatible(other, BaseGuideline)
 
     def _isCompatible(self, other, reporter):
         """
+        This is the environment implementation of
+        :meth:`BaseGuideline.isCompatible`.
+
         Subclasses may override this method.
         """
         guideline1 = self

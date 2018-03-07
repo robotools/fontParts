@@ -1607,12 +1607,28 @@ class BaseGlyph(BaseObject, TransformationMixin, InterpolationMixin, DeprecatedG
 
     def isCompatible(self, other):
         """
-        Evaluate interpolation compatibility with other.
+        Evaluate interpolation compatibility with **other**. ::
+
+            >>> compatible, report = self.isCompatible(otherGlyph)
+            >>> compatible
+            False
+            >>> compatible
+            [Fatal] Glyph: "test1" + "test2"
+            [Fatal] Glyph: "test1" contains 1 contours | "test2" contains 2 contours
+            [Fatal] Contour: [0] + [0]
+            [Fatal] Contour: [0] contains 4 segments | [0] contains 3 segments
+
+        This will return a ``bool`` indicating if the glyph is
+        compatible for interpolation with **other** and a
+        :ref:`type-string` of compatibility notes.
         """
         return super(BaseGlyph, self).isCompatible(other, BaseGlyph)
 
     def _isCompatible(self, other, reporter):
         """
+        This is the environment implementation of
+        :meth:`BaseGlyph.isCompatible`.
+
         Subclasses may override this method.
         """
         glyph1 = self
@@ -1625,55 +1641,61 @@ class BaseGlyph(BaseObject, TransformationMixin, InterpolationMixin, DeprecatedG
         for i in range(min(len(glyph1), len(glyph2))):
             contour1 = glyph1[i]
             contour2 = glyph2[i]
-            _checkPairs(contour1, contour2, reporter, reporter.contours)
+            self._checkPairs(contour1, contour2, reporter, reporter.contours)
         # component count
-        if len(self.components) != len(glyph2.components):
+        if len(glyph1.components) != len(glyph2.components):
             reporter.fatal = True
             reporter.componentCountDifference = True
         # component check
-        if len(self.components) != 0:
-            selfComponentBases = []
-            otherComponentBases = []
-            for source, bases in ((self, selfComponentBases), (other, otherComponentBases)):
-                for i, component in enumerate(source.components):
-                    bases.append((component.baseGlyph, i))
-                bases.sort()
-            for i in range(min(len(selfComponentBases), len(otherComponentBases))):
-                component1 = glyph1.components[selfComponentBases[i][1]]
-                component2 = glyph2.components[otherComponentBases[i][1]]
-                _checkPairs(component1, component2, reporter, reporter.components)
+        selfComponentBases = []
+        otherComponentBases = []
+        for source, bases in ((self, selfComponentBases), (other, otherComponentBases)):
+            for i, component in enumerate(source.components):
+                bases.append((component.baseGlyph, i))
+        components1 = set(selfComponentBases)
+        components2 = set(otherComponentBases)
+        if len(components1.difference(components2)) != 0:
+            reporter.warning = True
+            reporter.componentsMissingFromGlyph2 = list(components1.difference(components2))
+        if len(components2.difference(components1)) != 0:
+            reporter.warning = True
+            reporter.componentsMissingFromGlyph1 = list(components2.difference(components1))
         # guideline count
         if len(self.guidelines) != len(glyph2.guidelines):
             reporter.warning = True
             reporter.guidelineCountDifference = True
         # guideline check
-        if len(self.guidelines) != 0:
-            selfGuidelines = []
-            otherGuidelines = []
-            for source, names in ((self, selfGuidelines), (other, otherGuidelines)):
-                for i, guideline in enumerate(source.guidelines):
-                    names.append((guideline.name, i))
-                names.sort()
-            for i in range(min(len(selfGuidelines), len(otherGuidelines))):
-                guideline1 = glyph1.guidelines[selfGuidelines[i][1]]
-                guideline2 = glyph2.guidelines[otherGuidelines[i][1]]
-                _checkPairs(guideline1, guideline2, reporter, reporter.guidelines)
+        selfGuidelines = []
+        otherGuidelines = []
+        for source, names in ((self, selfGuidelines), (other, otherGuidelines)):
+            for i, guideline in enumerate(source.guidelines):
+                names.append((guideline.name, i))
+        guidelines1 = set(selfGuidelines)
+        guidelines2 = set(otherGuidelines)
+        if len(guidelines1.difference(guidelines2)) != 0:
+            reporter.warning = True
+            reporter.guidelinesMissingFromGlyph2 = list(guidelines1.difference(guidelines2))
+        if len(guidelines2.difference(guidelines1)) != 0:
+            reporter.warning = True
+            reporter.guidelinesMissingFromGlyph1 = list(guidelines2.difference(guidelines1))
         # anchor count
         if len(self.anchors) != len(glyph2.anchors):
             reporter.warning = True
             reporter.anchorCountDifference = True
         # anchor check
-        if len(self.anchors) != 0:
-            selfAnchors = []
-            otherAnchors = []
-            for source, names in ((self, selfAnchors), (other, otherAnchors)):
-                for i, anchor in enumerate(source.anchors):
-                    names.append((anchor.name, i))
-                names.sort()
-            for i in range(min(len(selfAnchors), len(otherAnchors))):
-                anchor1 = glyph1.anchors[selfAnchors[i][1]]
-                anchor2 = glyph2.anchors[otherAnchors[i][1]]
-                _checkPairs(anchor1, anchor2, reporter, reporter.anchors)
+        selfAnchors = []
+        otherAnchors = []
+        for source, names in ((self, selfAnchors), (other, otherAnchors)):
+            for i, anchor in enumerate(source.anchors):
+                names.append((anchor.name, i))
+        anchors1 = set(selfAnchors)
+        anchors2 = set(otherAnchors)
+        if len(anchors1.difference(anchors2)) != 0:
+            reporter.warning = True
+            reporter.anchorsMissingFromGlyph2 = list(anchors1.difference(anchors2))
+        if len(anchors2.difference(anchors1)) != 0:
+            reporter.warning = True
+            reporter.anchorsMissingFromGlyph1 = list(anchors2.difference(anchors1))
 
 
     # ------------

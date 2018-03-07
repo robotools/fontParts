@@ -1116,13 +1116,12 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         """
         Evaluate interpolation compatibility with **other**.
 
-            >>> compat, report = self.isCompatible(otherFont)
-            >>> compat
+            >>> compatible, report = self.isCompatible(otherFont)
+            >>> compatible
             False
             >>> report
-            A
-            -
-            [Fatal] The glyphs do not contain the same number of contours.
+            [Fatal] Glyph: "test1" + "test2"
+            [Fatal] Glyph: "test1" contains 1 contours | "test2" contains 2 contours
 
         This will return a ``bool`` indicating if the font is
         compatible for interpolation with **other** and a
