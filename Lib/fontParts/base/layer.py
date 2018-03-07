@@ -578,6 +578,8 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin):
             dstGlyph = self.newGlyph(glyphName)
             dstGlyph.interpolate(factor, minGlyph, maxGlyph, round=round, suppressError=suppressError)
 
+    compatibilityReporterClass = LayerCompatibilityReporter
+
     def isCompatible(self, other):
         """
         Evaluate interpolation compatibility with **other**. ::
@@ -596,7 +598,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin):
         """
         return super(BaseLayer, self).isCompatible(other, BaseLayer)
 
-    def _isCompatible(self, other):
+    def _isCompatible(self, other, reporter):
         """
         This is the environment implementation of
         :meth:`BaseLayer.isCompatible`.

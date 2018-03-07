@@ -1112,6 +1112,8 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         # info
         self.info.interpolate(factor, minFont.info, maxFont.info, round=round, suppressError=suppressError)
 
+    compatibilityReporterClass = FontCompatibilityReporter
+
     def isCompatible(self, other):
         """
         Evaluate interpolation compatibility with **other**.
@@ -1129,7 +1131,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         """
         return super(BaseFont, self).isCompatible(other, BaseFont)
 
-    def _isCompatible(self, other):
+    def _isCompatible(self, other, reporter):
         """
         This is the environment implementation of
         :meth:`BaseFont.isCompatible`.
