@@ -4,7 +4,9 @@ import fontMath
 from fontTools.misc.py23 import basestring
 from fontParts.base.errors import FontPartsError
 from fontParts.base.base import (
-    BaseObject, TransformationMixin, InterpolationMixin, dynamicProperty, interpolate)
+    BaseObject, TransformationMixin, InterpolationMixin, SelectionMixin,
+    dynamicProperty, interpolate
+)
 from fontParts.base.image import BaseImage
 from fontParts.base import normalizers
 from fontParts.base.compatibility import GlyphCompatibilityReporter
@@ -12,7 +14,7 @@ from fontParts.base.color import Color
 from fontParts.base.deprecated import DeprecatedGlyph, RemovedGlyph
 
 
-class BaseGlyph(BaseObject, TransformationMixin, InterpolationMixin, DeprecatedGlyph, RemovedGlyph):
+class BaseGlyph(BaseObject, TransformationMixin, InterpolationMixin, SelectionMixin, DeprecatedGlyph, RemovedGlyph):
 
     """
         Glyph object.
@@ -2112,3 +2114,53 @@ class BaseGlyph(BaseObject, TransformationMixin, InterpolationMixin, DeprecatedG
         Subclasses must override this method.
         """
         self.raiseNotImplementedError()
+
+    # ---------
+    # Selection
+    # ---------
+
+    selectedContours = dynamicProperty(
+        "base_selectedContours",
+        """
+        A list of contours selected in the glyph.
+
+        Getting selected contour objects:
+
+            >>> for contour in glyph.selectedContours:
+            ...     contour.reverse()
+
+        Setting selected contour onjects:
+
+            >>> contour.selectedContours = someContours
+
+        Setting also supports contour indexes:
+
+            >>> contour.selectedContours = [0, 2]
+        """
+    )
+
+    def _get_base_selectedContours(self):
+        selected = tuple([normalizers.normalizeContour(contour) for contour in self._get_selectedContours()])
+        return selected
+
+    def _get_selectedContours(self):
+        """
+        Subclasses may override this method.
+        """
+        return self._getSelectedSubObjects(self.contours)
+
+    def _set_base_selectedContours(self, value):
+        normalized = []
+        for i in value:
+            if isinstance(i, int):
+                i = normalizers.normalizeContourIndex(i)
+            else:
+                i = normalizers.normalizeContour(i)
+            normalized.append(i)
+        self._set_selectedContours(normalized)
+
+    def _set_selectedContours(self, value):
+        """
+        Subclasses may override this method.
+        """
+        return self._setSelectedSubObjects(self.contours, value)

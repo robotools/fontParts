@@ -5,6 +5,104 @@ from fontParts.base.errors import FontPartsError
 from fontParts.base import normalizers
 
 
+# -------
+# Helpers
+# -------
+
+class dynamicProperty(object):
+
+    """
+    This implements functionality that is very similar
+    to Python's built in property function, but makes
+    it much easier for subclassing. Here is an example
+    of why this is needed:
+
+        class BaseObject(object):
+
+            _foo = 1
+
+            def _get_foo(self):
+                return self._foo
+
+            def _set_foo(self, value):
+                self._foo = value
+
+            foo = property(_get_foo, _set_foo)
+
+
+        class MyObject(BaseObject):
+
+            def _set_foo(self, value):
+                self._foo = value * 100
+
+
+        >>> m = MyObject()
+        >>> m.foo
+        1
+        >>> m.foo = 2
+        >>> m.foo
+        2
+
+    The expected value is 200. The _set_foo method
+    needs to be reregistered. Doing that also requires
+    reregistering the _get_foo method. It's possible
+    to do this, but it's messy and will make subclassing
+    less than ideal.
+
+    Using dynamicProperty solves this.
+
+        class BaseObject(object):
+
+            _foo = 1
+
+            foo = dynamicProperty("foo")
+
+            def _get_foo(self):
+                return self._foo
+
+            def _set_foo(self, value):
+                self._foo = value
+
+
+        class MyObject(BaseObject):
+
+            def _set_foo(self, value):
+                self._foo = value * 100
+
+
+        >>> m = MyObject()
+        >>> m.foo
+        1
+        >>> m.foo = 2
+        >>> m.foo
+        200
+    """
+
+    def __init__(self, name, doc=None):
+        self.name = name
+        self.__doc__ = doc
+        self.getterName = "_get_" + name
+        self.setterName = "_set_" + name
+
+    def __get__(self, obj, cls):
+        getter = getattr(obj, self.getterName, None)
+        if getter is not None:
+            return getter()
+        else:
+            raise FontPartsError("no getter for %r" % self.name)
+
+    def __set__(self, obj, value):
+        setter = getattr(obj, self.setterName, None)
+        if setter is not None:
+            setter(value)
+        else:
+            raise FontPartsError("no setter for %r" % self.name)
+
+
+def interpolate(a, b, v):
+    return a + (b - a) * v
+
+
 # ------------
 # Base Objects
 # ------------
@@ -548,103 +646,55 @@ class InterpolationMixin(object):
         self.raiseNotImplementedError()
 
 
-# -------
-# Helpers
-# -------
+class SelectionMixin(object):
 
-class dynamicProperty(object):
+    # -------------
+    # Selected Flag
+    # -------------
 
-    """
-    This implements functionality that is very similar
-    to Python's built in property function, but makes
-    it much easier for subclassing. Here is an example
-    of why this is needed:
+    selected = dynamicProperty(
+        "base_selected",
+        """
+        The object's selection state.
 
-        class BaseObject(object):
+            >>> obj.selected
+            False
+            >>> obj.selected = True
+        """
+    )
 
-            _foo = 1
+    def _get_base_selected(self):
+        value = self._get_selected()
+        value = normalizers.normalizeBoolean(value)
+        return value
 
-            def _get_foo(self):
-                return self._foo
+    def _set_base_selected(self, value):
+        value = normalizers.normalizeBoolean(value)
+        self._set_selected(value)
 
-            def _set_foo(self, value):
-                self._foo = value
+    def _get_selected(self):
+        """
+        Subclasses must override this method if they implement object selection.
+        """
+        self.raiseNotImplementedError()
 
-            foo = property(_get_foo, _set_foo)
+    def _set_selected(self, value):
+        """
+        Subclasses must override this method if they implement object selection.
+        """
+        self.raiseNotImplementedError()
 
+    # -----------
+    # Sub-Objects
+    # -----------
 
-        class MyObject(BaseObject):
+    def _getSelectedSubObjects(self, subObjects):
+        selected = [obj for obj in subObjects if obj.selected]
+        return selected
 
-            def _set_foo(self, value):
-                self._foo = value * 100
-
-
-        >>> m = MyObject()
-        >>> m.foo
-        1
-        >>> m.foo = 2
-        >>> m.foo
-        2
-
-    The expected value is 200. The _set_foo method
-    needs to be reregistered. Doing that also requires
-    reregistering the _get_foo method. It's possible
-    to do this, but it's messy and will make subclassing
-    less than ideal.
-
-    Using dynamicProperty solves this.
-
-        class BaseObject(object):
-
-            _foo = 1
-
-            foo = dynamicProperty("foo")
-
-            def _get_foo(self):
-                return self._foo
-
-            def _set_foo(self, value):
-                self._foo = value
-
-
-        class MyObject(BaseObject):
-
-            def _set_foo(self, value):
-                self._foo = value * 100
-
-
-        >>> m = MyObject()
-        >>> m.foo
-        1
-        >>> m.foo = 2
-        >>> m.foo
-        200
-    """
-
-    def __init__(self, name, doc=None):
-        self.name = name
-        self.__doc__ = doc
-        self.getterName = "_get_" + name
-        self.setterName = "_set_" + name
-
-    def __get__(self, obj, cls):
-        getter = getattr(obj, self.getterName, None)
-        if getter is not None:
-            return getter()
-        else:
-            raise FontPartsError("no getter for %r" % self.name)
-
-    def __set__(self, obj, value):
-        setter = getattr(obj, self.setterName, None)
-        if setter is not None:
-            setter(value)
-        else:
-            raise FontPartsError("no setter for %r" % self.name)
-
-
-def interpolate(a, b, v):
-    return a + (b - a) * v
-
+    def _setSelectedSubObjects(self, subObjects, selected):
+        for obj in subObjects:
+            obj.selected = obj in selected
 
 
 class PointPositionMixin(object):
