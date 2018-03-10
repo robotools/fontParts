@@ -1,12 +1,14 @@
 from fontParts.base.errors import FontPartsError
 from fontParts.base.base import (
-    BaseObject, InterpolationMixin, dynamicProperty, reference)
+    BaseObject, InterpolationMixin, SelectionMixin,
+    dynamicProperty, reference
+)
 from fontParts.base import normalizers
 from fontParts.base.compatibility import LayerCompatibilityReporter
 from fontParts.base.color import Color
 
 
-class _BaseGlyphVendor(BaseObject):
+class _BaseGlyphVendor(BaseObject, SelectionMixin):
 
     """
     This class exists to provide common glyph
@@ -266,6 +268,84 @@ class _BaseGlyphVendor(BaseObject):
             destImage = dest.addImage(data=image.data, color=image.color)
             destImage.transformation = image.transformation
         return dest
+
+    # ---------
+    # Selection
+    # ---------
+
+    selectedGlyphs = dynamicProperty(
+        "base_selectedGlyphs",
+        """
+        A list of glyphs selected in the layer.
+
+        Getting selected glyph objects:
+
+            >>> for glyph in layer.selectedGlyphs:
+            ...     glyph.markColor = (1, 0, 0, 0.5)
+
+        Setting selected glyph objects:
+
+            >>> layer.selectedGlyphs = someGlyphs
+        """
+    )
+
+    def _get_base_selectedGlyphs(self):
+        selected = tuple([normalizers.normalizeGlyph(glyph) for glyph in self._get_selectedGlyphs()])
+        return selected
+
+    def _get_selectedGlyphs(self):
+        """
+        Subclasses may override this method.
+        """
+        return self._getSelectedSubObjects(self)
+
+    def _set_base_selectedGlyphs(self, value):
+        normalized = [normalizers.normalizeGlyph(glyph) for glyph in glyphs]
+        self._set_selectedGlyphs(normalized)
+
+    def _set_selectedGlyphs(self, value):
+        """
+        Subclasses may override this method.
+        """
+        return self._setSelectedSubObjects(self, value)
+
+    selectedGlyphNames = dynamicProperty(
+        "base_selectedGlyphNames",
+        """
+        A list of names of glyphs selected in the layer.
+
+        Getting selected glyph names:
+
+            >>> for name in layer.selectedGlyphNames:
+            ...     print(name)
+
+        Setting selected glyph names:
+
+            >>> layer.selectedGlyphNames = ["A", "B", "C"]
+        """
+    )
+
+    def _get_base_selectedGlyphNames(self):
+        selected = tuple([normalizers.normalizeGlyphName(name) for name in self._get_selectedGlyphNames()])
+        return selected
+
+    def _get_selectedGlyphNames(self):
+        """
+        Subclasses may override this method.
+        """
+        selected = [glyph.name for glyph in self.selectedGlyphs]
+        return selected
+
+    def _set_base_selectedGlyphNames(self, value):
+        normalized = [normalizers.normalizeGlyphName(name) for name in value]
+        self._set_selectedGlyphNames(normalized)
+
+    def _set_selectedGlyphNames(self, value):
+        """
+        Subclasses may override this method.
+        """
+        select = [self[name] for name in value]
+        self.selectedGlyphs = select
 
     # --------------------
     # Legacy Compatibility
