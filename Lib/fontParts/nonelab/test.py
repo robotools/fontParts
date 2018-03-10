@@ -16,6 +16,56 @@ from fontParts.nonelab.image import RImage
 from fontParts.nonelab.lib import RLib
 from fontParts.nonelab.guideline import RGuideline
 
+
+
+# defcon does not have prebuilt support for
+# selection states, so we simulate selection
+# behavior with a small subclasses for testing
+# purposes only.
+
+def _get_selected(self):
+    if not hasattr(self.naked(), "_testSelected"):
+        return False
+    return self.naked()._testSelected
+
+def _set_selected(self, value):
+    self.naked()._testSelected = value
+
+
+class NLTestGuideline(RGuideline):
+
+    _get_selected = _get_selected
+    _set_selected = _set_selected
+
+
+class NLTestAnchor(RAnchor):
+
+    _get_selected = _get_selected
+    _set_selected = _set_selected
+
+
+class NLTestComponent(RComponent):
+
+    _get_selected = _get_selected
+    _set_selected = _set_selected
+
+
+class NLTestContour(RContour):
+
+    _get_selected = _get_selected
+    _set_selected = _set_selected
+
+
+class NLTestGlyph(RGlyph):
+
+    contourClass = NLTestContour
+    componentClass = NLTestComponent
+    anchorClass = NLTestAnchor
+    guidelineClass = NLTestGuideline
+    _get_selected = _get_selected
+    _set_selected = _set_selected
+
+
 classMapping = dict(
     font=RFont,
     info=RInfo,
@@ -23,16 +73,16 @@ classMapping = dict(
     kerning=RKerning,
     features=RFeatures,
     layer=RLayer,
-    glyph=RGlyph,
-    contour=RContour,
+    glyph=NLTestGlyph,
+    contour=NLTestContour,
     segment=RSegment,
     bPoint=RBPoint,
     point=RPoint,
-    anchor=RAnchor,
-    component=RComponent,
+    anchor=NLTestAnchor,
+    component=NLTestComponent,
     image=RImage,
     lib=RLib,
-    guideline=RGuideline,
+    guideline=NLTestGuideline,
 )
 
 def noneLabObjectGenerator(cls):

@@ -2,14 +2,15 @@ from fontTools.misc import transform
 from fontParts.base import normalizers
 from fontParts.base.errors import FontPartsError
 from fontParts.base.base import (
-    BaseObject, TransformationMixin, InterpolationMixin, dynamicProperty, 
-    PointPositionMixin, reference)
+    BaseObject, TransformationMixin, InterpolationMixin, PointPositionMixin, SelectionMixin,
+    dynamicProperty, reference
+)
 from fontParts.base.compatibility import ComponentCompatibilityReporter
 from fontParts.base.deprecated import DeprecatedComponent, RemovedComponent
 
 
 class BaseComponent(BaseObject, TransformationMixin, DeprecatedComponent, 
-    RemovedComponent, PointPositionMixin, InterpolationMixin):
+    RemovedComponent, PointPositionMixin, InterpolationMixin, SelectionMixin):
 
     copyAttributes = (
         "baseGlyph",

@@ -2305,7 +2305,7 @@ class BaseGlyph(BaseObject, TransformationMixin, InterpolationMixin, SelectionMi
             normalized.append(i)
         self._set_selectedGuidelines(normalized)
 
-    def _set_selectedComponents(self, value):
+    def _set_selectedGuidelines(self, value):
         """
         Subclasses may override this method.
         """

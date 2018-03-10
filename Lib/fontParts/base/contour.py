@@ -1,13 +1,15 @@
 from fontParts.base.errors import FontPartsError
 from fontParts.base.base import (
-    BaseObject, TransformationMixin, InterpolationMixin, dynamicProperty, reference)
+    BaseObject, TransformationMixin, InterpolationMixin, SelectionMixin,
+    dynamicProperty, reference
+)
 from fontParts.base import normalizers
 from fontParts.base.compatibility import ContourCompatibilityReporter
 from fontParts.base.bPoint import absoluteBCPIn, absoluteBCPOut
 from fontParts.base.deprecated import DeprecatedContour, RemovedContour
 
 
-class BaseContour(BaseObject, TransformationMixin, InterpolationMixin, DeprecatedContour, RemovedContour):
+class BaseContour(BaseObject, TransformationMixin, InterpolationMixin, SelectionMixin, DeprecatedContour, RemovedContour):
 
     segmentClass = None
     bPointClass = None

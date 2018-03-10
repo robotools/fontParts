@@ -530,7 +530,7 @@ def normalizeComponent(value):
     * **value** must be a instance of :class:`BaseComponent`
     * Returned value is the same type as the input value.
     """
-    from fontParts.base.anchor import BaseComponent
+    from fontParts.base.component import BaseComponent
     if not isinstance(value, BaseComponent):
         raise FontPartsError("Component must be a Component instance, not %s." % type(value).__name__)
     return value
