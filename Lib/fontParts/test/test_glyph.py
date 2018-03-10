@@ -16,6 +16,11 @@ class TestGlyph(unittest.TestCase):
         pen.lineTo((200, 100))
         pen.lineTo((200, 0))
         pen.closePath()
+        pen.moveTo((110, 10))
+        pen.lineTo((110, 90))
+        pen.lineTo((190, 90))
+        pen.lineTo((190, 10))
+        pen.closePath()
         return glyph, unrequested
 
     # -------
@@ -111,4 +116,36 @@ class TestGlyph(unittest.TestCase):
         self.assertNotEqual(
             glyph_two,
             a
+        )
+
+    # ---------
+    # Selection
+    # ---------
+
+    def test_selectedContours(self):
+        glyph = self.getGlyph_generic()
+        contour1 = glyph.contours[0]
+        contour2 = glyph.contours[1]
+        try:
+            contour1.selected = False
+        except NotImplementedError:
+            return
+        self.assertEqual(
+            glyph.selectedContours(),
+            ()
+        )
+        contour2.selected = True
+        self.assertEqual(
+            glyph.selectedContours(),
+            (contour2,)
+        )
+        glyph.selectedContours = [contour1, contour2]
+        self.assertEqual(
+            glyph.selectedContours(),
+            (contour1, contour2)
+        )
+        glyph.selectedContours = []
+        self.assertEqual(
+            glyph.selectedContours(),
+            ()
         )
