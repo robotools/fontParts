@@ -674,13 +674,27 @@ class SelectionMixin(object):
 
     def _get_selected(self):
         """
-        Subclasses must override this method if they implement object selection.
+        This is the environment implementation of
+        :attr:`BaseObject.selected`. This must return a
+        **boolean** representing the selection state
+        of the object. The value will be normalized
+        with :func:`normalizers.normalizeBoolean`.
+
+        Subclasses must override this method if they
+        implement object selection.
         """
         self.raiseNotImplementedError()
 
     def _set_selected(self, value):
         """
-        Subclasses must override this method if they implement object selection.
+        This is the environment implementation of
+        :attr:`BaseObject.selected`. **value** will
+        be a **boolean** representing the object's
+        selection state. The value will have been
+        normalized with :func:`normalizers.normalizeBoolean`.
+
+        Subclasses must override this method if they
+        implement object selection.
         """
         self.raiseNotImplementedError()
 
