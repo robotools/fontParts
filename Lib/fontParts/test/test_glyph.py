@@ -123,7 +123,7 @@ class TestGlyph(unittest.TestCase):
     # ---------
 
     def test_selectedContours(self):
-        glyph = self.getGlyph_generic()
+        glyph, unrequested = self.getGlyph_generic()
         contour1 = glyph.contours[0]
         contour2 = glyph.contours[1]
         try:

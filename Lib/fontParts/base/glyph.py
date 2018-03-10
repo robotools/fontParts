@@ -2237,7 +2237,7 @@ class BaseGlyph(BaseObject, TransformationMixin, InterpolationMixin, SelectionMi
         """
     )
 
-    def _get_base_selectedAnchorsself):
+    def _get_base_selectedAnchors(self):
         selected = tuple([normalizers.normalizeAnchor(anchor) for anchor in self._get_selectedAnchors()])
         return selected
 
