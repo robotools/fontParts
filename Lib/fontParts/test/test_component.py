@@ -6,17 +6,17 @@ from fontParts.base import FontPartsError
 class TestComponent(unittest.TestCase):
 
     def getComponent_generic(self):
-        component, unrequested = self.objectGenerator("component")
+        component, _unrequested = self.objectGenerator("component")
         component.baseGlyph = "A"
         component.transformation = (1, 0, 0, 1, 0, 0)
-        return component, unrequested
+        return component
 
     # ----------
     # Base Glyph
     # ----------
 
     def test_baseGlyph(self):
-        component, unrequested = self.getComponent_generic()
+        component = self.getComponent_generic()
         # get
         self.assertEqual(
             component.baseGlyph,
@@ -41,10 +41,10 @@ class TestComponent(unittest.TestCase):
     # ------
 
     def getComponent_bounds(self):
-        font, unrequested = self.objectGenerator("font")
-        unrequested.append(font)
+        font = self.objectGenerator("font")
+        _unrequested.append(font)
         glyph = font.newGlyph("A")
-        unrequested.append(glyph)
+        _unrequested.append(glyph)
         pen = glyph.getPen()
         pen.moveTo((0, 0))
         pen.lineTo((0, 100))
@@ -52,12 +52,12 @@ class TestComponent(unittest.TestCase):
         pen.lineTo((100, 0))
         pen.closePath()
         glyph = font.newGlyph("B")
-        unrequested.append(glyph)
+        _unrequested.append(glyph)
         component = glyph.appendComponent("A")
-        return component, unrequested
+        return component
 
     def test_bounds(self):
-        component, unrequested = self.getComponent_bounds()
+        component = self.getComponent_bounds()
         # get
         self.assertEqual(
             component.bounds,
@@ -81,7 +81,7 @@ class TestComponent(unittest.TestCase):
     # Hash
     # ----
     def test_hash(self):
-        component, unrequested = self.getComponent_generic()
+        component = self.getComponent_generic()
         self.assertEqual(
             isinstance(component, collections.Hashable),
             False
@@ -92,8 +92,8 @@ class TestComponent(unittest.TestCase):
     # --------
 
     def test_equal(self):
-        component_one, unrequested = self.getComponent_generic()
-        component_two, unrequested = self.getComponent_generic()
+        component_one = self.getComponent_generic()
+        component_two = self.getComponent_generic()
         self.assertEqual(
             component_one,
             component_one

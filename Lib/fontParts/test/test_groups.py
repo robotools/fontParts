@@ -6,21 +6,21 @@ from fontParts.base import FontPartsError
 class TestGroups(unittest.TestCase):
 
     def getGroups_generic(self):
-        groups, unrequested = self.objectGenerator("groups")
+        groups, _unrequested = self.objectGenerator("groups")
         groups.update({
             "group 1" : ["A", "B", "C"],
             "group 2" : ["x", "y", "z"],
             "group 3" : [],
             "group 4" : ["A"]
         })
-        return groups, unrequested
+        return groups
 
     # ---
     # len
     # ---
 
     def test_len(self):
-        groups, unrequested = self.getGroups_generic()
+        groups = self.getGroups_generic()
         self.assertEqual(
             len(groups),
             4
@@ -36,7 +36,7 @@ class TestGroups(unittest.TestCase):
     # ---------
 
     def test_find(self):
-        groups, unrequested = self.getGroups_generic()
+        groups = self.getGroups_generic()
         found = groups.findGlyph("A")
         found.sort()
         self.assertEqual(
@@ -55,7 +55,7 @@ class TestGroups(unittest.TestCase):
     # Hash
     # ----
     def test_hash(self):
-        groups, unrequested = self.getGroups_generic()
+        groups = self.getGroups_generic()
         self.assertEqual(
             isinstance(groups, collections.Hashable),
             False
@@ -66,8 +66,8 @@ class TestGroups(unittest.TestCase):
     # --------
 
     def test_equal(self):
-        groups_one, unrequested = self.getGroups_generic()
-        groups_two, unrequested = self.getGroups_generic()
+        groups_one = self.getGroups_generic()
+        groups_two = self.getGroups_generic()
         self.assertEqual(
             groups_one,
             groups_one

@@ -10,15 +10,15 @@ class TestFont(unittest.TestCase):
     # ------
 
     def getFont_glyphs(self):
-        font, unrequested = self.objectGenerator("font")
+        font, _unrequested = self.objectGenerator("font")
         for name in "ABCD":
             glyph = font.newGlyph(name)
-        return font, unrequested
+        return font
 
     # len
 
     def test_len(self):
-        font, unrequested = self.getFont_glyphs()
+        font = self.getFont_glyphs()
         # one layer
         self.assertEqual(
             len(font),
@@ -37,8 +37,8 @@ class TestFont(unittest.TestCase):
     # ----
 
     def test_hash(self):
-        font_one, unrequested = self.getFont_glyphs()
-        font_two, unrequested = self.getFont_glyphs()
+        font_one = self.getFont_glyphs()
+        font_two = self.getFont_glyphs()
         self.assertEqual(
             hash(font_one),
             hash(font_one)
@@ -66,8 +66,8 @@ class TestFont(unittest.TestCase):
     # --------
 
     def test_equal(self):
-        font_one, unrequested = self.getFont_glyphs()
-        font_two, unrequested = self.getFont_glyphs()
+        font_one = self.getFont_glyphs()
+        font_two = self.getFont_glyphs()
         self.assertEqual(
             font_one,
             font_one

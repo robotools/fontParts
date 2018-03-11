@@ -10,15 +10,15 @@ class TestLayer(unittest.TestCase):
     # ------
 
     def getLayer_glyphs(self):
-        layer, unrequested = self.objectGenerator("layer")
+        layer, _unrequested = self.objectGenerator("layer")
         for name in "ABCD":
             glyph = layer.newGlyph(name)
-        return layer, unrequested
+        return layer
 
     # len
 
     def test_len(self):
-        layer, unrequested = self.getLayer_glyphs()
+        layer = self.getLayer_glyphs()
         self.assertEqual(
             len(layer),
             4
@@ -28,7 +28,7 @@ class TestLayer(unittest.TestCase):
     # Hash
     # ----
     def test_hash(self):
-        layer, unrequested = self.getLayer_glyphs()
+        layer = self.getLayer_glyphs()
         self.assertEqual(
             isinstance(layer, collections.Hashable),
             False
@@ -39,8 +39,8 @@ class TestLayer(unittest.TestCase):
     # --------
 
     def test_equal(self):
-        layer_one, unrequested = self.getLayer_glyphs()
-        layer_two, unrequested = self.getLayer_glyphs()
+        layer_one = self.getLayer_glyphs()
+        layer_two = self.getLayer_glyphs()
         self.assertEqual(
             layer_one,
             layer_one

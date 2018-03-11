@@ -260,17 +260,17 @@ testImageData = testImageData.encode('utf-8')
 class TestImage(unittest.TestCase):
 
     def getImage_generic(self):
-        image, unrequested = self.objectGenerator("image")
+        image, _unrequested = self.objectGenerator("image")
         image.data = testImageData
         image.transformation = (1, 0, 0, 1, 0, 0)
-        return image, unrequested
+        return image
 
     # ----
     # Data
     # ----
 
     def test_data(self):
-        image, unrequested = self.getImage_generic()
+        image = self.getImage_generic()
         # get
         self.assertEqual(
             image.data,
@@ -290,7 +290,7 @@ class TestImage(unittest.TestCase):
     # Hash
     # ----
     def test_hash(self):
-        image, unrequested = self.getImage_generic()
+        image = self.getImage_generic()
         self.assertEqual(
             isinstance(image, collections.Hashable),
             False
@@ -301,8 +301,8 @@ class TestImage(unittest.TestCase):
     # --------
 
     def test_equal(self):
-        image_one, unrequested = self.getImage_generic()
-        image_two, unrequested = self.getImage_generic()
+        image_one = self.getImage_generic()
+        image_two = self.getImage_generic()
         self.assertEqual(
             image_one,
             image_one

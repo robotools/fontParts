@@ -6,16 +6,16 @@ from fontParts.base import FontPartsError
 class TestInfo(unittest.TestCase):
 
     def getInfo_generic(self):
-        info, unrequested = self.objectGenerator("info")
+        info, _unrequested = self.objectGenerator("info")
         info.unitsPerEm = 1000
-        return info, unrequested
+        return info
 
     # ----------
     # Dimensions
     # ----------
 
     def test_unitsPerEm(self):
-        info, unrequested = self.getInfo_generic()
+        info = self.getInfo_generic()
         # get
         self.assertEqual(
             info.unitsPerEm,
@@ -42,7 +42,7 @@ class TestInfo(unittest.TestCase):
     # Hash
     # ----
     def test_hash(self):
-        info, unrequested = self.getInfo_generic()
+        info = self.getInfo_generic()
         self.assertEqual(
             isinstance(info, collections.Hashable),
             False
@@ -53,8 +53,8 @@ class TestInfo(unittest.TestCase):
     # --------
 
     def test_equal(self):
-        info_one, unrequested = self.getInfo_generic()
-        info_two, unrequested = self.getInfo_generic()
+        info_one = self.getInfo_generic()
+        info_two = self.getInfo_generic()
         self.assertEqual(
             info_one,
             info_one

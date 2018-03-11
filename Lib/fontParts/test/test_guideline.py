@@ -6,18 +6,18 @@ from fontParts.base import FontPartsError
 class TestGuideline(unittest.TestCase):
 
     def getGuideline_generic(self):
-        guideline, unrequested = self.objectGenerator("guideline")
+        guideline, _unrequested = self.objectGenerator("guideline")
         guideline.x = 1
         guideline.y = 2
         guideline.angle = 90
-        return guideline, unrequested
+        return guideline
 
     # --------
     # Position
     # --------
 
     def test_x(self):
-        guideline, unrequested = self.getGuideline_generic()
+        guideline = self.getGuideline_generic()
         # get
         self.assertEqual(
             guideline.x,
@@ -57,7 +57,7 @@ class TestGuideline(unittest.TestCase):
     # Hash
     # ----
     def test_hash(self):
-        guideline, unrequested = self.getGuideline_generic()
+        guideline = self.getGuideline_generic()
         self.assertEqual(
             isinstance(guideline, collections.Hashable),
             False
@@ -68,8 +68,8 @@ class TestGuideline(unittest.TestCase):
     # --------
 
     def test_equal(self):
-        guideline_one, unrequested = self.getGuideline_generic()
-        guideline_two, unrequested = self.getGuideline_generic()
+        guideline_one = self.getGuideline_generic()
+        guideline_two = self.getGuideline_generic()
         self.assertEqual(
             guideline_one,
             guideline_one

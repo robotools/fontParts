@@ -6,12 +6,12 @@ from fontParts.base import FontPartsError
 class TestSegment(unittest.TestCase):
 
     def getSegment_line(self):
-        contour, unrequested = self.objectGenerator("contour")
-        unrequested.append(contour)
+        contour, _unrequested = self.objectGenerator("contour")
+        _unrequested.append(contour)
         contour.appendPoint((0, 0), "move")
         contour.appendPoint((101, 202), "line")
         segment = contour[1]
-        return segment, unrequested
+        return segment
 
     # ----
     # Type
@@ -19,13 +19,13 @@ class TestSegment(unittest.TestCase):
 
     def test_typeLine(self):
         # get
-        segment, unrequested = self.getSegment_line()
+        segment = self.getSegment_line()
         self.assertEqual(
             segment.type,
             "line"
         )
         # set: move
-        segment, unrequested = self.getSegment_line()
+        segment = self.getSegment_line()
         segment.type = "move"
         self.assertEqual(
             segment.type,
@@ -44,7 +44,7 @@ class TestSegment(unittest.TestCase):
             (101, 202)
         )
         # set: curve
-        segment, unrequested = self.getSegment_line()
+        segment = self.getSegment_line()
         segment.type = "curve"
         self.assertEqual(
             segment.type,
@@ -65,7 +65,7 @@ class TestSegment(unittest.TestCase):
             ((0, 0), (101, 202), (101, 202))
         )
         # set: qcurve
-        segment, unrequested = self.getSegment_line()
+        segment = self.getSegment_line()
         segment.type = "qcurve"
         self.assertEqual(
             segment.type,
@@ -96,7 +96,7 @@ class TestSegment(unittest.TestCase):
     # Hash
     # ----
     def test_hash(self):
-        segment, unrequested = self.getSegment_line()
+        segment = self.getSegment_line()
         self.assertEqual(
             isinstance(segment, collections.Hashable),
             False
@@ -107,8 +107,8 @@ class TestSegment(unittest.TestCase):
     # --------
 
     def test_equal(self):
-        segment_one, unrequested = self.getSegment_line()
-        segment_two, unrequested = self.getSegment_line()
+        segment_one = self.getSegment_line()
+        segment_two = self.getSegment_line()
         self.assertEqual(
             segment_one,
             segment_one

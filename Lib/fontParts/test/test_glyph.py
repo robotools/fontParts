@@ -6,7 +6,7 @@ from fontParts.base import FontPartsError
 class TestGlyph(unittest.TestCase):
 
     def getGlyph_generic(self):
-        glyph, unrequested = self.objectGenerator("glyph")
+        glyph, _unrequested = self.objectGenerator("glyph")
         glyph.name = "Test Glyph 1"
         glyph.unicode = int(ord("X"))
         glyph.width = 250
@@ -16,7 +16,7 @@ class TestGlyph(unittest.TestCase):
         pen.lineTo((200, 100))
         pen.lineTo((200, 0))
         pen.closePath()
-        return glyph, unrequested
+        return glyph
 
     # -------
     # Metrics
@@ -24,7 +24,7 @@ class TestGlyph(unittest.TestCase):
 
     def test_width(self):
         # get
-        glyph, unrequested = self.getGlyph_generic()
+        glyph = self.getGlyph_generic()
         self.assertEqual(
             glyph.width,
             250
@@ -56,8 +56,8 @@ class TestGlyph(unittest.TestCase):
     # ----
 
     def test_hash(self):
-        glyph_one, unrequested = self.getGlyph_generic()
-        glyph_two, unrequested = self.getGlyph_generic()
+        glyph_one = self.getGlyph_generic()
+        glyph_two = self.getGlyph_generic()
         glyph_one.name = "Test"
         self.assertEqual(
             hash(glyph_one),
@@ -87,8 +87,8 @@ class TestGlyph(unittest.TestCase):
     # --------
 
     def test_equal(self):
-        glyph_one, unrequested = self.getGlyph_generic()
-        glyph_two, unrequested = self.getGlyph_generic()
+        glyph_one = self.getGlyph_generic()
+        glyph_two = self.getGlyph_generic()
         glyph_one.name = "Test"
         self.assertEqual(
             glyph_one,
