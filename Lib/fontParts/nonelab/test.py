@@ -18,7 +18,6 @@ from fontParts.nonelab.lib import RLib
 from fontParts.nonelab.guideline import RGuideline
 
 
-
 # defcon does not have prebuilt support for
 # selection states, so we simulate selection
 # behavior with a small subclasses for testing

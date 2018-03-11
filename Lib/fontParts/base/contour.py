@@ -886,7 +886,7 @@ class BaseContour(BaseObject, TransformationMixin, InterpolationMixin, Selection
     # Selection
     # ---------
 
-    # contours
+    # segments
 
     selectedSegments = dynamicProperty(
         "base_selectedSegments",
@@ -933,3 +933,51 @@ class BaseContour(BaseObject, TransformationMixin, InterpolationMixin, Selection
         Subclasses may override this method.
         """
         return self._setSelectedSubObjects(self.segments, value)
+
+    # points
+
+    selectedPoints = dynamicProperty(
+        "base_selectedPoints",
+        """
+        A list of points selected in the contour.
+
+        Getting selected point objects:
+
+            >>> for point in contour.selectedPoints:
+            ...     point.move((10, 20))
+
+        Setting selected point objects:
+
+            >>> contour.selectedPoints = somePoints
+
+        Setting also supports point indexes:
+
+            >>> contour.selectedPoints = [0, 2]
+        """
+    )
+
+    def _get_base_selectedPoints(self):
+        selected = tuple([normalizers.normalizePoint(point) for point in self._get_selectedPoints()])
+        return selected
+
+    def _get_selectedPoints(self):
+        """
+        Subclasses may override this method.
+        """
+        return self._getSelectedSubObjects(self.points)
+
+    def _set_base_selectedPoints(self, value):
+        normalized = []
+        for i in value:
+            if isinstance(i, int):
+                i = normalizers.normalizePointIndex(i)
+            else:
+                i = normalizers.normalizePoint(i)
+            normalized.append(i)
+        self._set_selectedPoints(normalized)
+
+    def _set_selectedPoints(self, value):
+        """
+        Subclasses may override this method.
+        """
+        return self._setSelectedSubObjects(self.points, value)
