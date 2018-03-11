@@ -219,9 +219,8 @@ def normalizeLayer(value):
     * Returned value is the same type as the input value.
     """
     from fontParts.base.layer import BaseLayer
-    if not isinstance(value, BaseLayer):
-        raise FontPartsError("Layer must be a Layer instance, not %s." % type(value).__name__)
-    return value
+    return normalizeInternalObjectType(value, BaseLayer, "Layer")
+
 
 def normalizeLayerName(value):
     """
@@ -250,9 +249,8 @@ def normalizeGlyph(value):
     * Returned value is the same type as the input value.
     """
     from fontParts.base.glyph import BaseGlyph
-    if not isinstance(value, BaseGlyph):
-        raise FontPartsError("Glyph must be a Glyph instance, not %s." % type(value).__name__)
-    return value
+    return normalizeInternalObjectType(value, BaseGlyph, "Glyph")
+
 
 def normalizeGlyphName(value):
     """
@@ -399,9 +397,8 @@ def normalizeContour(value):
     * Returned value is the same type as the input value.
     """
     from fontParts.base.contour import BaseContour
-    if not isinstance(value, BaseContour):
-        raise FontPartsError("Contour must be a Contour instance, not %s." % type(value).__name__)
-    return value
+    return normalizeInternalObjectType(value, BaseContour, "Contour")
+
 
 def normalizeContourIndex(value):
     """
@@ -469,9 +466,7 @@ def normalizePoint(value):
     * Returned value is the same type as the input value.
     """
     from fontParts.base.point import BasePoint
-    if not isinstance(value, BasePoint):
-        raise FontPartsError("Point must be a Point instance, not %s." % type(value).__name__)
-    return value
+    return normalizeInternalObjectType(value, BasePoint, "Point")
 
 # -------
 # Segment
@@ -485,9 +480,7 @@ def normalizeSegment(value):
     * Returned value is the same type as the input value.
     """
     from fontParts.base.segment import BaseSegment
-    if not isinstance(value, BaseSegment):
-        raise FontPartsError("Segment must be a Segment instance, not %s." % type(value).__name__)
-    return value
+    return normalizeInternalObjectType(value, BaseSegment, "Segment")
 
 def normalizeSegmentType(value):
     """
@@ -555,9 +548,8 @@ def normalizeComponent(value):
     * Returned value is the same type as the input value.
     """
     from fontParts.base.component import BaseComponent
-    if not isinstance(value, BaseComponent):
-        raise FontPartsError("Component must be a Component instance, not %s." % type(value).__name__)
-    return value
+    return normalizeInternalObjectType(value, BaseComponent, "Component")
+
 
 def normalizeComponentIndex(value):
     """
@@ -581,9 +573,8 @@ def normalizeAnchor(value):
     * Returned value is the same type as the input value.
     """
     from fontParts.base.anchor import BaseAnchor
-    if not isinstance(value, BaseAnchor):
-        raise FontPartsError("Anchor must be a Anchor instance, not %s." % type(value).__name__)
-    return value
+    return normalizeInternalObjectType(value, BaseAnchor, "Anchor")
+
 
 def normalizeAnchorIndex(value):
     """
@@ -622,9 +613,8 @@ def normalizeGuideline(value):
     * Returned value is the same type as the input value.
     """
     from fontParts.base.guideline import BaseGuideline
-    if not isinstance(value, BaseGuideline):
-        raise FontPartsError("Guideline must be a Guideline instance, not %s." % type(value).__name__)
-    return value
+    return normalizeInternalObjectType(value, BaseGuideline, "Guideline")
+
 
 def normalizeGuidelineIndex(value):
     """
@@ -634,6 +624,7 @@ def normalizeGuidelineIndex(value):
     * Returned value is the same type as the input value.
     """
     return normalizeIndex(value)
+
 
 def normalizeGuidelineAngle(value):
     """
@@ -671,6 +662,18 @@ def normalizeGuidelineName(value):
 # -------
 # Generic
 # -------
+
+def normalizeInternalObjectType(value, cls, name):
+    """
+    Normalizes an internal object type.
+
+    * **value** must be a instance of **cls**.
+    * Returned value is the same type as the input value.
+    """
+    if not isinstance(value, cls):
+        raise FontPartsError("%s must be a %s instance, not %s." % (name, name, type(value).__name__))
+    return value
+
 
 def normalizeBoolean(value):
     """
