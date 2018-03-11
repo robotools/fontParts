@@ -435,3 +435,13 @@ class DeprecatedFont(DeprecatedBase):
     def getGlyph(self, glyphName):
         warnings.warn("'Font.getGlyph(): use Font[glyphName]'", DeprecationWarning)
         return self[glyphName]
+
+    def _get_selection(self):
+        warnings.warn("'Font.selection: use Font.selectedGlyphNames'", DeprecationWarning)
+        return self.selectedGlyphNames
+
+    def _set_selection(self, glyphNames):
+        warnings.warn("'Font.selection: use Font.selectedGlyphNames'", DeprecationWarning)
+        self.selectedGlyphNames = glyphNames
+
+    selection = property(_get_selection, _set_selection, doc="Deprecated Font.selection")
