@@ -477,6 +477,18 @@ def normalizePoint(value):
 # Segment
 # -------
 
+def normalizeSegment(value):
+    """
+    Normalizes segment.
+
+    * **value** must be a instance of :class:`BaseSegment`
+    * Returned value is the same type as the input value.
+    """
+    from fontParts.base.segment import BaseSegment
+    if not isinstance(value, BaseSegment):
+        raise FontPartsError("Segment must be a Segment instance, not %s." % type(value).__name__)
+    return value
+
 def normalizeSegmentType(value):
     """
     Normalizes segment type.

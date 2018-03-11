@@ -85,3 +85,52 @@ class TestContour(unittest.TestCase):
             contour_two,
             a
         )
+
+    # ---------
+    # Selection
+    # ---------
+
+    def test_selected(self):
+        contour, unrequested = self.getContour_bounds()
+        try:
+            contour.selected = False
+        except NotImplementedError:
+            return
+        contour.selected = True
+        self.assertEqual(
+            contour.selected,
+            True
+        )
+        contour.selected = False
+        self.assertEqual(
+            contour.selected,
+            False
+        )
+
+    def test_selectedSegments(self):
+        contour, unrequested = self.getContour_bounds()
+        segment1 = contour.segments[0]
+        segment2 = contour.segments[1]
+        try:
+            segment1.selected = False
+        except NotImplementedError:
+            return
+        self.assertEqual(
+            contour.selectedSegments,
+            ()
+        )
+        segment1.selected = True
+        self.assertEqual(
+            contour.selectedSegments == (segment1,),
+            True
+        )
+        contour.selectedSegments = [segment1, segment2]
+        self.assertEqual(
+            contour.selectedSegments,
+            (segment1, segment2)
+        )
+        contour.selectedSegments = []
+        self.assertEqual(
+            contour.selectedSegments,
+            ()
+        )

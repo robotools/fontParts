@@ -881,3 +881,55 @@ class BaseContour(BaseObject, TransformationMixin, InterpolationMixin, Selection
         Subclasses must override this method.
         """
         self.raiseNotImplementedError()
+
+    # ---------
+    # Selection
+    # ---------
+
+    # contours
+
+    selectedSegments = dynamicProperty(
+        "base_selectedSegments",
+        """
+        A list of segments selected in the contour.
+
+        Getting selected segment objects:
+
+            >>> for segment in contour.selectedSegments:
+            ...     segment.move((10, 20))
+
+        Setting selected segment objects:
+
+            >>> contour.selectedSegments = someSegments
+
+        Setting also supports segment indexes:
+
+            >>> contour.selectedSegments = [0, 2]
+        """
+    )
+
+    def _get_base_selectedSegments(self):
+        selected = tuple([normalizers.normalizeSegment(segment) for segment in self._get_selectedSegments()])
+        return selected
+
+    def _get_selectedSegments(self):
+        """
+        Subclasses may override this method.
+        """
+        return self._getSelectedSubObjects(self.segments)
+
+    def _set_base_selectedSegments(self, value):
+        normalized = []
+        for i in value:
+            if isinstance(i, int):
+                i = normalizers.normalizeSegmentIndex(i)
+            else:
+                i = normalizers.normalizeSegment(i)
+            normalized.append(i)
+        self._set_selectedSegments(normalized)
+
+    def _set_selectedSegments(self, value):
+        """
+        Subclasses may override this method.
+        """
+        return self._setSelectedSubObjects(self.segments, value)

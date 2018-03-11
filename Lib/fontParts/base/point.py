@@ -1,11 +1,13 @@
 from fontTools.misc import transform
 from fontParts.base.base import (
-    BaseObject, TransformationMixin, dynamicProperty, PointPositionMixin, reference)
+    BaseObject, TransformationMixin, PointPositionMixin, SelectionMixin,
+    dynamicProperty, reference
+)
 from fontParts.base import normalizers
 from fontParts.base.deprecated import DeprecatedPoint, RemovedPoint
 
 
-class BasePoint(BaseObject, TransformationMixin, DeprecatedPoint, RemovedPoint, PointPositionMixin):
+class BasePoint(BaseObject, TransformationMixin, PointPositionMixin, SelectionMixin, DeprecatedPoint, RemovedPoint):
 
     """
     A point object. This object is almost always
