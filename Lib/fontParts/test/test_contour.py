@@ -197,3 +197,58 @@ class TestContour(unittest.TestCase):
             contour.selectedPoints,
             ()
         )
+
+    def test_selectedBPoints_default(self):
+        contour = self.getContour_bounds()
+        bPoint1 = contour.bPoints[0]
+        bPoint2 = contour.bPoints[1]
+        try:
+            bPoint1.selected = False
+        except NotImplementedError:
+            return
+        self.assertEqual(
+            contour.selectedBPoints,
+            ()
+        )
+
+    def test_selectedBPoints_setSubObject(self):
+        contour= self.getContour_bounds()
+        bPoint1 = contour.bPoints[0]
+        bPoint2 = contour.bPoints[1]
+        try:
+            bPoint1.selected = False
+        except NotImplementedError:
+            return
+        bPoint1.selected = True
+        self.assertEqual(
+            contour.selectedBPoints,
+            (bPoint1,)
+        )
+
+    def test_selectedBPoints_setFilledList(self):
+        contour = self.getContour_bounds()
+        bPoint1 = contour.bPoints[0]
+        bPoint2 = contour.bPoints[1]
+        try:
+            bPoint1.selected = False
+        except NotImplementedError:
+            return
+        contour.selectedBPoints = [bPoint1, bPoint2]
+        self.assertEqual(
+            contour.selectedBPoints,
+            (bPoint1, bPoint2)
+        )
+
+    def test_selectedBPoints_setEmptyList(self):
+        contour = self.getContour_bounds()
+        bPoint1 = contour.bPoints[0]
+        bPoint2 = contour.bPoints[1]
+        try:
+            bPoint1.selected = False
+        except NotImplementedError:
+            return
+        contour.selectedBPoints = []
+        self.assertEqual(
+            contour.selectedBPoints,
+            ()
+        )

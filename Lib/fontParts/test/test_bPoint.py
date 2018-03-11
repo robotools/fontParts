@@ -111,3 +111,31 @@ class TestBPoint(unittest.TestCase):
             bPoint_two,
             a
         )
+
+    # ---------
+    # Selection
+    # ---------
+
+    def test_selected_true(self):
+        bPoint = self.getBPoint_corner()
+        try:
+            bPoint.selected = False
+        except NotImplementedError:
+            return
+        bPoint.selected = True
+        self.assertEqual(
+            bPoint.selected,
+            True
+        )
+
+    def test_selected_false(self):
+        bPoint = self.getBPoint_corner()
+        try:
+            bPoint.selected = False
+        except NotImplementedError:
+            return
+        bPoint.selected = False
+        self.assertEqual(
+            bPoint.selected,
+            False
+        )

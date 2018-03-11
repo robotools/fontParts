@@ -29,6 +29,9 @@ def _get_selected(self):
             if point.selected:
                 return True
         return False
+    elif isinstance(self, NLTestBPoint):
+        point = self._point.naked()
+        return point.name == "selected"
     elif isinstance(self, NLTestPoint):
         return self.name == "selected"
     else:
@@ -40,6 +43,12 @@ def _set_selected(self, value):
     if isinstance(self, NLTestSegment):
         for point in self.points:
             point.selected = value
+    elif isinstance(self, NLTestBPoint):
+        point = self._point.naked()
+        if value:
+            point.name = "selected"
+        else:
+            point.name = None
     elif isinstance(self, NLTestPoint):
         if value:
             self.name = "selected"
@@ -50,6 +59,12 @@ def _set_selected(self, value):
 
 
 class NLTestPoint(RPoint):
+
+    _get_selected = _get_selected
+    _set_selected = _set_selected
+
+
+class NLTestBPoint(RBPoint):
 
     _get_selected = _get_selected
     _set_selected = _set_selected
@@ -88,6 +103,7 @@ class NLTestComponent(RComponent):
 class NLTestContour(RContour):
 
     segmentClass = NLTestSegment
+    bPointClass = NLTestBPoint
     pointClass = NLTestPoint
     _get_selected = _get_selected
     _set_selected = _set_selected
@@ -128,7 +144,7 @@ classMapping = dict(
     glyph=NLTestGlyph,
     contour=NLTestContour,
     segment=NLTestSegment,
-    bPoint=RBPoint,
+    bPoint=NLTestBPoint,
     point=NLTestPoint,
     anchor=NLTestAnchor,
     component=NLTestComponent,
