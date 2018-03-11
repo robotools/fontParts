@@ -88,3 +88,24 @@ class TestPoint(unittest.TestCase):
             point_two,
             a
         )
+
+    # ---------
+    # Selection
+    # ---------
+
+    def test_selected(self):
+        point, unrequested = self.getPoint_generic()
+        try:
+            point.selected = False
+        except NotImplementedError:
+            return
+        point.selected = True
+        self.assertEqual(
+            point.selected,
+            True
+        )
+        point.selected = False
+        self.assertEqual(
+            point.selected,
+            False
+        )
