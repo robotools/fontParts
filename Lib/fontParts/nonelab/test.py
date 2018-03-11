@@ -73,8 +73,15 @@ class NLTestLayer(RLayer):
     _set_selected = _set_selected
 
 
+class NLTestFont(RFont):
+
+    layerClass = NLTestLayer
+    _get_selected = _get_selected
+    _set_selected = _set_selected
+
+
 classMapping = dict(
-    font=RFont,
+    font=NLTestFont,
     info=RInfo,
     groups=RGroups,
     kerning=RKerning,

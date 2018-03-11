@@ -211,6 +211,18 @@ def normalizeLibValue(value):
 # Layer
 # -----
 
+def normalizeLayer(value):
+    """
+    Normalizes layer.
+
+    * **value** must be a instance of :class:`BaseLayer`
+    * Returned value is the same type as the input value.
+    """
+    from fontParts.base.layer import BaseLayer
+    if not isinstance(value, BaseLayer):
+        raise FontPartsError("Layer must be a Layer instance, not %s." % type(value).__name__)
+    return value
+
 def normalizeLayerName(value):
     """
     Normalizes layer name.

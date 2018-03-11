@@ -1220,3 +1220,81 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         """
         layer = self.getLayer(self.defaultLayer)
         return layer.getCharacterMapping()
+
+    # ---------
+    # Selection
+    # ---------
+
+    selectedLayers = dynamicProperty(
+        "base_selectedLayers",
+        """
+        A list of layers selected in the layer.
+
+        Getting selected layer objects:
+
+            >>> for layer in layer.selectedLayers:
+            ...     layer.color = (1, 0, 0, 0.5)
+
+        Setting selected layer objects:
+
+            >>> layer.selectedLayers = someLayers
+        """
+    )
+
+    def _get_base_selectedLayers(self):
+        selected = tuple([normalizers.normalizeLayer(layer) for layer in self._get_selectedLayers()])
+        return selected
+
+    def _get_selectedLayers(self):
+        """
+        Subclasses may override this method.
+        """
+        return self._getSelectedSubObjects(self.layers)
+
+    def _set_base_selectedLayers(self, value):
+        normalized = [normalizers.normalizeLayer(layer) for layer in value]
+        self._set_selectedLayers(normalized)
+
+    def _set_selectedLayers(self, value):
+        """
+        Subclasses may override this method.
+        """
+        return self._setSelectedSubObjects(self.layers, value)
+
+    selectedLayerNames = dynamicProperty(
+        "base_selectedLayerNames",
+        """
+        A list of names of layers selected in the layer.
+
+        Getting selected layer names:
+
+            >>> for name in layer.selectedLayerNames:
+            ...     print(name)
+
+        Setting selected layer names:
+
+            >>> layer.selectedLayerNames = ["A", "B", "C"]
+        """
+    )
+
+    def _get_base_selectedLayerNames(self):
+        selected = tuple([normalizers.normalizeLayerName(name) for name in self._get_selectedLayerNames()])
+        return selected
+
+    def _get_selectedLayerNames(self):
+        """
+        Subclasses may override this method.
+        """
+        selected = [layer.name for layer in self.selectedLayers]
+        return selected
+
+    def _set_base_selectedLayerNames(self, value):
+        normalized = [normalizers.normalizeLayerName(name) for name in value]
+        self._set_selectedLayerNames(normalized)
+
+    def _set_selectedLayerNames(self, value):
+        """
+        Subclasses may override this method.
+        """
+        select = [self.layers(name) for name in value]
+        self.selectedLayers = select
