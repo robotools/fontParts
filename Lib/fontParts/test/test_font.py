@@ -91,7 +91,7 @@ class TestFont(unittest.TestCase):
     def test_object_equal_self_variable_assignment(self):
         font_one = self.getFont_glyphs()
         a = font_one
-        glyph = a.newGlyph("XYZ")
+        a.newGlyph("XYZ")
         self.assertEqual(
             font_one,
             a

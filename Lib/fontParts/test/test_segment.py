@@ -103,7 +103,7 @@ class TestSegment(unittest.TestCase):
             types,
             ("offcurve", "offcurve", "qcurve")
         )
-    def test_curve_pt_x_y(self):
+    def test_qcurve_pt_x_y(self):
         segment = self.getSegment_line()
         segment.type = "qcurve"
         coordinates = tuple((point.x, point.y) for point in segment.points)

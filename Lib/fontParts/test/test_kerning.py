@@ -122,7 +122,7 @@ class TestKerning(unittest.TestCase):
             kerning[("public.kern1.X", "public.kern2.X")],
             2
         )
-    def test_set_group_glyph(self):
+    def test_set_glyph_group(self):
         kerning = self.getKerning_generic()
         kerning[("B", "public.kern2.X")] = 3
         self.assertEqual(
