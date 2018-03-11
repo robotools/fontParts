@@ -6,7 +6,7 @@ from fontParts.base import FontPartsError
 class TestGlyph(unittest.TestCase):
 
     def getGlyph_generic(self):
-        glyph, unrequested = self.objectGenerator("glyph")
+        glyph, _unrequested = self.objectGenerator("glyph")
         glyph.name = "Test Glyph 1"
         glyph.unicode = int(ord("X"))
         glyph.width = 250
@@ -27,38 +27,52 @@ class TestGlyph(unittest.TestCase):
         glyph.appendAnchor("Test Anchor 2", (3, 4))
         glyph.appendGuideline((1, 2), 0, "Test Guideline 1")
         glyph.appendGuideline((3, 4), 90, "Test Guideline 2")
-        return glyph, unrequested
+        return glyph
 
     # -------
     # Metrics
     # -------
 
-    def test_width(self):
-        # get
-        glyph, unrequested = self.getGlyph_generic()
+    def test_width_get(self):
+        glyph = self.getGlyph_generic()
         self.assertEqual(
             glyph.width,
             250
         )
-        # set: valid
+    def test_width_set_valid_positive(self):
+        glyph = self.getGlyph_generic()
         glyph.width = 300
         self.assertEqual(
             glyph.width,
             300
         )
+    def test_width_set_valid_zero(self):
+        glyph = self.getGlyph_generic()
         glyph.width = 0
         self.assertEqual(
             glyph.width,
             0
         )
+    def test_width_set_valid_float(self):
+        glyph = self.getGlyph_generic()
         glyph.width = 101.5
         self.assertEqual(
             glyph.width,
             101.5
         )
-        # set: invalid
+    def test_width_set_valid_negative(self):
+        glyph = self.getGlyph_generic()
+        glyph.width = -485
+        self.assertEqual(
+            glyph.width,
+            -485
+        )
+    def test_width_set_invalid_string(self):
+        glyph = self.getGlyph_generic()
         with self.assertRaises(FontPartsError):
             glyph.width = "abc"
+    def test_width_set_invalid_none(self):
+        glyph = self.getGlyph_generic()
         with self.assertRaises(FontPartsError):
             glyph.width = None
 
@@ -66,28 +80,39 @@ class TestGlyph(unittest.TestCase):
     # Hash
     # ----
 
-    def test_hash(self):
-        glyph_one, unrequested = self.getGlyph_generic()
-        glyph_two, unrequested = self.getGlyph_generic()
+    def test_hash_object_self(self):
+        glyph_one = self.getGlyph_generic()
         glyph_one.name = "Test"
         self.assertEqual(
             hash(glyph_one),
             hash(glyph_one)
         )
+    def test_hash_object_other(self):
+        glyph_one = self.getGlyph_generic()
+        glyph_two = self.getGlyph_generic()
+        glyph_one.name = "Test"
         glyph_two.name = "Test"
         self.assertNotEqual(
             hash(glyph_one),
             hash(glyph_two)
         )
+    def test_hash_object_self_variable_assignment(self):
+        glyph_one = self.getGlyph_generic()
         a = glyph_one
         self.assertEqual(
             hash(glyph_one),
             hash(a)
         )
+    def test_hash_object_other_variable_assignment(self):
+        glyph_one = self.getGlyph_generic()
+        glyph_two = self.getGlyph_generic()
+        a = glyph_one
         self.assertNotEqual(
             hash(glyph_two),
             hash(a)
         )
+    def test_is_hashable(self):
+        glyph_one = self.getGlyph_generic()
         self.assertEqual(
             isinstance(glyph_one, collections.Hashable),
             True
@@ -97,28 +122,41 @@ class TestGlyph(unittest.TestCase):
     # Equality
     # --------
 
-    def test_equal(self):
-        glyph_one, unrequested = self.getGlyph_generic()
-        glyph_two, unrequested = self.getGlyph_generic()
+    def test_object_equal_self(self):
+        glyph_one = self.getGlyph_generic()
         glyph_one.name = "Test"
         self.assertEqual(
             glyph_one,
             glyph_one
         )
+    def test_object_not_equal_other(self):
+        glyph_one = self.getGlyph_generic()
+        glyph_two = self.getGlyph_generic()
         self.assertNotEqual(
             glyph_one,
             glyph_two
         )
+    def test_object_not_equal_other_name_same(self):
+        glyph_one = self.getGlyph_generic()
+        glyph_two = self.getGlyph_generic()
+        glyph_one.name = "Test"
         glyph_two.name = "Test"
         self.assertNotEqual(
             glyph_one,
             glyph_two
         )
+    def test_object_equal_variable_assignment(self):
+        glyph_one = self.getGlyph_generic()
         a = glyph_one
+        a.name = "Other"
         self.assertEqual(
             glyph_one,
             a
         )
+    def test_object_not_equal_variable_assignment(self):
+        glyph_one = self.getGlyph_generic()
+        glyph_two = self.getGlyph_generic()
+        a = glyph_one
         self.assertNotEqual(
             glyph_two,
             a
@@ -129,7 +167,7 @@ class TestGlyph(unittest.TestCase):
     # ---------
 
     def test_selected(self):
-        glyph, unrequested = self.getGlyph_generic()
+        glyph = self.getGlyph_generic()
         try:
             glyph.selected = False
         except NotImplementedError:
@@ -139,6 +177,12 @@ class TestGlyph(unittest.TestCase):
             glyph.selected,
             True
         )
+    def test_not_selected(self):
+        glyph = self.getGlyph_generic()
+        try:
+            glyph.selected = False
+        except NotImplementedError:
+            return
         glyph.selected = False
         self.assertEqual(
             glyph.selected,
@@ -146,7 +190,7 @@ class TestGlyph(unittest.TestCase):
         )
 
     def test_selectedContours(self):
-        glyph, unrequested = self.getGlyph_generic()
+        glyph = self.getGlyph_generic()
         contour1 = glyph.contours[0]
         contour2 = glyph.contours[1]
         try:
@@ -174,7 +218,7 @@ class TestGlyph(unittest.TestCase):
         )
 
     def test_selectedComponents(self):
-        glyph, unrequested = self.getGlyph_generic()
+        glyph = self.getGlyph_generic()
         component1 = glyph.components[0]
         component2 = glyph.components[1]
         try:
@@ -202,7 +246,7 @@ class TestGlyph(unittest.TestCase):
         )
 
     def test_selectedAnchors(self):
-        glyph, unrequested = self.getGlyph_generic()
+        glyph = self.getGlyph_generic()
         anchor1 = glyph.anchors[0]
         anchor2 = glyph.anchors[1]
         try:
@@ -230,7 +274,7 @@ class TestGlyph(unittest.TestCase):
         )
 
     def test_selectedGuidelines(self):
-        glyph, unrequested = self.getGlyph_generic()
+        glyph = self.getGlyph_generic()
         guideline1 = glyph.guidelines[0]
         guideline2 = glyph.guidelines[1]
         try:

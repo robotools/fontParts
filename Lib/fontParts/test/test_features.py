@@ -6,30 +6,33 @@ from fontParts.base import FontPartsError
 class TestFeatures(unittest.TestCase):
 
     def getFeatures_generic(self):
-        features, unreferenced = self.objectGenerator("features")
+        features, _unrequested = self.objectGenerator("features")
         features.text = "# test"
-        return features, unreferenced
+        return features
 
     # ----
     # Text
     # ----
 
-    def test_text(self):
-        features, unreferenced = self.getFeatures_generic()
-        # get
+    def test_text_get(self):
+        features = self.getFeatures_generic()
         self.assertEqual(
             features.text,
             "# test"
         )
-        # set: valid
+    def test_text_valid_set(self):
+        features = self.getFeatures_generic()
         features.text = "# foo"
         self.assertEqual(
             features.text,
             "# foo"
         )
+    def test_text_set_none(self):
+        features = self.getFeatures_generic()
         features.text = None
         self.assertIsNone(features.text)
-        # set: invalid
+    def test_text_invalid_set(self):
+        features = self.getFeatures_generic()
         with self.assertRaises(FontPartsError):
             features.text = 123
 
@@ -37,7 +40,7 @@ class TestFeatures(unittest.TestCase):
     # Hash
     # ----
     def test_hash(self):
-        features, unrequested = self.getFeatures_generic()
+        features = self.getFeatures_generic()
         self.assertEqual(
             isinstance(features, collections.Hashable),
             False
@@ -47,22 +50,31 @@ class TestFeatures(unittest.TestCase):
     # Equality
     # --------
 
-    def test_equal(self):
-        features_one, unrequested = self.getFeatures_generic()
-        features_two, unrequested = self.getFeatures_generic()
+    def test_object_equal_self(self):
+        features_one = self.getFeatures_generic()
         self.assertEqual(
             features_one,
             features_one
         )
+    def test_object_not_equal_other(self):
+        features_one = self.getFeatures_generic()
+        features_two = self.getFeatures_generic()
         self.assertNotEqual(
             features_one,
             features_two
         )
+    def test_object_equal_self_variable_assignment(self):
+        features_one = self.getFeatures_generic()
         a = features_one
+        a.text += "# testing"
         self.assertEqual(
             features_one,
             a
         )
+    def test_object_not_equal_self_variable_assignment(self):
+        features_one = self.getFeatures_generic()
+        features_two = self.getFeatures_generic()
+        a = features_one
         self.assertNotEqual(
             features_two,
             a

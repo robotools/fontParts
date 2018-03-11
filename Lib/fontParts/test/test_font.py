@@ -10,33 +10,33 @@ class TestFont(unittest.TestCase):
     # ------
 
     def getFont_glyphs(self):
-        font, unrequested = self.objectGenerator("font")
+        font, _unrequested = self.objectGenerator("font")
         for name in "ABCD":
             glyph = font.newGlyph(name)
-        return font, unrequested
+        return font
 
     def getFont_layers(self):
-        font, unrequested = self.objectGenerator("font")
+        font, _unrequested = self.objectGenerator("font")
         for name in "ABCD":
             glyph = font.newLayer("layer " + name)
-        return font, unrequested
+        return font
 
     def getFont_guidelines(self):
-        font, unrequested = self.objectGenerator("font")
+        font, _unrequested = self.objectGenerator("font")
         font.appendGuideline((1, 2), 0, "Test Guideline 1")
         font.appendGuideline((3, 4), 90, "Test Guideline 2")
-        return font, unrequested
+        return font
 
     # len
 
-    def test_len(self):
-        font, unrequested = self.getFont_glyphs()
-        # one layer
+    def test_len_initial(self):
+        font = self.getFont_glyphs()
         self.assertEqual(
             len(font),
             4
         )
-        # two layers
+    def test_len_two_layers(self):
+        font = self.getFont_glyphs()
         layer = font.newLayer("test")
         layer.newGlyph("X")
         self.assertEqual(
@@ -48,26 +48,36 @@ class TestFont(unittest.TestCase):
     # Hash
     # ----
 
-    def test_hash(self):
-        font_one, unrequested = self.getFont_glyphs()
-        font_two, unrequested = self.getFont_glyphs()
+    def test_hash_same_object(self):
+        font_one = self.getFont_glyphs()
         self.assertEqual(
             hash(font_one),
             hash(font_one)
         )
+    def test_hash_different_object(self):
+        font_one = self.getFont_glyphs()
+        font_two = self.getFont_glyphs()
         self.assertNotEqual(
             hash(font_one),
             hash(font_two)
         )
+    def test_hash_same_object_variable_assignment(self):
+        font_one = self.getFont_glyphs()
         a = font_one
         self.assertEqual(
             hash(font_one),
             hash(a)
         )
+    def test_hash_different_object_variable_assignment(self):
+        font_one = self.getFont_glyphs()
+        font_two = self.getFont_glyphs()
+        a = font_one
         self.assertNotEqual(
             hash(font_two),
             hash(a)
         )
+    def test_hash_is_hasbable(self):
+        font_one = self.getFont_glyphs()
         self.assertEqual(
             isinstance(font_one, collections.Hashable),
             True
@@ -77,22 +87,31 @@ class TestFont(unittest.TestCase):
     # Equality
     # --------
 
-    def test_equal(self):
-        font_one, unrequested = self.getFont_glyphs()
-        font_two, unrequested = self.getFont_glyphs()
+    def test_object_equal_self(self):
+        font_one = self.getFont_glyphs()
         self.assertEqual(
             font_one,
             font_one
         )
+    def test_object_not_equal_other(self):
+        font_one = self.getFont_glyphs()
+        font_two = self.getFont_glyphs()
         self.assertNotEqual(
             font_one,
             font_two
         )
+    def test_object_equal_self_variable_assignment(self):
+        font_one = self.getFont_glyphs()
         a = font_one
+        a.newGlyph("XYZ")
         self.assertEqual(
             font_one,
             a
         )
+    def test_object_not_equal_other_variable_assignment(self):
+        font_one = self.getFont_glyphs()
+        font_two = self.getFont_glyphs()
+        a = font_one
         self.assertNotEqual(
             font_two,
             a
@@ -103,7 +122,7 @@ class TestFont(unittest.TestCase):
     # ---------
 
     def test_selected(self):
-        font, unrequested = self.getFont_glyphs()
+        font = self.getFont_glyphs()
         try:
             font.selected = False
         except NotImplementedError:
@@ -120,7 +139,7 @@ class TestFont(unittest.TestCase):
         )
 
     def test_selectedLayer(self):
-        font, unrequested = self.getFont_layers()
+        font = self.getFont_layers()
         try:
             font.getLayer(font.defaultLayer).selected = False
         except NotImplementedError:
@@ -151,7 +170,7 @@ class TestFont(unittest.TestCase):
         )
 
     def test_selectedGlyphs(self):
-        font, unrequested = self.getFont_glyphs()
+        font = self.getFont_glyphs()
         try:
             font.getLayer(font.defaultLayer).selected = False
         except NotImplementedError:
@@ -182,7 +201,7 @@ class TestFont(unittest.TestCase):
         )
 
     def test_selectedGlyphNames(self):
-        font, unrequested = self.getFont_glyphs()
+        font = self.getFont_glyphs()
         try:
             font.getLayer(font.defaultLayer).selected = False
         except NotImplementedError:
@@ -213,7 +232,7 @@ class TestFont(unittest.TestCase):
         )
 
     def test_selectedGuidelines(self):
-        font, unrequested = self.getFont_guidelines()
+        font = self.getFont_guidelines()
         guideline1 = font.guidelines[0]
         guideline2 = font.guidelines[1]
         try:

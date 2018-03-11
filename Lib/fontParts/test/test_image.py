@@ -260,29 +260,31 @@ testImageData = testImageData.encode('utf-8')
 class TestImage(unittest.TestCase):
 
     def getImage_generic(self):
-        image, unrequested = self.objectGenerator("image")
+        image, _unrequested = self.objectGenerator("image")
         image.data = testImageData
         image.transformation = (1, 0, 0, 1, 0, 0)
-        return image, unrequested
+        return image
 
     # ----
     # Data
     # ----
 
-    def test_data(self):
-        image, unrequested = self.getImage_generic()
+    def test_data_get(self):
+        image = self.getImage_generic()
         # get
         self.assertEqual(
             image.data,
             testImageData
         )
-        # set: valid
+    def test_data_set_valid(self):
+        image = self.getImage_generic()
         image.data = testImageData
         self.assertEqual(
             image.data,
             testImageData
         )
-        # set: invalid
+    def test_data_set_invalid(self):
+        image = self.getImage_generic()
         with self.assertRaises(FontPartsError):
             image.data = 123
 
@@ -290,7 +292,7 @@ class TestImage(unittest.TestCase):
     # Hash
     # ----
     def test_hash(self):
-        image, unrequested = self.getImage_generic()
+        image = self.getImage_generic()
         self.assertEqual(
             isinstance(image, collections.Hashable),
             False
@@ -300,22 +302,30 @@ class TestImage(unittest.TestCase):
     # Equality
     # --------
 
-    def test_equal(self):
-        image_one, unrequested = self.getImage_generic()
-        image_two, unrequested = self.getImage_generic()
+    def test_object_equal_self(self):
+        image_one = self.getImage_generic()
         self.assertEqual(
             image_one,
             image_one
         )
+    def test_object_not_equal_other(self):
+        image_one = self.getImage_generic()
+        image_two = self.getImage_generic()
         self.assertNotEqual(
             image_one,
             image_two
         )
+    def test_object_equal_self_variable_assignment(self):
+        image_one = self.getImage_generic()
         a = image_one
         self.assertEqual(
             image_one,
             a
         )
+    def test_object_not_equal_other_variable_assignment(self):
+        image_one = self.getImage_generic()
+        image_two = self.getImage_generic()
+        a = image_one
         self.assertNotEqual(
             image_two,
             a
@@ -326,7 +336,7 @@ class TestImage(unittest.TestCase):
     # ---------
 
     def test_selected(self):
-        image, unrequested = self.getImage_generic()
+        image = self.getImage_generic()
         try:
             image.selected = False
         except NotImplementedError:
@@ -336,6 +346,12 @@ class TestImage(unittest.TestCase):
             image.selected,
             True
         )
+    def test_not_selected(self):
+        image = self.getImage_generic()
+        try:
+            image.selected = False
+        except NotImplementedError:
+            return
         image.selected = False
         self.assertEqual(
             image.selected,

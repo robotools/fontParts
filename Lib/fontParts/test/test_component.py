@@ -6,33 +6,39 @@ from fontParts.base import FontPartsError
 class TestComponent(unittest.TestCase):
 
     def getComponent_generic(self):
-        component, unrequested = self.objectGenerator("component")
+        component, _unrequested = self.objectGenerator("component")
         component.baseGlyph = "A"
         component.transformation = (1, 0, 0, 1, 0, 0)
-        return component, unrequested
+        return component
 
     # ----------
     # Base Glyph
     # ----------
 
-    def test_baseGlyph(self):
-        component, unrequested = self.getComponent_generic()
+    def test_baseGlyph_generic(self):
+        component = self.getComponent_generic()
         # get
         self.assertEqual(
             component.baseGlyph,
             "A"
         )
-        # set: valid
+    def test_baseGlyph_valid_set(self):
+        component = self.getComponent_generic()
         component.baseGlyph = "B"
         self.assertEqual(
             component.baseGlyph,
             "B"
         )
-        # set: invalid
+    def test_baseGlyph_invalid_set_none(self):
+        component = self.getComponent_generic()
         with self.assertRaises(FontPartsError):
             component.baseGlyph = None
+    def test_baseGlyph_invalid_set_empty_string(self):
+        component = self.getComponent_generic()
         with self.assertRaises(FontPartsError):
             component.baseGlyph = ""
+    def test_baseGlyph_invalid_set_int(self):
+        component = self.getComponent_generic()
         with self.assertRaises(FontPartsError):
             component.baseGlyph = 123
 
@@ -41,10 +47,10 @@ class TestComponent(unittest.TestCase):
     # ------
 
     def getComponent_bounds(self):
-        font, unrequested = self.objectGenerator("font")
-        unrequested.append(font)
+        font, _unrequested = self.objectGenerator("font")
+        _unrequested.append(font)
         glyph = font.newGlyph("A")
-        unrequested.append(glyph)
+        _unrequested.append(glyph)
         pen = glyph.getPen()
         pen.moveTo((0, 0))
         pen.lineTo((0, 100))
@@ -52,28 +58,32 @@ class TestComponent(unittest.TestCase):
         pen.lineTo((100, 0))
         pen.closePath()
         glyph = font.newGlyph("B")
-        unrequested.append(glyph)
+        _unrequested.append(glyph)
         component = glyph.appendComponent("A")
-        return component, unrequested
+        return component
 
-    def test_bounds(self):
-        component, unrequested = self.getComponent_bounds()
-        # get
+    def test_bounds_get(self):
+        component = self.getComponent_bounds()
         self.assertEqual(
             component.bounds,
             (0, 0, 100, 100)
         )
+    def test_bounds_on_move(self):
+        component = self.getComponent_bounds()
         component.moveBy((0.1, -0.1))
         self.assertEqual(
             component.bounds,
             (0.1, -0.1, 100.1, 99.9)
         )
+    def test_bounds_on_scale(self):
+        component = self.getComponent_bounds()
         component.scaleBy((2, 0.5))
         self.assertEqual(
             component.bounds,
-            (0.2, -0.05, 200.2, 49.95)
+            (0, 0, 200, 50)
         )
-        # set
+    def test_bounds_invalid_set(self):
+        component = self.getComponent_bounds()
         with self.assertRaises(FontPartsError):
             component.bounds = (0, 0, 100, 100)
 
@@ -81,7 +91,7 @@ class TestComponent(unittest.TestCase):
     # Hash
     # ----
     def test_hash(self):
-        component, unrequested = self.getComponent_generic()
+        component = self.getComponent_generic()
         self.assertEqual(
             isinstance(component, collections.Hashable),
             False
@@ -91,22 +101,31 @@ class TestComponent(unittest.TestCase):
     # Equality
     # --------
 
-    def test_equal(self):
-        component_one, unrequested = self.getComponent_generic()
-        component_two, unrequested = self.getComponent_generic()
+    def test_object_equal_self(self):
+        component_one = self.getComponent_generic()
         self.assertEqual(
             component_one,
             component_one
         )
+    def test_object_not_equal_other(self):
+        component_one = self.getComponent_generic()
+        component_two = self.getComponent_generic()
         self.assertNotEqual(
             component_one,
             component_two
         )
+    def test_object_equal_assigned_variable(self):
+        component_one = self.getComponent_generic()
         a = component_one
+        a.baseGlyph = "C"
         self.assertEqual(
             component_one,
             a
         )
+    def test_object_not_equal_assigned_variable_other(self):
+        component_one = self.getComponent_generic()
+        component_two = self.getComponent_generic()
+        a = component_one
         self.assertNotEqual(
             component_two,
             a
@@ -117,7 +136,7 @@ class TestComponent(unittest.TestCase):
     # ---------
 
     def test_selected(self):
-        component, unrequested = self.getComponent_generic()
+        component = self.getComponent_generic()
         try:
             component.selected = False
         except NotImplementedError:
@@ -127,7 +146,12 @@ class TestComponent(unittest.TestCase):
             component.selected,
             True
         )
-        component.selected = False
+    def test_not_selected(self):
+        component = self.getComponent_generic()
+        try:
+            component.selected = False
+        except NotImplementedError:
+            return
         self.assertEqual(
             component.selected,
             False
