@@ -41,7 +41,7 @@ class TestComponent(unittest.TestCase):
     # ------
 
     def getComponent_bounds(self):
-        font = self.objectGenerator("font")
+        font, _unrequested = self.objectGenerator("font")
         _unrequested.append(font)
         glyph = font.newGlyph("A")
         _unrequested.append(glyph)

@@ -131,7 +131,7 @@ class TestAnchor(unittest.TestCase):
     # -------
 
     def getAnchor_copy(self):
-        anchor, _unrequested = self.getAnchor_generic()
+        anchor = self.getAnchor_generic()
         anchor.color = (0.1, 0.2, 0.3, 0.4)
         return anchor
 
@@ -244,7 +244,7 @@ class TestAnchor(unittest.TestCase):
         self.assertEqual(anchor.y, 2)
 
     def getAnchor_round(self):
-        anchor, _unrequested = self.getAnchor_generic()
+        anchor = self.getAnchor_generic()
         anchor.x = 1.1
         anchor.y = 2.5
         return anchor
