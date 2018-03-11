@@ -307,3 +307,24 @@ class TestAnchor(unittest.TestCase):
             anchor_two,
             a
         )
+
+    # ---------
+    # Selection
+    # ---------
+
+    def test_selected(self):
+        anchor, unrequested = self.getAnchor_generic()
+        try:
+            anchor.selected = False
+        except NotImplementedError:
+            return
+        anchor.selected = True
+        self.assertEqual(
+            anchor.selected,
+            True
+        )
+        anchor.selected = True
+        self.assertEqual(
+            anchor.selected,
+            True
+        )

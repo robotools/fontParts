@@ -111,3 +111,24 @@ class TestComponent(unittest.TestCase):
             component_two,
             a
         )
+
+    # ---------
+    # Selection
+    # ---------
+
+    def test_selected(self):
+        component, unrequested = self.getComponent_generic()
+        try:
+            component.selected = False
+        except NotImplementedError:
+            return
+        component.selected = True
+        self.assertEqual(
+            component.selected,
+            True
+        )
+        component.selected = True
+        self.assertEqual(
+            component.selected,
+            True
+        )

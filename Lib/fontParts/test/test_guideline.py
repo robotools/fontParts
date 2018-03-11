@@ -87,3 +87,24 @@ class TestGuideline(unittest.TestCase):
             guideline_two,
             a
         )
+
+    # ---------
+    # Selection
+    # ---------
+
+    def test_selected(self):
+        guideline, unrequested = self.getGuideline_generic()
+        try:
+            guideline.selected = False
+        except NotImplementedError:
+            return
+        guideline.selected = True
+        self.assertEqual(
+            guideline.selected,
+            True
+        )
+        guideline.selected = True
+        self.assertEqual(
+            guideline.selected,
+            True
+        )
