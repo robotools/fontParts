@@ -513,6 +513,16 @@ def normalizeSegmentType(value):
 # Type
 # ----
 
+def normalizeBPoint(value):
+    """
+    Normalizes bPoint.
+
+    * **value** must be a instance of :class:`BaseBPoint`
+    * Returned value is the same type as the input value.
+    """
+    from fontParts.base.bPoint import BaseBPoint
+    return normalizeInternalObjectType(value, BaseBPoint, "bPoint")
+
 def normalizeBPointType(value):
     """
     Normalizes bPoint type.

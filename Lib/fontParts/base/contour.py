@@ -981,3 +981,51 @@ class BaseContour(BaseObject, TransformationMixin, InterpolationMixin, Selection
         Subclasses may override this method.
         """
         return self._setSelectedSubObjects(self.points, value)
+
+    # bPoints
+
+    selectedBPoints = dynamicProperty(
+        "base_selectedBPoints",
+        """
+        A list of bPoints selected in the contour.
+
+        Getting selected bPoint objects:
+
+            >>> for bPoint in contour.selectedBPoints:
+            ...     bPoint.move((10, 20))
+
+        Setting selected bPoint objects:
+
+            >>> contour.selectedBPoints = someBPoints
+
+        Setting also supports bPoint indexes:
+
+            >>> contour.selectedBPoints = [0, 2]
+        """
+    )
+
+    def _get_base_selectedBPoints(self):
+        selected = tuple([normalizers.normalizeBPoint(bPoint) for bPoint in self._get_selectedBPoints()])
+        return selected
+
+    def _get_selectedBPoints(self):
+        """
+        Subclasses may override this method.
+        """
+        return self._getSelectedSubObjects(self.bPoints)
+
+    def _set_base_selectedBPoints(self, value):
+        normalized = []
+        for i in value:
+            if isinstance(i, int):
+                i = normalizers.normalizeBPointIndex(i)
+            else:
+                i = normalizers.normalizeBPoint(i)
+            normalized.append(i)
+        self._set_selectedBPoints(normalized)
+
+    def _set_selectedBPoints(self, value):
+        """
+        Subclasses may override this method.
+        """
+        return self._setSelectedSubObjects(self.bPoints, value)
