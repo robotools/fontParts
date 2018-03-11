@@ -186,12 +186,12 @@ class TestFont(unittest.TestCase):
         glyph1.selected = True
         glyph2.selected = True
         self.assertEqual(
-            font.selectedGlyphs,
+            tuple(sorted(font.selectedGlyphs, key=lambda glyph: glyph.name)),
             (glyph1, glyph2)
         )
         font.selectedGlyphs = [glyph3, glyph4]
         self.assertEqual(
-            font.selectedGlyphs,
+            tuple(sorted(font.selectedGlyphs, key=lambda glyph: glyph.name)),
             (glyph3, glyph4)
         )
         font.selectedGlyphs = []
@@ -217,12 +217,12 @@ class TestFont(unittest.TestCase):
         glyph1.selected = True
         glyph2.selected = True
         self.assertEqual(
-            font.selectedGlyphNames,
+            tuple(sorted(font.selectedGlyphNames)),
             ("A", "B")
         )
         font.selectedGlyphNames = ["C", "D"]
         self.assertEqual(
-            font.selectedGlyphNames,
+            tuple(sorted(font.selectedGlyphNames)),
             ("C", "D")
         )
         font.selectedGlyphNames = []

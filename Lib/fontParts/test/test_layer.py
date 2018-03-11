@@ -103,12 +103,12 @@ class TestLayer(unittest.TestCase):
         glyph1.selected = True
         glyph2.selected = True
         self.assertEqual(
-            layer.selectedGlyphs,
+            tuple(sorted(layer.selectedGlyphs, key=lambda glyph: glyph.name)),
             (glyph1, glyph2)
         )
         layer.selectedGlyphs = [glyph3, glyph4]
         self.assertEqual(
-            layer.selectedGlyphs,
+            tuple(sorted(layer.selectedGlyphs, key=lambda glyph: glyph.name)),
             (glyph3, glyph4)
         )
         layer.selectedGlyphs = []
@@ -134,12 +134,12 @@ class TestLayer(unittest.TestCase):
         glyph1.selected = True
         glyph2.selected = True
         self.assertEqual(
-            layer.selectedGlyphNames,
+            tuple(sorted(layer.selectedGlyphNames)),
             ("A", "B")
         )
         layer.selectedGlyphNames = ["C", "D"]
         self.assertEqual(
-            layer.selectedGlyphNames,
+            tuple(sorted(layer.selectedGlyphNames)),
             ("C", "D")
         )
         layer.selectedGlyphNames = []

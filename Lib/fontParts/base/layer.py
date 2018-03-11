@@ -290,9 +290,8 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
     )
 
     def _get_base_selectedGlyphs(self):
-        selected = [normalizers.normalizeGlyph(glyph) for glyph in self._get_selectedGlyphs()]
-        sorted(selected, key=lambda glyph: glyph.name)
-        return tuple(selected)
+        selected = tuple([normalizers.normalizeGlyph(glyph) for glyph in self._get_selectedGlyphs()])
+        return selected
 
     def _get_selectedGlyphs(self):
         """
@@ -327,9 +326,8 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
     )
 
     def _get_base_selectedGlyphNames(self):
-        selected = [normalizers.normalizeGlyphName(name) for name in self._get_selectedGlyphNames()]
-        selected.sort()
-        return tuple(selected)
+        selected = tuple([normalizers.normalizeGlyphName(name) for name in self._get_selectedGlyphNames()])
+        return selected
 
     def _get_selectedGlyphNames(self):
         """
