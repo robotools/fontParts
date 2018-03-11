@@ -128,6 +128,23 @@ class TestGlyph(unittest.TestCase):
     # Selection
     # ---------
 
+    def test_selected(self):
+        glyph, unrequested = self.getGlyph_generic()
+        try:
+            glyph.selected = False
+        except NotImplementedError:
+            return
+        glyph.selected = True
+        self.assertEqual(
+            glyph.selected,
+            True
+        )
+        glyph.selected = True
+        self.assertEqual(
+            glyph.selected,
+            True
+        )
+
     def test_selectedContours(self):
         glyph, unrequested = self.getGlyph_generic()
         contour1 = glyph.contours[0]

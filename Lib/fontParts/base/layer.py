@@ -300,7 +300,7 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
         return self._getSelectedSubObjects(self)
 
     def _set_base_selectedGlyphs(self, value):
-        normalized = [normalizers.normalizeGlyph(glyph) for glyph in glyphs]
+        normalized = [normalizers.normalizeGlyph(glyph) for glyph in value]
         self._set_selectedGlyphs(normalized)
 
     def _set_selectedGlyphs(self, value):

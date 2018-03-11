@@ -66,13 +66,20 @@ class NLTestGlyph(RGlyph):
     _set_selected = _set_selected
 
 
+class NLTestLayer(RLayer):
+
+    glyphClass = NLTestGlyph
+    _get_selected = _get_selected
+    _set_selected = _set_selected
+
+
 classMapping = dict(
     font=RFont,
     info=RInfo,
     groups=RGroups,
     kerning=RKerning,
     features=RFeatures,
-    layer=RLayer,
+    layer=NLTestLayer,
     glyph=NLTestGlyph,
     contour=NLTestContour,
     segment=RSegment,

@@ -237,7 +237,7 @@ def normalizeGlyph(value):
     * **value** must be a instance of :class:`BaseGlyph`
     * Returned value is the same type as the input value.
     """
-    from fontParts.base.contour import BaseGlyph
+    from fontParts.base.glyph import BaseGlyph
     if not isinstance(value, BaseGlyph):
         raise FontPartsError("Glyph must be a Glyph instance, not %s." % type(value).__name__)
     return value
