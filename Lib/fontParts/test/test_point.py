@@ -17,40 +17,47 @@ class TestPoint(unittest.TestCase):
     # Type
     # ----
 
-    def test_type(self):
+    def test_get(self):
         point = self.getPoint_generic()
         # get
         self.assertEqual(
             point.type,
             "line"
         )
-        # set: move
+    def test_set_move(self):
+        point = self.getPoint_generic()
         point.type = "move"
         self.assertEqual(
             point.type,
             "move"
         )
-        # set: curve
+    def test_set_curve(self):
+        point = self.getPoint_generic()
         point.type = "curve"
         self.assertEqual(
             point.type,
             "curve"
         )
-        # set: qcurve
+    def test_set_wcurve(self):
+        point = self.getPoint_generic()
         point.type = "qcurve"
         self.assertEqual(
             point.type,
             "qcurve"
         )
-        # set: offcurve
+    def test_set_offcurve(self):
+        point = self.getPoint_generic()
         point.type = "offcurve"
         self.assertEqual(
             point.type,
             "offcurve"
         )
-        # set: invalid
+    def test_set_invalid_point_type_string(self):
+        point = self.getPoint_generic()
         with self.assertRaises(FontPartsError):
             point.type = "xxx"
+    def test_set_invalid_point_type_int(self):
+        point = self.getPoint_generic()
         with self.assertRaises(FontPartsError):
             point.type = 123
 
@@ -68,22 +75,30 @@ class TestPoint(unittest.TestCase):
     # Equality
     # --------
 
-    def test_equal(self):
+    def test_object_equal_self(self):
         point_one = self.getPoint_generic()
-        point_two = self.getPoint_generic()
         self.assertEqual(
             point_one,
             point_one
         )
+    def test_object_not_equal_other(self):
+        point_one = self.getPoint_generic()
+        point_two = self.getPoint_generic()
         self.assertNotEqual(
             point_one,
             point_two
         )
+    def test_object_equal_self_variable_assignment(self):
+        point_one = self.getPoint_generic()
         a = point_one
         self.assertEqual(
             point_one,
             a
         )
+    def test_object_not_equal_other_variable_assignment(self):
+        point_one = self.getPoint_generic()
+        point_two = self.getPoint_generic()
+        a = point_one
         self.assertNotEqual(
             point_two,
             a

@@ -18,17 +18,22 @@ class TestBPoint(unittest.TestCase):
     # Type
     # ----
 
-    def test_type(self):
+    def test_type_corner(self):
         bPoint = self.getBPoint_corner()
         self.assertEqual(
             bPoint.type,
             "corner"
         )
+    def test_type_curve(self):
+        bPoint = self.getBPoint_corner()
         bPoint.type = "curve"
         self.assertEqual(
             bPoint.type,
             "curve"
         )
+    def test_type_not_equal(self):
+        bPoint = self.getBPoint_corner()
+        bPoint.type = "curve"
         self.assertNotEqual(
             bPoint.type,
             "corner"
@@ -38,12 +43,14 @@ class TestBPoint(unittest.TestCase):
     # Anchor
     # ------
 
-    def test_anchor(self):
+    def test_anchor_get(self):
         bPoint = self.getBPoint_corner()
         self.assertEqual(
             bPoint.anchor,
             (101, 202)
         )
+    def test_anchor_change(self):
+        bPoint = self.getBPoint_corner()
         bPoint.anchor = (51,45)
         self.assertEqual(
             bPoint.anchor,
@@ -75,22 +82,31 @@ class TestBPoint(unittest.TestCase):
     # Equality
     # --------
 
-    def test_equal(self):
+    def test_object_equal_self(self):
         bPoint_one = self.getBPoint_corner()
-        bPoint_two = self.getBPoint_corner()
         self.assertEqual(
             bPoint_one,
             bPoint_one
         )
+    def test_object_not_equal_other(self):
+        bPoint_one = self.getBPoint_corner()
+        bPoint_two = self.getBPoint_corner()
         self.assertNotEqual(
             bPoint_one,
             bPoint_two
         )
+    def test_object_equal_self_variable_assignment(self):
+        bPoint_one = self.getBPoint_corner()
         a = bPoint_one
+        a.anchor = (51,45)
         self.assertEqual(
             bPoint_one,
             a
         )
+    def test_object_not_equal_other_variable_assignment(self):
+        bPoint_one = self.getBPoint_corner()
+        bPoint_two = self.getBPoint_corner()
+        a = bPoint_one
         self.assertNotEqual(
             bPoint_two,
             a

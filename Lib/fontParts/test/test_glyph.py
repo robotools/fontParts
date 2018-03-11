@@ -22,32 +22,46 @@ class TestGlyph(unittest.TestCase):
     # Metrics
     # -------
 
-    def test_width(self):
-        # get
+    def test_width_get(self):
         glyph = self.getGlyph_generic()
         self.assertEqual(
             glyph.width,
             250
         )
-        # set: valid
+    def test_width_set_valid_positive(self):
+        glyph = self.getGlyph_generic()
         glyph.width = 300
         self.assertEqual(
             glyph.width,
             300
         )
+    def test_width_set_valid_zero(self):
+        glyph = self.getGlyph_generic()
         glyph.width = 0
         self.assertEqual(
             glyph.width,
             0
         )
+    def test_width_set_valid_float(self):
+        glyph = self.getGlyph_generic()
         glyph.width = 101.5
         self.assertEqual(
             glyph.width,
             101.5
         )
-        # set: invalid
+    def test_width_set_valid_negative(self):
+        glyph = self.getGlyph_generic()
+        glyph.width = -485
+        self.assertEqual(
+            glyph.width,
+            -485
+        )
+    def test_width_set_invalid_string(self):
+        glyph = self.getGlyph_generic()
         with self.assertRaises(FontPartsError):
             glyph.width = "abc"
+    def test_width_set_invalid_none(self):
+        glyph = self.getGlyph_generic()
         with self.assertRaises(FontPartsError):
             glyph.width = None
 
@@ -55,28 +69,39 @@ class TestGlyph(unittest.TestCase):
     # Hash
     # ----
 
-    def test_hash(self):
+    def test_hash_object_self(self):
         glyph_one = self.getGlyph_generic()
-        glyph_two = self.getGlyph_generic()
         glyph_one.name = "Test"
         self.assertEqual(
             hash(glyph_one),
             hash(glyph_one)
         )
+    def test_hash_object_other(self):
+        glyph_one = self.getGlyph_generic()
+        glyph_two = self.getGlyph_generic()
+        glyph_one.name = "Test"
         glyph_two.name = "Test"
         self.assertNotEqual(
             hash(glyph_one),
             hash(glyph_two)
         )
+    def test_hash_object_self_variable_assignment(self):
+        glyph_one = self.getGlyph_generic()
         a = glyph_one
         self.assertEqual(
             hash(glyph_one),
             hash(a)
         )
+    def test_hash_object_other_variable_assignment(self):
+        glyph_one = self.getGlyph_generic()
+        glyph_two = self.getGlyph_generic()
+        a = glyph_one
         self.assertNotEqual(
             hash(glyph_two),
             hash(a)
         )
+    def test_is_hashable(self):
+        glyph_one = self.getGlyph_generic()
         self.assertEqual(
             isinstance(glyph_one, collections.Hashable),
             True
@@ -86,28 +111,41 @@ class TestGlyph(unittest.TestCase):
     # Equality
     # --------
 
-    def test_equal(self):
+    def test_object_equal_self(self):
         glyph_one = self.getGlyph_generic()
-        glyph_two = self.getGlyph_generic()
         glyph_one.name = "Test"
         self.assertEqual(
             glyph_one,
             glyph_one
         )
+    def test_object_not_equal_other(self):
+        glyph_one = self.getGlyph_generic()
+        glyph_two = self.getGlyph_generic()
         self.assertNotEqual(
             glyph_one,
             glyph_two
         )
+    def test_object_not_equal_other_name_same(self):
+        glyph_one = self.getGlyph_generic()
+        glyph_two = self.getGlyph_generic()
+        glyph_one.name = "Test"
         glyph_two.name = "Test"
         self.assertNotEqual(
             glyph_one,
             glyph_two
         )
+    def test_object_equal_variable_assignment(self):
+        glyph_one = self.getGlyph_generic()
         a = glyph_one
+        a.name = "Other"
         self.assertEqual(
             glyph_one,
             a
         )
+    def test_object_not_equal_variable_assignment(self):
+        glyph_one = self.getGlyph_generic()
+        glyph_two = self.getGlyph_generic()
+        a = glyph_one
         self.assertNotEqual(
             glyph_two,
             a

@@ -269,20 +269,22 @@ class TestImage(unittest.TestCase):
     # Data
     # ----
 
-    def test_data(self):
+    def test_data_get(self):
         image = self.getImage_generic()
         # get
         self.assertEqual(
             image.data,
             testImageData
         )
-        # set: valid
+    def test_data_set_valid(self):
+        image = self.getImage_generic()
         image.data = testImageData
         self.assertEqual(
             image.data,
             testImageData
         )
-        # set: invalid
+    def test_data_set_invalid(self):
+        image = self.getImage_generic()
         with self.assertRaises(FontPartsError):
             image.data = 123
 
@@ -300,22 +302,30 @@ class TestImage(unittest.TestCase):
     # Equality
     # --------
 
-    def test_equal(self):
+    def test_object_equal_self(self):
         image_one = self.getImage_generic()
-        image_two = self.getImage_generic()
         self.assertEqual(
             image_one,
             image_one
         )
+    def test_object_not_equal_other(self):
+        image_one = self.getImage_generic()
+        image_two = self.getImage_generic()
         self.assertNotEqual(
             image_one,
             image_two
         )
+    def test_object_equal_self_variable_assignment(self):
+        image_one = self.getImage_generic()
         a = image_one
         self.assertEqual(
             image_one,
             a
         )
+    def test_object_not_equal_other_variable_assignment(self):
+        image_one = self.getImage_generic()
+        image_two = self.getImage_generic()
+        a = image_one
         self.assertNotEqual(
             image_two,
             a

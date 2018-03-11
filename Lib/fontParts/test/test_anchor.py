@@ -370,12 +370,11 @@ class TestAnchor(unittest.TestCase):
 
     def test_object_equal_self(self):
         anchor_one = self.getAnchor_generic()
-        anchor_two = self.getAnchor_generic()
         self.assertEqual(
             anchor_one,
             anchor_one
         )
-    def test_object_notequal_other(self):
+    def test_object_not_equal_other(self):
         anchor_one = self.getAnchor_generic()
         anchor_two = self.getAnchor_generic()
         self.assertNotEqual(
@@ -384,13 +383,13 @@ class TestAnchor(unittest.TestCase):
         )
     def test_object_equal_variable_assignment_self(self):
         anchor_one = self.getAnchor_generic()
-        anchor_two = self.getAnchor_generic()
         a = anchor_one
+        a.moveBy((-1, 2))
         self.assertEqual(
             anchor_one,
             a
         )
-    def test_object_notequal_variable_assignment_other(self):
+    def test_object_not_equal_variable_assignment_other(self):
         anchor_one = self.getAnchor_generic()
         anchor_two = self.getAnchor_generic()
         a = anchor_one
