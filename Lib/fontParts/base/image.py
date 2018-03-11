@@ -1,12 +1,14 @@
 from fontTools.misc import transform
 from fontParts.base.errors import FontPartsError
 from fontParts.base.base import (
-    BaseObject, TransformationMixin, dynamicProperty, PointPositionMixin, reference)
+    BaseObject, TransformationMixin, PointPositionMixin, SelectionMixin,
+    dynamicProperty, reference
+)
 from fontParts.base import normalizers
 from fontParts.base.color import Color
 
 
-class BaseImage(BaseObject, TransformationMixin, PointPositionMixin):
+class BaseImage(BaseObject, TransformationMixin, PointPositionMixin, SelectionMixin):
 
     copyAttributes = (
         "transformation",

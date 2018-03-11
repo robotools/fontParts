@@ -320,3 +320,24 @@ class TestImage(unittest.TestCase):
             image_two,
             a
         )
+
+    # ---------
+    # Selection
+    # ---------
+
+    def test_selected(self):
+        image, unrequested = self.getImage_generic()
+        try:
+            image.selected = False
+        except NotImplementedError:
+            return
+        image.selected = True
+        self.assertEqual(
+            image.selected,
+            True
+        )
+        image.selected = False
+        self.assertEqual(
+            image.selected,
+            False
+        )

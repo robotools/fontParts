@@ -113,10 +113,10 @@ class TestFont(unittest.TestCase):
             font.selected,
             True
         )
-        font.selected = True
+        font.selected = False
         self.assertEqual(
             font.selected,
-            True
+            False
         )
 
     def test_selectedLayer(self):

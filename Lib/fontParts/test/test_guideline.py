@@ -103,8 +103,8 @@ class TestGuideline(unittest.TestCase):
             guideline.selected,
             True
         )
-        guideline.selected = True
+        guideline.selected = False
         self.assertEqual(
             guideline.selected,
-            True
+            False
         )

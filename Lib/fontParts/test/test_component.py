@@ -127,8 +127,8 @@ class TestComponent(unittest.TestCase):
             component.selected,
             True
         )
-        component.selected = True
+        component.selected = False
         self.assertEqual(
             component.selected,
-            True
+            False
         )

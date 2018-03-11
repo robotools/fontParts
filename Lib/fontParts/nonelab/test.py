@@ -38,6 +38,12 @@ class NLTestGuideline(RGuideline):
     _set_selected = _set_selected
 
 
+class NLTestImage(RImage):
+
+    _get_selected = _get_selected
+    _set_selected = _set_selected
+
+
 class NLTestAnchor(RAnchor):
 
     _get_selected = _get_selected
@@ -95,7 +101,7 @@ classMapping = dict(
     point=RPoint,
     anchor=NLTestAnchor,
     component=NLTestComponent,
-    image=RImage,
+    image=NLTestImage,
     lib=RLib,
     guideline=NLTestGuideline,
 )

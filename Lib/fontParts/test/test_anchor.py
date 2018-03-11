@@ -323,8 +323,8 @@ class TestAnchor(unittest.TestCase):
             anchor.selected,
             True
         )
-        anchor.selected = True
+        anchor.selected = False
         self.assertEqual(
             anchor.selected,
-            True
+            False
         )

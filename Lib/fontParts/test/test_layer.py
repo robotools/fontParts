@@ -74,10 +74,10 @@ class TestLayer(unittest.TestCase):
             layer.selected,
             True
         )
-        layer.selected = True
+        layer.selected = False
         self.assertEqual(
             layer.selected,
-            True
+            False
         )
 
     def test_selectedGlyphs(self):

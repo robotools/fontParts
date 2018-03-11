@@ -139,10 +139,10 @@ class TestGlyph(unittest.TestCase):
             glyph.selected,
             True
         )
-        glyph.selected = True
+        glyph.selected = False
         self.assertEqual(
             glyph.selected,
-            True
+            False
         )
 
     def test_selectedContours(self):
