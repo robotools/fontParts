@@ -1225,6 +1225,8 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
     # Selection
     # ---------
 
+    # layers
+
     selectedLayers = dynamicProperty(
         "base_selectedLayers",
         """
@@ -1298,3 +1300,51 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         """
         select = [self.layers(name) for name in value]
         self.selectedLayers = select
+
+    # guidelines
+
+    selectedGuidelines = dynamicProperty(
+        "base_selectedGuidelines",
+        """
+        A list of guidelines selected in the font.
+
+        Getting selected guideline objects:
+
+            >>> for guideline in font.selectedGuidelines:
+            ...     guideline.color = (1, 0, 0, 0.5)
+
+        Setting selected guideline objects:
+
+            >>> font.selectedGuidelines = someGuidelines
+
+        Setting also supports guideline indexes:
+
+            >>> font.selectedGuidelines = [0, 2]
+        """
+    )
+
+    def _get_base_selectedGuidelines(self):
+        selected = tuple([normalizers.normalizeGuideline(guideline) for guideline in self._get_selectedGuidelines()])
+        return selected
+
+    def _get_selectedGuidelines(self):
+        """
+        Subclasses may override this method.
+        """
+        return self._getSelectedSubObjects(self.guidelines)
+
+    def _set_base_selectedGuidelines(self, value):
+        normalized = []
+        for i in value:
+            if isinstance(i, int):
+                i = normalizers.normalizeGuidelineIndex(i)
+            else:
+                i = normalizers.normalizeGuideline(i)
+            normalized.append(i)
+        self._set_selectedGuidelines(normalized)
+
+    def _set_selectedGuidelines(self, value):
+        """
+        Subclasses may override this method.
+        """
+        return self._setSelectedSubObjects(self.guidelines, value)

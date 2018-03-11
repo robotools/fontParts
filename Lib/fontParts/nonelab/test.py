@@ -76,6 +76,7 @@ class NLTestLayer(RLayer):
 class NLTestFont(RFont):
 
     layerClass = NLTestLayer
+    guidelineClass = NLTestGuideline
     _get_selected = _get_selected
     _set_selected = _set_selected
 

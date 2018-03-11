@@ -21,6 +21,12 @@ class TestFont(unittest.TestCase):
             glyph = font.newLayer("layer " + name)
         return font, unrequested
 
+    def getFont_guidelines(self):
+        font, unrequested = self.objectGenerator("font")
+        font.appendGuideline((1, 2), 0, "Test Guideline 1")
+        font.appendGuideline((3, 4), 90, "Test Guideline 2")
+        return font, unrequested
+
     # len
 
     def test_len(self):
@@ -144,7 +150,6 @@ class TestFont(unittest.TestCase):
             ()
         )
 
-
     def test_selectedGlyphs(self):
         font, unrequested = self.getFont_glyphs()
         try:
@@ -204,5 +209,33 @@ class TestFont(unittest.TestCase):
         font.selectedGlyphNames = []
         self.assertEqual(
             font.selectedGlyphNames,
+            ()
+        )
+
+    def test_selectedGuidelines(self):
+        font, unrequested = self.getFont_guidelines()
+        guideline1 = font.guidelines[0]
+        guideline2 = font.guidelines[1]
+        try:
+            guideline1.selected = False
+        except NotImplementedError:
+            return
+        self.assertEqual(
+            font.selectedGuidelines,
+            ()
+        )
+        guideline2.selected = True
+        self.assertEqual(
+            font.selectedGuidelines,
+            (guideline2,)
+        )
+        font.selectedGuidelines = [guideline1, guideline2]
+        self.assertEqual(
+            font.selectedGuidelines,
+            (guideline1, guideline2)
+        )
+        font.selectedGuidelines = []
+        self.assertEqual(
+            font.selectedGuidelines,
             ()
         )
