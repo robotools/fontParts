@@ -6,7 +6,7 @@ from fontParts.base import FontPartsError
 class TestGuideline(unittest.TestCase):
 
     def getGuideline_generic(self):
-        guideline, _unrequested = self.objectGenerator("guideline")
+        guideline, _ = self.objectGenerator("guideline")
         guideline.x = 1
         guideline.y = 2
         guideline.angle = 90

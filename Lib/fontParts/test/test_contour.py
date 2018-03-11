@@ -10,7 +10,7 @@ class TestContour(unittest.TestCase):
     # ------
 
     def getContour_bounds(self):
-        contour, _unrequested = self.objectGenerator("contour")
+        contour, _ = self.objectGenerator("contour")
         contour.appendPoint((0, 0), "line")
         contour.appendPoint((0, 100), "line")
         contour.appendPoint((100, 100), "line")
@@ -18,7 +18,7 @@ class TestContour(unittest.TestCase):
         return contour
 
     def getContour_boundsExtrema(self):
-        contour, _unrequested = self.objectGenerator("contour")
+        contour, _ = self.objectGenerator("contour")
         contour.appendPoint((0, 0), "line")
         contour.appendPoint((0, 100), "line")
         contour.appendPoint((50, 100), "line")
@@ -201,7 +201,6 @@ class TestContour(unittest.TestCase):
     def test_selectedBPoints_default(self):
         contour = self.getContour_bounds()
         bPoint1 = contour.bPoints[0]
-        bPoint2 = contour.bPoints[1]
         try:
             bPoint1.selected = False
         except NotImplementedError:
@@ -214,7 +213,6 @@ class TestContour(unittest.TestCase):
     def test_selectedBPoints_setSubObject(self):
         contour= self.getContour_bounds()
         bPoint1 = contour.bPoints[0]
-        bPoint2 = contour.bPoints[1]
         try:
             bPoint1.selected = False
         except NotImplementedError:

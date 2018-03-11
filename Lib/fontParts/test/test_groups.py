@@ -6,7 +6,7 @@ from fontParts.base import FontPartsError
 class TestGroups(unittest.TestCase):
 
     def getGroups_generic(self):
-        groups, _unrequested = self.objectGenerator("groups")
+        groups, _ = self.objectGenerator("groups")
         groups.update({
             "group 1" : ["A", "B", "C"],
             "group 2" : ["x", "y", "z"],

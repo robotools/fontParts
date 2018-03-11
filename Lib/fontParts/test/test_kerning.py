@@ -6,7 +6,7 @@ from fontParts.base import FontPartsError
 class TestKerning(unittest.TestCase):
 
     def getKerning_generic(self):
-        kerning, _unrequested = self.objectGenerator("kerning")
+        kerning, _ = self.objectGenerator("kerning")
         kerning.update({
             ("public.kern1.X", "public.kern2.X") : 100,
             ("B", "public.kern2.X") : 101,

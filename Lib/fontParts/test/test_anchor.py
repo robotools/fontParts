@@ -8,7 +8,7 @@ from fontTools.misc.py23 import basestring
 class TestAnchor(unittest.TestCase):
 
     def getAnchor_generic(self):
-        anchor, _unrequested = self.objectGenerator("anchor")
+        anchor, _ = self.objectGenerator("anchor")
         anchor.name = "Anchor Attribute Test"
         anchor.x = 1
         anchor.y = 2
@@ -93,7 +93,7 @@ class TestAnchor(unittest.TestCase):
             anchor.identifier = "ABC"
 
     def getAnchor_index(self):
-        glyph, _unrequested = self.objectGenerator("glyph")
+        glyph, _ = self.objectGenerator("glyph")
         glyph.appendAnchor("anchor 0", (0, 0))
         glyph.appendAnchor("anchor 1", (0, 0))
         glyph.appendAnchor("anchor 2", (0, 0))

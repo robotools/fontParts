@@ -1,4 +1,3 @@
-from fontParts.base.errors import FontPartsError
 from fontParts.test import testEnvironment
 from fontParts.nonelab.font import RFont
 from fontParts.nonelab.info import RInfo

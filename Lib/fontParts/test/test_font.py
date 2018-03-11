@@ -10,19 +10,19 @@ class TestFont(unittest.TestCase):
     # ------
 
     def getFont_glyphs(self):
-        font, _unrequested = self.objectGenerator("font")
+        font, _ = self.objectGenerator("font")
         for name in "ABCD":
-            glyph = font.newGlyph(name)
+            font.newGlyph(name)
         return font
 
     def getFont_layers(self):
-        font, _unrequested = self.objectGenerator("font")
+        font, _ = self.objectGenerator("font")
         for name in "ABCD":
-            glyph = font.newLayer("layer " + name)
+            font.newLayer("layer " + name)
         return font
 
     def getFont_guidelines(self):
-        font, _unrequested = self.objectGenerator("font")
+        font, _ = self.objectGenerator("font")
         font.appendGuideline((1, 2), 0, "Test Guideline 1")
         font.appendGuideline((3, 4), 90, "Test Guideline 2")
         return font

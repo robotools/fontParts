@@ -22,11 +22,6 @@ class BaseSegment(BaseObject, TransformationMixin, InterpolationMixin, Selection
             contents.append("index='%r'" % self.index)
         return contents
 
-    def __eq__(self, other):
-        if hasattr(other, "points"):
-            return self.points == other.points
-        return NotImplemented
-
     # -------
     # Parents
     # -------

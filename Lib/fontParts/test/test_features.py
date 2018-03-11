@@ -6,7 +6,7 @@ from fontParts.base import FontPartsError
 class TestFeatures(unittest.TestCase):
 
     def getFeatures_generic(self):
-        features, _unrequested = self.objectGenerator("features")
+        features, _ = self.objectGenerator("features")
         features.text = "# test"
         return features
 

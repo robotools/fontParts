@@ -6,8 +6,8 @@ from fontParts.base import FontPartsError
 class TestBPoint(unittest.TestCase):
 
     def getBPoint_corner(self):
-        contour, _unrequested = self.objectGenerator("contour")
-        _unrequested.append(contour)
+        contour, _ = self.objectGenerator("contour")
+        _.append(contour)
         contour.appendPoint((0, 0), "move")
         contour.appendPoint((101, 202), "line")
         contour.appendPoint((303, 0), "line")

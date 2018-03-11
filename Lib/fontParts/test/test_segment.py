@@ -6,8 +6,8 @@ from fontParts.base import FontPartsError
 class TestSegment(unittest.TestCase):
 
     def getSegment_line(self):
-        contour, _unrequested = self.objectGenerator("contour")
-        _unrequested.append(contour)
+        contour, _ = self.objectGenerator("contour")
+        _.append(contour)
         contour.appendPoint((0, 0), "move")
         contour.appendPoint((101, 202), "line")
         segment = contour[1]

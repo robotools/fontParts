@@ -6,7 +6,7 @@ from fontParts.base import FontPartsError
 class TestGlyph(unittest.TestCase):
 
     def getGlyph_generic(self):
-        glyph, _unrequested = self.objectGenerator("glyph")
+        glyph, _ = self.objectGenerator("glyph")
         glyph.name = "Test Glyph 1"
         glyph.unicode = int(ord("X"))
         glyph.width = 250

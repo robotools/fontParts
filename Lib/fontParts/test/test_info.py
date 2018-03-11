@@ -6,7 +6,7 @@ from fontParts.base import FontPartsError
 class TestInfo(unittest.TestCase):
 
     def getInfo_generic(self):
-        info, _unrequested = self.objectGenerator("info")
+        info, _ = self.objectGenerator("info")
         info.unitsPerEm = 1000
         return info
 

@@ -10,7 +10,7 @@ class TestLayer(unittest.TestCase):
     # ------
 
     def getLayer_glyphs(self):
-        layer, _unrequested = self.objectGenerator("layer")
+        layer, _ = self.objectGenerator("layer")
         for name in "ABCD":
             glyph = layer.newGlyph(name)
         return layer

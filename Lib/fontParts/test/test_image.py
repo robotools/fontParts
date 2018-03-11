@@ -260,7 +260,7 @@ testImageData = testImageData.encode('utf-8')
 class TestImage(unittest.TestCase):
 
     def getImage_generic(self):
-        image, _unrequested = self.objectGenerator("image")
+        image, _ = self.objectGenerator("image")
         image.data = testImageData
         image.transformation = (1, 0, 0, 1, 0, 0)
         return image
