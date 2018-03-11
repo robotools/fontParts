@@ -1,12 +1,14 @@
 from fontParts.base.errors import FontPartsError
 from fontParts.base.base import (
-    BaseObject, TransformationMixin, InterpolationMixin, dynamicProperty, reference)
+    BaseObject, TransformationMixin, InterpolationMixin, SelectionMixin,
+    dynamicProperty, reference
+)
 from fontParts.base import normalizers
 from fontParts.base.deprecated import DeprecatedSegment, RemovedSegment
 from fontParts.base.compatibility import SegmentCompatibilityReporter
 
 
-class BaseSegment(BaseObject, TransformationMixin, DeprecatedSegment, RemovedSegment, InterpolationMixin):
+class BaseSegment(BaseObject, TransformationMixin, InterpolationMixin, SelectionMixin, DeprecatedSegment, RemovedSegment):
 
     def _setPoints(self, points):
         assert not hasattr(self, "_points")
@@ -78,6 +80,25 @@ class BaseSegment(BaseObject, TransformationMixin, DeprecatedSegment, RemovedSeg
         if self._contour is None:
             return None
         return self.glyph.font
+
+    # --------
+    # equality
+    # --------
+
+    def __eq__(self, other):
+        """
+        The :meth:`BaseObject.__eq__` method can't be used here
+        because the :class:`BaseContour` implementation contructs
+        segment objects without assigning an underlying ``naked``
+        object. Therefore, comparisons will always fail. This
+        method overrides the base method and compares the
+        :class:`BasePoint` contained by the segment.
+
+        Subclasses may override this method.
+        """
+        if isinstance(other, self.__class__):
+            return self.points == other.points
+        return NotImplemented
 
     # --------------
     # Identification
