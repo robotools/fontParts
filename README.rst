@@ -112,3 +112,8 @@ or the ``TOXENV`` environment variable:
    :alt: Python Versions
 .. |Coverage| image:: https://codecov.io/gh/robofab-developers/fontParts/branch/master/graph/badge.svg
    :target: https://codecov.io/gh/robofab-developers/fontParts
+
+
+.. image:: https://api.codacy.com/project/badge/Grade/dc7342e7da18482d816c281c2748810a
+   :alt: Codacy Badge
+   :target: https://app.codacy.com/app/benkiel/fontParts?utm_source=github.com&utm_medium=referral&utm_content=robofab-developers/fontParts&utm_campaign=badger
