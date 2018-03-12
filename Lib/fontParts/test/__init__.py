@@ -47,7 +47,8 @@ def testEnvironment(objectGenerator, inApp=False, verbosity=1):
     if not inApp:
         sys.exit(not succes)
     else:
-        return succes
+        return succes  # pragma: no cover
+
 
 def _setObjectGenerator(suite, objectGenerator):
     for i in suite:
