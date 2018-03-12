@@ -25,6 +25,7 @@ class TestGroups(unittest.TestCase):
             len(groups),
             4
         )
+
     def test_len_clear(self):
         groups = self.getGroups_generic()
         groups.clear()
@@ -45,12 +46,14 @@ class TestGroups(unittest.TestCase):
             found,
             [u"group 1", u"group 4"]
         )
+
     def test_find_not_found(self):
         groups = self.getGroups_generic()
         self.assertEqual(
             groups.findGlyph("five"),
             []
         )
+
     def test_find_invalid_key(self):
         groups = self.getGroups_generic()
         with self.assertRaises(FontPartsError):
@@ -59,6 +62,7 @@ class TestGroups(unittest.TestCase):
     # ----
     # Hash
     # ----
+
     def test_hash(self):
         groups = self.getGroups_generic()
         self.assertEqual(
@@ -76,6 +80,7 @@ class TestGroups(unittest.TestCase):
             groups_one,
             groups_one
         )
+
     def test_object_not_equal_other(self):
         groups_one = self.getGroups_generic()
         groups_two = self.getGroups_generic()
@@ -83,6 +88,7 @@ class TestGroups(unittest.TestCase):
             groups_one,
             groups_two
         )
+
     def test_object_equal_self_variable_assignment(self):
         groups_one = self.getGroups_generic()
         a = groups_one
@@ -90,6 +96,7 @@ class TestGroups(unittest.TestCase):
             groups_one,
             a
         )
+
     def test_object_not_equal_other_variable_assignment(self):
         groups_one = self.getGroups_generic()
         groups_two = self.getGroups_generic()

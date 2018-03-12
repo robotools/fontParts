@@ -155,7 +155,7 @@ classMapping = dict(
 def noneLabObjectGenerator(cls):
     unrequested = []
     obj = classMapping[cls]()
-    return obj, []
+    return obj, unrequested
 
 if __name__ == "__main__":
     import sys

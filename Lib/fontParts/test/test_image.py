@@ -276,6 +276,7 @@ class TestImage(unittest.TestCase):
             image.data,
             testImageData
         )
+
     def test_data_set_valid(self):
         image = self.getImage_generic()
         image.data = testImageData
@@ -283,6 +284,7 @@ class TestImage(unittest.TestCase):
             image.data,
             testImageData
         )
+
     def test_data_set_invalid(self):
         image = self.getImage_generic()
         with self.assertRaises(FontPartsError):
@@ -291,6 +293,7 @@ class TestImage(unittest.TestCase):
     # ----
     # Hash
     # ----
+
     def test_hash(self):
         image = self.getImage_generic()
         self.assertEqual(
@@ -308,6 +311,7 @@ class TestImage(unittest.TestCase):
             image_one,
             image_one
         )
+
     def test_object_not_equal_other(self):
         image_one = self.getImage_generic()
         image_two = self.getImage_generic()
@@ -315,6 +319,7 @@ class TestImage(unittest.TestCase):
             image_one,
             image_two
         )
+
     def test_object_equal_self_variable_assignment(self):
         image_one = self.getImage_generic()
         a = image_one
@@ -322,6 +327,7 @@ class TestImage(unittest.TestCase):
             image_one,
             a
         )
+
     def test_object_not_equal_other_variable_assignment(self):
         image_one = self.getImage_generic()
         image_two = self.getImage_generic()
@@ -335,7 +341,7 @@ class TestImage(unittest.TestCase):
     # Selection
     # ---------
 
-    def test_selected(self):
+    def test_selected_true(self):
         image = self.getImage_generic()
         try:
             image.selected = False
@@ -346,13 +352,13 @@ class TestImage(unittest.TestCase):
             image.selected,
             True
         )
-    def test_not_selected(self):
+
+    def test_selected_false(self):
         image = self.getImage_generic()
         try:
             image.selected = False
         except NotImplementedError:
             return
-        image.selected = False
         self.assertEqual(
             image.selected,
             False

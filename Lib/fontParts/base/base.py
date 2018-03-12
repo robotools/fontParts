@@ -172,7 +172,7 @@ class BaseObject(object):
     # ----
     # Hash
     # ----
-    
+
     __hash__ = None
 
     # ----

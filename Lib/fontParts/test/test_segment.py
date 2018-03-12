@@ -6,8 +6,8 @@ from fontParts.base import FontPartsError
 class TestSegment(unittest.TestCase):
 
     def getSegment_line(self):
-        contour, _ = self.objectGenerator("contour")
-        _.append(contour)
+        contour, unrequested = self.objectGenerator("contour")
+        unrequested.append(contour)
         contour.appendPoint((0, 0), "move")
         contour.appendPoint((101, 202), "line")
         segment = contour[1]
@@ -23,6 +23,7 @@ class TestSegment(unittest.TestCase):
             segment.type,
             "line"
         )
+
     def test_set_move(self):
         segment = self.getSegment_line()
         segment.type = "move"
@@ -30,6 +31,7 @@ class TestSegment(unittest.TestCase):
             segment.type,
             "move"
         )
+
     def test_len_move(self):
         segment = self.getSegment_line()
         segment.type = "move"
@@ -37,6 +39,7 @@ class TestSegment(unittest.TestCase):
             len(segment.points),
             1
         )
+
     def test_oncuve_type_move(self):
         segment = self.getSegment_line()
         segment.type = "move"
@@ -44,6 +47,7 @@ class TestSegment(unittest.TestCase):
             segment.onCurve.type,
             "move"
         )
+
     def test_oncuve_x_y(self):
         segment = self.getSegment_line()
         segment.type = "move"
@@ -51,6 +55,7 @@ class TestSegment(unittest.TestCase):
             (segment.onCurve.x, segment.onCurve.y),
             (101, 202)
         )
+
     def test_set_curve(self):
         segment = self.getSegment_line()
         segment.type = "curve"
@@ -58,6 +63,7 @@ class TestSegment(unittest.TestCase):
             segment.type,
             "curve"
         )
+
     def test_len_curve(self):
         segment = self.getSegment_line()
         segment.type = "curve"
@@ -65,6 +71,7 @@ class TestSegment(unittest.TestCase):
             len(segment.points),
             3
         )
+
     def test_curve_pt_types(self):
         segment = self.getSegment_line()
         segment.type = "curve"
@@ -73,6 +80,7 @@ class TestSegment(unittest.TestCase):
             types,
             ("offcurve", "offcurve", "curve")
         )
+
     def test_curve_pt_x_y(self):
         segment = self.getSegment_line()
         segment.type = "curve"
@@ -81,6 +89,7 @@ class TestSegment(unittest.TestCase):
             coordinates,
             ((0, 0), (101, 202), (101, 202))
         )
+
     def test_set_qcurve(self):
         segment = self.getSegment_line()
         segment.type = "qcurve"
@@ -88,6 +97,7 @@ class TestSegment(unittest.TestCase):
             segment.type,
             "qcurve"
         )
+
     def test_len_qcurve(self):
         segment = self.getSegment_line()
         segment.type = "qcurve"
@@ -95,6 +105,7 @@ class TestSegment(unittest.TestCase):
             len(segment.points),
             3
         )
+
     def test_qcurve_pt_types(self):
         segment = self.getSegment_line()
         segment.type = "qcurve"
@@ -103,6 +114,7 @@ class TestSegment(unittest.TestCase):
             types,
             ("offcurve", "offcurve", "qcurve")
         )
+
     def test_qcurve_pt_x_y(self):
         segment = self.getSegment_line()
         segment.type = "qcurve"
@@ -111,10 +123,12 @@ class TestSegment(unittest.TestCase):
             coordinates,
             ((0, 0), (101, 202), (101, 202))
         )
+
     def test_set_invalid_segment_type_string(self):
         segment = self.getSegment_line()
         with self.assertRaises(FontPartsError):
             segment.type = "xxx"
+
     def test_set_invalid_segment_type_int(self):
         segment = self.getSegment_line()
         with self.assertRaises(FontPartsError):
@@ -124,6 +138,7 @@ class TestSegment(unittest.TestCase):
     # ----
     # Hash
     # ----
+
     def test_hash(self):
         segment = self.getSegment_line()
         self.assertEqual(
@@ -141,6 +156,7 @@ class TestSegment(unittest.TestCase):
             segment_one,
             segment_one
         )
+
     def test_object_not_equal_other(self):
         segment_one = self.getSegment_line()
         segment_two = self.getSegment_line()
@@ -148,6 +164,7 @@ class TestSegment(unittest.TestCase):
             segment_one,
             segment_two
         )
+
     def test_object_equal_self_variable_assignment(self):
         segment_one = self.getSegment_line()
         a = segment_one
@@ -155,6 +172,7 @@ class TestSegment(unittest.TestCase):
             segment_one,
             a
         )
+
     def test_object_not_equal_other_variable_assignment(self):
         segment_one = self.getSegment_line()
         segment_two = self.getSegment_line()
@@ -162,4 +180,31 @@ class TestSegment(unittest.TestCase):
         self.assertNotEqual(
             segment_two,
             a
+        )
+
+    # ---------
+    # Selection
+    # ---------
+
+    def test_selected_true(self):
+        segment = self.getSegment_line()
+        try:
+            segment.selected = False
+        except NotImplementedError:
+            return
+        segment.selected = True
+        self.assertEqual(
+            segment.selected,
+            True
+        )
+
+    def test_selected_false(self):
+        segment = self.getSegment_line()
+        try:
+            segment.selected = False
+        except NotImplementedError:
+            return
+        self.assertEqual(
+            segment.selected,
+            False
         )

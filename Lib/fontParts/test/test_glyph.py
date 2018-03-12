@@ -39,6 +39,7 @@ class TestGlyph(unittest.TestCase):
             glyph.width,
             250
         )
+
     def test_width_set_valid_positive(self):
         glyph = self.getGlyph_generic()
         glyph.width = 300
@@ -46,6 +47,7 @@ class TestGlyph(unittest.TestCase):
             glyph.width,
             300
         )
+
     def test_width_set_valid_zero(self):
         glyph = self.getGlyph_generic()
         glyph.width = 0
@@ -53,6 +55,7 @@ class TestGlyph(unittest.TestCase):
             glyph.width,
             0
         )
+
     def test_width_set_valid_float(self):
         glyph = self.getGlyph_generic()
         glyph.width = 101.5
@@ -60,6 +63,7 @@ class TestGlyph(unittest.TestCase):
             glyph.width,
             101.5
         )
+
     def test_width_set_valid_negative(self):
         glyph = self.getGlyph_generic()
         glyph.width = -485
@@ -67,10 +71,12 @@ class TestGlyph(unittest.TestCase):
             glyph.width,
             -485
         )
+
     def test_width_set_invalid_string(self):
         glyph = self.getGlyph_generic()
         with self.assertRaises(FontPartsError):
             glyph.width = "abc"
+
     def test_width_set_invalid_none(self):
         glyph = self.getGlyph_generic()
         with self.assertRaises(FontPartsError):
@@ -87,6 +93,7 @@ class TestGlyph(unittest.TestCase):
             hash(glyph_one),
             hash(glyph_one)
         )
+
     def test_hash_object_other(self):
         glyph_one = self.getGlyph_generic()
         glyph_two = self.getGlyph_generic()
@@ -96,6 +103,7 @@ class TestGlyph(unittest.TestCase):
             hash(glyph_one),
             hash(glyph_two)
         )
+
     def test_hash_object_self_variable_assignment(self):
         glyph_one = self.getGlyph_generic()
         a = glyph_one
@@ -103,6 +111,7 @@ class TestGlyph(unittest.TestCase):
             hash(glyph_one),
             hash(a)
         )
+
     def test_hash_object_other_variable_assignment(self):
         glyph_one = self.getGlyph_generic()
         glyph_two = self.getGlyph_generic()
@@ -111,6 +120,7 @@ class TestGlyph(unittest.TestCase):
             hash(glyph_two),
             hash(a)
         )
+
     def test_is_hashable(self):
         glyph_one = self.getGlyph_generic()
         self.assertEqual(
@@ -129,6 +139,7 @@ class TestGlyph(unittest.TestCase):
             glyph_one,
             glyph_one
         )
+
     def test_object_not_equal_other(self):
         glyph_one = self.getGlyph_generic()
         glyph_two = self.getGlyph_generic()
@@ -136,6 +147,7 @@ class TestGlyph(unittest.TestCase):
             glyph_one,
             glyph_two
         )
+
     def test_object_not_equal_other_name_same(self):
         glyph_one = self.getGlyph_generic()
         glyph_two = self.getGlyph_generic()
@@ -145,6 +157,7 @@ class TestGlyph(unittest.TestCase):
             glyph_one,
             glyph_two
         )
+
     def test_object_equal_variable_assignment(self):
         glyph_one = self.getGlyph_generic()
         a = glyph_one
@@ -153,6 +166,7 @@ class TestGlyph(unittest.TestCase):
             glyph_one,
             a
         )
+
     def test_object_not_equal_variable_assignment(self):
         glyph_one = self.getGlyph_generic()
         glyph_two = self.getGlyph_generic()
@@ -166,7 +180,7 @@ class TestGlyph(unittest.TestCase):
     # Selection
     # ---------
 
-    def test_selected(self):
+    def test_selected_true(self):
         glyph = self.getGlyph_generic()
         try:
             glyph.selected = False
@@ -177,22 +191,23 @@ class TestGlyph(unittest.TestCase):
             glyph.selected,
             True
         )
-    def test_not_selected(self):
+
+    def test_not_selected_false(self):
         glyph = self.getGlyph_generic()
         try:
             glyph.selected = False
         except NotImplementedError:
             return
-        glyph.selected = False
         self.assertEqual(
             glyph.selected,
             False
         )
 
-    def test_selectedContours(self):
+    # Contours
+
+    def test_selectedContours_default(self):
         glyph = self.getGlyph_generic()
         contour1 = glyph.contours[0]
-        contour2 = glyph.contours[1]
         try:
             contour1.selected = False
         except NotImplementedError:
@@ -201,26 +216,54 @@ class TestGlyph(unittest.TestCase):
             glyph.selectedContours,
             ()
         )
+
+    def test_selectedContours_setSubObject(self):
+        glyph = self.getGlyph_generic()
+        contour1 = glyph.contours[0]
+        contour2 = glyph.contours[1]
+        try:
+            contour1.selected = False
+        except NotImplementedError:
+            return
         contour2.selected = True
         self.assertEqual(
             glyph.selectedContours,
             (contour2,)
         )
+
+    def test_selectedContours_setFilledList(self):
+        glyph = self.getGlyph_generic()
+        contour1 = glyph.contours[0]
+        contour2 = glyph.contours[1]
+        try:
+            contour1.selected = False
+        except NotImplementedError:
+            return
         glyph.selectedContours = [contour1, contour2]
         self.assertEqual(
             glyph.selectedContours,
             (contour1, contour2)
         )
+
+    def test_selectedContours_setEmptyList(self):
+        glyph = self.getGlyph_generic()
+        contour1 = glyph.contours[0]
+        contour2 = glyph.contours[1]
+        try:
+            contour1.selected = True
+        except NotImplementedError:
+            return
         glyph.selectedContours = []
         self.assertEqual(
             glyph.selectedContours,
             ()
         )
 
-    def test_selectedComponents(self):
+    # Components
+
+    def test_selectedComponents_default(self):
         glyph = self.getGlyph_generic()
         component1 = glyph.components[0]
-        component2 = glyph.components[1]
         try:
             component1.selected = False
         except NotImplementedError:
@@ -229,26 +272,54 @@ class TestGlyph(unittest.TestCase):
             glyph.selectedComponents,
             ()
         )
+
+    def test_selectedComponents_setSubObject(self):
+        glyph = self.getGlyph_generic()
+        component1 = glyph.components[0]
+        component2 = glyph.components[1]
+        try:
+            component1.selected = False
+        except NotImplementedError:
+            return
         component2.selected = True
         self.assertEqual(
             glyph.selectedComponents,
             (component2,)
         )
+
+    def test_selectedComponents_setFilledList(self):
+        glyph = self.getGlyph_generic()
+        component1 = glyph.components[0]
+        component2 = glyph.components[1]
+        try:
+            component1.selected = False
+        except NotImplementedError:
+            return
         glyph.selectedComponents = [component1, component2]
         self.assertEqual(
             glyph.selectedComponents,
             (component1, component2)
         )
+
+    def test_selectedComponents_setEmptyList(self):
+        glyph = self.getGlyph_generic()
+        component1 = glyph.components[0]
+        component2 = glyph.components[1]
+        try:
+            component1.selected = True
+        except NotImplementedError:
+            return
         glyph.selectedComponents = []
         self.assertEqual(
             glyph.selectedComponents,
             ()
         )
 
-    def test_selectedAnchors(self):
+    # Anchors
+
+    def test_selectedAnchors_default(self):
         glyph = self.getGlyph_generic()
         anchor1 = glyph.anchors[0]
-        anchor2 = glyph.anchors[1]
         try:
             anchor1.selected = False
         except NotImplementedError:
@@ -257,26 +328,54 @@ class TestGlyph(unittest.TestCase):
             glyph.selectedAnchors,
             ()
         )
+
+    def test_selectedAnchors_setSubObject(self):
+        glyph = self.getGlyph_generic()
+        anchor1 = glyph.anchors[0]
+        anchor2 = glyph.anchors[1]
+        try:
+            anchor1.selected = False
+        except NotImplementedError:
+            return
         anchor2.selected = True
         self.assertEqual(
             glyph.selectedAnchors,
             (anchor2,)
         )
+
+    def test_selectedAnchors_setFilledList(self):
+        glyph = self.getGlyph_generic()
+        anchor1 = glyph.anchors[0]
+        anchor2 = glyph.anchors[1]
+        try:
+            anchor1.selected = False
+        except NotImplementedError:
+            return
         glyph.selectedAnchors = [anchor1, anchor2]
         self.assertEqual(
             glyph.selectedAnchors,
             (anchor1, anchor2)
         )
+
+    def test_selectedAnchors_setEmptyList(self):
+        glyph = self.getGlyph_generic()
+        anchor1 = glyph.anchors[0]
+        anchor2 = glyph.anchors[1]
+        try:
+            anchor1.selected = True
+        except NotImplementedError:
+            return
         glyph.selectedAnchors = []
         self.assertEqual(
             glyph.selectedAnchors,
             ()
         )
 
-    def test_selectedGuidelines(self):
+    # Guidelines
+
+    def test_selectedGuidelines_default(self):
         glyph = self.getGlyph_generic()
         guideline1 = glyph.guidelines[0]
-        guideline2 = glyph.guidelines[1]
         try:
             guideline1.selected = False
         except NotImplementedError:
@@ -285,16 +384,43 @@ class TestGlyph(unittest.TestCase):
             glyph.selectedGuidelines,
             ()
         )
+
+    def test_selectedGuidelines_setSubObject(self):
+        glyph = self.getGlyph_generic()
+        guideline1 = glyph.guidelines[0]
+        guideline2 = glyph.guidelines[1]
+        try:
+            guideline1.selected = False
+        except NotImplementedError:
+            return
         guideline2.selected = True
         self.assertEqual(
             glyph.selectedGuidelines,
             (guideline2,)
         )
+
+    def test_selectedGuidelines_setFilledList(self):
+        glyph = self.getGlyph_generic()
+        guideline1 = glyph.guidelines[0]
+        guideline2 = glyph.guidelines[1]
+        try:
+            guideline1.selected = False
+        except NotImplementedError:
+            return
         glyph.selectedGuidelines = [guideline1, guideline2]
         self.assertEqual(
             glyph.selectedGuidelines,
             (guideline1, guideline2)
         )
+
+    def test_selectedGuidelines_setEmptyList(self):
+        glyph = self.getGlyph_generic()
+        guideline1 = glyph.guidelines[0]
+        guideline2 = glyph.guidelines[1]
+        try:
+            guideline1.selected = True
+        except NotImplementedError:
+            return
         glyph.selectedGuidelines = []
         self.assertEqual(
             glyph.selectedGuidelines,

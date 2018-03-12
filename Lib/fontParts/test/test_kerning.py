@@ -25,6 +25,7 @@ class TestKerning(unittest.TestCase):
             len(kerning),
             4
         )
+
     def test_len_clear(self):
         kerning = self.getKerning_generic()
         kerning.clear()
@@ -37,20 +38,29 @@ class TestKerning(unittest.TestCase):
     # contains
     # --------
 
-    def test_contains(self):
+    def test_contains_glyph_glyph(self):
         kerning = self.getKerning_generic()
         self.assertEqual(
             ('A','A') in kerning,
             True
         )
+
+    def test_contains_group_group(self):
+        kerning = self.getKerning_generic()
         self.assertEqual(
             ("public.kern1.X", "public.kern2.X") in kerning,
             True
         )
+
+    def test_contains_glyph_group(self):
+        kerning = self.getKerning_generic()
         self.assertEqual(
             ("B", "public.kern2.X") in kerning,
             True
         )
+
+    def test_contains_missing_glyph_glyph(self):
+        kerning = self.getKerning_generic()
         self.assertEqual(
             ("H", "H") in kerning,
             False
@@ -85,18 +95,21 @@ class TestKerning(unittest.TestCase):
             kerning[('A','A')],
             103
         )
+
     def test_get_group_group(self):
         kerning = self.getKerning_generic()
         self.assertEqual(
             kerning[("public.kern1.X", "public.kern2.X")],
             100
         )
+
     def test_get_glyph_group(self):
         kerning = self.getKerning_generic()
         self.assertEqual(
             kerning[("B", "public.kern2.X")],
             101
         )
+
     def test_get_group_glyph(self):
         kerning = self.getKerning_generic()
         self.assertEqual(
@@ -115,6 +128,7 @@ class TestKerning(unittest.TestCase):
             kerning[('A','A')],
             1
         )
+
     def test_set_group_group(self):
         kerning = self.getKerning_generic()
         kerning[("public.kern1.X", "public.kern2.X")] = 2
@@ -122,6 +136,7 @@ class TestKerning(unittest.TestCase):
             kerning[("public.kern1.X", "public.kern2.X")],
             2
         )
+
     def test_set_glyph_group(self):
         kerning = self.getKerning_generic()
         kerning[("B", "public.kern2.X")] = 3
@@ -129,6 +144,7 @@ class TestKerning(unittest.TestCase):
             kerning[("B", "public.kern2.X")],
             3
         )
+
     def test_set_group_glyph(self):
         kerning = self.getKerning_generic()
         kerning[("public.kern1.X", "B")] = 4
@@ -140,6 +156,7 @@ class TestKerning(unittest.TestCase):
     # ----
     # Hash
     # ----
+
     def test_hash(self):
         kerning = self.getKerning_generic()
         self.assertEqual(
@@ -157,6 +174,7 @@ class TestKerning(unittest.TestCase):
             kerning_one,
             kerning_one
         )
+
     def test_object_not_equal_other(self):
         kerning_one = self.getKerning_generic()
         kerning_two = self.getKerning_generic()
@@ -164,6 +182,7 @@ class TestKerning(unittest.TestCase):
             kerning_one,
             kerning_two
         )
+
     def test_object_equal_self_variable_assignment(self):
         kerning_one = self.getKerning_generic()
         a = kerning_one
@@ -171,6 +190,7 @@ class TestKerning(unittest.TestCase):
             kerning_one,
             a
         )
+
     def test_object_not_equal_other_variable_assignment(self):
         kerning_one = self.getKerning_generic()
         kerning_two = self.getKerning_generic()

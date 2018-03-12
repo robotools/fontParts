@@ -22,6 +22,7 @@ class TestComponent(unittest.TestCase):
             component.baseGlyph,
             "A"
         )
+
     def test_baseGlyph_valid_set(self):
         component = self.getComponent_generic()
         component.baseGlyph = "B"
@@ -29,14 +30,17 @@ class TestComponent(unittest.TestCase):
             component.baseGlyph,
             "B"
         )
+
     def test_baseGlyph_invalid_set_none(self):
         component = self.getComponent_generic()
         with self.assertRaises(FontPartsError):
             component.baseGlyph = None
+
     def test_baseGlyph_invalid_set_empty_string(self):
         component = self.getComponent_generic()
         with self.assertRaises(FontPartsError):
             component.baseGlyph = ""
+
     def test_baseGlyph_invalid_set_int(self):
         component = self.getComponent_generic()
         with self.assertRaises(FontPartsError):
@@ -47,10 +51,10 @@ class TestComponent(unittest.TestCase):
     # ------
 
     def getComponent_bounds(self):
-        font, _ = self.objectGenerator("font")
-        _.append(font)
+        font, unrequested = self.objectGenerator("font")
+        unrequested.append(font)
         glyph = font.newGlyph("A")
-        _.append(glyph)
+        unrequested.append(glyph)
         pen = glyph.getPen()
         pen.moveTo((0, 0))
         pen.lineTo((0, 100))
@@ -58,7 +62,7 @@ class TestComponent(unittest.TestCase):
         pen.lineTo((100, 0))
         pen.closePath()
         glyph = font.newGlyph("B")
-        _.append(glyph)
+        unrequested.append(glyph)
         component = glyph.appendComponent("A")
         return component
 
@@ -68,6 +72,7 @@ class TestComponent(unittest.TestCase):
             component.bounds,
             (0, 0, 100, 100)
         )
+
     def test_bounds_on_move(self):
         component = self.getComponent_bounds()
         component.moveBy((0.1, -0.1))
@@ -75,6 +80,7 @@ class TestComponent(unittest.TestCase):
             component.bounds,
             (0.1, -0.1, 100.1, 99.9)
         )
+
     def test_bounds_on_scale(self):
         component = self.getComponent_bounds()
         component.scaleBy((2, 0.5))
@@ -82,6 +88,7 @@ class TestComponent(unittest.TestCase):
             component.bounds,
             (0, 0, 200, 50)
         )
+
     def test_bounds_invalid_set(self):
         component = self.getComponent_bounds()
         with self.assertRaises(FontPartsError):
@@ -90,6 +97,7 @@ class TestComponent(unittest.TestCase):
     # ----
     # Hash
     # ----
+
     def test_hash(self):
         component = self.getComponent_generic()
         self.assertEqual(
@@ -107,6 +115,7 @@ class TestComponent(unittest.TestCase):
             component_one,
             component_one
         )
+
     def test_object_not_equal_other(self):
         component_one = self.getComponent_generic()
         component_two = self.getComponent_generic()
@@ -114,6 +123,7 @@ class TestComponent(unittest.TestCase):
             component_one,
             component_two
         )
+
     def test_object_equal_assigned_variable(self):
         component_one = self.getComponent_generic()
         a = component_one
@@ -122,6 +132,7 @@ class TestComponent(unittest.TestCase):
             component_one,
             a
         )
+
     def test_object_not_equal_assigned_variable_other(self):
         component_one = self.getComponent_generic()
         component_two = self.getComponent_generic()
@@ -135,7 +146,7 @@ class TestComponent(unittest.TestCase):
     # Selection
     # ---------
 
-    def test_selected(self):
+    def test_selected_true(self):
         component = self.getComponent_generic()
         try:
             component.selected = False
@@ -146,7 +157,8 @@ class TestComponent(unittest.TestCase):
             component.selected,
             True
         )
-    def test_not_selected(self):
+
+    def test_selected_false(self):
         component = self.getComponent_generic()
         try:
             component.selected = False

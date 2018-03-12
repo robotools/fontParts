@@ -20,6 +20,7 @@ class TestInfo(unittest.TestCase):
             info.unitsPerEm,
             1000
         )
+
     def test_set_valid_unitsPerEm_int(self):
         info = self.getInfo_generic()
         info.unitsPerEm = 2000
@@ -27,6 +28,7 @@ class TestInfo(unittest.TestCase):
             info.unitsPerEm,
             2000
         )
+
     def test_set_valid_unitsPerEm_float(self):
         info = self.getInfo_generic()
         info.unitsPerEm = 2000.1
@@ -34,10 +36,12 @@ class TestInfo(unittest.TestCase):
             info.unitsPerEm,
             2000.1
         )
+
     def test_set_invalid_unitsPerEm_negative(self):
         info = self.getInfo_generic()
         with self.assertRaises(FontPartsError):
             info.unitsPerEm = -1000
+
     def test_set_invalid_unitsPerEm_string(self):
         info = self.getInfo_generic()
         with self.assertRaises(FontPartsError):
@@ -46,6 +50,7 @@ class TestInfo(unittest.TestCase):
     # ----
     # Hash
     # ----
+
     def test_hash(self):
         info = self.getInfo_generic()
         self.assertEqual(
@@ -63,6 +68,7 @@ class TestInfo(unittest.TestCase):
             info_one,
             info_one
         )
+
     def test_object_not_equal_other(self):
         info_one = self.getInfo_generic()
         info_two = self.getInfo_generic()
@@ -70,6 +76,7 @@ class TestInfo(unittest.TestCase):
             info_one,
             info_two
         )
+
     def test_object_equal_self_variable_assignment(self):
         info_one = self.getInfo_generic()
         a = info_one
@@ -77,6 +84,7 @@ class TestInfo(unittest.TestCase):
             info_one,
             a
         )
+
     def test_object_not_equal_other_variable_assignment(self):
         info_one = self.getInfo_generic()
         info_two = self.getInfo_generic()

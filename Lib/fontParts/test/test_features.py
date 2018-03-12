@@ -20,6 +20,7 @@ class TestFeatures(unittest.TestCase):
             features.text,
             "# test"
         )
+
     def test_text_valid_set(self):
         features = self.getFeatures_generic()
         features.text = "# foo"
@@ -27,10 +28,12 @@ class TestFeatures(unittest.TestCase):
             features.text,
             "# foo"
         )
+
     def test_text_set_none(self):
         features = self.getFeatures_generic()
         features.text = None
         self.assertIsNone(features.text)
+
     def test_text_invalid_set(self):
         features = self.getFeatures_generic()
         with self.assertRaises(FontPartsError):
@@ -39,6 +42,7 @@ class TestFeatures(unittest.TestCase):
     # ----
     # Hash
     # ----
+
     def test_hash(self):
         features = self.getFeatures_generic()
         self.assertEqual(
@@ -56,6 +60,7 @@ class TestFeatures(unittest.TestCase):
             features_one,
             features_one
         )
+
     def test_object_not_equal_other(self):
         features_one = self.getFeatures_generic()
         features_two = self.getFeatures_generic()
@@ -63,6 +68,7 @@ class TestFeatures(unittest.TestCase):
             features_one,
             features_two
         )
+
     def test_object_equal_self_variable_assignment(self):
         features_one = self.getFeatures_generic()
         a = features_one
@@ -71,6 +77,7 @@ class TestFeatures(unittest.TestCase):
             features_one,
             a
         )
+
     def test_object_not_equal_self_variable_assignment(self):
         features_one = self.getFeatures_generic()
         features_two = self.getFeatures_generic()

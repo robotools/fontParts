@@ -7,7 +7,6 @@ from fontParts.base.base import (
     BaseObject, TransformationMixin, InterpolationMixin, SelectionMixin,
     dynamicProperty, interpolate
 )
-from fontParts.base.image import BaseImage
 from fontParts.base import normalizers
 from fontParts.base.compatibility import GlyphCompatibilityReporter
 from fontParts.base.color import Color
@@ -78,7 +77,7 @@ class BaseGlyph(BaseObject, TransformationMixin, InterpolationMixin, SelectionMi
         for sourceAnchor in source.anchors:
             self.appendAnchor(sourceAnchor.name, (sourceAnchor.x, sourceAnchor.y), sourceAnchor.color)
         for sourceGuideline in self.guidelines:
-            selfGuideline = self.appendGuideline(
+            self.appendGuideline(
                 (sourceGuideline.x, sourceGuideline.y),
                 sourceGuideline.angle,
                 sourceGuideline.name,

@@ -6,8 +6,8 @@ from fontParts.base import FontPartsError
 class TestBPoint(unittest.TestCase):
 
     def getBPoint_corner(self):
-        contour, _ = self.objectGenerator("contour")
-        _.append(contour)
+        contour, unrequested = self.objectGenerator("contour")
+        unrequested.append(contour)
         contour.appendPoint((0, 0), "move")
         contour.appendPoint((101, 202), "line")
         contour.appendPoint((303, 0), "line")
@@ -24,6 +24,7 @@ class TestBPoint(unittest.TestCase):
             bPoint.type,
             "corner"
         )
+
     def test_type_curve(self):
         bPoint = self.getBPoint_corner()
         bPoint.type = "curve"
@@ -31,6 +32,7 @@ class TestBPoint(unittest.TestCase):
             bPoint.type,
             "curve"
         )
+
     def test_type_not_equal(self):
         bPoint = self.getBPoint_corner()
         bPoint.type = "curve"
@@ -49,6 +51,7 @@ class TestBPoint(unittest.TestCase):
             bPoint.anchor,
             (101, 202)
         )
+
     def test_anchor_change(self):
         bPoint = self.getBPoint_corner()
         bPoint.anchor = (51,45)
@@ -71,6 +74,7 @@ class TestBPoint(unittest.TestCase):
     # ----
     # Hash
     # ----
+
     def test_hash(self):
         bPoint = self.getBPoint_corner()
         self.assertEqual(
@@ -88,6 +92,7 @@ class TestBPoint(unittest.TestCase):
             bPoint_one,
             bPoint_one
         )
+
     def test_object_not_equal_other(self):
         bPoint_one = self.getBPoint_corner()
         bPoint_two = self.getBPoint_corner()
@@ -95,6 +100,7 @@ class TestBPoint(unittest.TestCase):
             bPoint_one,
             bPoint_two
         )
+
     def test_object_equal_self_variable_assignment(self):
         bPoint_one = self.getBPoint_corner()
         a = bPoint_one
@@ -103,6 +109,7 @@ class TestBPoint(unittest.TestCase):
             bPoint_one,
             a
         )
+
     def test_object_not_equal_other_variable_assignment(self):
         bPoint_one = self.getBPoint_corner()
         bPoint_two = self.getBPoint_corner()
