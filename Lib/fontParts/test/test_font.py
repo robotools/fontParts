@@ -197,8 +197,6 @@ class TestFont(unittest.TestCase):
             font.getLayer(font.defaultLayer).selected = False
         except NotImplementedError:
             return
-        layer1 = font.getLayer("layer A")
-        layer2 = font.getLayer("layer B")
         layer3 = font.getLayer("layer C")
         layer4 = font.getLayer("layer D")
         font.selectedLayers = [layer3, layer4]
@@ -214,9 +212,6 @@ class TestFont(unittest.TestCase):
         except NotImplementedError:
             return
         layer1 = font.getLayer("layer A")
-        layer2 = font.getLayer("layer B")
-        layer3 = font.getLayer("layer C")
-        layer4 = font.getLayer("layer D")
         layer1.selected = True
         font.selectedLayers = []
         self.assertEqual(
@@ -232,10 +227,6 @@ class TestFont(unittest.TestCase):
             font.getLayer(font.defaultLayer).selected = False
         except NotImplementedError:
             return
-        glyph1 = font["A"]
-        glyph2 = font["B"]
-        glyph3 = font["C"]
-        glyph4 = font["D"]
         self.assertEqual(
             font.selectedGlyphs,
             ()
@@ -249,8 +240,6 @@ class TestFont(unittest.TestCase):
             return
         glyph1 = font["A"]
         glyph2 = font["B"]
-        glyph3 = font["C"]
-        glyph4 = font["D"]
         glyph1.selected = True
         glyph2.selected = True
         self.assertEqual(
@@ -264,8 +253,6 @@ class TestFont(unittest.TestCase):
             font.getLayer(font.defaultLayer).selected = False
         except NotImplementedError:
             return
-        glyph1 = font["A"]
-        glyph2 = font["B"]
         glyph3 = font["C"]
         glyph4 = font["D"]
         font.selectedGlyphs = [glyph3, glyph4]
@@ -281,9 +268,6 @@ class TestFont(unittest.TestCase):
         except NotImplementedError:
             return
         glyph1 = font["A"]
-        glyph2 = font["B"]
-        glyph3 = font["C"]
-        glyph4 = font["D"]
         glyph1.selected = True
         font.selectedGlyphs = []
         self.assertEqual(
@@ -299,10 +283,6 @@ class TestFont(unittest.TestCase):
             font.getLayer(font.defaultLayer).selected = False
         except NotImplementedError:
             return
-        glyph1 = font["A"]
-        glyph2 = font["B"]
-        glyph3 = font["C"]
-        glyph4 = font["D"]
         self.assertEqual(
             font.selectedGlyphs,
             ()
@@ -316,8 +296,6 @@ class TestFont(unittest.TestCase):
             return
         glyph1 = font["A"]
         glyph2 = font["B"]
-        glyph3 = font["C"]
-        glyph4 = font["D"]
         glyph1.selected = True
         glyph2.selected = True
         self.assertEqual(
@@ -331,10 +309,6 @@ class TestFont(unittest.TestCase):
             font.getLayer(font.defaultLayer).selected = False
         except NotImplementedError:
             return
-        glyph1 = font["A"]
-        glyph2 = font["B"]
-        glyph3 = font["C"]
-        glyph4 = font["D"]
         font.selectedGlyphNames = ["C", "D"]
         self.assertEqual(
             tuple(sorted(font.selectedGlyphNames)),
@@ -348,9 +322,6 @@ class TestFont(unittest.TestCase):
         except NotImplementedError:
             return
         glyph1 = font["A"]
-        glyph2 = font["B"]
-        glyph3 = font["C"]
-        glyph4 = font["D"]
         glyph1.selected = True
         font.selectedGlyphNames = []
         self.assertEqual(
@@ -403,7 +374,6 @@ class TestFont(unittest.TestCase):
     def test_selectedGuidelines_setEmptyList(self):
         font = self.getFont_guidelines()
         guideline1 = font.guidelines[0]
-        guideline2 = font.guidelines[1]
         try:
             guideline1.selected = True
         except NotImplementedError:

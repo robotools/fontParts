@@ -174,7 +174,6 @@ class TestContour(unittest.TestCase):
     def test_selectedSegments_setEmptyList(self):
         contour = self.getContour_bounds()
         segment1 = contour.segments[0]
-        segment2 = contour.segments[1]
         try:
             segment1.selected = True
         except NotImplementedError:

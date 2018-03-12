@@ -104,10 +104,6 @@ class TestLayer(unittest.TestCase):
             layer.selected = False
         except NotImplementedError:
             return
-        glyph1 = layer["A"]
-        glyph2 = layer["B"]
-        glyph3 = layer["C"]
-        glyph4 = layer["D"]
         self.assertEqual(
             layer.selectedGlyphs,
             ()
@@ -121,8 +117,6 @@ class TestLayer(unittest.TestCase):
             return
         glyph1 = layer["A"]
         glyph2 = layer["B"]
-        glyph3 = layer["C"]
-        glyph4 = layer["D"]
         glyph1.selected = True
         glyph2.selected = True
         self.assertEqual(
@@ -136,8 +130,6 @@ class TestLayer(unittest.TestCase):
             layer.selected = False
         except NotImplementedError:
             return
-        glyph1 = layer["A"]
-        glyph2 = layer["B"]
         glyph3 = layer["C"]
         glyph4 = layer["D"]
         layer.selectedGlyphs = [glyph3, glyph4]
@@ -153,9 +145,6 @@ class TestLayer(unittest.TestCase):
         except NotImplementedError:
             return
         glyph1 = layer["A"]
-        glyph2 = layer["B"]
-        glyph3 = layer["C"]
-        glyph4 = layer["D"]
         glyph1.selected = True
         layer.selectedGlyphs = []
         self.assertEqual(
@@ -171,10 +160,6 @@ class TestLayer(unittest.TestCase):
             layer.selected = False
         except NotImplementedError:
             return
-        glyph1 = layer["A"]
-        glyph2 = layer["B"]
-        glyph3 = layer["C"]
-        glyph4 = layer["D"]
         self.assertEqual(
             layer.selectedGlyphs,
             ()
@@ -188,8 +173,6 @@ class TestLayer(unittest.TestCase):
             return
         glyph1 = layer["A"]
         glyph2 = layer["B"]
-        glyph3 = layer["C"]
-        glyph4 = layer["D"]
         glyph1.selected = True
         glyph2.selected = True
         self.assertEqual(
@@ -203,8 +186,6 @@ class TestLayer(unittest.TestCase):
             layer.selected = False
         except NotImplementedError:
             return
-        glyph1 = layer["A"]
-        glyph2 = layer["B"]
         glyph3 = layer["C"]
         glyph4 = layer["D"]
         layer.selectedGlyphNames = ["C", "D"]
@@ -220,9 +201,6 @@ class TestLayer(unittest.TestCase):
         except NotImplementedError:
             return
         glyph1 = layer["A"]
-        glyph2 = layer["B"]
-        glyph3 = layer["C"]
-        glyph4 = layer["D"]
         glyph1.selected = True
         layer.selectedGlyphNames = []
         self.assertEqual(

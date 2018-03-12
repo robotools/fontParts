@@ -248,7 +248,6 @@ class TestGlyph(unittest.TestCase):
     def test_selectedContours_setEmptyList(self):
         glyph = self.getGlyph_generic()
         contour1 = glyph.contours[0]
-        contour2 = glyph.contours[1]
         try:
             contour1.selected = True
         except NotImplementedError:
@@ -304,7 +303,6 @@ class TestGlyph(unittest.TestCase):
     def test_selectedComponents_setEmptyList(self):
         glyph = self.getGlyph_generic()
         component1 = glyph.components[0]
-        component2 = glyph.components[1]
         try:
             component1.selected = True
         except NotImplementedError:
@@ -360,7 +358,6 @@ class TestGlyph(unittest.TestCase):
     def test_selectedAnchors_setEmptyList(self):
         glyph = self.getGlyph_generic()
         anchor1 = glyph.anchors[0]
-        anchor2 = glyph.anchors[1]
         try:
             anchor1.selected = True
         except NotImplementedError:
@@ -416,7 +413,6 @@ class TestGlyph(unittest.TestCase):
     def test_selectedGuidelines_setEmptyList(self):
         glyph = self.getGlyph_generic()
         guideline1 = glyph.guidelines[0]
-        guideline2 = glyph.guidelines[1]
         try:
             guideline1.selected = True
         except NotImplementedError:
