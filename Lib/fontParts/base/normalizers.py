@@ -357,8 +357,10 @@ def normalizeGlyphLeftMargin(value):
     * **value** must be a :ref:`type-int-float` or `None`.
     * Returned value is the same type as the input value.
     """
-    if not isinstance(value, (int, float, None)):
-        raise TypeError("Glyph left margin must be an :ref:`type-int-float`, "
+    if value is None:
+        return value
+    if not isinstance(value, (int, float)):
+        raise TypeError("Glyph left margin must be an :ref:`type-int-float` or `None`, "
                         "not %s." % type(value).__name__)
     return value
 
@@ -370,8 +372,10 @@ def normalizeGlyphRightMargin(value):
     * **value** must be a :ref:`type-int-float` or `None`.
     * Returned value is the same type as the input value.
     """
-    if not isinstance(value, (int, float, None)):
-        raise TypeError("Glyph right margin must be an :ref:`type-int-float`, "
+    if value is None:
+        return value
+    if not isinstance(value, (int, float)):
+        raise TypeError("Glyph right margin must be an :ref:`type-int-float` or `None`, "
                         "not %s." % type(value).__name__)
     return value
 
@@ -396,9 +400,11 @@ def normalizeGlyphBottomMargin(value):
     * **value** must be a :ref:`type-int-float` or `None`.
     * Returned value is the same type as the input value.
     """
-    if not isinstance(value, (int, float, None)):
+    if value is None:
+        return value
+    if not isinstance(value, (int, float)):
         raise TypeError("Glyph bottom margin must be an "
-                        ":ref:`type-int-float`, not %s."
+                        ":ref:`type-int-float` or `None`, not %s."
                         % type(value).__name__)
     return value
 
@@ -410,8 +416,10 @@ def normalizeGlyphTopMargin(value):
     * **value** must be a :ref:`type-int-float` or `None`.
     * Returned value is the same type as the input value.
     """
-    if not isinstance(value, (int, float, None)):
-        raise TypeError("Glyph top margin must be an :ref:`type-int-float`, "
+    if value is None:
+        return value
+    if not isinstance(value, (int, float)):
+        raise TypeError("Glyph top margin must be an :ref:`type-int-float` or `None`, "
                         "not %s." % type(value).__name__)
     return value
 
