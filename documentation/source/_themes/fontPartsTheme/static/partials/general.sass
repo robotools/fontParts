@@ -24,8 +24,15 @@
 	// grid-template-areas: ". content"
 	position: relative
 	// margin: $padding
-	padding: calc(5vw + $header-height) $padding 5vw
+	padding: $header-height*2 $padding 5vw
 	// display: block
+	// .section::before
+	// 	display: inline-block
+	// 	content: " "
+	// 	margin-top: -$header-height
+	// 	height: $header-height
+	// 	visibility: hidden
+	// 	pointer-events: none
 	
 
 #content, #sidebar, #footer, #footer p
@@ -80,7 +87,7 @@
 	z-index: 1
 	top: 0
 	// width: 30%
-	padding: 1.5em 0
+	padding: 1.5em $padding
 	// margin: $padding
 	font-size: 0.9em
 	font-family: $monofont

@@ -1,5 +1,5 @@
 @charset "UTF-8";
-@import url("https://fonts.googleapis.com/css?family=Source+Code+Pro|Source+Sans+Pro");
+@import url("https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700|Source+Sans+Pro:400,700");
 /* ---------- resets etc ---------- */
 html {
   box-sizing: border-box;
@@ -83,6 +83,13 @@ dl {
     margin-left: 0;
     padding-left: 0;
   }
+}
+
+dt {
+  font-weight: 700;
+}
+dt code {
+  font-weight: 700;
 }
 
 h1, h2, h3 {
@@ -307,7 +314,7 @@ h6:hover > a.headerlink {
   display: grid;
   grid-template-columns: minmax(250px, 30%) 1fr;
   position: relative;
-  padding: calc(5vw + $header-height) 1rem 5vw;
+  padding: 6rem 1rem 5vw;
 }
 
 .document {
@@ -351,7 +358,7 @@ h6:hover > a.headerlink {
   display: inline-block;
   z-index: 1;
   top: 0;
-  padding: 1.5em 0;
+  padding: 1.5em 1rem;
   font-size: 0.9em;
   font-family: "Source Code Pro", "Menlo", "Andale Mono", "Monaco", "Consolas", "Courier";
 }

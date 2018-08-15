@@ -347,7 +347,8 @@ class BaseGlyph(BaseObject,
             35
             >>> glyph.leftMargin = 45
 
-        The value will be a :ref:`type-int-float`.
+        The value will be a :ref:`type-int-float`
+        or `None` if the glyph has no outlines.
         """
     )
 
@@ -363,12 +364,13 @@ class BaseGlyph(BaseObject,
     def _get_leftMargin(self):
         """
         This must return an int or float.
+        If the glyph has no outlines, this must return `None`.
 
         Subclasses may override this method.
         """
         bounds = self.bounds
         if bounds is None:
-            return 0
+            return None
         xMin, yMin, xMax, yMax = bounds
         return xMin
 
@@ -391,7 +393,8 @@ class BaseGlyph(BaseObject,
             35
             >>> glyph.rightMargin = 45
 
-        The value will be a :ref:`type-int-float`.
+        The value will be a :ref:`type-int-float`
+        or `None` if the glyph has no outlines.
         """
     )
 
@@ -407,12 +410,13 @@ class BaseGlyph(BaseObject,
     def _get_rightMargin(self):
         """
         This must return an int or float.
+        If the glyph has no outlines, this must return `None`.
 
         Subclasses may override this method.
         """
         bounds = self.bounds
         if bounds is None:
-            return self.width
+            return None
         xMin, yMin, xMax, yMax = bounds
         return self.width - xMax
 
@@ -478,7 +482,8 @@ class BaseGlyph(BaseObject,
             35
             >>> glyph.bottomMargin = 45
 
-        The value will be a :ref:`type-int-float`.
+        The value will be a :ref:`type-int-float`
+        or `None` if the glyph has no outlines.
         """
     )
 
@@ -494,12 +499,13 @@ class BaseGlyph(BaseObject,
     def _get_bottomMargin(self):
         """
         This must return an int or float.
+        If the glyph has no outlines, this must return `None`.
 
         Subclasses may override this method.
         """
         bounds = self.bounds
         if bounds is None:
-            return 0
+            return None
         xMin, yMin, xMax, yMax = bounds
         return yMin
 
@@ -522,7 +528,8 @@ class BaseGlyph(BaseObject,
             35
             >>> glyph.topMargin = 45
 
-        The value will be a :ref:`type-int-float`.
+        The value will be a :ref:`type-int-float`
+        or `None` if the glyph has no outlines.
         """
     )
 
@@ -538,12 +545,13 @@ class BaseGlyph(BaseObject,
     def _get_topMargin(self):
         """
         This must return an int or float.
+        If the glyph has no outlines, this must return `None`.
 
         Subclasses may override this method.
         """
         bounds = self.bounds
         if bounds is None:
-            return self.height
+            return None
         xMin, yMin, xMax, yMax = bounds
         return self.height - yMax
 
