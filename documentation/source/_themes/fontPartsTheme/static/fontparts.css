@@ -1,0 +1,467 @@
+@charset "UTF-8";
+@import url("https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700|Source+Sans+Pro:400,700");
+/* ---------- resets etc ---------- */
+html {
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+/* ---------- variables ---------- */
+/* ---------- html ---------- */
+body {
+  margin: 0;
+  font-family: "Source Sans Pro", Lucida Grande, Geneva, Arial, Verdana, sans-serif;
+  font-size: 1.15em;
+  line-height: 1.6em;
+  position: relative;
+  min-height: 100vh;
+}
+
+pre, code, tt {
+  font-family: "Source Code Pro", "Menlo", "Andale Mono", "Monaco", "Consolas", "Courier";
+  font-size: 0.95em;
+  font-style: normal;
+  font-weight: normal;
+  white-space: pre-wrap;
+}
+
+pre {
+  background: whitesmoke;
+}
+
+a, a:active {
+  text-decoration: none;
+  font-style: normal;
+  color: #0062FF;
+  transition: 0.25s;
+}
+a:hover, a:active:hover {
+  color: #66DD00;
+}
+
+button, a.button {
+  border: none;
+  display: inline-block;
+  font-family: "Source Code Pro", "Menlo", "Andale Mono", "Monaco", "Consolas", "Courier";
+  font-size: 0.875em;
+  background: #0062FF;
+  border-radius: 12px;
+  padding: 8px 16px;
+  color: white;
+  transition: 0.25s;
+}
+button:hover, a.button:hover {
+  background: #66DD00;
+  color: white;
+  cursor: pointer;
+}
+
+hr {
+  color: none;
+  background-color: none;
+  border: none;
+  border-top: 3px solid black;
+  height: 1px;
+  margin: 2em 0;
+}
+
+::selection {
+  background-color: #D5D5D5;
+}
+
+dl {
+  margin-bottom: calc(4rem + 2.5vw);
+}
+
+@media screen and (max-width: 800px) {
+  dd {
+    margin-left: 0;
+    padding-left: 0;
+  }
+}
+
+dt {
+  font-weight: 700;
+}
+dt code {
+  font-weight: 700;
+}
+
+h1, h2, h3 {
+  font-family: "Source Code Pro", "Menlo", "Andale Mono", "Monaco", "Consolas", "Courier";
+  color: black;
+  line-height: 1.2em;
+}
+
+h1 {
+  font-size: 2.25em;
+  margin-top: 0.5em;
+}
+
+h2 {
+  font-size: 1.5em;
+  margin-top: 1em;
+  padding-top: 1em;
+  font-size: 1.75em;
+}
+
+ul {
+  padding-left: 0;
+}
+
+ul {
+  list-style: none;
+}
+
+ul.simple {
+  text-indent: 0em;
+}
+
+code {
+  padding: 0 0.05em;
+  white-space: pre-line;
+}
+
+pre {
+  padding: 1em;
+  white-space: pre-wrap;
+}
+
+img {
+  width: 100%;
+}
+
+table {
+  border-collapse: collapse;
+  border: none;
+}
+
+tr {
+  border: none;
+}
+tr th, tr td {
+  padding: 0.5em;
+  border: solid 1px #DDD;
+}
+tr th {
+  background-color: #DDD;
+}
+
+a.headerlink,
+a.headerlink:visited {
+  visibility: hidden;
+}
+
+.note {
+  padding: 0.6em 1em 0.8em;
+  background-color: #EEE;
+  margin-bottom: calc(4rem + 2.5vw);
+}
+@media (max-width: 800px) {
+  .note {
+    margin-left: -1rem;
+  }
+}
+.note p {
+  margin: 0;
+}
+.note .admonition-title {
+  font-weight: bold;
+  color: #666;
+  margin-bottom: 1em;
+}
+
+@media (max-width: 800px) {
+  .highlight {
+    margin-left: -1rem;
+  }
+}
+
+h1:hover > a.headerlink,
+h2:hover > a.headerlink,
+h3:hover > a.headerlink,
+h4:hover > a.headerlink,
+h5:hover > a.headerlink,
+h6:hover > a.headerlink {
+  visibility: visible;
+}
+
+#header, #footer {
+  height: 3rem;
+  position: fixed;
+  z-index: 2;
+  width: 100%;
+  background: black;
+  font-family: "Source Code Pro", "Menlo", "Andale Mono", "Monaco", "Consolas", "Courier";
+  font-size: 0.75em;
+  color: white;
+  display: flex;
+  align-items: center;
+}
+#header a, #footer a {
+  color: white;
+}
+#header a:hover, #footer a:hover {
+  color: #66DD00;
+  font-weight: bold;
+}
+
+.navbar {
+  display: flex;
+  width: 100%;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  justify-content: space-between;
+  align-items: center;
+}
+.navbar ul {
+  padding-left: 0;
+  white-space: nowrap;
+}
+.navbar ul, .navbar li, .navbar #searchbox {
+  display: inline-block;
+  zoom: 1;
+}
+.navbar nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.navbar nav a {
+  padding-right: 1rem;
+}
+.navbar img {
+  width: 30px;
+}
+
+#searchbox form {
+  font-family: "Source Code Pro", "Menlo", "Andale Mono", "Monaco", "Consolas", "Courier";
+  display: flex;
+}
+
+#searchbox input[type=text] {
+  border-radius: 0.25rem 0 0 0.25rem;
+  font-family: "Source Code Pro", "Menlo", "Andale Mono", "Monaco", "Consolas", "Courier";
+  font-size: 0.875em;
+}
+
+#searchbox button {
+  height: 1.5rem;
+  padding: 0 0.5rem;
+  border-radius: 0 0.25rem 0.25rem 0;
+}
+
+.inline-items {
+  margin-top: 0;
+}
+.inline-items li {
+  border-left: 3px solid black;
+  margin-left: 0;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+.inline-items li:first-child {
+  border: none;
+  margin-left: 0;
+  padding-left: 0;
+  padding-right: 10px;
+}
+.inline-items li:last-child {
+  padding-right: 0;
+}
+.inline-items input {
+  border: none;
+  border-radius: 0.25rem;
+  height: 1.5rem;
+  padding: 0.25rem;
+}
+
+#content {
+  max-width: 50rem;
+  vertical-align: top;
+  min-height: 100%;
+  padding-bottom: 1em;
+  margin-bottom: 1rem;
+  display: inline-block;
+}
+#content p {
+  max-width: 60ch;
+}
+
+.central-column-wrapper {
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.columns-2 {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-gap: 1rem;
+}
+@media (max-width: 800px) {
+  .columns-2 {
+    grid-template-columns: auto;
+  }
+}
+
+#wrapper {
+  display: grid;
+  grid-template-columns: minmax(250px, 30%) 1fr;
+  position: relative;
+  padding: 6rem 1rem 5vw;
+}
+
+.document {
+  padding-top: 3rem;
+}
+
+#intro {
+  padding: 8em 1rem;
+  border-bottom: 3px solid black;
+  background: #0f1622;
+  width: 100%;
+  margin: auto;
+}
+#intro img {
+  width: 100%;
+  margin-bottom: 10vh;
+}
+#intro p {
+  margin: 0;
+  margin-bottom: 1rem;
+  max-width: 50ch;
+  color: white;
+}
+#intro ul {
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  flex-flow: row wrap;
+  max-width: 300px;
+}
+#intro li {
+  display: inline-block;
+  list-style: none;
+  margin-bottom: 1rem;
+}
+
+#sidebar {
+  position: -website-sticky;
+  position: -webkit-sticky;
+  position: sticky;
+  display: inline-block;
+  z-index: 1;
+  top: 0;
+  padding: 1.5em 1rem;
+  font-size: 0.9em;
+  font-family: "Source Code Pro", "Menlo", "Andale Mono", "Monaco", "Consolas", "Courier";
+}
+#sidebar ul {
+  margin: 0;
+  padding: 0 0 0 1em;
+  list-style: none;
+}
+#sidebar li {
+  padding: 0;
+}
+#sidebar li:before {
+  content: "–";
+}
+#sidebar h3 {
+  margin-bottom: 0.5em;
+}
+
+.sticky-wrapper {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 4rem;
+  overflow-y: auto;
+  max-height: calc(100vh - 4rem);
+  padding-bottom: 4rem;
+}
+@media screen and (max-width: 800px) {
+  .sticky-wrapper {
+    max-height: none;
+  }
+}
+
+.toctree-wrapper ul {
+  text-indent: 0;
+}
+
+#designers, #developers {
+  display: inline-block;
+  vertical-align: top;
+  width: 48%;
+}
+
+#developers {
+  float: right;
+}
+
+#footer {
+  height: auto;
+  display: block;
+  position: absolute;
+  z-index: 0;
+  bottom: -150px;
+  width: 100%;
+  padding: 1.5rem 1rem;
+}
+#footer a {
+  width: 100%;
+}
+#footer p {
+  margin: 0;
+}
+
+#home_button {
+  position: fixed;
+  bottom: 1em;
+  right: 1em;
+  z-index: 4;
+  opacity: 0.15;
+  background: black;
+  padding: 20px;
+  border-radius: 12px;
+  color: white;
+  transition: opacity 0.75s;
+}
+#home_button:hover {
+  opacity: 1;
+}
+
+/* ---------- media queries ---------- */
+@media screen and (max-width: 800px) {
+  #wrapper {
+    grid-template-columns: 1fr;
+  }
+
+  #designers, #developers {
+    display: block;
+    width: 100%;
+  }
+
+  #content {
+    width: 100%;
+    order: -1;
+  }
+
+  #sidebar {
+    display: block;
+    width: 100%;
+    min-height: none;
+  }
+
+  #sticky-wrapper {
+    position: relative;
+  }
+}
+
+/*# sourceMappingURL=fontparts.css.map */

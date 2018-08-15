@@ -1,0 +1,75 @@
+{%- extends "basic/layout.html" %}
+
+{%- macro navBar() %}
+<div class="navbar inline-items">
+	<nav>
+		<a href="{{ pathto(master_doc) }}">
+			<img src="{{ pathto('_static/mono_ltgray.png', 1) }}">
+		</a>
+		<a href="{{ pathto('genindex.html', 1) }}">
+			Index
+		</a>
+	</nav>
+	{%- include "searchbox.html" %}
+</div>
+{%- endmacro %}
+
+{%- block extrahead %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+{% endblock %}
+
+{%- block header %}
+<div id='header'>
+{{ navBar() }}
+</div>
+{% endblock %}
+
+{% block relbar1 %}{% endblock %}
+{% block sidebar1 %}{% endblock %}
+
+{% block document %}
+{%- if pagename == "index" %}
+	{%- include "intro.html" %}
+{%- endif %}
+<div id="wrapper">
+	<div id="sidebar" class="box sidebar">
+		<div class="sticky-wrapper">
+		{{ toc }}
+		{% if prev %}
+			<h3>Previous</h3>
+			<ul>
+				<li><a href="{{ prev.link|e }}">{{ prev.title }}</a></li>
+			</ul>
+		{% endif %}
+		{% if next %}
+			<h3>Next</h3>
+			<ul>
+				<li><a href="{{ next.link|e }}">{{ next.title }}</a></li>
+			</ul>
+		{% endif %}
+		</div>
+	</div>
+	<div class="body" id="content" class='box content'>
+		{% block body %}
+		{% endblock %}
+	</div>
+	{% block relbar2 %}{% endblock %}
+	{% block sidebar2 %}{% endblock %}
+</div>
+{% endblock %}
+
+{%- block footer %}
+<div id="footer">
+	<p>&copy; Copyright <script>document.write(new Date().getFullYear())</script> <a href="http://letterror.com/">Just van Rossum</a>, <a href="http://letterror.com/">Erik van Blokland</a>, <a href="http://typesupply.com/">Tal Leming</a>.</p>
+	<p>
+	<p>FontParts logo by <a href="http://www.shiva-n.com/">Shiva Nallaperumal.</a></p>
+	{%- if last_updated %}
+		{% trans last_updated=last_updated|e %}Last updated on {{ last_updated }}. {% endtrans %}
+	{%- endif %}
+	{%- if show_sphinx %}
+		{% trans sphinx_version=sphinx_version|e %} <p>Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> {{ sphinx_version }}.</p> {% endtrans %}
+	{%- endif %}
+	</p>
+</div>
+<a href="{{ pathto(master_doc) }}"><div id="home_button"></div></a>
+{%- endblock %}

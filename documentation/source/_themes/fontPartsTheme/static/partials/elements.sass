@@ -1,0 +1,136 @@
+/* ---------- html ---------- */
+
+body
+	margin: 0
+	font-family: $sansfont
+	font-size: 1.15em
+	line-height: 1.6em
+	position: relative
+	min-height: 100vh
+
+pre, code, tt
+	font-family: $monofont
+	font-size: 0.95em
+	font-style: normal
+	font-weight: normal
+	white-space: pre-wrap
+
+pre
+	background: whitesmoke
+
+a, a:active
+	text-decoration: none
+	font-style: normal
+	color: $blue
+	transition: .25s
+
+	&:hover
+		color: $green
+
+button, a.button
+	border: none
+	display: inline-block
+	font-family: $monofont
+	font-size: $font-smallish
+	background: $blue
+	border-radius: 12px
+	padding: 8px 16px
+	color: white
+	transition: .25s
+	&:hover
+		background: $green
+		color: white
+		cursor: pointer
+
+hr
+	color: none
+	background-color: none
+	border: none
+	border-top: $border
+	height: 1px
+	margin: 2em 0
+
+::selection
+	background-color: #D5D5D5
+
+dl
+	margin-bottom: $width-flexing-margin
+
+dd
+	@media screen and (max-width: $tablet-portrait)
+		margin-left: 0
+		padding-left: 0
+
+dt
+	font-weight: 700
+	code
+		font-weight: 700
+
+h1, h2, h3
+	font-family: $monofont
+	color: black
+	line-height: 1.2em
+h1
+	font-size: 2.25em
+	margin-top: 0.5em
+h2
+	font-size: 1.5em
+	margin-top: 1em
+	padding-top: 1em
+	font-size: 1.75em
+
+
+ul
+	padding-left: 0
+	// margin-left: 1em
+	// text-indent: -1em
+ul
+	list-style: none
+ul.simple
+	text-indent: 0em
+code
+	padding: 0 0.05em
+	white-space: pre-line
+pre
+	padding: 1em
+	white-space: pre-wrap
+img
+	width: 100%
+table
+	border-collapse: collapse
+	border: none
+tr
+	border: none
+	th, td
+		padding: 0.5em
+		border: solid 1px #DDD
+	th
+		background-color: #DDD
+a.headerlink,
+a.headerlink:visited
+	visibility: hidden
+.note
+	padding: 0.6em 1em 0.8em
+	background-color: #EEE
+	margin-bottom: $width-flexing-margin
+
+	@media (max-width: $tablet-portrait)
+		margin-left: -$padding
+	p
+		margin: 0
+	.admonition-title
+		font-weight: bold
+		color: #666
+		margin-bottom: 1em
+
+.highlight
+	@media (max-width: $tablet-portrait)
+		margin-left: -$padding
+		
+h1:hover > a.headerlink,
+h2:hover > a.headerlink,
+h3:hover > a.headerlink,
+h4:hover > a.headerlink,
+h5:hover > a.headerlink,
+h6:hover > a.headerlink
+	visibility: visible

@@ -53,6 +53,8 @@ clean:
 
 .PHONY: html
 html:
+	# run sass compiler
+	python source/_themes/fontPartsTheme/static/sass2css.py
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
@@ -214,3 +216,29 @@ pseudoxml:
 	$(SPHINXBUILD) -b pseudoxml $(ALLSPHINXOPTS) $(BUILDDIR)/pseudoxml
 	@echo
 	@echo "Build finished. The pseudo-XML files are in $(BUILDDIR)/pseudoxml."
+
+SPHINXAUTOBUILD = sphinx-autobuild
+
+ALLSPHINXLIVEOPTS = $(ALLSPHINXOPTS) -q \
+	-p 0 \
+	-H 0.0.0.0 \
+	-B \
+	--delay 1 \
+	--ignore "*.swp" \
+	--ignore "*.pdf" \
+	--ignore "*.log" \
+	--ignore "*.out" \
+	--ignore "*.toc" \
+	--ignore "*.aux" \
+	--ignore "*.idx" \
+	--ignore "*.ind" \
+	--ignore "*.ilg" \
+	--ignore "*.tex" \
+	--watch source/_themes/fontPartsTheme/*/
+
+
+.PHONY: livehtml
+livehtml:
+	$(SPHINXAUTOBUILD) -b html $(ALLSPHINXLIVEOPTS) $(BUILDDIR)
+	@echo
+	@echo "Build finished. The HTML pages are in $(BUILDDIR)."

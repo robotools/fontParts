@@ -1,0 +1,86 @@
+#header
+	height: $header-height
+	position: fixed
+	z-index: 2
+	width: 100%
+	background: black
+	// padding: 0 $padding * 2
+	font-family: $monofont
+	font-size: 0.75em
+	color: white
+	display: flex
+	align-items: center
+	a
+		color: white
+	a:hover
+		color: $green
+		font-weight: bold
+
+.navbar
+	// list-style: none
+	// margin-left: 0
+	// margin-bottom: 0
+	display: flex
+	width: 100%
+	padding-left: $padding
+	padding-right: $padding
+	justify-content: space-between
+	align-items: center
+	
+	ul
+		padding-left: 0
+		// padding-right: 1em
+		// margin-right: 1em
+		white-space: nowrap
+	ul, li, #searchbox
+		display: inline-block
+		zoom: 1
+
+	nav
+		display: flex
+		align-items: center
+		justify-content: space-between
+
+		a
+			padding-right: 1rem
+
+	img
+		width: 30px
+
+#searchbox form
+	font-family: $monofont
+	display: flex
+
+
+
+#searchbox input[type="text"]
+	border-radius: 0.25rem 0 0 0.25rem
+	font-family: $monofont
+	font-size: $font-smallish
+
+
+#searchbox button
+	// font-size: .75rem
+	height: 1.5rem
+	padding: 0 0.5rem
+	border-radius: 0 0.25rem 0.25rem 0
+
+.inline-items
+	margin-top: 0
+	li
+		border-left: $border
+		margin-left: 0
+		padding-left: 10px
+		padding-right: 10px
+		&:first-child
+			border: none
+			margin-left: 0
+			padding-left: 0
+			padding-right: 10px
+		&:last-child
+			padding-right: 0
+	input
+		border: none
+		border-radius: .25rem
+		height: 1.5rem
+		padding: .25rem
