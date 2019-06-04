@@ -1,5 +1,5 @@
 import unittest2 as unittest
-from fontParts.base.deprecated import RemovedWarning
+from fontParts.base.deprecated import RemovedError
 
 
 class TestDeprecated(unittest.TestCase):
@@ -16,22 +16,22 @@ class TestDeprecated(unittest.TestCase):
 
     def test_font_removed_getParent(self):
         font, _ = self.objectGenerator("font")
-        with self.assertRaises(RemovedWarning):
+        with self.assertRaises(RemovedError):
             font.getParent()
 
     def test_font_removed_generateGlyph(self):
         font, _ = self.objectGenerator("font")
-        with self.assertRaises(RemovedWarning):
+        with self.assertRaises(RemovedError):
             font.generateGlyph()
 
     def test_font_removed_compileGlyph(self):
         font, _ = self.objectGenerator("font")
-        with self.assertRaises(RemovedWarning):
+        with self.assertRaises(RemovedError):
             font.compileGlyph()
 
     def test_font_removed_getGlyphNameToFileNameFunc(self):
         font, _ = self.objectGenerator("font")
-        with self.assertRaises(RemovedWarning):
+        with self.assertRaises(RemovedError):
             font.getGlyphNameToFileNameFunc()
 
     def test_font_deprecated_update(self):
@@ -48,7 +48,7 @@ class TestDeprecated(unittest.TestCase):
 
     def test_font_removed_setParent(self):
         font, _ = self.objectGenerator("font")
-        with self.assertRaises(RemovedWarning):
+        with self.assertRaises(RemovedError):
             font.setParent(font)
 
     def test_font_deprecated__fileName(self):
@@ -173,19 +173,19 @@ class TestDeprecated(unittest.TestCase):
     def test_anchor_removed_setParent(self):
         anchor = self.getAnchor()
         glyph = anchor.glyph
-        with self.assertRaises(RemovedWarning):
+        with self.assertRaises(RemovedError):
             anchor.setParent(glyph)
 
     def test_anchor_removed_draw(self):
         anchor = self.getAnchor()
         pen = anchor.glyph.getPen()
-        with self.assertRaises(RemovedWarning):
+        with self.assertRaises(RemovedError):
             anchor.draw(pen)
 
     def test_anchor_removed_drawPoints(self):
         anchor = self.getAnchor()
         pen = anchor.glyph.getPen()
-        with self.assertRaises(RemovedWarning):
+        with self.assertRaises(RemovedError):
             anchor.drawPoints(pen)
 
     def test_anchor_deprecated_move(self):
@@ -317,7 +317,7 @@ class TestDeprecated(unittest.TestCase):
         for name in "ABCD":
             font.newLayer("layer " + name)
         layer = font.layers[0]
-        with self.assertRaises(RemovedWarning):
+        with self.assertRaises(RemovedError):
             layer.setParent(font)
 
     # --------
@@ -348,12 +348,12 @@ class TestDeprecated(unittest.TestCase):
         font, _ = self.objectGenerator("font")
         features = font.features
         features.text = "# Test"
-        with self.assertRaises(RemovedWarning):
+        with self.assertRaises(RemovedError):
             features.setParent(font)
 
     def test_feature_removed_round(self):
         feature, _ = self.objectGenerator("features")
-        with self.assertRaises(RemovedWarning):
+        with self.assertRaises(RemovedError):
             feature.round()
 
     # -----
@@ -388,7 +388,7 @@ class TestDeprecated(unittest.TestCase):
     def test_image_removed_setParent(self):
         glyph, _ = self.objectGenerator("glyph")
         image = self.getImage_glyph()
-        with self.assertRaises(RemovedWarning):
+        with self.assertRaises(RemovedError):
             image.setParent(glyph)
 
     # ----
@@ -419,7 +419,7 @@ class TestDeprecated(unittest.TestCase):
         font, _ = self.objectGenerator("font")
         info, _ = self.objectGenerator("info")
         info.unitsPerEm = 1000
-        with self.assertRaises(RemovedWarning):
+        with self.assertRaises(RemovedError):
             info.setParent(font)
 
     # -------
@@ -443,77 +443,77 @@ class TestDeprecated(unittest.TestCase):
     def test_kerning_removed_setParent(self):
         font, _ = self.objectGenerator("font")
         kerning, _ = self.objectGenerator("kerning")
-        with self.assertRaises(RemovedWarning):
+        with self.assertRaises(RemovedError):
             kerning.setParent(font)
 
     def test_kerning_removed_swapNames(self):
         kerning = self.getKerning_generic()
         swap = {"B": "C"}
-        with self.assertRaises(RemovedWarning):
+        with self.assertRaises(RemovedError):
             kerning.swapNames(swap)
 
     def test_kerning_removed_getLeft(self):
         kerning = self.getKerning_generic()
-        with self.assertRaises(RemovedWarning):
+        with self.assertRaises(RemovedError):
             kerning.getLeft("B")
 
     def test_kerning_removed_getRight(self):
         kerning = self.getKerning_generic()
-        with self.assertRaises(RemovedWarning):
+        with self.assertRaises(RemovedError):
             kerning.getRight("B")
 
     def test_kerning_removed_getExtremes(self):
         kerning = self.getKerning_generic()
-        with self.assertRaises(RemovedWarning):
+        with self.assertRaises(RemovedError):
             kerning.getExtremes()
 
     def test_kerning_removed_add(self):
         kerning = self.getKerning_generic()
-        with self.assertRaises(RemovedWarning):
+        with self.assertRaises(RemovedError):
             kerning.add(10)
 
     def test_kerning_removed_minimize(self):
         kerning = self.getKerning_generic()
-        with self.assertRaises(RemovedWarning):
+        with self.assertRaises(RemovedError):
             kerning.minimize()
 
     def test_kerning_removed_importAFM(self):
         kerning = self.getKerning_generic()
-        with self.assertRaises(RemovedWarning):
+        with self.assertRaises(RemovedError):
             kerning.importAFM("fake/path")
 
     def test_kerning_removed_getAverage(self):
         kerning = self.getKerning_generic()
-        with self.assertRaises(RemovedWarning):
+        with self.assertRaises(RemovedError):
             kerning.getAverage()
 
     def test_kerning_removed_combine(self):
         kerning = self.getKerning_generic()
         one = {("A", "v"): -10}
         two = {("v", "A"): -10}
-        with self.assertRaises(RemovedWarning):
+        with self.assertRaises(RemovedError):
             kerning.combine([one, two])
 
     def test_kerning_removed_eliminate(self):
         kerning = self.getKerning_generic()
-        with self.assertRaises(RemovedWarning):
+        with self.assertRaises(RemovedError):
             kerning.eliminate(leftGlyphsToEliminate=["A"])
 
     def test_kerning_removed_occurrenceCount(self):
         kerning = self.getKerning_generic()
-        with self.assertRaises(RemovedWarning):
+        with self.assertRaises(RemovedError):
             kerning.occurrenceCount(["A"])
 
     def test_kerning_removed_implodeClasses(self):
         kerning = self.getKerning_generic()
         classes = {"group": ["a", "v"]}
-        with self.assertRaises(RemovedWarning):
+        with self.assertRaises(RemovedError):
             kerning.implodeClasses(leftClassDict=classes)
 
     def test_kerning_removed_explodeClasses(self):
         kerning = self.getKerning_generic()
         classes = {"group": ["a", "v"]}
-        with self.assertRaises(RemovedWarning):
+        with self.assertRaises(RemovedError):
             kerning.explodeClasses(leftClassDict=classes)
 
     def test_kerning_removed_setChanged(self):
@@ -560,7 +560,7 @@ class TestDeprecated(unittest.TestCase):
             "group 3": [],
             "group 4": ["A"]
         })
-        with self.assertRaises(RemovedWarning):
+        with self.assertRaises(RemovedError):
             groups.setParent(font)
 
     # ---
@@ -609,7 +609,7 @@ class TestDeprecated(unittest.TestCase):
             "key 3": [],
             "key 4": 20
         })
-        with self.assertRaises(RemovedWarning):
+        with self.assertRaises(RemovedError):
             lib.setParent(font)
 
     def test_lib_removed_setParent_glyph(self):
@@ -621,7 +621,7 @@ class TestDeprecated(unittest.TestCase):
             "key 3": [],
             "key 4": 20
         })
-        with self.assertRaises(RemovedWarning):
+        with self.assertRaises(RemovedError):
             lib.setParent(glyph)
 
     # ---------
@@ -683,7 +683,7 @@ class TestDeprecated(unittest.TestCase):
     def test_guideline_removed_setParent(self):
         font, _ = self.objectGenerator("font")
         guideline = self.getGuideline_generic()
-        with self.assertRaises(RemovedWarning):
+        with self.assertRaises(RemovedError):
             guideline.setParent(font)
 
     def test_guideline_deprecated_move(self):
@@ -803,23 +803,23 @@ class TestDeprecated(unittest.TestCase):
 
     def test_glyph_removed_center(self):
         glyph = self.getGlyph_generic()
-        with self.assertRaisesRegex(RemovedWarning, "center()"):
+        with self.assertRaisesRegex(RemovedError, "center()"):
             glyph.center()
 
     def test_glyph_removed_clearVGuides(self):
         glyph = self.getGlyph_generic()
-        with self.assertRaisesRegex(RemovedWarning, "clearGuidelines()"):
+        with self.assertRaisesRegex(RemovedError, "clearGuidelines()"):
             glyph.clearVGuides()
 
     def test_glyph_removed_clearHGuides(self):
         glyph = self.getGlyph_generic()
-        with self.assertRaisesRegex(RemovedWarning, "clearGuidelines()"):
+        with self.assertRaisesRegex(RemovedError, "clearGuidelines()"):
             glyph.clearHGuides()
 
     def test_glyph_removed_setParent(self):
         font, _ = self.objectGenerator("font")
         glyph = self.getGlyph_generic()
-        with self.assertRaisesRegex(RemovedWarning, "setParent()"):
+        with self.assertRaisesRegex(RemovedError, "setParent()"):
             glyph.setParent(font)
 
     def test_glyph_deprecated_get_mark(self):
@@ -1017,7 +1017,7 @@ class TestDeprecated(unittest.TestCase):
     def test_contour_removed_setParent(self):
         glyph, _ = self.objectGenerator("glyph")
         contour = self.getContour_bounds()
-        with self.assertRaisesRegex(RemovedWarning, "setParent()"):
+        with self.assertRaisesRegex(RemovedError, "setParent()"):
             contour.setParent(glyph)
 
     def test_contour_deprecated__get_box(self):
@@ -1201,17 +1201,17 @@ class TestDeprecated(unittest.TestCase):
 
     def test_segment_removed_insertPoint(self):
         segment = self.getSegment()
-        with self.assertRaisesRegex(RemovedWarning, "insertPoint()"):
+        with self.assertRaisesRegex(RemovedError, "insertPoint()"):
             segment.insertPoint(None)
 
     def test_segment_removed_removePoint(self):
         segment = self.getSegment()
-        with self.assertRaisesRegex(RemovedWarning, "removePoint()"):
+        with self.assertRaisesRegex(RemovedError, "removePoint()"):
             segment.removePoint(None)
 
     def test_segment_removed_setParent(self):
         segment = self.getSegment()
-        with self.assertRaisesRegex(RemovedWarning, "setParent()"):
+        with self.assertRaisesRegex(RemovedError, "setParent()"):
             segment.setParent(None)
 
     def test_segment_deprecated_getParent(self):
@@ -1386,7 +1386,7 @@ class TestDeprecated(unittest.TestCase):
 
     def test_component_removed_setParent(self):
         component = self.getComponent()
-        with self.assertRaisesRegex(RemovedWarning, "setParent()"):
+        with self.assertRaisesRegex(RemovedError, "setParent()"):
             component.setParent(None)
 
     def test_component_deprecated__get_box(self):
@@ -1526,12 +1526,12 @@ class TestDeprecated(unittest.TestCase):
 
     def test_point_removed_select(self):
         point = self.getPoint()
-        with self.assertRaisesRegex(RemovedWarning, "Point.select"):
+        with self.assertRaisesRegex(RemovedError, "Point.select"):
             point.select()
 
     def test_point_removed_setParent(self):
         point = self.getPoint()
-        with self.assertRaisesRegex(RemovedWarning, "setParent()"):
+        with self.assertRaisesRegex(RemovedError, "setParent()"):
             point.setParent(None)
 
     def test_point_deprecated__generateIdentifier(self):
@@ -1677,12 +1677,12 @@ class TestDeprecated(unittest.TestCase):
 
     def test_bPoint_removed_select(self):
         bPoint = self.getBPoint()
-        with self.assertRaisesRegex(RemovedWarning, "BPoint.select"):
+        with self.assertRaisesRegex(RemovedError, "BPoint.select"):
             bPoint.select()
 
     def test_bPoint_removed_setParent(self):
         bPoint = self.getBPoint()
-        with self.assertRaisesRegex(RemovedWarning, "setParent()"):
+        with self.assertRaisesRegex(RemovedError, "setParent()"):
             bPoint.setParent(None)
 
     def test_bPoint_deprecated__generateIdentifier(self):
