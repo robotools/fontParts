@@ -1,3 +1,7 @@
+0.8.7 (released 2019-06-04)
+---------------------------
+- 2019-06-04: Change `RemovedWarning` to `RemovedError`
+- 2019-03-26: Set the first layer in `layerOrder` as the default layer for `font.interpolate`
 - 2019-03-18: A missing glyph in a `get` or `del` now returns `KeyError`
 
 0.8.6 (released 2019-03-15)
