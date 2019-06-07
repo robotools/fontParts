@@ -307,6 +307,16 @@ class TestBPoint(unittest.TestCase):
             "corner"
         )
 
+    # https://github.com/robotools/fontParts/issues/435
+    def test_smooth_move_bPoint_type_issue435(self):
+        contour = self.getContour()
+        contour.points[0].smooth = True
+        bPoint = contour.bPoints[0]
+        self.assertEqual(
+            bPoint.type,
+            "curve"
+        )
+
     # anchor
 
     def test_get_anchor(self):
@@ -512,13 +522,6 @@ class TestBPoint(unittest.TestCase):
         bPoint = self.getBPoint_corner()
         with self.assertRaises(TypeError):
             bPoint.bcpOut = None
-
-    # https://github.com/robotools/fontParts/issues/435
-    def test_smooth_move_bPoint_type_issue435(self):
-        contour = self.getContour()
-        contour.points[0].smooth = True
-        bPoint = contour.bPoints[0]
-        assert bPoint.type == "curve"
 
     # --------------
     # Identification
