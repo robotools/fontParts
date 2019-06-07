@@ -1,3 +1,5 @@
+- 2019-06-07: Allow first point of a contour to be smooth.
+
 0.8.7 (released 2019-06-04)
 ---------------------------
 - 2019-06-04: Change `RemovedWarning` to `RemovedError`
