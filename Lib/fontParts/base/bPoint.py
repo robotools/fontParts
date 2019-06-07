@@ -294,7 +294,7 @@ class BaseBPoint(
         if point.smooth:
             if typ == "curve":
                 bType = "curve"
-            elif typ == "line":
+            elif typ == "line" or typ == "move":
                 nextSegment = self._nextSegment
                 if nextSegment is not None and nextSegment.type == "curve":
                     bType = "curve"
