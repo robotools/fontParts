@@ -513,6 +513,13 @@ class TestBPoint(unittest.TestCase):
         with self.assertRaises(TypeError):
             bPoint.bcpOut = None
 
+    # https://github.com/robotools/fontParts/issues/435
+    def test_smooth_move_bPoint_type_issue435(self):
+        contour = self.getContour()
+        contour.points[0].smooth = True
+        bPoint = contour.bPoints[0]
+        assert bPoint.type == "curve"
+
     # --------------
     # Identification
     # --------------
