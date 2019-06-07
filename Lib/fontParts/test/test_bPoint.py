@@ -308,7 +308,7 @@ class TestBPoint(unittest.TestCase):
         )
 
     # https://github.com/robotools/fontParts/issues/435
-    def test_smooth_move_bPoint_type_issue435(self):
+    def test_smooth_move_type_issue435(self):
         contour = self.getContour()
         contour.points[0].smooth = True
         bPoint = contour.bPoints[0]
