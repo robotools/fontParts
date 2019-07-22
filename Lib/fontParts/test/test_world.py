@@ -283,10 +283,10 @@ class TestFontList(unittest.TestCase):
 class TestFontOpen(unittest.TestCase):
 
     def setUp(self):
-        self.font, _ = self.objectGenerator("font")
+        font, _ = self.objectGenerator("font")
         self.font_dir = tempfile.mkdtemp()
         self.font_path = os.path.join(self.font_dir, "test.ufo")
-        self.font.save(self.font_path)
+        font.save(self.font_path)
 
     def tearDown(self):
         import shutil
