@@ -3,7 +3,8 @@ def OpenFont(path, showInterface=True):
     Open font located at **path**. If **showInterface**
     is ``False``, the font should be opened without
     graphical interface. The default for **showInterface**
-    is ``True``.
+    is ``True``. Note: **path** can both be a string representing
+    a file path, or a font object.
 
     ::
 
@@ -12,7 +13,7 @@ def OpenFont(path, showInterface=True):
         font = OpenFont("/path/to/my/font.ufo")
         font = OpenFont("/path/to/my/font.ufo", showInterface=False)
     """
-    return dispatcher["OpenFont"](pathOrObject=path, showInterface=showInterface)
+    return dispatcher["OpenFont"](path=path, showInterface=showInterface)
 
 
 def NewFont(familyName=None, styleName=None, showInterface=True):
@@ -243,7 +244,7 @@ def AllFonts(sortOptions=None):
 
 
 def RFont(path=None, showInterface=True):
-    return dispatcher["RFont"](pathOrObject=path, showInterface=showInterface)
+    return dispatcher["RFont"](path=path, showInterface=showInterface)
 
 
 def RGlyph():
@@ -621,8 +622,8 @@ try:
 
     # OpenFont, RFont
 
-    def _fontshellRFont(pathOrObject=None, showInterface=True):
-        return fontshell.RFont(pathOrObject=pathOrObject, showInterface=showInterface)
+    def _fontshellRFont(path=None, showInterface=True):
+        return fontshell.RFont(pathOrObject=path, showInterface=showInterface)
 
     dispatcher["OpenFont"] = _fontshellRFont
     dispatcher["RFont"] = _fontshellRFont

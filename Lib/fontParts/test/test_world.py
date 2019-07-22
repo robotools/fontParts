@@ -283,17 +283,22 @@ class TestFontList(unittest.TestCase):
 class TestFontOpen(unittest.TestCase):
 
     def setUp(self):
-        font, _ = self.objectGenerator("font")
+        self.font, _ = self.objectGenerator("font")
         self.font_dir = tempfile.mkdtemp()
         self.font_path = os.path.join(self.font_dir, "test.ufo")
-        font.save(self.font_path)
+        self.font.save(self.font_path)
 
     def tearDown(self):
         import shutil
         shutil.rmtree(self.font_dir)
 
-    def test_font_open(self):
+    def test_font_open_path(self):
         OpenFont(self.font_path)
+        
+    def test_font_open_object(self):
+        from fontTools.ufoLib import UFOReader
+        obj = UFOReader(self.font_path)
+        OpenFont(obj)
 
 
 class TestFontShell_RFont(unittest.TestCase):
