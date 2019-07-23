@@ -22,6 +22,19 @@ def normalizeFileFormatVersion(value):
     return value
 
 
+def normalizeFileStructure(value):
+    """
+    Normalizes a font's file structure.
+
+    * **value** must be a :ref:`type-string`.
+    * Returned value will be a ``string``.
+    """
+    allowedFileStructures = ["zip", "package"]
+    if value not in allowedFileStructures:
+        raise TypeError("File Strucute must be %s, not %s" % (", ".join(allowedFileStructures), value))
+    return value
+
+
 def normalizeLayerOrder(value, font):
     """
     Normalizes layer order.

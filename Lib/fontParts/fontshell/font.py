@@ -45,8 +45,8 @@ class RFont(RBaseObject, BaseFont):
     # save
 
     def _save(self, path=None, showProgress=False,
-              formatVersion=None, **kwargs):
-        self.naked().save(path=path, formatVersion=formatVersion)
+              formatVersion=None, fileStructure=None, **kwargs):
+        self.naked().save(path=path, formatVersion=formatVersion, structure=fileStructure)
 
     # close
 

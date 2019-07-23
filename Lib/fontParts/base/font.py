@@ -158,7 +158,7 @@ class BaseFont(
 
     # save
 
-    def save(self, path=None, showProgress=False, formatVersion=None):
+    def save(self, path=None, showProgress=False, formatVersion=None, fileStructure=None):
         """
         Save the font to **path**.
 
@@ -180,7 +180,11 @@ class BaseFont(
         the original format version of the file should be preserved.
         If there is no original format version it is implied that
         the format version is the latest version for the file
-        type as supported by the environment.
+        type as supported by the environment. **fileStructure** indicates
+        the file structure of the written ufo. The **fileStructure** can
+        either be None, 'zip' or 'package', None will use the existing file
+        strucure or the default one for unsaved font. 'package' is the default
+        file structure and 'zip' will save the font to .ufoz.
 
         .. note::
 
@@ -199,11 +203,13 @@ class BaseFont(
         if formatVersion is not None:
             formatVersion = normalizers.normalizeFileFormatVersion(
                 formatVersion)
+        if fileStructure is not None:
+            fileStructure = normalizers.normalizeFileStructure(fileStructure)
         self._save(path=path, showProgress=showProgress,
-                   formatVersion=formatVersion)
+                   formatVersion=formatVersion, fileStructure=fileStructure)
 
     def _save(self, path=None, showProgress=False,
-              formatVersion=None, **kwargs):
+              formatVersion=None, fileStructure=None, **kwargs):
         """
         This is the environment implementation of
         :meth:`BaseFont.save`. **path** will be a
