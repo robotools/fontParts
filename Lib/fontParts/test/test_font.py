@@ -527,7 +527,7 @@ class TestFont(unittest.TestCase):
     def test_save_fileStructure(self):
         from fontTools.ufoLib import UFOReader, UFOFileStructure
 
-        for fileStructure in [None, "package", "zip"]:  # this fails on formatVersion 1 (but maybe dont worry about it...)
+        for fileStructure in [None, "package", "zip"]:
             def testCases(path):
                 reader = UFOReader(path)
                 expectedFileStructure = fileStructure
