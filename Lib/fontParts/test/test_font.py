@@ -1,5 +1,8 @@
 import unittest
 import collections
+import tempfile
+import os
+import shutil
 
 
 class TestFont(unittest.TestCase):
@@ -487,3 +490,50 @@ class TestFont(unittest.TestCase):
             font.selectedGuidelines,
             ()
         )
+
+    # save
+
+    def _saveFontPath(self, ext):
+        root = tempfile.mkdtemp()
+        return os.path.join(root, "test.%s" % ext)
+
+    def _tearDownPath(self, path):
+        if os.path.isdir(path):
+            shutil.rmtree(path)
+        elif os.path.isfile(path):
+            os.remove(path)
+
+    def _save(self, testCallback, **kwargs):
+        path = self._saveFontPath(".ufo")
+        font = self.getFont_glyphs()
+        font.save(path, **kwargs)
+        testCallback(path)
+        self._tearDownPath(path)
+
+    def test_save(self):
+        def testCases(path):
+            self.assertTrue(os.path.exists(path) and os.path.isdir(path))
+        self._save(testCases)
+
+    def test_save_formatVersion(self):
+        from fontTools.ufoLib import UFOReader
+
+        for version in [2, 3]:  # fails on formatVersion 1 (but maybe we should not worry about it...)
+            def testCases(path):
+                reader = UFOReader(path)
+                self.assertEqual(reader.formatVersion, version)
+            self._save(testCases, formatVersion=version)
+
+    def test_save_fileStructure(self):
+        from fontTools.ufoLib import UFOReader, UFOFileStructure
+
+        for fileStructure in [None, "package", "zip"]:  # this fails on formatVersion 1 (but maybe dont worry about it...)
+            def testCases(path):
+                reader = UFOReader(path)
+                expectedFileStructure = fileStructure
+                if fileStructure is None:
+                    expectedFileStructure = UFOFileStructure.PACKAGE
+                else:
+                    expectedFileStructure = UFOFileStructure(fileStructure)
+                self.assertEqual(reader.fileStructure, expectedFileStructure)
+            self._save(testCases, fileStructure=fileStructure)
