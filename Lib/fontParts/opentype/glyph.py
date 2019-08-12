@@ -3,7 +3,8 @@ from fontParts.base.errors import FontPartsError
 from fontParts.fontshell.base import RBaseObject
 from fontParts.opentype.contour import OTContour
 from fontParts.opentype.component import OTComponent
-
+# from fontParts.fontshell.point import RPoint
+import defcon
 import fontTools.ttLib.tables._g_l_y_f
 
 class OTGlyph(RBaseObject, BaseGlyph):
@@ -35,7 +36,7 @@ class OTGlyph(RBaseObject, BaseGlyph):
     # Unicodes
 
     def _get_unicodes(self):
-        return list(self.font.naked()["cmap"].buildReversed()[self._named])
+        return list(self.font.naked()["cmap"].buildReversed()[self._name])
 
     def _set_unicodes(self, value):
         # XXX
@@ -72,6 +73,9 @@ class OTGlyph(RBaseObject, BaseGlyph):
         return self.font.naked()["hhea"].ascent
         # Or maybe self.font.naked()["OS/2"].usWinAscent
 
+    def _set_height(self, value):
+        self.font.naked()["hhea"].ascent = value
+
     # ------
     # Bounds
     # ------
@@ -93,10 +97,13 @@ class OTGlyph(RBaseObject, BaseGlyph):
     # XXX
 
     def getPen(self):
-        return self.naked().getPen()
+        from fontTools.pens.pointPen import SegmentToPointPen
+        return SegmentToPointPen(self.getPointPen())
 
     def getPointPen(self):
-        return self.naked().getPointPen()
+        from fontTools.pens.pointPen import BasePointToSegmentPen
+        return BasePointToSegmentPen()
+        # return self.naked().getPointPen()
 
     # -----------------------------------------
     # Contour, Component and Anchor Interaction
@@ -104,23 +111,44 @@ class OTGlyph(RBaseObject, BaseGlyph):
 
     # Contours
 
-    def _lenContours(self, **kwargs):
-        return max(self.naked().numberOfContours,0)
-
-    def _getContour(self, index, **kwargs):
+    def _contourStartAndEnd(self,index):
         glyph = self.naked()
         endPt = glyph.endPtsOfContours[index]
         if index > 0:
             startPt = glyph.endPtsOfContours[index-1]
         else:
             startPt = 0
-        contour = [
-            {"x": glyph.coordinates[j][0],
-             "y": glyph.coordinates[j][1],
-             "on": glyph.flags[j]
-            } for j in range(startPt, endPt)
-        ]
+        return startPt, endPt
+
+    def _lenContours(self, **kwargs):
+        return max(self.naked().numberOfContours,0)
+
+    def _getContour(self, index, **kwargs):
+        glyph = self.naked()
+        startPt, endPt = self._contourStartAndEnd(index)
+        contour = []
+        for j in range(startPt, endPt+1):
+            coords = (glyph.coordinates[j][0], glyph.coordinates[j][1])
+            flags = glyph.flags[j] == 1
+            t = "offcurve"
+            if flags == 1:
+                if (j == startPt and glyph.flags[endPt] == 1) or (j != startPt and contour[-1].segmentType != "offcurve"):
+                    t = "line"
+                else:
+                    t = "curve"
+            contour.append(defcon.Point(coords,segmentType = t))
         return self.contourClass(wrap=contour, index=index)
+
+    def _setContour(self,index,contour):
+        old = self._getContour(index)
+        clist = contour.naked()
+        if len(old.naked()) != len(clist):
+            self.raiseNotImplementedError()
+        glyph = self.naked()
+        startPt, endPt = self._contourStartAndEnd(index)
+        for j in range(0,len(clist)):
+            glyph.coordinates[j+startPt] = (clist[j].x,clist[j].y)
+            glyph.flags[j+startPt] = int(clist[j].segmentType != "offcurve")
 
     def _removeContour(self, index, **kwargs):
         glyph = self.naked()
@@ -142,20 +170,25 @@ class OTGlyph(RBaseObject, BaseGlyph):
         component = glyph.components[index]
         return self.componentClass(component)
 
-    def _removeComponent(self, index, **kwargs):
+    def _removeComponent(self, index, **kwargs): # XXX
         glyph = self.naked()
         component = glyph.components[index]
         glyph.removeComponent(component)
 
+    # Guidelines
+    def _lenGuidelines(self, **kwargs):
+        return 0 # len(self.naked().anchors)
+
     # Anchors
 
     def _lenAnchors(self, **kwargs):
-        return len(self.naked().anchors)
+        return 0 # len(self.naked().anchors)
 
     def _getAnchor(self, index, **kwargs):
-        glyph = self.naked()
-        anchor = glyph.anchors[index]
-        return self.anchorClass(anchor)
+        return None
+        # glyph = self.naked()
+        # anchor = glyph.anchors[index]
+        # return self.anchorClass(anchor)
 
     def _appendAnchor(self, name, position=None, color=None, identifier=None, **kwargs):
         glyph = self.naked()

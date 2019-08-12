@@ -4,14 +4,24 @@ from fontParts.fontshell.point import RPoint
 from fontParts.fontshell.segment import RSegment
 from fontParts.fontshell.bPoint import RBPoint
 
+class OTPoint(RPoint):
+    def _postChangeNotification(self):
+        contour = self.contour
+        if contour is None:
+            return
+        contour._pointsChanged()
+
 class OTContour(RBaseObject, BaseContour):
-    pointClass = RPoint
+    pointClass = OTPoint
     segmentClass = RSegment
     bPointClass = RBPoint
 
     def _init(self, *args, **kwargs):
         self._wrapped = kwargs["wrap"]
         self._index = kwargs["index"]
+
+    def _pointsChanged(self):
+        self.glyph._setContour(self._index,self)
 
     # --------------
     # Identification

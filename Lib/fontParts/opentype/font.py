@@ -76,7 +76,7 @@ class OTFont(RBaseObject, BaseFont):
 
     def _save(self, path=None, showProgress=False,
               formatVersion=None, fileStructure=None, **kwargs):
-        self.naked().save(path=path, formatVersion=formatVersion, structure=fileStructure)
+        self.naked().save(path)
 
     # close
 
