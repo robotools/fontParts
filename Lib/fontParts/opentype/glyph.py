@@ -58,8 +58,11 @@ class OTGlyph(RBaseObject, BaseGlyph):
         return self.font.naked()["hmtx"][self._name][1]
 
     def _set_leftMargin(self, value):
+        oldLSB = self.font.naked()["hmtx"][self._name][1]
+        delta = value - oldLSB
         self.font.naked()["hmtx"][self._name] = (self.font.naked()["hmtx"][self._name][0], value)
-        # XXX Change points
+        self.move((delta,0))
+        self.width = self.width + delta
 
     def _get_rightMargin(self):
         return self.width - self.bounds[2]
