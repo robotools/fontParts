@@ -1,3 +1,5 @@
+0.8.8 (released 2019-08-23)
+---------------------------
 - 2019-08-23: Fix `removeOverlap` and add `removeOverlap` to fontShell.
 - 2019-07-23: Added support for `fileStructure`, for UFOZ.
 - 2019-06-07: Allow first point of a contour to be smooth.
