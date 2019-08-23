@@ -31,7 +31,7 @@ def normalizeFileStructure(value):
     """
     allowedFileStructures = ["zip", "package"]
     if value not in allowedFileStructures:
-        raise TypeError("File Strucute must be %s, not %s" % (", ".join(allowedFileStructures), value))
+        raise TypeError("File Structure must be %s, not %s" % (", ".join(allowedFileStructures), value))
     return value
 
 
