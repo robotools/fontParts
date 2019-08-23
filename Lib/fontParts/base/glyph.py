@@ -905,6 +905,7 @@ class BaseGlyph(BaseObject,
 
         The behavior of this may vary across environments.
         """
+        self._removeOverlap()
 
     def _removeOverlap(self):
         """

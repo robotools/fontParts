@@ -1,4 +1,5 @@
 import defcon
+from booleanOperations.booleanGlyph import BooleanGlyph
 from fontParts.base import BaseGlyph
 from fontParts.base.errors import FontPartsError
 from fontParts.fontshell.base import RBaseObject
@@ -132,6 +133,13 @@ class RGlyph(RBaseObject, BaseGlyph):
         glyph = self.naked()
         contour = glyph[index]
         glyph.removeContour(contour)
+
+    def _removeOverlap(self, **kwargs):
+        if len(self):
+            result = BooleanGlyph(self.naked()).removeOverlap()
+            self.naked().clearContours()
+            pen = self.naked().getPen()
+            result.draw(pen)
 
     def _correctDirection(self, trueType=False, **kwargs):
         self.naked().correctContourDirection(trueType=trueType)
