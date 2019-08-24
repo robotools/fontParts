@@ -1151,6 +1151,12 @@ class TestGlyph(unittest.TestCase):
         glyph.appendComponent("component 1")
         self.assertFalse(glyph.isEmpty())
 
+    def test_removeOverlap(self):
+        glyph = self.getGlyph_generic()
+        self.assertEquals(len(glyph), 2)
+        glyph.removeOverlap()
+        self.assertEquals(len(glyph), 1)
+
 
 def test_generator(test_name, metric, value):
     if '_invalid_' in test_name:
