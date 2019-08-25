@@ -1,2 +1,5 @@
+-r requirements.txt
 virtualenv>=15.0
 tox>=2.3
+unittest2
+coverage

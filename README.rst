@@ -84,7 +84,13 @@ fontshell is fontParts for the commandline, implemented with
 `defcon <https://github.com/typesupply/defcon>`__ and is included
 as part of the fontParts package.
 
-To run the test suite, you can do:
+Before you can run the test suite you’ll need to install the test dependencies:
+
+.. code:: sh
+
+    pip install -r dev-requirements.txt
+
+To run the test suite you can do:
 
 .. code:: sh
 
