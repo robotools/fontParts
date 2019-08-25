@@ -1,3 +1,10 @@
+0.8.8 (released 2019-08-25)
+---------------------------
+- 2019-08-25: Simplify `removeOverlap` in fontShell
+- 2019-08-25: Fixup dev-requirements
+
+Note: This will be one of the last releases to support Python2.
+
 0.8.8 (released 2019-08-23)
 ---------------------------
 - 2019-08-23: Fix `removeOverlap` and add `removeOverlap` to fontShell.
