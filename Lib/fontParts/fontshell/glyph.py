@@ -1,5 +1,5 @@
 import defcon
-from booleanOperations.booleanGlyph import BooleanGlyph
+import booleanOperations
 from fontParts.base import BaseGlyph
 from fontParts.base.errors import FontPartsError
 from fontParts.fontshell.base import RBaseObject
@@ -136,10 +136,14 @@ class RGlyph(RBaseObject, BaseGlyph):
 
     def _removeOverlap(self, **kwargs):
         if len(self):
-            result = BooleanGlyph(self.naked()).removeOverlap()
-            self.naked().clearContours()
-            pen = self.naked().getPen()
-            result.draw(pen)
+            contours = list(self)
+            for contour in contours:
+                for point in contour.points:
+                    if point.type == "qcurve":
+                        raise TypeError("fontshell can't removeOverlap for quadratics")
+            self.clear(contours=True, components=False,
+                       anchors=False, guidelines=False, image=False)
+            booleanOperations.union(contours, self.getPointPen())
 
     def _correctDirection(self, trueType=False, **kwargs):
         self.naked().correctContourDirection(trueType=trueType)
