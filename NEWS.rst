@@ -1,4 +1,4 @@
-0.8.8 (released 2019-08-25)
+0.8.9 (released 2019-08-25)
 ---------------------------
 - 2019-08-25: Simplify `removeOverlap` in fontShell
 - 2019-08-25: Fixup dev-requirements
