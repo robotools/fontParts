@@ -60,7 +60,7 @@ def normalizeLayerOrder(value, font):
     if len(duplicates) != 0:
         raise ValueError("Duplicate layers are not allowed. Layer name(s) "
                          "'%s' are duplicate(s)." % ", ".join(duplicates))
-    return tuple([str(v) for v in value])
+    return tuple(value)
 
 
 def normalizeDefaultLayerName(value, font):
