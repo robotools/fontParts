@@ -26,8 +26,7 @@ into something that you wish fontParts did/didn't do.
 Installation
 ~~~~~~~~~~~~
 
-FontParts requires `Python <http://www.python.org/download/>`__ 2.7, 3.4
-or later.
+FontParts requires `Python <http://www.python.org/download/>`__ 3.6 or later.
 
 The package is listed in the Python Package Index (PyPI), so you can
 install it with `pip <https://pip.pypa.io>`__:
@@ -39,8 +38,7 @@ install it with `pip <https://pip.pypa.io>`__:
 If you would like to contribute to its development, you can clone the
 repository from Github, install the package in 'editable' mode and
 modify the source code in place. We recommend creating a virtual
-environment, using `virtualenv <https://virtualenv.pypa.io>`__ or
-Python 3 `venv <https://docs.python.org/3/library/venv.html>`__ module.
+environment, using `virtualenv <https://virtualenv.pypa.io>`__ or `venv <https://docs.python.org/3/library/venv.html>`__ module.
 
 .. code:: sh
 
@@ -63,11 +61,12 @@ Python 3 `venv <https://docs.python.org/3/library/venv.html>`__ module.
 Roadmap
 ~~~~~~~
 
-We are currently working towards the 1.0 release.
+We are currently working towards the 1.1 release.
 
-* **1.0** Documentation and testing complete.
+* **0.x** Initial releases. Python 2 & 3.
+* **1.0** Python 3 only.
+* **1.1** Documentation and testing complete.
 * **1.5** Removal of ``Deprecated``. Released 1 year after 1.0.
-* **2.0** Python 3 only. Released 1 year after 1.0.
 
 Testing
 ~~~~~~~
@@ -109,8 +108,8 @@ environments.
 
 Note that when you run ``tox`` without arguments, the tests are executed
 for all the environments listed in tox.ini's ``envlist``. In our case,
-this includes Python 2.7 and 3.6, so for this to work the ``python2.7``
-and ``python3.6`` executables must be available in your ``PATH``.
+this is Python 3.6, so for this to work the ``python3.6`` executables must
+be available in your ``PATH``.
 
 You can specify an alternative environment list via the ``-e`` option,
 or the ``TOXENV`` environment variable:
@@ -124,7 +123,7 @@ or the ``TOXENV`` environment variable:
    :target: https://travis-ci.org/robotools/fontParts
 .. |PyPI| image:: https://img.shields.io/pypi/v/fontParts.svg
    :target: https://pypi.org/project/fontParts
-.. |Versions| image:: https://img.shields.io/badge/python-2.7%2C%203.7-blue.svg
+.. |Versions| image:: https://img.shields.io/badge/python-3.6%2C%203.7-blue.svg
    :alt: Python Versions
 .. |Coverage| image:: https://codecov.io/gh/robotools/fontParts/branch/master/graph/badge.svg
    :target: https://codecov.io/gh/robotools/fontParts

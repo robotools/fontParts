@@ -1,7 +1,6 @@
 import unittest
 import collections
 from fontParts.base import FontPartsError
-from fontTools.misc.py23 import basestring
 
 
 class TestGuideline(unittest.TestCase):
@@ -35,21 +34,21 @@ class TestGuideline(unittest.TestCase):
         value = guideline._reprContents()
         self.assertIsInstance(value, list)
         for i in value:
-            self.assertIsInstance(i, basestring)
+            self.assertIsInstance(i, str)
 
     def test_reprContents_noGlyph(self):
         guideline, _ = self.objectGenerator("guideline")
         value = guideline._reprContents()
         self.assertIsInstance(value, list)
         for i in value:
-            self.assertIsInstance(i, basestring)
+            self.assertIsInstance(i, str)
 
     def test_reprContents_Layer(self):
         guideline = self.getGuideline_glyphGuideline()
         value = guideline._reprContents()
         self.assertIsInstance(value, list)
         for i in value:
-            self.assertIsInstance(i, basestring)
+            self.assertIsInstance(i, str)
 
     # --------
     # Attributes
@@ -513,7 +512,7 @@ class TestGuideline(unittest.TestCase):
     def test_identifier_generated_type(self):
         guideline = self.getGuideline_generic()
         guideline.getIdentifier()
-        self.assertIsInstance(guideline.identifier, basestring)
+        self.assertIsInstance(guideline.identifier, str)
 
     def test_identifier_consistency(self):
         guideline = self.getGuideline_generic()

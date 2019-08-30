@@ -1,6 +1,5 @@
 import unittest
 import collections
-from fontTools.misc.py23 import basestring
 from fontParts.base import FontPartsError
 
 
@@ -23,14 +22,14 @@ class TestPoint(unittest.TestCase):
         value = point._reprContents()
         self.assertIsInstance(value, list)
         for i in value:
-            self.assertIsInstance(i, basestring)
+            self.assertIsInstance(i, str)
 
     def test_reprContents_withName(self):
         point = self.getPoint_withName()
         value = point._reprContents()
         self.assertIsInstance(value, list)
         for i in value:
-            self.assertIsInstance(i, basestring)
+            self.assertIsInstance(i, str)
 
     def test_reprContents_isSmooth(self):
         point = self.getPoint_generic()
@@ -38,14 +37,14 @@ class TestPoint(unittest.TestCase):
         value = point._reprContents()
         self.assertIsInstance(value, list)
         for i in value:
-            self.assertIsInstance(i, basestring)
+            self.assertIsInstance(i, str)
 
     def test_reprContents_noContour(self):
         point, _ = self.objectGenerator("point")
         value = point._reprContents()
         self.assertIsInstance(value, list)
         for i in value:
-            self.assertIsInstance(i, basestring)
+            self.assertIsInstance(i, str)
 
     # -------
     # Parents
@@ -392,7 +391,7 @@ class TestPoint(unittest.TestCase):
     def test_identifier_generated_type(self):
         point = self.getPoint_generic()
         point.generateIdentifier()
-        self.assertIsInstance(point.identifier, basestring)
+        self.assertIsInstance(point.identifier, str)
 
     def test_identifier_consistency(self):
         point = self.getPoint_generic()
