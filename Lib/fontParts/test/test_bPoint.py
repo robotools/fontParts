@@ -1,6 +1,5 @@
 import unittest
 import collections
-from fontTools.misc.py23 import basestring
 from fontParts.base import FontPartsError
 
 
@@ -74,14 +73,14 @@ class TestBPoint(unittest.TestCase):
         value = bPoint._reprContents()
         self.assertIsInstance(value, list)
         for i in value:
-            self.assertIsInstance(i, basestring)
+            self.assertIsInstance(i, str)
 
     def test_reprContents_noContour(self):
         point, _ = self.objectGenerator("point")
         value = point._reprContents()
         self.assertIsInstance(value, list)
         for i in value:
-            self.assertIsInstance(i, basestring)
+            self.assertIsInstance(i, str)
 
     # -------
     # Parents
@@ -565,7 +564,7 @@ class TestBPoint(unittest.TestCase):
     def test_identifier_generated_type(self):
         bPoint = self.getBPoint_corner()
         bPoint.generateIdentifier()
-        self.assertIsInstance(bPoint.identifier, basestring)
+        self.assertIsInstance(bPoint.identifier, str)
 
     def test_identifier_consistency(self):
         bPoint = self.getBPoint_corner()

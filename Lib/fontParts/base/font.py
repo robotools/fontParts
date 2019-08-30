@@ -1,5 +1,4 @@
 import os
-from fontTools.misc.py23 import basestring
 from fontParts.base.errors import FontPartsError
 from fontParts.base.base import dynamicProperty, InterpolationMixin
 from fontParts.base.layer import _BaseGlyphVendor
@@ -337,7 +336,7 @@ class BaseFont(
         import warnings
         if format is None:
             raise ValueError("The format must be defined when generating.")
-        elif not isinstance(format, basestring):
+        elif not isinstance(format, str):
             raise TypeError("The format must be defined as a string.")
         env = {}
         for key, value in environmentOptions.items():

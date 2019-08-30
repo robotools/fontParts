@@ -1,7 +1,6 @@
 import unittest
 import collections
 from fontParts.base import FontPartsError
-from fontTools.misc.py23 import basestring
 
 
 class TestAnchor(unittest.TestCase):
@@ -23,14 +22,14 @@ class TestAnchor(unittest.TestCase):
         value = anchor._reprContents()
         self.assertIsInstance(value, list)
         for i in value:
-            self.assertIsInstance(i, basestring)
+            self.assertIsInstance(i, str)
 
     def test_reprContents_noGlyph(self):
         anchor, _ = self.objectGenerator("anchor")
         value = anchor._reprContents()
         self.assertIsInstance(value, list)
         for i in value:
-            self.assertIsInstance(i, basestring)
+            self.assertIsInstance(i, str)
 
     def test_reprContents_color(self):
         anchor = self.getAnchor_generic()
@@ -38,7 +37,7 @@ class TestAnchor(unittest.TestCase):
         value = anchor._reprContents()
         self.assertIsInstance(value, list)
         for i in value:
-            self.assertIsInstance(i, basestring)
+            self.assertIsInstance(i, str)
 
     def test_reprContents_noGlyph_color(self):
         anchor, _ = self.objectGenerator("anchor")
@@ -46,7 +45,7 @@ class TestAnchor(unittest.TestCase):
         value = anchor._reprContents()
         self.assertIsInstance(value, list)
         for i in value:
-            self.assertIsInstance(i, basestring)
+            self.assertIsInstance(i, str)
 
     # ----------
     # Attributes
@@ -133,7 +132,7 @@ class TestAnchor(unittest.TestCase):
     def test_identifier_generated_type(self):
         anchor = self.getAnchor_generic()
         anchor.generateIdentifier()
-        self.assertIsInstance(anchor.identifier, basestring)
+        self.assertIsInstance(anchor.identifier, str)
 
     def test_identifier_consistency(self):
         anchor = self.getAnchor_generic()

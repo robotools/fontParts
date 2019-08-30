@@ -1,7 +1,6 @@
 import unittest
 import collections
 from fontParts.base import FontPartsError
-from fontTools.misc.py23 import basestring
 
 
 class TestContour(unittest.TestCase):
@@ -23,7 +22,7 @@ class TestContour(unittest.TestCase):
         value = contour._reprContents()
         self.assertIsInstance(value, list)
         for i in value:
-            self.assertIsInstance(i, basestring)
+            self.assertIsInstance(i, str)
 
     def test_reprContents_noGlyph_ID(self):
         contour = self.getContour_bounds()
@@ -32,7 +31,7 @@ class TestContour(unittest.TestCase):
         self.assertIsInstance(value, list)
         idFound = False
         for i in value:
-            self.assertIsInstance(i, basestring)
+            self.assertIsInstance(i, str)
             if i == "identifier='%r'" % contour.identifier:
                 idFound = True
         self.assertTrue(idFound)
@@ -47,7 +46,7 @@ class TestContour(unittest.TestCase):
         idFound = False
         glyphFound = False
         for i in value:
-            self.assertIsInstance(i, basestring)
+            self.assertIsInstance(i, str)
             if i == "identifier='%r'" % contour.identifier:
                 idFound = True
             if i == "in glyph":
@@ -63,7 +62,7 @@ class TestContour(unittest.TestCase):
         self.assertIsInstance(value, list)
         glyphFound = False
         for i in value:
-            self.assertIsInstance(i, basestring)
+            self.assertIsInstance(i, str)
             if i == "in glyph":
                 glyphFound = True
         self.assertTrue(glyphFound)

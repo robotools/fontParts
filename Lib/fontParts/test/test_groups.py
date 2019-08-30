@@ -1,6 +1,5 @@
 import unittest
 import collections
-from fontTools.misc.py23 import basestring
 
 
 class TestGroups(unittest.TestCase):
@@ -26,7 +25,7 @@ class TestGroups(unittest.TestCase):
         self.assertIsInstance(value, list)
         found = False
         for i in value:
-            self.assertIsInstance(i, basestring)
+            self.assertIsInstance(i, str)
             if "for font" in value:
                 found = True
         self.assertTrue(found)
@@ -50,11 +49,11 @@ class TestGroups(unittest.TestCase):
             groups.font,
             font
         )
-    
+
     def test_get_parent_font_none(self):
         groups, _ = self.objectGenerator("groups")
         self.assertIsNone(groups.font)
-    
+
     def test_set_parent_font(self):
         font, _ = self.objectGenerator("font")
         groups, _ = self.objectGenerator("groups")
@@ -69,7 +68,7 @@ class TestGroups(unittest.TestCase):
         groups, _ = self.objectGenerator("groups")
         groups.font = None
         self.assertIsNone(groups.font)
-    
+
     def test_set_parent_differentFont(self):
         font, _ = self.objectGenerator("font")
         fontB, _ = self.objectGenerator("font")
@@ -269,10 +268,10 @@ class TestGroups(unittest.TestCase):
             a
         )
 
-    # --------------------- 
-    # RoboFab Compatibility 
-    # --------------------- 
-    
+    # ---------------------
+    # RoboFab Compatibility
+    # ---------------------
+
     def test_remove(self):
         groups = self.getGroups_generic()
         groups.remove("group 2")
@@ -282,7 +281,7 @@ class TestGroups(unittest.TestCase):
             "group 4": ('A',)
         }
         self.assertEqual(groups.asDict(), expected)
-    
+
     def test_remove_twice(self):
         groups = self.getGroups_generic()
         groups.remove("group 1")

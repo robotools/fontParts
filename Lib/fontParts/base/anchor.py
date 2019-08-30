@@ -392,5 +392,5 @@ class BaseAnchor(
 
         Subclasses may override this method.
         """
-        self.x = normalizers.normalizeRounding(self.x)
-        self.y = normalizers.normalizeRounding(self.y)
+        self.x = round(self.x)
+        self.y = round(self.y)

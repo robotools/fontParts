@@ -110,8 +110,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         Subclasses may override this method.
         """
         for pair, value in self.items():
-            value = int(normalizers.normalizeRounding(
-                value / float(multiple))) * multiple
+            value = int(round(value / float(multiple))) * multiple
             self[pair] = value
 
     # -------------
@@ -234,7 +233,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         """
         d = {}
         for k, v in self.items():
-            d[k] = v if not returnIntegers else normalizers.normalizeRounding(v)
+            d[k] = v if not returnIntegers else round(v)
         return d
 
     # -------------------
