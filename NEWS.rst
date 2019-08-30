@@ -1,3 +1,11 @@
+0.9.0 (released 2019-08-30)
+---------------------------
+This release only supports Python 3, if you need Python 2 support, use 0.8.9.
+
+- 2019-08-30: Remove Python 2 support.
+- 2019-08-30: Change rounding to always round to the higher number, matching what fontTools does for anything visual.
+
+
 0.8.9 (released 2019-08-25)
 ---------------------------
 - 2019-08-25: Simplify `removeOverlap` in fontShell

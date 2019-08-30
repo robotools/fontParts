@@ -61,11 +61,11 @@ environment, using `virtualenv <https://virtualenv.pypa.io>`__ or `venv <https:/
 Roadmap
 ~~~~~~~
 
-We are currently working towards the 1.1 release.
+We are currently working towards the 1.0 release.
 
-* **0.x** Initial releases. Python 2 & 3.
-* **1.0** Python 3 only.
-* **1.1** Documentation and testing complete.
+* **0.8** Initial releases. Python 2 & 3.
+* **0.9** Python 3 only.
+* **1.0** Documentation and testing complete.
 * **1.5** Removal of ``Deprecated``. Released 1 year after 1.0.
 
 Testing
