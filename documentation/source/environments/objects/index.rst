@@ -51,8 +51,7 @@ Each of these require their own specific environment overrides, but the general 
         # objects are the same object. This does not mean that two
         # objects that have the same content should be considered
         # equal. It means that the object must be the same. The
-        # corrilary __ne__ also needs to be defined for Python 2.7.
-        # It is not necessary for a Python 3.
+        # corrilary __ne__ is optional to define.
         #
         # Note that the base implentation of fontParts provides
         # __eq__ and __ne__ methods that test the naked objects
