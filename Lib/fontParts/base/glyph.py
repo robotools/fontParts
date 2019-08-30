@@ -1464,8 +1464,8 @@ class BaseGlyph(BaseObject,
             anchor.round()
         for guideline in self.guidelines:
             guideline.round()
-        self.width = round(self.width)
-        self.height = round(self.height)
+        self.width = normalizers.normalizeVisualRounding(self.width)
+        self.height = normalizers.normalizeVisualRounding(self.height)
 
     def correctDirection(self, trueType=False):
         """

@@ -305,6 +305,6 @@ class BaseImage(
         Subclasses may override this method.
         """
         x, y = self.offset
-        x = round(x)
-        y = round(y)
+        x = normalizers.normalizeVisualRounding(x)
+        y = normalizers.normalizeVisualRounding(y)
         self.offset = (x, y)

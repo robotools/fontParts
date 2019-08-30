@@ -1910,3 +1910,29 @@ class TestNormalizers(unittest.TestCase):
     def test_normalizeTransformationScale_tooMany(self):
         with self.assertRaises(ValueError):
             normalizers.normalizeTransformationScale((2, 2, 2))
+
+    # normalizeVisualRounding
+
+    def test_normalizeVisualRounding_int(self):
+        result = normalizers.normalizeVisualRounding(1)
+        self.assertIsInstance(result, int)
+        self.assertEqual(result, 1)
+
+    def test_normalizeVisualRounding_float(self):
+        result = normalizers.normalizeVisualRounding(1.0)
+        self.assertIsInstance(result, int)
+        self.assertEqual(result, 1)
+
+    def test_normalizeVisualRounding_half(self):
+        result = normalizers.normalizeVisualRounding(1.5)
+        self.assertIsInstance(result, int)
+        self.assertEqual(result, 2)
+
+    def test_normalizeVisualRounding_half_even(self):
+        result = normalizers.normalizeVisualRounding(2.5)
+        self.assertIsInstance(result, int)
+        self.assertEqual(result, 3)
+
+    def test_normalizeVisualRounding_notNumber(self):
+        with self.assertRaises(TypeError):
+            normalizers.normalizeVisualRounding("1")

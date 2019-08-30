@@ -766,7 +766,7 @@ class TestGuideline(unittest.TestCase):
     def test_round_at_half(self):
         guideline = self.getGuideline_round()
         guideline.round()
-        self.assertEqual(guideline.y, 2)
+        self.assertEqual(guideline.y, 3)
 
     def test_round_angle(self):
         guideline = self.getGuideline_round()

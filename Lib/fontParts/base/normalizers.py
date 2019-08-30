@@ -1,6 +1,7 @@
 # -*- coding: utf8 -*-
 
 from collections import Counter
+from fontTools.misc.fixedTools import otRound
 
 # ----
 # Font
@@ -1088,3 +1089,20 @@ def normalizeTransformationScale(value):
                                 % type(value).__name__)
         value = tuple([float(v) for v in value])
     return value
+
+
+def normalizeVisualRounding(value):
+    """
+    Normalizes rounding.
+    Python 3 uses banker’s rounding, meaning anything that is at 0.5
+    will go to the even number. This isn't always ideal for point
+    coordinates, so instead round to the higher number.
+
+    * **value** must be an :ref:`type-int-float`
+    * Returned value is a ``int``
+    """
+
+    if not isinstance(value, (int, float)):
+        raise TypeError("Value to round must be an int or float, not %s."
+                        % type(value).__name__)
+    return otRound(value)
