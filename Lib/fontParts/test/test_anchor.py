@@ -459,13 +459,13 @@ class TestAnchor(unittest.TestCase):
         self.assertEqual(anchor.x, 1)
         self.assertEqual(anchor.y, 2)
 
+    # round
+
     def getAnchor_round(self):
         anchor = self.getAnchor_generic()
         anchor.x = 1.1
         anchor.y = 2.5
         return anchor
-
-    # round
 
     def test_round_close_to(self):
         anchor = self.getAnchor_round()
@@ -475,7 +475,7 @@ class TestAnchor(unittest.TestCase):
     def test_round_at_half(self):
         anchor = self.getAnchor_round()
         anchor.round()
-        self.assertEqual(anchor.y, 2)
+        self.assertEqual(anchor.y, 3)
 
     # ----
     # Hash

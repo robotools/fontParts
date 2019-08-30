@@ -504,5 +504,5 @@ class BaseGuideline(
 
         Subclasses may override this method.
         """
-        self.x = round(self.x)
-        self.y = round(self.y)
+        self.x = normalizers.normalizeVisualRounding(self.x)
+        self.y = normalizers.normalizeVisualRounding(self.y)
