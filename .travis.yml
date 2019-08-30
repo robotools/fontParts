@@ -10,6 +10,7 @@ env:
 matrix:
   fast_finish: true
   exclude:
+    # Exclude the default Python 3.6 build
     - python: 3.6
   include:
     - python: 3.6
@@ -20,11 +21,9 @@ matrix:
       env: TOXENV=py37-cov
       dist: xenial
       sudo: true
-    - python: pypy
-      env: TOXENV=pypy-nocov
-    - language: generic
-      os: osx
-      env: TOXENV=py36-cov
+    - python: pypy3
+      env: TOXENV=pypy3
+      dist: xenial
     - language: generic
       os: osx
       env:
