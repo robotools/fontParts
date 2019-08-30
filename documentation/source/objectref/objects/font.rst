@@ -70,6 +70,7 @@ Layers
     BaseFont.getLayer
     BaseFont.newLayer
     BaseFont.removeLayer
+    BaseFont.insertLayer
 
 Glyphs
 ======
@@ -124,6 +125,7 @@ Layers
 .. automethod:: BaseFont.getLayer
 .. automethod:: BaseFont.newLayer
 .. automethod:: BaseFont.removeLayer
+.. automethod:: BaseFont.insertLayer
 
 Glyphs
 ======
@@ -134,7 +136,7 @@ Interacting with glyphs at the font level is a shortcut for interacting with gly
 
 Does the same thing as::
 
-	>>> glyph = font.getLayer(font.defaultLayer).newGlyph("A")
+	>>> glyph = font.getLayer(font.defaultLayerName).newGlyph("A")
 
 .. automethod:: BaseFont.__len__
 .. automethod:: BaseFont.keys

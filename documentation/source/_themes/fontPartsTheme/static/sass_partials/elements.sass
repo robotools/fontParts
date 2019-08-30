@@ -1,0 +1,204 @@
+////////////////////////////////////////////////////////
+//////////// basic html elements and styles ////////////
+////////////////////////////////////////////////////////
+
+::selection
+	background: $green-highlight // rgba($greener, 0.35)
+
+body
+	margin: 0
+	font-family: $sansfont
+	font-size: 1.15em
+	line-height: 1.6em
+	position: relative
+	min-height: 100vh
+
+pre, code, tt
+	font-family: $monofont
+	font-size: 0.95em
+	font-style: normal
+	font-weight: normal
+	white-space: pre-wrap
+
+pre, code, tt, .method dt
+	@media (max-width: 600px)
+		font-size: 1rem
+		
+
+pre
+	background: $offwhite-gray
+	border: $lighter-gray solid 1px
+
+
+
+// span.pre, dt code
+dt code, p code
+	background: $offwhite-gray
+	border: none
+	border-radius: .25em
+	padding: 0.125em
+	margin-left: -0.125em
+	margin-right: -0.125em
+
+dt, dt code, dt span, dt em
+	font-family: $monofont
+	font-weight: bold
+	font-style: normal
+
+dt a, dt a span
+	font-family: $sansfont
+	font-weight: normal 
+
+table span.pre
+	background: none
+	border: none
+
+a, a:active
+	text-decoration: none
+	font-style: normal
+	color: $blue
+	transition: .25s
+
+
+	&:hover
+		color: $green
+
+	&.underline
+		border-bottom: 1px solid white
+
+		&:hover
+			border-bottom: 1px solid $green
+
+	&:focus
+		outline: 2px solid $green
+		outline-offset: 4px 
+		
+
+button, a.button
+	border: none
+	display: inline-block
+	font-family: $monofont
+	font-size: $font-smallish
+	background: $blue
+	border-radius: 12px
+	padding: 8px 16px
+	color: white
+	transition: .25s
+	&:hover
+		background: $green
+		color: white
+		cursor: pointer
+
+	&:focus
+		outline: 2px solid $green
+		outline-offset: 4px 
+
+hr
+	color: none
+	background-color: none
+	border: none
+	border-top: $border
+	height: 1px
+	margin: 2em 0
+
+dl
+	margin: 0
+	padding-bottom: $padding
+
+	dt
+		padding-top:$header-height
+
+.rst-badge dl,
+.rst-badge dt
+	padding-top: 0
+	margin: 0
+	font-family: $sansfont
+
+dd
+	@media screen and (max-width: $tablet-portrait)
+		margin-left: 0
+		padding-left: 0
+
+h1, h2, h3
+	font-family: $sansfont
+	color: black
+	line-height: 1.2em
+	padding-top: $header-height //helps position headline visibly when it is directly linked to
+	margin-top: 0
+	margin-bottom: 1rem
+
+h1
+	font-size: 2.25em
+	
+h2
+	font-size: 1.75em
+
+ol
+	margin-left: -1em
+	max-width: 100%
+
+ul
+	// padding-left: 0
+	// margin-left: 1em
+	// text-indent: -1em
+ul
+	list-style: none
+ul.simple
+	// text-indent: -0.5em // 0em
+code
+	padding: 0 0.05em
+	white-space: pre-line
+pre
+	padding: 1em
+	white-space: pre-wrap
+img
+	width: 100%
+table
+	border-collapse: collapse
+	border: none
+	overflow-x: auto
+	display: block
+	max-width: 90vw
+	// border: solid $lighter-gray 1px
+tr
+	border: none
+	th, td
+		padding: 0.5em
+		border: solid 1px #DDD
+	th
+		background-color: #DDD
+a.headerlink,
+a.headerlink:visited
+	visibility: hidden
+.note
+	padding: $padding
+	border-radius: $rounded-corner-1
+	background-color: rgba($blue, 0.1)
+	border: rgba($blue, 0.5) solid 1px
+
+	@media (min-width: $tablet-portrait)
+		margin-left: -$padding
+	p
+		margin: 0
+	.admonition-title
+		// font-weight: bold
+		color: $blue
+		margin-bottom: 0
+
+.highlight
+	background: transparent !important
+	max-width: 100vw
+	@media (max-width: $tablet-portrait)
+		// margin-left: -$padding
+
+	pre
+		border-radius: $rounded-corner-1
+		overflow: auto
+		
+h1:hover > a.headerlink,
+h2:hover > a.headerlink,
+h3:hover > a.headerlink,
+h4:hover > a.headerlink,
+h5:hover > a.headerlink,
+h6:hover > a.headerlink
+	visibility: visible

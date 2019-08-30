@@ -1,5 +1,8 @@
 import unittest
 import collections
+import tempfile
+import os
+import shutil
 
 
 class TestFont(unittest.TestCase):
@@ -35,6 +38,49 @@ class TestFont(unittest.TestCase):
         font.appendGuideline((3, 4), 90, "Test Guideline 2")
         return font
 
+    def test_appendGuideline_valid_object(self):
+        font, _ = self.objectGenerator("font")
+        src, _ = self.objectGenerator("guideline")
+        src.position = (1, 2)
+        src.angle = 123
+        src.name = "test"
+        src.color = (1, 1, 1, 1)
+        src.getIdentifier()
+        dst = font.appendGuideline(guideline=src)
+        self.assertNotEqual(src, dst)
+        self.assertEqual(src.position, dst.position)
+        self.assertEqual(src.angle, dst.angle)
+        self.assertEqual(src.name, dst.name)
+        self.assertEqual(src.color, dst.color)
+        self.assertEqual(src.identifier, dst.identifier)
+
+    # glyphOrder
+
+    def test_glyphOrder(self):
+        font = self.getFont_glyphs()
+        expectedGlyphOrder = ["A", "B", "C", "D"]
+        self.assertEqual(font.glyphOrder, tuple(expectedGlyphOrder))
+        # reverse the excepected glyph order and set it
+        expectedGlyphOrder.reverse()
+        font.glyphOrder = expectedGlyphOrder
+        self.assertEqual(font.glyphOrder, tuple(expectedGlyphOrder))
+        # add a glyph
+        expectedGlyphOrder.append("newGlyph")
+        font.newGlyph("newGlyph")
+        self.assertEqual(font.glyphOrder, tuple(expectedGlyphOrder))
+        # remove a glyph
+        expectedGlyphOrder.remove("newGlyph")
+        del font["newGlyph"]
+        self.assertEqual(font.glyphOrder, tuple(expectedGlyphOrder))
+        # insert a glyph, where the glyph is at the beginning of the glyph order
+        glyph, _ = self.objectGenerator("glyph")
+        font["D"] = glyph
+        self.assertEqual(font.glyphOrder, tuple(expectedGlyphOrder))
+        # insert a glyph, where the glyph is at the end of the glyph order
+        glyph, _ = self.objectGenerator("glyph")
+        font["A"] = glyph
+        self.assertEqual(font.glyphOrder, tuple(expectedGlyphOrder))
+
     # len
 
     def test_len_initial(self):
@@ -52,6 +98,68 @@ class TestFont(unittest.TestCase):
             len(font),
             4
         )
+
+    # insert glyphs
+
+    def test_insertGlyph(self):
+        font, _ = self.objectGenerator("font")
+        glyph, _ = self.objectGenerator("glyph")
+        font.insertGlyph(glyph, "inserted1")
+        self.assertIn("inserted1", font)
+        font["inserted2"] = glyph
+        self.assertIn("inserted2", font)
+        font.newGlyph("A")
+        glyph.unicode = 123
+        font["A"] = glyph
+        self.assertEqual(font["A"].unicode, 123)
+
+    # ----
+    # flatKerning
+    # ----
+
+    def test_flatKerning(self):
+        font = self.getFont_glyphs()
+        # glyph, glyph kerning
+        font.kerning["A", "V"] = -100
+        font.kerning["V", "A"] = -200
+        expected = {("A", "V"): -100, ("V", "A"): -200}
+        self.assertEqual(font.getFlatKerning(), expected)
+        # add some groups
+        font.groups["public.kern1.O"] = ["O", "Ograve"]
+        font.groups["public.kern2.O"] = ["O", "Ograve"]
+        # group, group kerning
+        font.kerning["public.kern1.O", "public.kern2.O"] = -50
+        expected = {
+            ('O', 'O'): -50,
+            ('Ograve', 'O'): -50,
+            ('O', 'Ograve'): -50,
+            ('Ograve', 'Ograve'): -50,
+            ('A', 'V'): -100,
+            ('V', 'A'): -200
+        }
+        self.assertEqual(font.getFlatKerning(), expected)
+        # glyph, group exception
+        font.kerning["O", "public.kern2.O"] = -30
+        expected = {
+            ('O', 'O'): -30,
+            ('Ograve', 'O'): -50,
+            ('O', 'Ograve'): -30,
+            ('Ograve', 'Ograve'): -50,
+            ('A', 'V'): -100,
+            ('V', 'A'): -200
+        }
+        self.assertEqual(font.getFlatKerning(), expected)
+        # glyph, glyph exception
+        font.kerning["O", "Ograve"] = -70
+        expected = {
+            ('O', 'O'): -30,
+            ('Ograve', 'O'): -50,
+            ('O', 'Ograve'): -70,
+            ('Ograve', 'Ograve'): -50,
+            ('A', 'V'): -100,
+            ('V', 'A'): -200
+        }
+        self.assertEqual(font.getFlatKerning(), expected)
 
     # ----
     # Hash
@@ -382,3 +490,50 @@ class TestFont(unittest.TestCase):
             font.selectedGuidelines,
             ()
         )
+
+    # save
+
+    def _saveFontPath(self, ext):
+        root = tempfile.mkdtemp()
+        return os.path.join(root, "test.%s" % ext)
+
+    def _tearDownPath(self, path):
+        if os.path.isdir(path):
+            shutil.rmtree(path)
+        elif os.path.isfile(path):
+            os.remove(path)
+
+    def _save(self, testCallback, **kwargs):
+        path = self._saveFontPath(".ufo")
+        font = self.getFont_glyphs()
+        font.save(path, **kwargs)
+        testCallback(path)
+        self._tearDownPath(path)
+
+    def test_save(self):
+        def testCases(path):
+            self.assertTrue(os.path.exists(path) and os.path.isdir(path))
+        self._save(testCases)
+
+    def test_save_formatVersion(self):
+        from fontTools.ufoLib import UFOReader
+
+        for version in [2, 3]:  # fails on formatVersion 1 (but maybe we should not worry about it...)
+            def testCases(path):
+                reader = UFOReader(path)
+                self.assertEqual(reader.formatVersion, version)
+            self._save(testCases, formatVersion=version)
+
+    def test_save_fileStructure(self):
+        from fontTools.ufoLib import UFOReader, UFOFileStructure
+
+        for fileStructure in [None, "package", "zip"]:
+            def testCases(path):
+                reader = UFOReader(path)
+                expectedFileStructure = fileStructure
+                if fileStructure is None:
+                    expectedFileStructure = UFOFileStructure.PACKAGE
+                else:
+                    expectedFileStructure = UFOFileStructure(fileStructure)
+                self.assertEqual(reader.fileStructure, expectedFileStructure)
+            self._save(testCases, fileStructure=fileStructure)

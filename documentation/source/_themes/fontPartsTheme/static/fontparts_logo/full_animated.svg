@@ -1,0 +1,225 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1627.494 328.418">
+    <defs>
+        <style>
+            .path {
+                fill: none;
+                stroke: #fff;
+                stroke-linecap: round;
+                stroke-miterlimit: 10;
+                stroke-width: 15.639px;
+                stroke-dasharray: 250;
+                stroke-dashoffset: 250;
+                transition: 3s ease;
+            }
+            
+
+            .path-0 {
+                animation:  dash 3s 0.0s ease forwards,
+                            reDash 24s 4s ease infinite;
+            }
+
+            .path-1 {
+                animation:  dash 3s 0.1s ease forwards,
+                            reDash 24s 4.2s ease infinite;
+            }
+
+            .path-2 {
+                animation:  dash 3s 0.2s ease forwards,
+                            reDash 24s 4.4s ease infinite;
+            }
+
+            .path-3 {
+                animation:  dash 3s 0.3s ease forwards,
+                            reDash 24s 4.6s ease infinite;
+            }
+
+            .path-4 {
+                animation:  dash 3s 0.4s ease forwards,
+                            reDash 24s 4.8s ease infinite;
+            }
+
+            .path-5 {
+                animation:  dash 3s 0.5s ease forwards,
+                            reDash 24s 5.0s ease infinite;
+            }
+
+            .path-6 {
+                animation:  dash 3s 0.6s ease forwards,
+                            reDash 24s 5.2s ease infinite;
+            }
+
+            .path-7 {
+                animation:  dash 3s 0.7s ease forwards,
+                            reDash 24s 5.4s ease infinite;
+            }
+
+            .path-8 {
+                animation:  dash 3s 0.8s ease forwards,
+                            reDash 24s 5.6s ease infinite;
+            }
+
+            .path-9 {
+                animation:  dash 3s 0.9s ease forwards,
+                            reDash 24s 5.8s ease infinite;
+            } 
+
+            @keyframes dash {
+            from {
+                stroke-dashoffset: 500;
+                opacity: 0;
+            }
+            to {
+                stroke-dashoffset: 0;
+                opacity: 1;
+            }
+            }
+
+            @keyframes reDash {
+            0% {
+                stroke-dashoffset: 0;
+                opacity: 1;
+            }
+            12.49% {
+                stroke-dashoffset: -500;
+                opacity: 0;
+            }
+            12.5% {
+                stroke-dashoffset: 500;
+                opacity: 0;
+            }
+            25%, 100% {
+                stroke-dashoffset: 0;
+                opacity: 1;
+            }
+            }
+        </style>
+    </defs>
+    <title>fp-logo-lines</title>
+    <g id="Layer_2" data-name="Layer 2">
+        <g id="Layer_2-2" data-name="Layer 2">
+            <line class="path path-6" x1="7.819" y1="7.819" x2="173.071" y2="7.819" />
+            <line class="path path-9" x1="7.819" y1="33.884" x2="173.071" y2="33.884" />
+            <line class="path path-7" x1="7.819" y1="59.949" x2="173.071" y2="59.949" />
+            <line class="path path-6" x1="7.819" y1="86.014" x2="75.588" y2="86.014" />
+            <line class="path path-6" x1="7.819" y1="112.079" x2="75.588" y2="112.079" />
+            <line class="path path-6" x1="7.819" y1="138.144" x2="75.588" y2="138.144" />
+            <line class="path path-4" x1="7.819" y1="164.209" x2="164.209" y2="164.209" />
+            <line class="path path-0" x1="7.819" y1="190.274" x2="153.783" y2="190.274" />
+            <line class="path path-3" x1="7.819" y1="216.339" x2="143.357" y2="216.339" />
+            <line class="path path-7" x1="7.819" y1="242.404" x2="75.588" y2="242.404" />
+            <line class="path path-2" x1="7.819" y1="268.469" x2="75.588" y2="268.469" />
+            <line class="path path-8" x1="7.819" y1="294.534" x2="75.588" y2="294.534" />
+            <line class="path path-0" x1="7.819" y1="320.599" x2="75.588" y2="320.599" />
+            <line class="path path-4" x1="220.509" y1="86.014" x2="332.067" y2="86.014" />
+            <line class="path path-2" x1="207.998" y1="112.079" x2="344.578" y2="112.079" />
+            <line class="path path-7" x1="201.743" y1="138.144" x2="350.834" y2="138.144" />
+            <line class="path path-5" x1="195.487" y1="164.209" x2="258.043" y2="164.209" />
+            <line class="path path-6" x1="190.274" y1="190.274" x2="258.043" y2="190.274" />
+            <line class="path path-1" x1="190.274" y1="216.339" x2="258.043" y2="216.339" />
+            <line class="path path-7" x1="197.572" y1="242.404" x2="258.043" y2="242.404" />
+            <line class="path path-0" x1="298.704" y1="164.209" x2="361.26" y2="164.209" />
+            <line class="path path-2" x1="299.747" y1="190.274" x2="367.515" y2="190.274" />
+            <line class="path path-2" x1="299.747" y1="216.339" x2="367.515" y2="216.339" />
+            <line class="path path-2" x1="299.747" y1="242.404" x2="360.739" y2="242.404" />
+            <line class="path path-6" x1="204.349" y1="268.469" x2="353.44" y2="268.469" />
+            <line class="path path-1" x1="210.605" y1="294.534" x2="347.185" y2="294.534" />
+            <line class="path path-9" x1="223.116" y1="320.599" x2="334.674" y2="320.599" />
+            <line class="path path-3" x1="399.836" y1="86.014" x2="428.507" y2="86.014" />
+            <line class="path path-5" x1="399.836" y1="112.079" x2="439.455" y2="112.079" />
+            <line class="path path-6" x1="472.818" y1="86.014" x2="537.98" y2="86.014" />
+            <line class="path path-3" x1="472.818" y1="112.079" x2="549.97" y2="112.079" />
+            <line class="path path-5" x1="399.836" y1="138.144" x2="556.747" y2="138.144" />
+            <line class="path path-4" x1="399.836" y1="164.209" x2="462.392" y2="164.209" />
+            <line class="path path-8" x1="504.096" y1="164.209" x2="565.088" y2="164.209" />
+            <line class="path path-2" x1="399.836" y1="190.274" x2="467.605" y2="190.274" />
+            <line class="path path-4" x1="504.096" y1="190.274" x2="571.864" y2="190.274" />
+            <line class="path path-1" x1="399.836" y1="216.339" x2="467.605" y2="216.339" />
+            <line class="path path-5" x1="504.096" y1="216.339" x2="571.864" y2="216.339" />
+            <line class="path path-9" x1="399.836" y1="242.404" x2="467.605" y2="242.404" />
+            <line class="path path-7" x1="504.096" y1="242.404" x2="571.864" y2="242.404" />
+            <line class="path path-4" x1="399.836" y1="268.469" x2="467.605" y2="268.469" />
+            <line class="path path-6" x1="504.096" y1="268.469" x2="571.864" y2="268.469" />
+            <line class="path path-4" x1="399.836" y1="294.534" x2="467.605" y2="294.534" />
+            <line class="path path-5" x1="504.096" y1="294.534" x2="571.864" y2="294.534" />
+            <line class="path path-3" x1="399.836" y1="320.599" x2="467.605" y2="320.599" />
+            <line class="path path-4" x1="504.096" y1="320.599" x2="571.864" y2="320.599" />
+            <line class="path path-7" x1="634.42" y1="7.819" x2="673.518" y2="7.819" />
+            <line class="path path-1" x1="627.122" y1="33.884" x2="673.518" y2="33.884" />
+            <line class="path path-8" x1="619.303" y1="59.949" x2="673.518" y2="59.949" />
+            <line class="path path-2" x1="612.004" y1="86.014" x2="731.382" y2="86.014" />
+            <line class="path path-4" x1="605.228" y1="112.079" x2="731.382" y2="112.079" />
+            <line class="path path-2" x1="605.228" y1="138.144" x2="731.382" y2="138.144" />
+            <line class="path path-4" x1="605.228" y1="164.209" x2="672.996" y2="164.209" />
+            <line class="path path-5" x1="605.228" y1="190.274" x2="672.996" y2="190.274" />
+            <line class="path path-0" x1="605.228" y1="216.339" x2="672.996" y2="216.339" />
+            <line class="path path-7" x1="610.44" y1="242.404" x2="672.996" y2="242.404" />
+            <line class="path path-5" x1="619.303" y1="268.469" x2="737.116" y2="268.469" />
+            <line class="path path-3" x1="625.558" y1="294.534" x2="730.86" y2="294.534" />
+            <line class="path path-5" x1="632.856" y1="320.599" x2="723.562" y2="320.599" />
+            <line class="path path-0" x1="772.043" y1="7.819" x2="906.017" y2="7.819" />
+            <line class="path path-3" x1="772.043" y1="33.884" x2="921.656" y2="33.884" />
+            <line class="path path-9" x1="772.043" y1="59.949" x2="937.295" y2="59.949" />
+            <line class="path path-1" x1="772.043" y1="86.014" x2="834.599" y2="86.014" />
+            <line class="path path-8" x1="876.303" y1="86.014" x2="944.071" y2="86.014" />
+            <line class="path path-0" x1="772.043" y1="112.079" x2="839.812" y2="112.079" />
+            <line class="path path-5" x1="876.303" y1="112.079" x2="944.071" y2="112.079" />
+            <line class="path path-5" x1="772.043" y1="138.144" x2="839.812" y2="138.144" />
+            <line class="path path-1" x1="876.303" y1="138.144" x2="944.071" y2="138.144" />
+            <line class="path path-9" x1="772.043" y1="164.209" x2="839.812" y2="164.209" />
+            <line class="path path-3" x1="876.303" y1="164.209" x2="938.859" y2="164.209" />
+            <line class="path path-9" x1="772.043" y1="190.274" x2="928.433" y2="190.274" />
+            <line class="path path-7" x1="772.043" y1="216.339" x2="918.007" y2="216.339" />
+            <line class="path path-7" x1="772.043" y1="242.404" x2="839.812" y2="242.404" />
+            <line class="path path-3" x1="772.043" y1="268.469" x2="839.812" y2="268.469" />
+            <line class="path path-1" x1="772.043" y1="294.534" x2="839.812" y2="294.534" />
+            <line class="path path-6" x1="772.043" y1="320.599" x2="839.812" y2="320.599" />
+            <line class="path path-8" x1="975.871" y1="86.014" x2="1098.897" y2="86.014" />
+            <line class="path path-0" x1="975.871" y1="112.079" x2="1111.408" y2="112.079" />
+            <line class="path path-8" x1="975.871" y1="138.144" x2="1121.834" y2="138.144" />
+            <line class="path path-7" x1="1064.491" y1="164.209" x2="1127.047" y2="164.209" />
+            <line class="path path-2" x1="970.658" y1="190.274" x2="1127.047" y2="190.274" />
+            <line class="path path-1" x1="960.232" y1="216.339" x2="1127.047" y2="216.339" />
+            <line class="path path-5" x1="967.009" y1="242.404" x2="1028.001" y2="242.404" />
+            <line class="path path-3" x1="1071.268" y1="242.404" x2="1127.047" y2="242.404" />
+            <line class="path path-9" x1="975.349" y1="268.469" x2="1038.427" y2="268.469" />
+            <line class="path path-1" x1="1072.311" y1="268.469" x2="1127.047" y2="268.469" />
+            <line class="path path-2" x1="986.297" y1="294.534" x2="1127.047" y2="294.534" />
+            <line class="path path-7" x1="998.287" y1="320.599" x2="1127.047" y2="320.599" />
+            <line class="path path-5" x1="1163.538" y1="86.014" x2="1192.21" y2="86.014" />
+            <line class="path path-5" x1="1236.52" y1="86.014" x2="1294.384" y2="86.014" />
+            <line class="path path-9" x1="1163.538" y1="112.079" x2="1203.157" y2="112.079" />
+            <line class="path path-9" x1="1236.52" y1="112.079" x2="1294.384" y2="112.079" />
+            <line class="path path-8" x1="1163.538" y1="138.144" x2="1294.384" y2="138.144" />
+            <line class="path path-5" x1="1163.538" y1="164.209" x2="1226.094" y2="164.209" />
+            <line class="path path-5" x1="1163.538" y1="190.274" x2="1231.307" y2="190.274" />
+            <line class="path path-7" x1="1163.538" y1="216.339" x2="1231.307" y2="216.339" />
+            <line class="path path-9" x1="1163.538" y1="242.404" x2="1231.307" y2="242.404" />
+            <line class="path path-7" x1="1163.538" y1="268.469" x2="1231.307" y2="268.469" />
+            <line class="path path-8" x1="1163.538" y1="294.534" x2="1231.307" y2="294.534" />
+            <line class="path path-8" x1="1163.538" y1="320.599" x2="1231.307" y2="320.599" />
+            <line class="path path-1" x1="1351.206" y1="7.819" x2="1390.303" y2="7.819" />
+            <line class="path path-6" x1="1343.907" y1="33.884" x2="1390.303" y2="33.884" />
+            <line class="path path-9" x1="1336.088" y1="59.949" x2="1390.303" y2="59.949" />
+            <line class="path path-7" x1="1328.79" y1="86.014" x2="1448.167" y2="86.014" />
+            <line class="path path-3" x1="1322.013" y1="112.079" x2="1448.167" y2="112.079" />
+            <line class="path path-3" x1="1322.013" y1="138.144" x2="1448.167" y2="138.144" />
+            <line class="path path-6" x1="1322.013" y1="164.209" x2="1389.782" y2="164.209" />
+            <line class="path path-0" x1="1322.013" y1="190.274" x2="1389.782" y2="190.274" />
+            <line class="path path-3" x1="1322.013" y1="216.339" x2="1389.782" y2="216.339" />
+            <line class="path path-4" x1="1327.226" y1="242.404" x2="1389.782" y2="242.404" />
+            <line class="path path-7" x1="1336.088" y1="268.469" x2="1453.901" y2="268.469" />
+            <line class="path path-6" x1="1342.343" y1="294.534" x2="1447.646" y2="294.534" />
+            <line class="path path-2" x1="1349.642" y1="320.599" x2="1440.348" y2="320.599" />
+            <line class="path path-7" x1="1499.776" y1="86.014" x2="1614.461" y2="86.014" />
+            <line class="path path-4" x1="1487.264" y1="112.079" x2="1614.461" y2="112.079" />
+            <line class="path path-1" x1="1481.009" y1="138.144" x2="1614.461" y2="138.144" />
+            <line class="path path-0" x1="1469.54" y1="164.209" x2="1526.883" y2="164.209" />
+            <line class="path path-5" x1="1469.54" y1="190.274" x2="1619.674" y2="190.274" />
+            <line class="path path-9" x1="1479.966" y1="216.339" x2="1619.674" y2="216.339" />
+            <line class="path path-5" x1="1563.374" y1="242.404" x2="1619.674" y2="242.404" />
+            <line class="path path-5" x1="1485.179" y1="268.469" x2="1611.855" y2="268.469" />
+            <line class="path path-7" x1="1485.179" y1="294.534" x2="1605.599" y2="294.534" />
+            <line class="path path-0" x1="1485.179" y1="320.599" x2="1593.088" y2="320.599" />
+        </g>
+    </g>
+</svg>

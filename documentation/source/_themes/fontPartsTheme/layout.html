@@ -1,0 +1,123 @@
+{%- extends "basic/layout.html" %}
+
+
+
+{%- block extrahead %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="icon" href="{{ pathto('_static/fontparts_logo/favicon.png?v=1.2', 1) }}">
+<link rel="icon" href="{{ pathto('_static/fontparts_logo/favicon.svg?v=1.2', 1) }}">
+{% endblock %}
+
+{%- block header %}
+<div id='header'>
+
+	{%- include "navbar.html" %}
+</div>
+{% endblock %}
+
+{% block relbar1 %}{% endblock %}
+{% block sidebar1 %}{% endblock %}
+
+{% block document %}
+{%- if pagename == "index" %}
+{%- include "intro.html" %}
+{%- endif %}
+<div id="wrapper" class="central-column-wrapper-wide">
+	<div id="mobile-nav-overlay" class="hidden">
+		<!-- overlay for sidebar -->
+	</div>
+	<div id="sidebar" class="box sidebar">
+		<div class="sidebar-inner-wrapper">
+			{% block menu %}
+			{#
+			The singlehtml builder doesn't handle this toctree call when the
+			toctree is empty. Skip building this for now.
+			#}
+			{% if 'singlehtml' not in builder %}
+			{% set global_toc = toctree(maxdepth=3,
+			collapse=True,
+			includehidden=True,
+			titles_only=False) %}
+			{% endif %}
+
+			{% if global_toc %}
+			{{ global_toc }}
+			{% else %}
+			<!-- Local TOC -->
+			<div class="local-toc">{{ toc }}</div>
+			{% endif %}
+			{% endblock %}
+
+			<div class="hidden--non-small-screen">
+				<a href="https://github.com/robofab-developers/fontParts" target="_blank">
+					<svg class="icon-24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32.579 31.775">
+						<title>github-icon</title>
+						<g id="Layer_2" data-name="Layer 2">
+							<g id="Layer_1-2" data-name="Layer 1">
+								<path fill="#000" fill-rule="evenodd" d="M16.288,0a16.291,16.291,0,0,0-5.147,31.747c.814.149,1.111-.354,1.111-.786,0-.386-.014-1.411-.022-2.77-4.531.984-5.487-2.184-5.487-2.184a4.32,4.32,0,0,0-1.809-2.383c-1.479-1.01.112-.99.112-.99a3.42,3.42,0,0,1,2.5,1.679,3.469,3.469,0,0,0,4.741,1.354,3.482,3.482,0,0,1,1.034-2.178C9.7,23.078,5.9,21.68,5.9,15.438a6.3,6.3,0,0,1,1.677-4.371,5.863,5.863,0,0,1,.16-4.311s1.368-.438,4.479,1.67a15.451,15.451,0,0,1,8.157,0c3.109-2.108,4.475-1.67,4.475-1.67a5.857,5.857,0,0,1,.162,4.311,6.286,6.286,0,0,1,1.674,4.371c0,6.258-3.808,7.635-7.437,8.038a3.888,3.888,0,0,1,1.106,3.017c0,2.177-.02,3.934-.02,4.468,0,.436.293.943,1.12.784A16.292,16.292,0,0,0,16.288,0Z" />
+							</g>
+						</g>
+					</svg>
+					<span>
+						FontParts on GitHub
+					</span>
+				</a>
+			</div>
+
+		</div>
+	</div>
+	<div class="body" id="content" class='box content'>
+		<div class="central-column-wrapper">
+			{% block body %}
+			{% endblock %}
+			<div id="pagination">
+				{% if prev %}
+				<a id="prev-link" href="{{ prev.link|e }}">
+					<p>Previous</p>
+					<p>{{ prev.title }}</p>
+				</a>
+				{% endif %}
+				{% if next %}
+				<a id="next-link" href="{{ next.link|e }}">
+					<p>Next</p>
+					<p>{{ next.title }}</p>
+				</a>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	{% block relbar2 %}{% endblock %}
+	{% block sidebar2 %}{% endblock %}
+</div>
+{% endblock %}
+
+{%- block footer %}
+<div id="footer">
+	<div class="central-column-wrapper-wide">
+		<div>
+			<a class="underline" href="{{ pathto('genindex.html', 1) }}">
+				Index of All Methods and Modules
+			</a>
+
+
+		</div>
+		<div>
+			<p>&copy; Copyright <script>
+					document.write(new Date().getFullYear())
+				</script> <a href="http://letterror.com/">Just van Rossum</a>, <a href="http://letterror.com/">Erik van Blokland</a>, <a href="http://typesupply.com/">Tal Leming</a>.</p>
+			<p>
+				<p>FontParts logo by <a href="http://www.shiva-n.com/">Shiva Nallaperumal.</a></p>
+				{%- if last_updated %}
+				{% trans last_updated=last_updated|e %}Last updated on {{ last_updated }}. {% endtrans %}
+				{%- endif %}
+				{%- if show_sphinx %}
+				{% trans sphinx_version=sphinx_version|e %} <p>Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> {{ sphinx_version }}.</p> {% endtrans %}
+				{%- endif %}
+			</p>
+		</div>
+	</div>
+</div>
+{%- endblock %}
+
+
+{% set script_files = script_files + ['_static/js/fontparts_theme.js'] %}

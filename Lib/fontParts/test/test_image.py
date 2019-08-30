@@ -2,8 +2,7 @@ import unittest
 import collections
 from fontParts.base import FontPartsError
 
-
-testImageData = """
+testPNGData = """
 89504e470d0a1a0a0000000d4948445200000080000000800806000000c33e61cb0000
 02ee694343504943432050726f66696c65000078018554cf6b134114fe366ea9d02208
 5a6b0eb27890224959ab6845d436fd11626b0cdb1fb64590643349d66e36ebee26b5a5
@@ -254,7 +253,7 @@ d7085ec287e7994dab3d53f971b1085c2a1f3f4669fcd3c46f160e2064598141bd5ee1
 73bdbc1371cd7100c18726fe1cc635e5ff7f6d102cb21055ee1c0000000049454e44ae
 426082
 """.strip().replace("\n", "")
-testImageData = b"\x89PNG\r\n\x1a\n" + testImageData.encode('utf-8')
+testImageData = b"\x89PNG\r\n\x1a\n" + testPNGData.encode('utf-8')
 
 
 class TestImage(unittest.TestCase):
@@ -265,6 +264,168 @@ class TestImage(unittest.TestCase):
         image.transformation = (1, 0, 0, 1, 0, 0)
         image.color = (1, 0, 1, 1)
         return image
+
+    # ----
+    # repr
+    # ----
+
+    def test_reprContents(self):
+        image = self.getImage_generic()
+        value = image._reprContents()
+        self.assertIsInstance(value, list)
+        color = False
+        glyph = False
+        for i in value:
+            self.assertIsInstance(i, str)
+            if "color" in i:
+                color = True
+            if "in glyph" in i:
+                glyph = True
+        self.assertTrue(color)
+        self.assertFalse(glyph)
+
+    def test_reprContents_noColor(self):
+        image, _ = self.objectGenerator("image")
+        image.data = testImageData
+        value = image._reprContents()
+        self.assertIsInstance(value, list)
+        color = False
+        glyph = False
+        for i in value:
+            self.assertIsInstance(i, str)
+            if "color" in i:
+                color = True
+            if "in glyph" in i:
+                glyph = True
+        self.assertFalse(color)
+        self.assertFalse(glyph)
+
+    def test_reprContents_glyph(self):
+        glyph, _ = self.objectGenerator("glyph")
+        image = glyph.image
+        value = image._reprContents()
+        self.assertIsInstance(value, list)
+        color = False
+        glyph = False
+        for i in value:
+            self.assertIsInstance(i, str)
+            if "color=" in value:
+                color = i
+            if "in glyph" in i:
+                glyph = True
+        self.assertFalse(color)
+        self.assertTrue(glyph)
+
+    def test_reprContents_glyph_color(self):
+        glyph, _ = self.objectGenerator("glyph")
+        image = glyph.image
+        image.color = (1, 0, 1, 1)
+        value = image._reprContents()
+        self.assertIsInstance(value, list)
+        color = False
+        glyph = False
+        for i in value:
+            self.assertIsInstance(i, str)
+            if "color=" in i:
+                color = True
+            if "in glyph" in i:
+                glyph = True
+        self.assertTrue(color)
+        self.assertTrue(glyph)
+
+    # ----
+    # bool
+    # ----
+
+    def test_bool_data(self):
+        image = self.getImage_generic()
+        self.assertTrue(image)
+
+    def test_bool_no_data(self):
+        image, _ = self.objectGenerator("image")
+        self.assertFalse(image)
+
+    def test_bool_data_len_zero(self):
+        image, _ = self.objectGenerator("image")
+        try:
+            image.data = "".encode('utf-8')
+        except FontPartsError:
+            raise unittest.SkipTest("Cannot set zero data")
+        self.assertFalse(image)
+
+    # -------
+    # Parents
+    # -------
+
+    def test_get_parent_font(self):
+        font, _ = self.objectGenerator("font")
+        layer = font.newLayer("L")
+        glyph = layer.newGlyph("X")
+        image = glyph.image
+        self.assertIsNotNone(image.font)
+        self.assertEqual(
+            image.font,
+            font
+        )
+
+    def test_get_parent_noFont(self):
+        layer, _ = self.objectGenerator("layer")
+        glyph = layer.newGlyph("X")
+        image = glyph.image
+        self.assertIsNone(image.font)
+
+    def test_get_parent_layer(self):
+        layer, _ = self.objectGenerator("layer")
+        glyph = layer.newGlyph("X")
+        image = glyph.image
+        self.assertIsNotNone(image.layer)
+        self.assertEqual(
+            image.layer,
+            layer
+        )
+
+    def test_get_parent_noLayer(self):
+        glyph, _ = self.objectGenerator("glyph")
+        image = glyph.image
+        self.assertIsNone(image.font)
+        self.assertIsNone(image.layer)
+
+    def test_get_parent_glyph(self):
+        glyph, _ = self.objectGenerator("glyph")
+        image = glyph.image
+        self.assertIsNotNone(image.glyph)
+        self.assertEqual(
+            image.glyph,
+            glyph
+        )
+
+    def test_get_parent_noGlyph(self):
+        image, _ = self.objectGenerator("image")
+        self.assertIsNone(image.font)
+        self.assertIsNone(image.layer)
+        self.assertIsNone(image.glyph)
+
+    def test_set_parent_glyph(self):
+        glyph, _ = self.objectGenerator("glyph")
+        image = self.getImage_generic()
+        image.glyph = glyph
+        self.assertIsNotNone(image.glyph)
+        self.assertEqual(
+            image.glyph,
+            glyph
+        )
+
+    def test_set_parent_glyph_none(self):
+        image, _ = self.objectGenerator("image")
+        image.glyph = None
+        self.assertIsNone(image.glyph)
+
+    def test_set_parent_glyph_exists(self):
+        glyph, _ = self.objectGenerator("glyph")
+        otherGlyph, _ = self.objectGenerator("glyph")
+        image = glyph.image
+        with self.assertRaises(AssertionError):
+            image.glyph = otherGlyph
 
     # ----
     # Data
@@ -286,20 +447,74 @@ class TestImage(unittest.TestCase):
             testImageData
         )
 
+    def test_data_get_direct(self):
+        image = self.getImage_generic()
+        # get
+        self.assertEqual(
+            image._get_base_data(),
+            testImageData
+        )
+
+    def test_data_set_valid_direct(self):
+        image = self.getImage_generic()
+        image._set_base_data(testImageData)
+        self.assertEqual(
+            image.data,
+            testImageData
+        )
+
     def test_data_set_invalid(self):
         image = self.getImage_generic()
         with self.assertRaises(FontPartsError):
             image.data = 123
 
+    def test_data_set_invalid_png(self):
+        image, _ = self.objectGenerator("image")
+        with self.assertRaises(FontPartsError):
+            image.data = testPNGData.encode('utf-8')
+
     # -----
     # Color
     # -----
 
-    def test_get_color(self):
+    def test_get_color_no_parent(self):
         image = self.getImage_generic()
         self.assertEqual(
             image.color,
             (1, 0, 1, 1)
+        )
+
+    def test_get_color_parent(self):
+        font, _ = self.objectGenerator("font")
+        layer = font.layers[0]
+        glyph = layer.newGlyph("A")
+        image = glyph.image
+        image.data = testImageData
+        image.transformation = (1, 0, 0, 1, 0, 0)
+        image.color = (1, 0, 1, 1)
+        self.assertEqual(
+            image.color,
+            (1, 0, 1, 1)
+        )
+
+    def test_get_color_no_parent_none(self):
+        image = self.getImage_generic()
+        image.color = None
+        self.assertEqual(
+            image.color,
+            None
+        )
+
+    def test_get_color_parent_none(self):
+        font, _ = self.objectGenerator("font")
+        layer = font.layers[0]
+        glyph = layer.newGlyph("A")
+        image = glyph.image
+        image.data = testImageData
+        image.transformation = (1, 0, 0, 1, 0, 0)
+        self.assertEqual(
+            image.color,
+            None
         )
 
     def test_set_color(self):
@@ -348,6 +563,118 @@ class TestImage(unittest.TestCase):
         image = self.getImage_generic()
         with self.assertRaises(TypeError):
             image.transformation = (0, 1, "a", 0, 1, 1)
+
+    def test_transformBy_valid_no_origin(self):
+        image = self.getImage_generic()
+        image.transformBy((2, 0, 0, 3, -3, 2))
+        self.assertEqual(
+            image.transformation,
+            (2, 0, 0, 3, -3, 2)
+        )
+
+    def test_transformBy_valid_origin(self):
+        image = self.getImage_generic()
+        image.transformBy((2, 0, 0, 2, 0, 0), origin=(1, 2))
+        self.assertEqual(
+            image.transformation,
+            (2, 0, 0, 2, -1, -2)
+        )
+
+    # ------
+    # Offset
+    # ------
+
+    def test_get_offset(self):
+        image = self.getImage_generic()
+        self.assertEqual(
+            image.offset,
+            (0, 0)
+        )
+
+    def test_get_offset_set(self):
+        image = self.getImage_generic()
+        image.offset = (1, 4.5)
+        self.assertEqual(
+            image.offset,
+            (1, 4.5)
+        )
+
+    def test_set_offset(self):
+        image = self.getImage_generic()
+        image.offset = (2.3, 5)
+        self.assertEqual(
+            image.offset,
+            (2.3, 5)
+        )
+
+    def test_set_offset_invalid_none(self):
+        image = self.getImage_generic()
+        with self.assertRaises(TypeError):
+            image.offset = None
+
+    def test_set_offset_invalid_string(self):
+        image = self.getImage_generic()
+        with self.assertRaises(TypeError):
+            image.offset = ("a", "b")
+
+    # -----
+    # Scale
+    # -----
+
+    def test_get_scale(self):
+        image = self.getImage_generic()
+        self.assertEqual(
+            image.scale,
+            (1, 1)
+        )
+
+    def test_get_scale_set(self):
+        image = self.getImage_generic()
+        image.scale = (2, 2.5)
+        self.assertEqual(
+            image.scale,
+            (2, 2.5)
+        )
+
+    def test_set_scale(self):
+        image = self.getImage_generic()
+        image.scale = (2.3, 5)
+        self.assertEqual(
+            image.scale,
+            (2.3, 5)
+        )
+
+    def test_set_scale_invalid_none(self):
+        image = self.getImage_generic()
+        with self.assertRaises(TypeError):
+            image.scale = None
+
+    def test_set_scale_invalid_string(self):
+        image = self.getImage_generic()
+        with self.assertRaises(TypeError):
+            image.scale = ("a", "b")
+
+    # -------------
+    # Normalization
+    # -------------
+
+    def test_round(self):
+        image = self.getImage_generic()
+        image.offset = (1.1, 1.1)
+        image.round()
+        self.assertEqual(
+            image.offset,
+            (1, 1)
+        )
+
+    def test_round_half(self):
+        image = self.getImage_generic()
+        image.offset = (1.5, 1.5)
+        image.round()
+        self.assertEqual(
+            image.offset,
+            (2, 2)
+        )
 
     # ----
     # Hash

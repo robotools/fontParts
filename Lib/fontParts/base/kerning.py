@@ -52,7 +52,8 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         return self._font()
 
     def _set_font(self, font):
-        assert self._font is None or self._font() == font
+        if self._font is not None and self._font() != font:
+            raise AssertionError("font for kerning already set and is not same as font")
         if font is not None:
             font = reference(font)
         self._font = font
@@ -109,8 +110,8 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         Subclasses may override this method.
         """
         for pair, value in self.items():
-            value = int(normalizers.normalizeRounding(
-                value / float(multiple))) * multiple
+            value = int(normalizers.normalizeVisualRounding(
+                        value / float(multiple))) * multiple
             self[pair] = value
 
     # -------------
@@ -233,7 +234,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         """
         d = {}
         for k, v in self.items():
-            d[k] = v if not returnIntegers else normalizers.normalizeRounding(v)
+            d[k] = v if not returnIntegers else normalizers.normalizeVisualRounding(v)
         return d
 
     # -------------------
@@ -367,7 +368,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         :attr:`BaseKerning.find`. This must return an
         :ref:`type-int-float` or `default`.
         """
-        from ufoLib.kerning import lookupKerningValue
+        from fontTools.ufoLib.kerning import lookupKerningValue
         font = self.font
         groups = font.groups
         return lookupKerningValue(pair, self, groups, fallback=default)

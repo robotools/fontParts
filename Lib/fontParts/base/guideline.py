@@ -67,8 +67,10 @@ class BaseGuideline(
         return self._glyph()
 
     def _set_glyph(self, glyph):
-        assert self._font is None
-        assert self._glyph is None
+        if self._font is not None:
+            raise AssertionError("font for guideline already set")
+        if self._glyph is not None:
+            raise AssertionError("glyph for guideline already set")
         if glyph is not None:
             glyph = reference(glyph)
         self._glyph = glyph
@@ -96,8 +98,10 @@ class BaseGuideline(
         return None
 
     def _set_font(self, font):
-        assert self._font is None
-        assert self._glyph is None
+        if self._font is not None:
+            raise AssertionError("font for guideline already set")
+        if self._glyph is not None:
+            raise AssertionError("glyph for guideline already set")
         if font is not None:
             font = reference(font)
         self._font = font
@@ -500,5 +504,5 @@ class BaseGuideline(
 
         Subclasses may override this method.
         """
-        self.x = normalizers.normalizeRounding(self.x)
-        self.y = normalizers.normalizeRounding(self.y)
+        self.x = normalizers.normalizeVisualRounding(self.x)
+        self.y = normalizers.normalizeVisualRounding(self.y)

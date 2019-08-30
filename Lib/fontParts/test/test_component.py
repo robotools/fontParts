@@ -1,6 +1,5 @@
 import unittest
 import collections
-from fontTools.misc.py23 import basestring
 from fontParts.base import FontPartsError
 
 
@@ -31,14 +30,14 @@ class TestComponent(unittest.TestCase):
         value = component._reprContents()
         self.assertIsInstance(value, list)
         for i in value:
-            self.assertIsInstance(i, basestring)
+            self.assertIsInstance(i, str)
 
     def test_reprContents_noGlyph(self):
         component, _ = self.objectGenerator("component")
         value = component._reprContents()
         self.assertIsInstance(value, list)
         for i in value:
-            self.assertIsInstance(i, basestring)
+            self.assertIsInstance(i, str)
 
     # -------
     # Parents
@@ -386,7 +385,7 @@ class TestComponent(unittest.TestCase):
     def test_identifier_generated_type(self):
         component = self.getComponent_generic()
         component.generateIdentifier()
-        self.assertIsInstance(component.identifier, basestring)
+        self.assertIsInstance(component.identifier, str)
 
     def test_identifier_consistency(self):
         component = self.getComponent_generic()

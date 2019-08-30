@@ -1,0 +1,117 @@
+#header
+	height: $header-height
+	position: fixed
+	z-index: 2
+	width: 100%
+	background: black
+	// padding: 0 $padding * 2
+	font-family: $monofont
+	font-size: 0.75em
+	color: white
+	display: flex
+	align-items: center
+	a
+		color: white
+	a:hover
+		color: $green
+		font-weight: bold
+
+.navbar
+	display: flex
+	width: 100%
+	padding-left: $padding
+	padding-right: $padding
+	
+	ul
+		padding-left: 0
+		white-space: nowrap
+	ul, li, #searchbox
+		display: inline-block
+		zoom: 1
+
+	nav
+		display: flex
+		align-items: center
+		justify-content: space-between
+		width: 100%
+
+		div
+			display: flex
+			justify-content: space-between
+			align-items: center
+
+		a:not(:last-child)
+			margin-right: 1rem
+
+		svg
+			width: 32px
+
+.navbar a svg path,
+.navbar a svg line
+	transition: 0.25s ease
+
+.navbar a svg:hover path
+	fill: $green !important
+
+.navbar a svg:hover line
+	stroke: $green !important
+
+.navbar button
+	background: none
+	padding: 0
+	transition: .25s ease
+	outline: none
+
+	svg
+		width: 32px
+
+		line
+			transition: .25s ease		
+
+	&:hover, &:focus
+		
+	
+		svg line
+			stroke: $green !important
+
+			&#line1
+				transform: rotate(-45deg) scale(0.8, 1)
+
+			&#line2
+				transform-origin: 100% 50%
+				transform: scale(0.8, 1)
+
+			&#line3
+				transform: rotate(45deg) scale(0.8, 1)
+
+	svg.open 
+		line
+			&#line1
+				transform: rotate(45deg) scale(0.8, 1)
+
+			&#line2
+				transform-origin: 0% 50%
+				transform: scale(0.8, 1)
+
+			&#line3
+				transform: rotate(-45deg) scale(0.8, 1)
+
+.inline-items
+	margin-top: 0
+	li
+		border-left: $border
+		margin-left: 0
+		padding-left: 10px
+		padding-right: 10px
+		&:first-child
+			border: none
+			margin-left: 0
+			padding-left: 0
+			padding-right: 10px
+		&:last-child
+			padding-right: 0
+	input
+		border: none
+		border-radius: .25rem
+		height: 1.5rem
+		padding: .25rem

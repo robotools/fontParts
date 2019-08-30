@@ -1,0 +1,133 @@
+#sidebar
+	position: sticky
+	top: $header-height
+	max-height: calc(100vh - #{$header-height})
+	max-width: $sidebarWidth
+	z-index: 1
+	padding: 0 0 0 1rem
+	font-size: 1rem
+	font-family: $sansfont
+	background: white
+	display: flex
+
+	ul
+		margin: 0
+		margin-bottom: $padding
+
+	li
+		padding: 0
+
+	h3
+		margin-bottom: 0.5em
+		font-size: 1rem
+		font-weight: bold
+
+	.caption
+		margin: 0
+		text-transform: uppercase
+		font-size: 80%
+		letter-spacing: 0.1em
+
+	@media (max-width: $tablet-landscape)
+
+		z-index: 2
+
+		&.mobile-slideout
+			position: fixed
+			width: $sidebarWidth 
+			max-width: 100vh
+			height: calc(100vh - #{$header-height})
+			left: 100vw
+			top: $header-height
+			transition: 0.5s ease
+			border-right: none
+			padding: 0
+			overflow-y: auto
+			opacity: 0
+
+			.sidebar-inner-wrapper
+				padding: 0 1rem 2rem 1rem
+				transform: none
+				overflow-y: show
+
+		&.expanded
+			opacity: 1
+			transform: translateX(-100%)
+			transition: 0.5s ease
+
+// the below wrapper div could probably be refactored to be eliminated – the stickiness now happens on the parent
+
+.sidebar-inner-wrapper
+	width: 100%
+	padding: 3rem 1rem 4rem 1rem //3rem 1rem
+	overflow-y: auto
+	transform: translateX(-1rem)
+	border-right: solid #dddddd 1px
+	
+
+	@media screen and (max-width: $tablet-landscape)
+		max-height: none
+		padding-left: 2em
+
+	a
+		display: block
+		margin-left: -0.5em
+		padding: 0.25em 0.5em
+		border-radius: 0.5em
+		background: white
+		border: white solid .125em
+		transition: background 1s ease-out
+		line-height: 1
+		color: black
+		display: grid
+		grid-template-columns: auto 1fr
+		align-items: center
+
+		span
+			padding-left: .5em
+
+
+	a:focus
+		outline: 0
+		border: $focus-border
+		// box-shadow: 0px 0px .75em $greener
+
+	a:hover
+		color: $blue
+		background: $offwhite-gray//  rgba($greener, 0.35)
+		transition: background .125s ease
+
+	a.current
+		background: $blue //$offwhite-gray
+		color: white
+
+	&>ul
+		padding: 0
+
+		ul
+			padding-left: 1em
+
+		&>li>a
+			color: black
+			font-weight: bold
+
+	// &>ul ul
+	// 	height: 0px
+	// 	overflow: hidden
+
+#mobile-nav-overlay
+	position: fixed
+	width: 100vw
+	height: 100vh
+	background: rgba($dark-navy, 0.75)
+	opacity: 1
+	pointer-events: all
+	transition: .25s ease
+	cursor: e-resize
+	z-index: 2
+	top: $header-height
+
+	&.hidden
+		opacity: 0
+		pointer-events: none
+		

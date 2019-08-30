@@ -1,4 +1,5 @@
 import defcon
+import booleanOperations
 from fontParts.base import BaseGlyph
 from fontParts.base.errors import FontPartsError
 from fontParts.fontshell.base import RBaseObject
@@ -8,7 +9,7 @@ from fontParts.fontshell.anchor import RAnchor
 from fontParts.fontshell.guideline import RGuideline
 from fontParts.fontshell.image import RImage
 from fontParts.fontshell.lib import RLib
-from ufoLib.glifLib import (GlifLibError, readGlyphFromString,
+from fontTools.ufoLib.glifLib import (GlifLibError, readGlyphFromString,
                             writeGlyphToString)
 
 
@@ -133,6 +134,17 @@ class RGlyph(RBaseObject, BaseGlyph):
         contour = glyph[index]
         glyph.removeContour(contour)
 
+    def _removeOverlap(self, **kwargs):
+        if len(self):
+            contours = list(self)
+            for contour in contours:
+                for point in contour.points:
+                    if point.type == "qcurve":
+                        raise TypeError("fontshell can't removeOverlap for quadratics")
+            self.clear(contours=True, components=False,
+                       anchors=False, guidelines=False, image=False)
+            booleanOperations.union(contours, self.getPointPen())
+
     def _correctDirection(self, trueType=False, **kwargs):
         self.naked().correctContourDirection(trueType=trueType)
 
@@ -161,13 +173,14 @@ class RGlyph(RBaseObject, BaseGlyph):
         anchor = glyph.anchors[index]
         return self.anchorClass(anchor)
 
-    def _appendAnchor(self, name, position=None, color=None, **kwargs):
+    def _appendAnchor(self, name, position=None, color=None, identifier=None, **kwargs):
         glyph = self.naked()
         anchor = self.anchorClass().naked()
         anchor.name = name
         anchor.x = position[0]
         anchor.y = position[1]
         anchor.color = color
+        anchor.identifier = identifier
         glyph.appendAnchor(anchor)
         wrapped = self.anchorClass(anchor)
         wrapped.glyph = self
@@ -188,8 +201,7 @@ class RGlyph(RBaseObject, BaseGlyph):
         guideline = glyph.guidelines[index]
         return self.guidelineClass(guideline)
 
-    def _appendGuideline(self, position, angle,
-                         name=None, color=None, **kwargs):
+    def _appendGuideline(self, position, angle, name=None, color=None, identifier=None, **kwargs):
         glyph = self.naked()
         guideline = self.guidelineClass().naked()
         guideline.x = position[0]
@@ -197,6 +209,7 @@ class RGlyph(RBaseObject, BaseGlyph):
         guideline.angle = angle
         guideline.name = name
         guideline.color = color
+        guideline.identifier = identifier
         glyph.appendGuideline(guideline)
         return self.guidelineClass(guideline)
 
@@ -290,12 +303,19 @@ class RGlyph(RBaseObject, BaseGlyph):
 
     def _loadFromGLIF(self, glifData):
         try:
-            readGlyphFromString(glifData, glyphObject=self.naked(),
-                                pointPen=self.getPointPen())
+            readGlyphFromString(
+                aString=glifData,
+                glyphObject=self.naked(),
+                pointPen=self.getPointPen()
+            )
         except GlifLibError:
             raise FontPartsError("Not valid glif data")
 
     def _dumpToGLIF(self, glyphFormatVersion):
         glyph = self.naked()
-        return writeGlyphToString(glyph.name, glyph,
-                                  glyph.drawPoints, glyphFormatVersion)
+        return writeGlyphToString(
+            glyphName=glyph.name,
+            glyphObject=glyph,
+            drawPointsFunc=glyph.drawPoints,
+            formatVersion=glyphFormatVersion
+        )

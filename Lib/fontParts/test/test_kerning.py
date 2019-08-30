@@ -120,6 +120,24 @@ class TestKerning(unittest.TestCase):
             102
         )
 
+    def test_get_fallback_default(self):
+        kerning = self.getKerning_generic()
+        self.assertEqual(
+            kerning.get(("F", "F")),
+            None
+        )
+
+    def test_get_fallback_default_user(self):
+        kerning = self.getKerning_generic()
+        self.assertEqual(
+            kerning.get(("F", "F"), None),
+            None
+        )
+        self.assertEqual(
+            kerning.get(("F", "F"), 0),
+            0
+        )
+
     # ---
     # set
     # ---

@@ -6,7 +6,7 @@ Developing FontParts
 
 You want to help with developing FontParts? Yay!
 
-We are mostly focused on documenting the objects and building a test suite. We'll eventually need bits of code here and there. If you have an idea for a new API or want to discuss one of the esting APIs, cool.
+We are mostly focused on documenting the objects and building a test suite. We'll eventually need bits of code here and there. If you have an idea for a new API or want to discuss one of the testing APIs, cool.
 
 .. _developing-proposals:
 
@@ -23,7 +23,7 @@ Want to suggest a new font part for FontParts? It's best to do this as an issue 
 Bug Reports
 ***********
 
-Notice a bug when using FontParts? Is it a bug in a specific application? If so, please report the bug to the application develper. If it's not specific to a particular application, please open an issue on GitHub or, if you really can't `open an issue on GitHub <https://github.com/robofab-developers/fontParts/issues>`_, send a message to the `RoboFab mailing list <https://groups.google.com/forum/#!forum/robofab>`_
+Notice a bug when using FontParts? Is it a bug in a specific application? If so, please report the bug to the application developer. If it's not specific to a particular application, please open an issue on GitHub or, if you really can't `open an issue on GitHub <https://github.com/robofab-developers/fontParts/issues>`_, send a message to the `RoboFab mailing list <https://groups.google.com/forum/#!forum/robofab>`_
 
 
 .. _developing-coding:

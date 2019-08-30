@@ -14,6 +14,17 @@ class TestLib(unittest.TestCase):
         })
         return lib
 
+    # ----
+    # repr
+    # ----
+
+    def test_reprContents(self):
+        lib = self.getLib_generic()
+        value = lib._reprContents()
+        self.assertIsInstance(value, list)
+        for i in value:
+            self.assertIsInstance(i, str)
+
     # ---
     # len
     # ---
@@ -32,6 +43,59 @@ class TestLib(unittest.TestCase):
             len(lib),
             0
         )
+
+    # -------
+    # Parents
+    # -------
+
+    # Glyph
+
+    def test_get_parent_glyph(self):
+        glyph, _ = self.objectGenerator("glyph")
+        lib, _ = self.objectGenerator("lib")
+        lib.glyph = glyph
+        self.assertIsNotNone(lib.glyph)
+        self.assertEqual(
+            lib.glyph,
+            glyph
+        )
+
+    def test_get_parent_noGlyph(self):
+        lib, _ = self.objectGenerator("lib")
+        self.assertIsNone(lib.font)
+        self.assertIsNone(lib.layer)
+        self.assertIsNone(lib.glyph)
+
+    def test_set_parent_glyph(self):
+        glyph, _ = self.objectGenerator("glyph")
+        lib, _ = self.objectGenerator("lib")
+        lib.glyph = glyph
+        self.assertIsNotNone(lib.glyph)
+        self.assertEqual(
+            lib.glyph,
+            glyph
+        )
+
+    # Font
+
+    def test_get_parent_font(self):
+        font, _ = self.objectGenerator("font")
+        layer = font.newLayer("L")
+        glyph = layer.newGlyph("X")
+        lib, _ = self.objectGenerator("lib")
+        lib.glyph = glyph
+        self.assertIsNotNone(lib.font)
+        self.assertEqual(
+            lib.font,
+            font
+        )
+
+    def test_get_parent_noFont(self):
+        layer, _ = self.objectGenerator("layer")
+        glyph = layer.newGlyph("X")
+        lib, _ = self.objectGenerator("lib")
+        lib.glyph = glyph
+        self.assertIsNone(lib.font)
 
     # -------
     # Queries

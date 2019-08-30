@@ -60,7 +60,8 @@ class BaseContour(
         return self._glyph()
 
     def _set_glyph(self, glyph):
-        assert self._glyph is None
+        if self._glyph is not None:
+            raise AssertionError("glyph for contour already set")
         if glyph is not None:
             glyph = reference(glyph)
         self._glyph = glyph
@@ -174,7 +175,7 @@ class BaseContour(
         """
         Subclasses may override this method.
         """
-        from ufoLib.pointPen import PointToSegmentPen
+        from fontTools.ufoLib.pointPen import PointToSegmentPen
         adapter = PointToSegmentPen(pen)
         self.drawPoints(adapter)
 
@@ -491,8 +492,7 @@ class BaseContour(
             del segments[-1]
         if lastWasOffCurve and not firstIsMove:
             segment = segments.pop(-1)
-            assert len(segments[0]) == 1
-            segment.append(segments[0][0])
+            segment.extend(segments[0])
             del segments[0]
             segments.append(segment)
         if not lastWasOffCurve and not firstIsMove:
@@ -531,10 +531,16 @@ class BaseContour(
         """
         return len(self.segments)
 
-    def appendSegment(self, type, points, smooth=False):
+    def appendSegment(self, type=None, points=None, smooth=False, segment=None):
         """
         Append a segment to the contour.
         """
+        if segment is not None:
+            if type is not None:
+                type = segment.type
+            if points is None:
+                points = [(point.x, point.y) for point in segment.points]
+            smooth = segment.smooth
         type = normalizers.normalizeSegmentType(type)
         pts = []
         for pt in points:
@@ -551,10 +557,16 @@ class BaseContour(
         self._insertSegment(len(self), type=type, points=points,
                             smooth=smooth, **kwargs)
 
-    def insertSegment(self, index, type, points, smooth=False):
+    def insertSegment(self, index, type=None, points=None, smooth=False, segment=None):
         """
         Insert a segment into the contour.
         """
+        if segment is not None:
+            if type is not None:
+                type = segment.type
+            if points is None:
+                points = [(point.x, point.y) for point in segment.points]
+            smooth = segment.smooth
         index = normalizers.normalizeIndex(index)
         type = normalizers.normalizeSegmentType(type)
         pts = []
@@ -573,7 +585,8 @@ class BaseContour(
         """
         onCurve = points[-1]
         offCurve = points[:-1]
-        ptCount = sum([len(self.segments[s].points) for s in range(index)])
+        segments = self.segments
+        ptCount = sum([len(segments[s].points) for s in range(index)]) + 1
         self.insertPoint(ptCount, onCurve, type=type, smooth=smooth)
         for offCurvePoint in reversed(offCurve):
             self.insertPoint(ptCount, offCurvePoint, type="offcurve")
@@ -591,18 +604,18 @@ class BaseContour(
         if segment >= self._len__segments():
             raise ValueError("No segment located at index %d." % segment)
         preserveCurve = normalizers.normalizeBoolean(preserveCurve)
-        self._removeSegment(segment)
+        self._removeSegment(segment, preserveCurve)
 
     def _removeSegment(self, segment, preserveCurve, **kwargs):
         """
         segment will be a valid segment index.
-        Preserve curve will be a boolean.
+        preserveCurve will be a boolean.
 
         Subclasses may override this method.
         """
         segment = self.segments[segment]
         for point in segment.points:
-            self.removePoint(point)
+            self.removePoint(point, preserveCurve)
 
     def setStartSegment(self, segment):
         """
@@ -628,8 +641,8 @@ class BaseContour(
         Subclasses may override this method.
         """
         segments = self.segments
-        oldStart = self.segments[0]
-        oldLast = self.segments[-1]
+        oldStart = segments[-1]
+        oldLast = segments[0]
         # If the contour ends with a curve on top of a move,
         # delete the move.
         if oldLast.type == "curve" or oldLast.type == "qcurve":
@@ -644,7 +657,7 @@ class BaseContour(
         if segments[0].type == "move":
             segments[0].type = "line"
         # Reorder the points internally.
-        segments = segments[segmentIndex:] + segments[:segmentIndex]
+        segments = segments[segmentIndex - 1:] + segments[:segmentIndex - 1]
         points = []
         for segment in segments:
             for point in segment:
@@ -681,10 +694,19 @@ class BaseContour(
             bPoints.append(bPoint)
         return tuple(bPoints)
 
-    def appendBPoint(self, type, anchor, bcpIn=None, bcpOut=None):
+    def appendBPoint(self, type=None, anchor=None, bcpIn=None, bcpOut=None, bPoint=None):
         """
         Append a bPoint to the contour.
         """
+        if bPoint is not None:
+            if type is None:
+                type = bPoint.type
+            if anchor is None:
+                anchor = bPoint.anchor
+            if bcpIn is None:
+                bcpIn = bPoint.bcpIn
+            if bcpOut is None:
+                bcpOut = bPoint.bcpOut
         type = normalizers.normalizeBPointType(type)
         anchor = normalizers.normalizeCoordinateTuple(anchor)
         if bcpIn is None:
@@ -699,13 +721,27 @@ class BaseContour(
         """
         Subclasses may override this method.
         """
-        self.insertBPoint(len(self.bPoints), type, anchor,
-                          bcpIn=bcpIn, bcpOut=bcpOut)
+        self.insertBPoint(
+            len(self.bPoints),
+            type,
+            anchor,
+            bcpIn=bcpIn,
+            bcpOut=bcpOut
+        )
 
-    def insertBPoint(self, index, type, anchor, bcpIn=None, bcpOut=None):
+    def insertBPoint(self, index, type=None, anchor=None, bcpIn=None, bcpOut=None, bPoint=None):
         """
         Insert a bPoint at index in the contour.
         """
+        if bPoint is not None:
+            if type is None:
+                type = bPoint.type
+            if anchor is None:
+                anchor = bPoint.anchor
+            if bcpIn is None:
+                bcpIn = bPoint.bcpIn
+            if bcpOut is None:
+                bcpOut = bPoint.bcpOut
         index = normalizers.normalizeIndex(index)
         type = normalizers.normalizeBPointType(type)
         anchor = normalizers.normalizeCoordinateTuple(anchor)
@@ -722,101 +758,21 @@ class BaseContour(
         """
         Subclasses may override this method.
         """
-        segments = self.segments
-        # insert a curve point that we can work with
-        nextSegment = segments[index]
-        if nextSegment.type not in ("move", "line", "curve"):
-            raise ValueError("Unknown segment type (%s) in contour."
-                             % nextSegment.type)
-        if nextSegment.type == "move":
-            prevSegment = segments[index - 1]
-            prevOn = prevSegment.onCurve
-            if bcpIn != (0, 0):
-                new = self.appendSegment(
-                    "curve",
-                    [(prevOn.x, prevOn.y), absoluteBCPIn(anchor, bcpIn),
-                     anchor],
-                    smooth=False
-                )
-                if type == "curve":
-                    new.smooth = True
-            else:
-                new = self.appendSegment(
-                    "line",
-                    [anchor],
-                    smooth=False
-                )
-            # if the user wants an outgoing bcp, we must
-            # add a curve ontop of the move
-            if bcpOut != (0, 0):
-                nextOn = nextSegment.onCurve
-                self.appendSegment(
-                    "curve",
-                    [absoluteBCPOut(anchor, bcpOut), (nextOn.x, nextOn.y),
-                     (nextOn.x, nextOn.y)],
-                    smooth=False
-                )
-        else:
-            # handle the bcps
-            if nextSegment.type != "curve":
-                prevSegment = segments[index - 1]
-                prevOn = prevSegment.onCurve
-                prevOutX, prevOutY = (prevOn.x, prevOn.y)
-            else:
-                prevOut = nextSegment.offCurve[0]
-                prevOutX, prevOutY = (prevOut.x, prevOut.y)
-            newSegment = self.insertSegment(
-                index,
-                type="curve",
-                points=[(prevOutX, prevOutY), anchor, anchor],
-                smooth=False
-            )
-            segments = self.segments
-            p = index - 1
-            if p < 0:
-                p = -1
-            prevSegment = segments[p]
-            n = index + 1
-            if n >= len(segments):
-                n = 0
-            nextSegment = segments[n]
-            if nextSegment.type == "move":
-                raise FontPartsError(("still working out curving at the "
-                                      "end of a contour"))
-            elif nextSegment.type == "qcurve":
-                return
-            # set the new incoming bcp
-            newIn = newSegment.offCurve[1]
-            nIX, nIY = absoluteBCPIn(anchor, bcpIn)
-            newIn.x = nIX
-            newIn.y = nIY
-            # set the new outgoing bcp
-            hasCurve = True
-            if nextSegment.type != "curve":
-                if bcpOut != (0, 0):
-                    nextSegment.type = "curve"
-                    hasCurve = True
-                else:
-                    hasCurve = False
-            if hasCurve:
-                newOut = nextSegment.offCurve[0]
-                nOX, nOY = absoluteBCPOut(anchor, bcpOut)
-                newOut.x = nOX
-                newOut.y = nOY
-            # now check to see if we can convert the curve
-            # segment to a line segment
-            newAnchor = newSegment.onCurve
-            newA = newSegment.offCurve[0]
-            newB = newSegment.offCurve[1]
-            prevAnchor = prevSegment.onCurve
-            if (
-                (prevAnchor.x, prevAnchor.y) == (newA.x, newA.y) and
-                (newAnchor.x, newAnchor.y) == (newB.x, newB.y)
-               ):
-                newSegment.type = "line"
-            # the user wants a smooth segment
-            if type == "curve":
-                newSegment.smooth = True
+        # insert a simple line segment at the given anchor
+        # look it up as a bPoint and change the bcpIn and bcpOut there
+        # this avoids code duplication
+        self._insertSegment(index=index, type="line",
+                            points=[anchor], smooth=False)
+        bPoints = self.bPoints
+        index += 1
+        if index >= len(bPoints):
+            # its an append instead of an insert
+            # so take the last bPoint
+            index = -1
+        bPoint = bPoints[index]
+        bPoint.bcpIn = bcpIn
+        bPoint.bcpOut = bcpOut
+        bPoint.type = type
 
     def removeBPoint(self, bPoint):
         """
@@ -905,19 +861,41 @@ class BaseContour(
                 return i
         raise FontPartsError("The point could not be found.")
 
-    def appendPoint(self, position, type="line", smooth=False,
-                    name=None, identifier=None):
+    def appendPoint(self, position=None, type="line", smooth=False, name=None, identifier=None, point=None):
         """
         Append a point to the contour.
         """
-        self.insertPoint(len(self.points), position=position, type=type,
-                         smooth=smooth, name=name, identifier=identifier)
+        if point is not None:
+            if position is None:
+                position = point.position
+            type = point.type
+            smooth = point.smooth
+            if name is None:
+                name = point.name
+            if identifier is not None:
+                identifier = point.identifier
+        self.insertPoint(
+            len(self.points),
+            position=position,
+            type=type,
+            smooth=smooth,
+            name=name,
+            identifier=identifier
+        )
 
-    def insertPoint(self, index, position, type="line", smooth=False,
-                    name=None, identifier=None):
+    def insertPoint(self, index, position=None, type="line", smooth=False, name=None, identifier=None, point=None):
         """
         Insert a point into the contour.
         """
+        if point is not None:
+            if position is None:
+                position = point.position
+            type = point.type
+            smooth = point.smooth
+            if name is None:
+                name = point.name
+            if identifier is not None:
+                identifier = point.identifier
         index = normalizers.normalizeIndex(index)
         position = normalizers.normalizeCoordinateTuple(position)
         type = normalizers.normalizePointType(type)
@@ -926,8 +904,14 @@ class BaseContour(
             name = normalizers.normalizePointName(name)
         if identifier is not None:
             identifier = normalizers.normalizeIdentifier(identifier)
-        self._insertPoint(index, position=position, type=type, smooth=smooth,
-                          name=name, identifier=identifier)
+        self._insertPoint(
+            index,
+            position=position,
+            type=type,
+            smooth=smooth,
+            name=name,
+            identifier=identifier
+        )
 
     def _insertPoint(self, index, position, type="line",
                      smooth=False, name=None, identifier=None, **kwargs):

@@ -22,7 +22,8 @@ class BaseSegment(
                   ):
 
     def _setPoints(self, points):
-        assert not hasattr(self, "_points")
+        if hasattr(self, "_points"):
+            raise AssertionError("segment has points")
         self._points = points
 
     def _reprContents(self):
@@ -54,7 +55,8 @@ class BaseSegment(
         return self._contour()
 
     def _set_contour(self, contour):
-        assert self._contour is None
+        if self._contour is not None:
+            raise AssertionError("contour for segment already set")
         if contour is not None:
             contour = reference(contour)
         self._contour = contour

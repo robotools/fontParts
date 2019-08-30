@@ -1,5 +1,4 @@
 import defcon
-from fontTools.misc.py23 import basestring
 from fontParts.base import BaseFont
 from fontParts.fontshell.base import RBaseObject
 from fontParts.fontshell.info import RInfo
@@ -29,7 +28,7 @@ class RFont(RBaseObject, BaseFont):
     # Initialize
 
     def _init(self, pathOrObject=None, showInterface=True, **kwargs):
-        if isinstance(pathOrObject, basestring):
+        if isinstance(pathOrObject, str):
             font = self.wrapClass(pathOrObject)
         elif pathOrObject is None:
             font = self.wrapClass()
@@ -45,8 +44,8 @@ class RFont(RBaseObject, BaseFont):
     # save
 
     def _save(self, path=None, showProgress=False,
-              formatVersion=None, **kwargs):
-        self.naked().save(path=path, formatVersion=formatVersion)
+              formatVersion=None, fileStructure=None, **kwargs):
+        self.naked().save(path=path, formatVersion=formatVersion, structure=fileStructure)
 
     # close
 
@@ -144,13 +143,14 @@ class RFont(RBaseObject, BaseFont):
         guideline = self.naked().guidelines[index]
         return self.guidelineClass(guideline)
 
-    def _appendGuideline(self, position, angle,
-                         name=None, color=None, **kwargs):
+    def _appendGuideline(self, position, angle, name=None, color=None, identifier=None, **kwargs):
         guideline = self.guidelineClass().naked()
         guideline.x = position[0]
         guideline.y = position[1]
+        guideline.angle = angle
         guideline.name = name
         guideline.color = color
+        guideline.identifier = identifier
         self.naked().appendGuideline(guideline)
         return self.guidelineClass(guideline)
 

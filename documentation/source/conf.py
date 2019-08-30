@@ -97,7 +97,7 @@ source_suffix = '.rst'
 #source_encoding = 'utf-8-sig'
 
 # The master toctree document.
-master_doc = 'index'
+master_doc = 'contents' # was 'index'
 
 # General information about the project.
 project = u'FontParts'
@@ -162,7 +162,7 @@ todo_include_todos = True
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'sphinx_rtd_theme'
+html_theme = 'fontPartsTheme'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -170,7 +170,8 @@ html_theme = 'sphinx_rtd_theme'
 #html_theme_options = {}
 
 # Add any paths that contain custom themes here, relative to this directory.
-#html_theme_path = []
+sys.path.append(os.path.abspath('_themes'))
+html_theme_path = ['_themes']
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
@@ -421,3 +422,19 @@ class AutosummaryMethodList(Autosummary):
 
 def setup(app):
     app.add_directive('autosummarymethodlist', AutosummaryMethodList)
+
+
+from pygments.style import Style
+from pygments.token import Keyword, Name, Comment, String, Error, \
+     Number, Operator, Generic
+
+class YourStyle(Style):
+    default_style = ""
+    styles = {
+        Comment:                'italic #888',
+        Keyword:                'bold #005',
+        Name:                   '#f00',
+        Name.Function:          '#0f0',
+        Name.Class:             'bold #0f0',
+        String:                 'bg:#eee #111'
+    }

@@ -39,7 +39,9 @@ class BaseImage(
         return contents
 
     def __bool__(self):
-        if len(self.data) == 0 or self.data is None:
+        if self.data is None:
+            return False
+        elif len(self.data) == 0:
             return False
         else:
             return True
@@ -62,7 +64,8 @@ class BaseImage(
         return self._glyph()
 
     def _set_glyph(self, glyph):
-        assert self._glyph is None
+        if self._glyph is not None:
+            raise AssertionError("glyph for image already set")
         if glyph is not None:
             glyph = reference(glyph)
         self._glyph = glyph
@@ -302,6 +305,6 @@ class BaseImage(
         Subclasses may override this method.
         """
         x, y = self.offset
-        x = normalizers.normalizeRounding(x)
-        y = normalizers.normalizeRounding(y)
+        x = normalizers.normalizeVisualRounding(x)
+        y = normalizers.normalizeVisualRounding(y)
         self.offset = (x, y)

@@ -1,5 +1,7 @@
-# disable PR comments and status checks
-comment: false
+comment:
+  layout: "diff, files"
+  behavior: default
+  require_changes: true
 coverage:
     status:
         project: off

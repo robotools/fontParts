@@ -51,6 +51,9 @@ class RComponent(RBaseObject, BaseComponent):
         component = self.naked()
         return component.generateIdentifier()
 
+    def _setIdentifier(self, value):
+        self.naked().identifier = value
+
     # -------------
     # Normalization
     # -------------

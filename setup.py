@@ -193,11 +193,11 @@ setup_params = dict(
     version=_get_version(),
     description=("An API for interacting with the parts of fonts "
                  "during the font development process."),
-    author='Just van Rossum, Tal Leming, Erik van Blokland, others',
+    author='Just van Rossum, Tal Leming, Erik van Blokland, Ben Kiel, others',
     author_email='info@robofab.com',
-    maintainer="Just van Rossum, Tal Leming, Erik van Blokland",
+    maintainer="Just van Rossum, Tal Leming, Erik van Blokland, Ben Kiel",
     maintainer_email="info@robofab.com",
-    url='http://github.com/robofab-developers/fontParts',
+    url='http://github.com/robotools/fontParts',
     license="OpenSource, MIT",
     platforms=["Any"],
     long_description=long_description,
@@ -206,10 +206,9 @@ setup_params = dict(
     include_package_data=True,
     setup_requires=wheel + bump2version,
     install_requires=[
-        "fonttools>=3.20.0",
-        "ufoLib>=2.0",
-        "fontMath>=0.4.4",
-        "defcon[pens]>=0.5.1",
+        "FontTools[ufo,lxml,unicode]>=3.32.0",
+        "fontMath>=0.4.8",
+        "defcon[pens]>=0.6.0",
     ],
     cmdclass={
         "release": release,

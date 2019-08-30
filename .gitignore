@@ -10,8 +10,11 @@ __pycache__/
 build/*
 dist/*
 .eggs/
+.vscode
 
 documentation/build/*
+documentation/.sass-cache/*
+documentation/source/_themes/fontPartsTheme/static/.sass-cache/*
 
 doc/*
 .pytest_cache

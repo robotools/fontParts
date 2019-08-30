@@ -1,0 +1,168 @@
+#content
+    vertical-align: top
+    margin-bottom: $padding
+    display: inline-block
+    padding:0 1rem
+
+    @media screen and (max-width: $tablet-portrait)
+        width: 100vw
+        order: -1
+
+    h1 + .section h2:first-of-type
+        padding-top: 0
+
+    p 
+        max-width: $max-text-width
+
+    ul li
+        margin-bottom: 1em
+        max-width: $max-text-width
+        word-wrap: break-word
+        // text-indent: -0.5em
+
+    dl ul li, ul.simple li
+        margin-bottom: 0
+
+    ul li:before
+        content: "–"
+        position: absolute
+        transform: translateX(-1rem)
+
+    .toctree-wrapper
+        ul li
+            margin-top: 0em
+            margin-bottom: 0em
+
+
+dt code, dt span
+    display: inline-block
+    @media screen and (max-width: $tablet-portrait)
+        word-break: break-word
+
+#fp-object-tree
+    @media screen and (min-width: $computer-average)
+        transform: scale(1.05)
+        margin-left: -2.5%
+        margin-right: -2.5%
+
+#pagination
+    display: grid
+    grid-template-columns: 1fr 1fr
+    grid-gap: $padding
+    margin-top: 4*$padding
+    margin-bottom: 6*$padding
+
+    @media screen and (min-width: 1200px)
+        margin-left: -$padding
+        margin-right: -$padding
+
+
+    
+
+    //////// TODO: if only 1 link, make full-width
+
+    @media screen and (max-width: $tablet-portrait)
+        word-break: break-word
+        grid-template-columns: 1fr
+        margin-left: $padding
+        margin-right: $padding
+
+    a
+        display: block
+        background: $offwhite-gray
+        border: $focus-border
+        border-color: $offwhite-gray
+        border-radius: 1em
+        padding: $padding
+        padding-bottom: 2 * $padding
+        transition: $short-transition
+        
+        &:focus
+            outline: none
+            border: $focus-border
+
+        p:after
+            font-family: $monofont
+            display: block
+            color: rgba(0,0,0,0)
+            transform: translateY(0.4em)
+
+        &#prev-link
+            p:last-child:after
+                content: "<<<<"
+        &#next-link
+            p:last-child:after
+                content: ">>>>"
+
+        &:hover
+            border-color: $blue
+
+        &:hover, &:focus
+            background: $blue
+            color: #fff
+
+            p:first-child
+                color: white
+                opacity: 0.5
+
+            p:after
+                color: rgba(0,0,0,0.2)
+                transition: $short-transition
+                
+            
+            &#prev-link
+                p:last-child:after
+                    animation: pulse-left 1s linear infinite
+            
+            &#next-link
+                p:last-child:after
+                    animation: pulse-right 1s linear infinite
+
+    p
+        margin: 0
+        font-family: $sansfont
+
+        &:first-child
+            color: $dark-navy
+            text-transform: uppercase
+            transition: $short-transition
+        
+        &:last-child
+            font-size: 1.5em
+            font-weight: bold
+
+
+
+    &>#next-link
+        text-align: right
+
+@keyframes pulse-right
+    0%
+        content: ">>>>>\0000a0"
+    15%
+        content: ">>>>\0000a0>"
+    30%
+        content: ">>>\0000a0>>"
+    45%
+        content: ">>\0000a0>>>"
+    60%
+        content: ">\0000a0>>>>"
+    75%
+        content: "\0000a0>>>>>"
+    100%
+        content: "\0000a0>>>>>"
+@keyframes pulse-left
+    0%
+        content: "\0000a0<<<<<"
+    15%
+        content: "<\0000a0<<<<"
+    30%
+        content: "<<\0000a0<<<"
+    45%
+        content: "<<<\0000a0<<"
+    60%
+        content: "<<<<\0000a0<"
+    75%
+        content: "<<<<<\0000a0"
+    100%
+        content: "<<<<<\0000a0"

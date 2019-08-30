@@ -1,7 +1,6 @@
 import unittest
 import collections
 from fontParts.base import FontPartsError
-from fontTools.misc.py23 import basestring
 
 
 class TestGuideline(unittest.TestCase):
@@ -11,23 +10,91 @@ class TestGuideline(unittest.TestCase):
         guideline.x = 1
         guideline.y = 2
         guideline.angle = 90
+        guideline.name = "Test Guideline"
         return guideline
 
+    def getGuideline_fontGuideline(self):
+        font, _ = self.objectGenerator("font")
+        guideline = font.appendGuideline((1, 2), 90, "Test Guideline Font")
+        return guideline
+
+    def getGuideline_glyphGuideline(self):
+        font, _ = self.objectGenerator("font")
+        layer = font.newLayer("L")
+        glyph = layer.newGlyph("X")
+        guideline = glyph.appendGuideline((1, 2), 90, "Test Guideline Glyph")
+        return guideline
+
+    # ----
+    # repr
+    # ----
+
+    def test_reprContents(self):
+        guideline = self.getGuideline_generic()
+        value = guideline._reprContents()
+        self.assertIsInstance(value, list)
+        for i in value:
+            self.assertIsInstance(i, str)
+
+    def test_reprContents_noGlyph(self):
+        guideline, _ = self.objectGenerator("guideline")
+        value = guideline._reprContents()
+        self.assertIsInstance(value, list)
+        for i in value:
+            self.assertIsInstance(i, str)
+
+    def test_reprContents_Layer(self):
+        guideline = self.getGuideline_glyphGuideline()
+        value = guideline._reprContents()
+        self.assertIsInstance(value, list)
+        for i in value:
+            self.assertIsInstance(i, str)
+
     # --------
-    # Position
+    # Attributes
     # --------
 
     # x
 
-    def test_x_get(self):
+    def test_x_get_generic(self):
         guideline = self.getGuideline_generic()
         self.assertEqual(
             guideline.x,
             1
         )
 
-    def test_x_set_valid_zero(self):
+    def test_x_get_fontGuideline(self):
+        guideline = self.getGuideline_fontGuideline()
+        self.assertEqual(
+            guideline.x,
+            1
+        )
+
+    def test_x_get_glyphGuideline(self):
+        guideline = self.getGuideline_glyphGuideline()
+        self.assertEqual(
+            guideline.x,
+            1
+        )
+
+    def test_x_set_valid_zero_generic(self):
         guideline = self.getGuideline_generic()
+        guideline.x = 0
+        self.assertEqual(
+            guideline.x,
+            0
+        )
+
+    def test_x_set_valid_zero_fontGuideline(self):
+        guideline = self.getGuideline_fontGuideline()
+        guideline.x = 0
+        self.assertEqual(
+            guideline.x,
+            0
+        )
+
+    def test_x_set_valid_zero_glyphGuideline(self):
+        guideline = self.getGuideline_glyphGuideline()
         guideline.x = 0
         self.assertEqual(
             guideline.x,
@@ -66,6 +133,14 @@ class TestGuideline(unittest.TestCase):
             -1.1
         )
 
+    def test_x_set_valid_None(self):
+        guideline = self.getGuideline_generic()
+        guideline.x = None
+        self.assertEqual(
+            guideline.x,
+            0
+        )
+
     def test_x_set_invalid_string(self):
         guideline = self.getGuideline_generic()
         with self.assertRaises(TypeError):
@@ -73,15 +148,45 @@ class TestGuideline(unittest.TestCase):
 
     # y
 
-    def test_y_get(self):
+    def test_y_get_generic(self):
         guideline = self.getGuideline_generic()
         self.assertEqual(
             guideline.y,
             2
         )
 
-    def test_y_set_valid_zero(self):
+    def test_y_get_fontGuideline(self):
+        guideline = self.getGuideline_fontGuideline()
+        self.assertEqual(
+            guideline.y,
+            2
+        )
+
+    def test_y_get_glyphGuideline(self):
+        guideline = self.getGuideline_glyphGuideline()
+        self.assertEqual(
+            guideline.y,
+            2
+        )
+
+    def test_y_set_valid_zero_generic(self):
         guideline = self.getGuideline_generic()
+        guideline.y = 0
+        self.assertEqual(
+            guideline.y,
+            0
+        )
+
+    def test_y_set_valid_zero_fontGuideline(self):
+        guideline = self.getGuideline_fontGuideline()
+        guideline.y = 0
+        self.assertEqual(
+            guideline.y,
+            0
+        )
+
+    def test_y_set_valid_zero_glyphGuideline(self):
+        guideline = self.getGuideline_glyphGuideline()
         guideline.y = 0
         self.assertEqual(
             guideline.y,
@@ -120,6 +225,14 @@ class TestGuideline(unittest.TestCase):
             -1.1
         )
 
+    def test_y_set_valid_None(self):
+        guideline = self.getGuideline_generic()
+        guideline.y = None
+        self.assertEqual(
+            guideline.y,
+            0
+        )
+
     def test_y_set_invalid_string(self):
         guideline = self.getGuideline_generic()
         with self.assertRaises(TypeError):
@@ -127,15 +240,45 @@ class TestGuideline(unittest.TestCase):
 
     # angle
 
-    def test_angle_get(self):
+    def test_angle_get_generic(self):
         guideline = self.getGuideline_generic()
         self.assertEqual(
             guideline.angle,
             90
         )
 
-    def test_angle_set_valid_zero(self):
+    def test_angle_get_fontGuideline(self):
+        guideline = self.getGuideline_fontGuideline()
+        self.assertEqual(
+            guideline.angle,
+            90
+        )
+
+    def test_angle_get_glyphGuideline(self):
+        guideline = self.getGuideline_glyphGuideline()
+        self.assertEqual(
+            guideline.angle,
+            90
+        )
+
+    def test_angle_set_valid_zero_generic(self):
         guideline = self.getGuideline_generic()
+        guideline.angle = 0
+        self.assertEqual(
+            guideline.angle,
+            0
+        )
+
+    def test_angle_set_valid_zero_fontGuideline(self):
+        guideline = self.getGuideline_fontGuideline()
+        guideline.angle = 0
+        self.assertEqual(
+            guideline.angle,
+            0
+        )
+
+    def test_angle_set_valid_zero_glyphGuideline(self):
+        guideline = self.getGuideline_glyphGuideline()
         guideline.angle = 0
         self.assertEqual(
             guideline.angle,
@@ -185,6 +328,14 @@ class TestGuideline(unittest.TestCase):
     def test_angle_set_valid_negative_edge(self):
         guideline = self.getGuideline_generic()
         guideline.angle = -360
+        self.assertEqual(
+            guideline.angle,
+            0
+        )
+
+    def test_angle_set_valid_None(self):
+        guideline = self.getGuideline_generic()
+        guideline.angle = None
         self.assertEqual(
             guideline.angle,
             0
@@ -245,10 +396,6 @@ class TestGuideline(unittest.TestCase):
             0
         )
 
-    # --------------
-    # Identification
-    # --------------
-
     # index
 
     def getGuideline_index(self):
@@ -258,15 +405,36 @@ class TestGuideline(unittest.TestCase):
         glyph.appendGuideline((0, 0), 90, "guideline 2")
         return glyph
 
-    def test_index(self):
+    def test_get_index_noParent(self):
+        guideline, _ = self.objectGenerator("guideline")
+        self.assertIsNone(guideline.index)
+
+    def test_get_index(self):
         glyph = self.getGuideline_index()
         for i, guideline in enumerate(glyph.guidelines):
             self.assertEqual(guideline.index, i)
 
+    def test_set_index_noParent(self):
+        guideline, _ = self.objectGenerator("guideline")
+        with self.assertRaises(FontPartsError):
+            guideline.index = 1
+
+    def test_set_index_positive(self):
+        glyph = self.getGuideline_index()
+        guideline = glyph.guidelines[0]
+        with self.assertRaises(FontPartsError):
+            guideline.index = 2
+
+    def test_set_index_negative(self):
+        glyph = self.getGuideline_index()
+        guideline = glyph.guidelines[1]
+        with self.assertRaises(FontPartsError):
+            guideline.index = -1
+
     # name
 
     def test_name_get_none(self):
-        guideline = self.getGuideline_generic()
+        guideline, _ = self.objectGenerator("guideline")
         self.assertIsNone(guideline.name)
 
     def test_name_set_valid(self):
@@ -343,12 +511,12 @@ class TestGuideline(unittest.TestCase):
 
     def test_identifier_generated_type(self):
         guideline = self.getGuideline_generic()
-        guideline.generateIdentifier()
-        self.assertIsInstance(guideline.identifier, basestring)
+        guideline.getIdentifier()
+        self.assertIsInstance(guideline.identifier, str)
 
     def test_identifier_consistency(self):
         guideline = self.getGuideline_generic()
-        guideline.generateIdentifier()
+        guideline.getIdentifier()
         # get: twice to test consistency
         self.assertEqual(guideline.identifier, guideline.identifier)
 
@@ -364,9 +532,9 @@ class TestGuideline(unittest.TestCase):
         guideline._setIdentifier(identifier)
         self.assertEqual(guideline.identifier, identifier)
 
-    # --------------
-    # Transformation
-    # --------------
+    # -------
+    # Methods
+    # -------
 
     def getGuideline_copy(self):
         guideline = self.getGuideline_generic()
@@ -598,7 +766,7 @@ class TestGuideline(unittest.TestCase):
     def test_round_at_half(self):
         guideline = self.getGuideline_round()
         guideline.round()
-        self.assertEqual(guideline.y, 2)
+        self.assertEqual(guideline.y, 3)
 
     def test_round_angle(self):
         guideline = self.getGuideline_round()
@@ -646,6 +814,103 @@ class TestGuideline(unittest.TestCase):
         self.assertTrue(
             isinstance(guideline_one, collections.Hashable)
         )
+
+    # -------
+    # Parents
+    # -------
+
+    def test_get_parent_font(self):
+        font, _ = self.objectGenerator("font")
+        layer = font.newLayer("L")
+        glyph = layer.newGlyph("X")
+        guideline = glyph.appendGuideline((0, 0), 90, "Test Guideline")
+        self.assertIsNotNone(guideline.font)
+        self.assertEqual(
+            guideline.font,
+            font
+        )
+
+    def test_get_parent_noFont(self):
+        layer, _ = self.objectGenerator("layer")
+        glyph = layer.newGlyph("X")
+        guideline = glyph.appendGuideline((0, 0), 90, "Test Guideline")
+        self.assertIsNone(guideline.font)
+
+    def test_get_parent_layer(self):
+        layer, _ = self.objectGenerator("layer")
+        glyph = layer.newGlyph("X")
+        guideline = glyph.appendGuideline((0, 0), 90, "Test Guideline")
+        self.assertIsNotNone(guideline.layer)
+        self.assertEqual(
+            guideline.layer,
+            layer
+        )
+
+    def test_get_parent_noLayer(self):
+        glyph, _ = self.objectGenerator("glyph")
+        guideline = glyph.appendGuideline((0, 0), 90, "Test Guideline")
+        self.assertIsNone(guideline.font)
+        self.assertIsNone(guideline.layer)
+
+    def test_get_parent_glyph(self):
+        glyph, _ = self.objectGenerator("glyph")
+        guideline = glyph.appendGuideline((0, 0), 90, "Test Guideline")
+        self.assertIsNotNone(guideline.glyph)
+        self.assertEqual(
+            guideline.glyph,
+            glyph
+        )
+
+    def test_get_parent_noGlyph(self):
+        guideline, _ = self.objectGenerator("guideline")
+        self.assertIsNone(guideline.font)
+        self.assertIsNone(guideline.layer)
+        self.assertIsNone(guideline.glyph)
+
+    def test_set_parent_glyph(self):
+        glyph, _ = self.objectGenerator("glyph")
+        guideline = self.getGuideline_generic()
+        guideline.glyph = glyph
+        self.assertIsNotNone(guideline.glyph)
+        self.assertEqual(
+            guideline.glyph,
+            glyph
+        )
+
+    def test_set_parent_glyph_none(self):
+        guideline, _ = self.objectGenerator("guideline")
+        guideline.glyph = None
+        self.assertIsNone(guideline.glyph)
+
+    def test_set_parent_font_none(self):
+        guideline, _ = self.objectGenerator("guideline")
+        guideline.font = None
+        self.assertIsNone(guideline.glyph)
+
+    def test_set_parent_glyph_exists(self):
+        glyph, _ = self.objectGenerator("glyph")
+        otherGlyph, _ = self.objectGenerator("glyph")
+        guideline = glyph.appendGuideline((0, 0), 90, "Test Guideline")
+        with self.assertRaises(AssertionError):
+            guideline.glyph = otherGlyph
+
+    def test_set_parent_glyph_font_exists(self):
+        guideline = self.getGuideline_fontGuideline()
+        glyph, _ = self.objectGenerator("glyph")
+        with self.assertRaises(AssertionError):
+            guideline.glyph = glyph
+
+    def test_set_parent_font_font_exists(self):
+        guideline = self.getGuideline_fontGuideline()
+        font, _ = self.objectGenerator("font")
+        with self.assertRaises(AssertionError):
+            guideline.font = font
+
+    def test_set_parent_font_glyph_exists(self):
+        guideline = self.getGuideline_glyphGuideline()
+        font, _ = self.objectGenerator("font")
+        with self.assertRaises(AssertionError):
+            guideline.font = font
 
     # --------
     # Equality

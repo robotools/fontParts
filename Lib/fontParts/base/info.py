@@ -5,11 +5,12 @@ from fontParts.base.base import (
     reference
 )
 from fontParts.base import normalizers
+from fontParts.base.errors import FontPartsError
 from fontParts.base.deprecated import DeprecatedInfo, RemovedInfo
 
 
 class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
-    from ufoLib import fontInfoAttributesVersion3
+    from fontTools.ufoLib import fontInfoAttributesVersion3
 
     copyAttributes = set(fontInfoAttributesVersion3)
     copyAttributes.remove("guidelines")
@@ -38,7 +39,8 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
         return self._font()
 
     def _set_font(self, font):
-        assert self._font is None or self._font() == font
+        if self._font is not None and self._font != font:
+            raise AssertionError("font for info already set and is not same as font")
         if font is not None:
             font = reference(font)
         self._font = font
@@ -49,7 +51,7 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
 
     @staticmethod
     def _validateFontInfoAttributeValue(attr, value):
-        from ufoLib import validateFontInfoVersion3ValueForAttribute
+        from fontTools.ufoLib import validateFontInfoVersion3ValueForAttribute
         valid = validateFontInfoVersion3ValueForAttribute(attr, value)
         if not valid:
             raise ValueError("Invalid value %s for attribute '%s'."
@@ -63,7 +65,7 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
     # has
 
     def __hasattr__(self, attr):
-        from ufoLib import fontInfoAttributesVersion3
+        from fontTools.ufoLib import fontInfoAttributesVersion3
         if attr in fontInfoAttributesVersion3:
             return True
         return super(BaseInfo, self).__hasattr__(attr)
@@ -71,7 +73,7 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
     # get
 
     def __getattribute__(self, attr):
-        from ufoLib import fontInfoAttributesVersion3
+        from fontTools.ufoLib import fontInfoAttributesVersion3
         if attr != "guidelines" and attr in fontInfoAttributesVersion3:
             value = self._getAttr(attr)
             if value is not None:
@@ -97,7 +99,7 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
     # set
 
     def __setattr__(self, attr, value):
-        from ufoLib import fontInfoAttributesVersion3
+        from fontTools.ufoLib import fontInfoAttributesVersion3
         if attr != "guidelines" and attr in fontInfoAttributesVersion3:
             if value is not None:
                 value = self._validateFontInfoAttributeValue(attr, value)
@@ -189,6 +191,26 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
     # Interpolation
     # -------------
 
+    def toMathInfo(self, guidelines=True):
+        """
+        Returns the info as an object that follows the
+        `MathGlyph protocol <https://github.com/typesupply/fontMath>`_.
+
+            >>> mg = font.info.toMathInfo()
+        """
+        return self._toMathInfo(guidelines=guidelines)
+
+    def fromMathInfo(self, mathInfo, guidelines=True):
+        """
+        Replaces the contents of this info object with the contents of ``mathInfo``.
+
+            >>> font.fromMathInfo(mg)
+
+        ``mathInfo`` must be an object following the
+        `MathInfo protocol <https://github.com/typesupply/fontMath>`_.
+        """
+        return self._fromMathInfo(mathInfo, guidelines=guidelines)
+
     def _toMathInfo(self, guidelines=True):
         """
         Subclasses may override this method.
@@ -270,6 +292,10 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
         minInfo = minInfo._toMathInfo()
         maxInfo = maxInfo._toMathInfo()
         result = interpolate(minInfo, maxInfo, factor)
+        if result is None and not suppressError:
+            raise FontPartsError(("Info from font '%s' and font '%s' could not be "
+                                  "interpolated.")
+                                 % (minInfo.font.name, maxInfo.font.name))
         if round:
             result = result.round()
         self._fromMathInfo(result)

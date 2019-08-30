@@ -1,34 +1,5 @@
 .. highlight:: python
 
-#########
-FontParts
-#########
-
-FontParts is an *API* for programatically creating and editing parts of fonts during the type design process. It is application independent to allow scripts to be portable across multiple applications. It ***is*** the replacement for `RoboFab <http://robofab.org>`_.
-
-Ready to get started? Here you go…
-
-Designers
-=========
-
-.. toctree::
-   :maxdepth: 3
-
-   gettingstarted/index
-   objects/index
-
-Developers
-==========
-
-.. toctree::
-   :maxdepth: 1
-
-   environments/index
-   development/index
-
-
-Still here? What to know a lot more about the whys of this project? Here goes…
-
 History
 =======
 
@@ -60,7 +31,7 @@ This proved to be incredibly useful and it gave us the idea that a universal, en
       character.leftMargin = character.leftMargin + 10
       character.rightMargin = character.rightMargin + 10
 
-Did you notice that the important parts of the script are completely unchanged? Sure, this is a simlpe two line example, but imagine that you have a suite of tools made of hundreds of thousands of lines of code. *Portable APIs are awesome!!!!!!*
+Did you notice that the important parts of the script are completely unchanged? Sure, this is a simple two line example, but imagine that you have a suite of tools made of hundreds of thousands of lines of code. *Portable APIs are awesome!!!!!!*
 
 This was very stable and worked reliably for over a decade. New font editors came along. New font formats came along. New ideas came along. RoboFab was not built in a way that made it easy to add all of these new things while making the old things keep working. We tried, hard, to make it work, but it wasn't possible. We decided that the way forward was to start over from scratch. That idea became FontParts.
 

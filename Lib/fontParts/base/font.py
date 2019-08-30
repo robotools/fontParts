@@ -1,5 +1,4 @@
 import os
-from fontTools.misc.py23 import basestring
 from fontParts.base.errors import FontPartsError
 from fontParts.base.base import dynamicProperty, InterpolationMixin
 from fontParts.base.layer import _BaseGlyphVendor
@@ -93,9 +92,8 @@ class BaseFont(
             else:
                 layer = self.newLayer(layerName)
             layer.copyData(source.getLayer(layerName))
-        for sourceGuideline in self.guidelines:
-            selfGuideline = self.appendGuideline((0, 0), 0)
-            selfGuideline.copyData(sourceGuideline)
+        for guideline in self.guidelines:
+            self.appendGuideline(guideline)
         super(BaseFont, self).copyData(source)
 
     # ---------------
@@ -159,7 +157,7 @@ class BaseFont(
 
     # save
 
-    def save(self, path=None, showProgress=False, formatVersion=None):
+    def save(self, path=None, showProgress=False, formatVersion=None, fileStructure=None):
         """
         Save the font to **path**.
 
@@ -181,7 +179,11 @@ class BaseFont(
         the original format version of the file should be preserved.
         If there is no original format version it is implied that
         the format version is the latest version for the file
-        type as supported by the environment.
+        type as supported by the environment. **fileStructure** indicates
+        the file structure of the written ufo. The **fileStructure** can
+        either be None, 'zip' or 'package', None will use the existing file
+        strucure or the default one for unsaved font. 'package' is the default
+        file structure and 'zip' will save the font to .ufoz.
 
         .. note::
 
@@ -200,11 +202,13 @@ class BaseFont(
         if formatVersion is not None:
             formatVersion = normalizers.normalizeFileFormatVersion(
                 formatVersion)
+        if fileStructure is not None:
+            fileStructure = normalizers.normalizeFileStructure(fileStructure)
         self._save(path=path, showProgress=showProgress,
-                   formatVersion=formatVersion)
+                   formatVersion=formatVersion, fileStructure=fileStructure)
 
     def _save(self, path=None, showProgress=False,
-              formatVersion=None, **kwargs):
+              formatVersion=None, fileStructure=None, **kwargs):
         """
         This is the environment implementation of
         :meth:`BaseFont.save`. **path** will be a
@@ -307,10 +311,9 @@ class BaseFont(
             >>> font.generate("otfcff")
             >>> font.generate("otfcff", "/path/to/my/font.otf")
 
-        **format** defines the file format to output. These are the
-        standard format identifiers:
+        **format** defines the file format to output.
+        Standard format identifiers can be found in :attr:`BaseFont.generateFormatToExtension`:
 
-        %s
 
         Environments are not required to support all of these
         and environments may define their own format types.
@@ -333,14 +336,14 @@ class BaseFont(
         import warnings
         if format is None:
             raise ValueError("The format must be defined when generating.")
-        elif not isinstance(format, basestring):
+        elif not isinstance(format, str):
             raise TypeError("The format must be defined as a string.")
         env = {}
         for key, value in environmentOptions.items():
             valid = self._isValidGenerateEnvironmentOption(key)
             if not valid:
                 warnings.warn("The %s argument is not supported "
-                        "in this environment." % key, UserWarning)
+                              "in this environment." % key, UserWarning)
             env[key] = value
         environmentOptions = env
         ext = self.generateFormatToExtension(format, "." + format)
@@ -363,8 +366,6 @@ class BaseFont(
             path=path,
             environmentOptions=environmentOptions
         )
-
-    generate.__doc__ %= generateFormatToExtension.__doc__
 
     @staticmethod
     def _isValidGenerateEnvironmentOption(name):
@@ -484,6 +485,55 @@ class BaseFont(
         Subclasses must override this method.
         """
         self.raiseNotImplementedError()
+
+    def getFlatKerning(self):
+        """
+        Get the font's kerning as a flat dictionary.
+        """
+        return self._getFlatKerning()
+
+    def _getFlatKerning(self):
+        """
+        This is the environment implementation of
+        :meth:`BaseFont.getFlatKerning`.
+
+        Subclasses may override this method.
+        """
+        kernOrder = {
+            (True, True): 0,  # group group
+            (True, False): 1,  # group glyph
+            (False, True): 2,  # glyph group
+            (False, False): 3,  # glyph glyph
+        }
+
+        def kerningSortKeyFunc(pair):
+            g1, g2 = pair
+            g1grp = g1.startswith("public.kern1.")
+            g2grp = g2.startswith("public.kern2.")
+            return (kernOrder[g1grp, g2grp], pair)
+
+        flatKerning = dict()
+        kerning = self.kerning
+        groups = self.groups
+
+        for pair in sorted(self.kerning.keys(), key=kerningSortKeyFunc):
+            kern = kerning[pair]
+            (left, right) = pair
+            if left.startswith("public.kern1."):
+                left = groups.get(left, [])
+            else:
+                left = [left]
+
+            if right.startswith("public.kern2."):
+                right = groups.get(right, [])
+            else:
+                right = [right]
+
+            for r in right:
+                for l in left:
+                    flatKerning[(l, r)] = kern
+
+        return flatKerning
 
     # features
 
@@ -821,15 +871,15 @@ class BaseFont(
 
             >>> layer = font.insertLayer(otherLayer, name="layer 2")
 
-        This does not necessarily insert the layer directly.
-        In many cases, the environment will create a new
-        layer and copy the data from **layer** to the new
-        layer. **name** indicates the name that should be
-        assigned to the layer after insertion. If **name**
-        is not given, the layer's original name must be used.
-        If the layer does not have a name, an error must be raised.
-        The data that will be inserted from **layer** is the
-        same data as documented in :meth:`BaseLayer.copy`.
+        This will not insert the layer directly.
+        Rather, a new layer will be created and the data from
+        **layer** will be copied to to the new layer. **name**
+        indicates the name that should be assigned to the layer
+        after insertion. If **name** is not given, the layer's
+        original name must be used. If the layer does not have
+        a name, an error must be raised. The data that will be
+        inserted from **layer** is the same data as documented
+        in :meth:`BaseLayer.copy`.
         """
         if name is None:
             name = layer.name
@@ -844,12 +894,11 @@ class BaseFont(
         This must return an instance of a :class:`BaseLayer` subclass.
         **layer** will be a layer object with the attributes necessary
         for copying as defined in :meth:`BaseLayer.copy` An environment
-        may choose to not insert **layer** directly, opting to copy
-        the data from **layer** into a new layer instead. **name**
-        will be a :ref:`type-string` representing a glyph layer. It
-        will have been normalized with :func:`normalizers.normalizeLayerName`.
-        **name** will have been tested to make sure that no layer with
-        the same name exists in the font.
+        must not insert **layer** directly. Instead the data from **layer**
+        should be copied to a new layer. **name** will be a :ref:`type-string`
+        representing a glyph layer. It will have been normalized with
+        :func:`normalizers.normalizeLayerName`. **name** will have been
+        tested to make sure that no layer with the same name exists in the font.
 
         Subclasses may override this method.
         """
@@ -1013,6 +1062,30 @@ class BaseFont(
         layer = self.defaultLayer
         layer.removeGlyph(name)
 
+    def __setitem__(self, name, glyph):
+        """
+        Insert **glyph** into the font. ::
+
+            >>> glyph = font["A"] = otherGlyph
+
+        This will not insert the glyph directly. Rather, a
+        new glyph will be created and the data from **glyph**
+        will be copied to the new glyph. **name** indicates
+        the name that should be assigned to the glyph after
+        insertion. The data that will be inserted
+        from **glyph** is the same data as documented in
+        :meth:`BaseGlyph.copy`.
+
+        On a font level **font.glyphOrder** will be preserved
+        if the **name** is already present.
+        """
+        name = normalizers.normalizeGlyphName(name)
+        if name in self:
+            # clear the glyph here if the glyph exists
+            dest = self._getItem(name)
+            dest.clear()
+        return self._insertGlyph(glyph, name=name, clear=False)
+
     # order
 
     glyphOrder = dynamicProperty(
@@ -1092,7 +1165,7 @@ class BaseFont(
         layer.round()
         self.info.round()
         self.kerning.round()
-        for guideline in self.guidelines():
+        for guideline in self.guidelines:
             guideline.round()
 
     def autoUnicodes(self):
@@ -1187,7 +1260,7 @@ class BaseFont(
                 return i
         raise FontPartsError("The guideline could not be found.")
 
-    def appendGuideline(self, position, angle, name=None, color=None):
+    def appendGuideline(self, position=None, angle=None, name=None, color=None, guideline=None):
         """
         Append a new guideline to the font.
 
@@ -1204,17 +1277,39 @@ class BaseFont(
         the guideline. This must be a :ref:`type-color`
         or ``None``. This will return the newly created
         :class:`BaseGuidline` object.
+
+        ``guideline`` may be a :class:`BaseGuideline` object from which
+        attribute values will be copied. If ``position``, ``angle``, ``name``
+        or ``color`` are specified as arguments, those values will be used
+        instead of the values in the given guideline object.
         """
+        identifier = None
+        if guideline is not None:
+            guideline = normalizers.normalizeGuideline(guideline)
+            if position is None:
+                position = guideline.position
+            if angle is None:
+                angle = guideline.angle
+            if name is None:
+                name = guideline.name
+            if color is None:
+                color = guideline.color
+            if guideline.identifier is not None:
+                existing = set([g.identifier for g in self.guidelines if g.identifier is not None])
+                if guideline.identifier not in existing:
+                    identifier = guideline.identifier
         position = normalizers.normalizeCoordinateTuple(position)
         angle = normalizers.normalizeRotationAngle(angle)
         if name is not None:
             name = normalizers.normalizeGuidelineName(name)
         if color is not None:
             color = normalizers.normalizeColor(color)
-        return self._appendGuideline(position, angle, name=name, color=color)
+        identifier = normalizers.normalizeIdentifier(identifier)
+        guideline = self._appendGuideline(position, angle, name=name, color=color, identifier=identifier)
+        guideline.font = self
+        return guideline
 
-    def _appendGuideline(self, position, angle, name=None,
-                         color=None, **kwargs):
+    def _appendGuideline(self, position, angle, name=None, color=None, identifier=None, **kwargs):
         """
         This is the environment implementation of
         :meth:`BaseFont.appendGuideline`. **position**
@@ -1332,6 +1427,8 @@ class BaseFont(
             dstLayer = self.newLayer(layerName)
             dstLayer.interpolate(factor, minLayer, maxLayer,
                                  round=round, suppressError=suppressError)
+        if self.layerOrder:
+            self.defaultLayer = self.getLayer(self.layerOrder[0])
         # kerning and groups
         self.kerning.interpolate(factor, minFont.kerning, maxFont.kerning,
                                  round=round, suppressError=suppressError)

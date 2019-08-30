@@ -44,7 +44,7 @@ These will be covered in detail below. In general follow these guidelines when d
 
 #. Keep the test focused on what is relevant to what is being tested. Don't test file saving within an attribute test in a sub-sub-sub-sub object.
 #. Make the tests as atomic as possible. Don't modify lots of parts of an object during a single test. That makes the tests very hard to debug.
-#. Keep the code clear and concise so that it is easy to see what is being tested. Add documentation to clarify anything that is ambiguious. Try to imagine someone trying to debug a failure of this test five years from now. Will they be able to tell what is going on in the code?
+#. Keep the code clear and concise so that it is easy to see what is being tested. Add documentation to clarify anything that is ambiguous. Try to imagine someone trying to debug a failure of this test five years from now. Will they be able to tell what is going on in the code?
 #. If testing an edge case, make notes defining where this situation is happening, why it is important and so on. Edge case tests often are hyper-specific to one version of one environment and thus have a limited lifespan. This needs to be made clear for future reference.
 #. Test valid and invalid input. The base implementation's normalizers define what is valid and invalid. Use this as a reference.
 #. Only test one thing per test case. Tests are **not** a place to avoid repeated code, it's much easier to debug an error in a test when that test is only doing one thing.

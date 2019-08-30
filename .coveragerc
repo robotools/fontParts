@@ -9,6 +9,7 @@ source = fontParts
 omit =
     */__init__.py
     */test/*
+    */test.py
 
 
 [paths]

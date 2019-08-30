@@ -29,7 +29,8 @@ class BaseBPoint(
         return contents
 
     def _setPoint(self, point):
-        assert not hasattr(self, "_point")
+        if hasattr(self, "_point"):
+            raise AssertionError("point for bPoint already set")
         self._point = point
 
     def __eq__(self, other):
@@ -102,7 +103,8 @@ class BaseBPoint(
         return self._contour()
 
     def _set_contour(self, contour):
-        assert self._contour is None
+        if self._contour is not None:
+            raise AssertionError("contour for bPoint already set")
         if contour is not None:
             contour = reference(contour)
         self._contour = contour
@@ -294,13 +296,22 @@ class BaseBPoint(
         """
         point = self._point
         typ = point.type
-        if typ == "curve" and point.smooth:
-            bType = "curve"
+        bType = None
+        if point.smooth:
+            if typ == "curve":
+                bType = "curve"
+            elif typ == "line" or typ == "move":
+                nextSegment = self._nextSegment
+                if nextSegment is not None and nextSegment.type == "curve":
+                    bType = "curve"
+                else:
+                    bType = "corner"
         elif typ in ("move", "line", "curve"):
             bType = "corner"
-        else:
+
+        if bType is None:
             raise FontPartsError("A %s point can not be converted to a bPoint."
-                                 % typ)
+                                         % typ)
         return bType
 
     def _set_type(self, value):
@@ -376,14 +387,14 @@ class BaseBPoint(
         Round coordinates.
         """
         x, y = self.anchor
-        self.anchor = (normalizers.normalizeRounding(x),
-                       normalizers.normalizeRounding(y))
+        self.anchor = (normalizers.normalizeVisualRounding(x),
+                       normalizers.normalizeVisualRounding(y))
         x, y = self.bcpIn
-        self.bcpIn = (normalizers.normalizeRounding(x),
-                      normalizers.normalizeRounding(y))
+        self.bcpIn = (normalizers.normalizeVisualRounding(x),
+                      normalizers.normalizeVisualRounding(y))
         x, y = self.bcpOut
-        self.bcpOut = (normalizers.normalizeRounding(x),
-                       normalizers.normalizeRounding(y))
+        self.bcpOut = (normalizers.normalizeVisualRounding(x),
+                       normalizers.normalizeVisualRounding(y))
 
 
 def relativeBCPIn(anchor, BCPIn):

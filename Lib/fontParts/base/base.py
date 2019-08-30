@@ -178,7 +178,6 @@ class BaseObject(object):
     # Hash
     # ----
 
-
     def __hash__(self):
         """
         Allow subclasses to be used in hashable collections.
@@ -344,7 +343,10 @@ class BaseDict(BaseObject):
     def __getitem__(self, key):
         if self.keyNormalizer is not None:
             key = self.keyNormalizer.__func__(key)
-        return self._getItem(key)
+        value = self._getItem(key)
+        if self.valueNormalizer is not None:
+            value = self.valueNormalizer.__func__(value)
+        return value
 
     def _getItem(self, key):
         """
@@ -357,7 +359,10 @@ class BaseDict(BaseObject):
             key = self.keyNormalizer.__func__(key)
         if default is not None and self.valueNormalizer is not None:
             default = self.valueNormalizer.__func__(default)
-        return self._get(key, default=default)
+        value = self._get(key, default=default)
+        if value is not default and self.valueNormalizer is not None:
+            value = self.valueNormalizer.__func__(value)
+        return value
 
     def _get(self, key, default=None):
         """
@@ -383,7 +388,10 @@ class BaseDict(BaseObject):
             key = self.keyNormalizer.__func__(key)
         if default is not None and self.valueNormalizer is not None:
             default = self.valueNormalizer.__func__(default)
-        return self._pop(key, default=default)
+        value = self._pop(key, default=default)
+        if self.valueNormalizer is not None:
+            value = self.valueNormalizer.__func__(value)
+        return value
 
     def _pop(self, key, default=None):
         """

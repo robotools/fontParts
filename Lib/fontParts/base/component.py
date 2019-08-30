@@ -57,7 +57,8 @@ class BaseComponent(
         return self._glyph()
 
     def _set_glyph(self, glyph):
-        assert self._glyph is None
+        if self._glyph is not None:
+            raise AssertionError("glyph for component already set")
         if glyph is not None:
             glyph = reference(glyph)
         self._glyph = glyph
@@ -254,7 +255,7 @@ class BaseComponent(
         """
         Subclasses may override this method.
         """
-        from ufoLib.pointPen import PointToSegmentPen
+        from fontTools.ufoLib.pointPen import PointToSegmentPen
         adapter = PointToSegmentPen(pen)
         self.drawPoints(adapter)
 
@@ -305,8 +306,8 @@ class BaseComponent(
         Subclasses may override this method.
         """
         x, y = self.offset
-        x = normalizers.normalizeRounding(x)
-        y = normalizers.normalizeRounding(y)
+        x = normalizers.normalizeVisualRounding(x)
+        y = normalizers.normalizeVisualRounding(y)
         self.offset = (x, y)
 
     def decompose(self):

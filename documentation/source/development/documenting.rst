@@ -24,7 +24,7 @@ Public API
 Most people reading the Public API will be looking for specific information about a specific method, property, etc. The text needs to be brief, easy to understand and quick to get the gist of.
 
     * write as if talking
-    * don't assume that the reader has more than basic Python profeciency
+    * don't assume that the reader has more than basic Python proficiency
     * be detailed, but not overwhelming
     * keep technical jargon to a minimum
     * show examples
@@ -68,7 +68,7 @@ Implementation API
 Developers reading the Implementation API will be looking for detailed information about what they need to do. The text needs to make their work as easy as possible.
 
     * write concisely
-    * assume that the reader has computer science profeciency
+    * assume that the reader has computer science proficiency
     * cover requirements thoroughly
     * explain what can be expected of incoming data
     * explain what is expected of outgoing data

@@ -1,5 +1,4 @@
 import unittest
-from fontTools.misc.py23 import unicode
 from fontParts.base import normalizers
 
 
@@ -19,13 +18,12 @@ class TestNormalizers(unittest.TestCase):
 
     def test_normalizeFileFormatVersion_int(self):
         result = normalizers.normalizeFileFormatVersion(3)
-        self.assertIsInstance(result, float)
-        self.assertEqual(result, 3.0)
+        self.assertIsInstance(result, int)
+        self.assertEqual(result, 3)
 
     def test_normalizeFileFormatVersion_float(self):
-        result = normalizers.normalizeFileFormatVersion(3.0)
-        self.assertIsInstance(result, float)
-        self.assertEqual(result, 3.0)
+        with self.assertRaises(TypeError):
+            normalizers.normalizeFileFormatVersion(3.0)
 
     def test_normalizeFileFormatVersion_invalid(self):
         with self.assertRaises(TypeError):
@@ -38,7 +36,7 @@ class TestNormalizers(unittest.TestCase):
         result = normalizers.normalizeLayerOrder(["A", "B", "C", "D", "E"], font)
         self.assertIsInstance(result, tuple)
         for i in result:
-            self.assertIsInstance(i, unicode)
+            self.assertIsInstance(i, str)
         self.assertEqual(result, (u"A", u"B", u"C", u"D", u"E"))
 
     def test_normalizeLayerOrder_validTuple(self):
@@ -70,7 +68,7 @@ class TestNormalizers(unittest.TestCase):
     def test_normalizeDefaultLayerName_valid(self):
         font = self.getFont_layers()
         result = normalizers.normalizeDefaultLayerName("B", font)
-        self.assertIsInstance(result, unicode)
+        self.assertIsInstance(result, str)
         self.assertEqual(result, u"B")
 
     def test_normalizeDefaultLayerName_notValidLayerName(self):
@@ -89,7 +87,7 @@ class TestNormalizers(unittest.TestCase):
         result = normalizers.normalizeGlyphOrder(["A", "B", "C", "D", "E"])
         self.assertIsInstance(result, tuple)
         for i in result:
-            self.assertIsInstance(i, unicode)
+            self.assertIsInstance(i, str)
         self.assertEqual(result, (u"A", u"B", u"C", u"D", u"E"))
 
     def test_normalizeGlyphOrder_validTuple(self):
@@ -199,7 +197,7 @@ class TestNormalizers(unittest.TestCase):
 
     def test_normalizeGroupKey_valid(self):
         result = normalizers.normalizeGroupKey("A")
-        self.assertIsInstance(result, unicode)
+        self.assertIsInstance(result, str)
         self.assertEqual(result, u"A")
 
     def test_normalizeGroupKey_notString(self):
@@ -241,7 +239,7 @@ class TestNormalizers(unittest.TestCase):
 
     def test_normalizeFeatureText_valid(self):
         result = normalizers.normalizeFeatureText("test")
-        self.assertIsInstance(result, unicode)
+        self.assertIsInstance(result, str)
         self.assertEqual(result, u"test")
 
     def test_normalizeFeatureText_notString(self):
@@ -256,7 +254,7 @@ class TestNormalizers(unittest.TestCase):
 
     def test_normalizeLibKey_valid(self):
         result = normalizers.normalizeLibKey("test")
-        self.assertIsInstance(result, unicode)
+        self.assertIsInstance(result, str)
         self.assertEqual(result, u"test")
 
     def test_normalizeLibKey_notString(self):
@@ -275,7 +273,7 @@ class TestNormalizers(unittest.TestCase):
 
     def test_normalizeLibValue_validString(self):
         result = normalizers.normalizeLibValue("test")
-        self.assertIsInstance(result, unicode)
+        self.assertIsInstance(result, str)
         self.assertEqual(result, u"test")
 
     def test_normalizeLibValue_validInt(self):
@@ -340,7 +338,7 @@ class TestNormalizers(unittest.TestCase):
 
     def test_normalizeLayerName_valid(self):
         result = normalizers.normalizeLayerName("A")
-        self.assertIsInstance(result, unicode)
+        self.assertIsInstance(result, str)
         self.assertEqual(result, u"A")
 
     def test_normalizeLayerName_notString(self):
@@ -372,7 +370,7 @@ class TestNormalizers(unittest.TestCase):
 
     def test_normalizeGlyphName_valid(self):
         result = normalizers.normalizeGlyphName("A")
-        self.assertIsInstance(result, unicode)
+        self.assertIsInstance(result, str)
         self.assertEqual(result, u"A")
 
     def test_normalizeGlyphName_notString(self):
@@ -644,7 +642,7 @@ class TestNormalizers(unittest.TestCase):
 
     def test_normalizePointType_move(self):
         result = normalizers.normalizePointType("move")
-        self.assertIsInstance(result, unicode)
+        self.assertIsInstance(result, str)
         self.assertEqual(result, u"move")
 
     def test_normalizePointType_Move(self):
@@ -657,7 +655,7 @@ class TestNormalizers(unittest.TestCase):
 
     def test_normalizePointType_line(self):
         result = normalizers.normalizePointType("line")
-        self.assertIsInstance(result, unicode)
+        self.assertIsInstance(result, str)
         self.assertEqual(result, u"line")
 
     def test_normalizePointType_Line(self):
@@ -670,7 +668,7 @@ class TestNormalizers(unittest.TestCase):
 
     def test_normalizePointType_offcurve(self):
         result = normalizers.normalizePointType("offcurve")
-        self.assertIsInstance(result, unicode)
+        self.assertIsInstance(result, str)
         self.assertEqual(result, u"offcurve")
 
     def test_normalizePointType_OffCurve(self):
@@ -683,7 +681,7 @@ class TestNormalizers(unittest.TestCase):
 
     def test_normalizePointType_curve(self):
         result = normalizers.normalizePointType("curve")
-        self.assertIsInstance(result, unicode)
+        self.assertIsInstance(result, str)
         self.assertEqual(result, u"curve")
 
     def test_normalizePointType_Curve(self):
@@ -696,7 +694,7 @@ class TestNormalizers(unittest.TestCase):
 
     def test_normalizePointType_qcurve(self):
         result = normalizers.normalizePointType("qcurve")
-        self.assertIsInstance(result, unicode)
+        self.assertIsInstance(result, str)
         self.assertEqual(result, u"qcurve")
 
     def test_normalizePointType_QOffCurve(self):
@@ -719,7 +717,7 @@ class TestNormalizers(unittest.TestCase):
 
     def test_normalizePointName_valid(self):
         result = normalizers.normalizePointName("A")
-        self.assertIsInstance(result, unicode)
+        self.assertIsInstance(result, str)
         self.assertEqual(result, u"A")
 
     def test_normalizePointName_notString(self):
@@ -751,7 +749,7 @@ class TestNormalizers(unittest.TestCase):
 
     def test_normalizeSegmentType_move(self):
         result = normalizers.normalizeSegmentType("move")
-        self.assertIsInstance(result, unicode)
+        self.assertIsInstance(result, str)
         self.assertEqual(result, u"move")
 
     def test_normalizeSegmentType_Move(self):
@@ -764,7 +762,7 @@ class TestNormalizers(unittest.TestCase):
 
     def test_normalizeSegmentType_line(self):
         result = normalizers.normalizeSegmentType("line")
-        self.assertIsInstance(result, unicode)
+        self.assertIsInstance(result, str)
         self.assertEqual(result, u"line")
 
     def test_normalizeSegmentType_Line(self):
@@ -777,7 +775,7 @@ class TestNormalizers(unittest.TestCase):
 
     def test_normalizeSegmentType_curve(self):
         result = normalizers.normalizeSegmentType("curve")
-        self.assertIsInstance(result, unicode)
+        self.assertIsInstance(result, str)
         self.assertEqual(result, u"curve")
 
     def test_normalizeSegmentType_OffCurve(self):
@@ -790,7 +788,7 @@ class TestNormalizers(unittest.TestCase):
 
     def test_normalizeSegmentType_qcurve(self):
         result = normalizers.normalizeSegmentType("qcurve")
-        self.assertIsInstance(result, unicode)
+        self.assertIsInstance(result, str)
         self.assertEqual(result, u"qcurve")
 
     def test_normalizeSegmentType_QOffCurve(self):
@@ -830,7 +828,7 @@ class TestNormalizers(unittest.TestCase):
 
     def test_normalizeBPointType_corner(self):
         result = normalizers.normalizeBPointType("corner")
-        self.assertIsInstance(result, unicode)
+        self.assertIsInstance(result, str)
         self.assertEqual(result, u"corner")
 
     def test_normalizeBPointType_Corner(self):
@@ -843,7 +841,7 @@ class TestNormalizers(unittest.TestCase):
 
     def test_normalizeBPointType_curve(self):
         result = normalizers.normalizeBPointType("curve")
-        self.assertIsInstance(result, unicode)
+        self.assertIsInstance(result, str)
         self.assertEqual(result, u"curve")
 
     def test_normalizeBPointType_OffCurve(self):
@@ -992,7 +990,7 @@ class TestNormalizers(unittest.TestCase):
 
     def test_normalizeAnchorName_valid(self):
         result = normalizers.normalizeAnchorName("A")
-        self.assertIsInstance(result, unicode)
+        self.assertIsInstance(result, str)
         self.assertEqual(result, u"A")
 
     def test_normalizeAnchorName_notString(self):
@@ -1024,7 +1022,7 @@ class TestNormalizers(unittest.TestCase):
 
     def test_normalizeGuidelineName_valid(self):
         result = normalizers.normalizeGuidelineName("A")
-        self.assertIsInstance(result, unicode)
+        self.assertIsInstance(result, str)
         self.assertEqual(result, u"A")
 
     def test_normalizeGuidelineName_notString(self):
@@ -1098,22 +1096,22 @@ class TestNormalizers(unittest.TestCase):
 
     def test_normalizeIdentifier_stringMinimumLength(self):
         result = normalizers.normalizeIdentifier("A")
-        self.assertIsInstance(result, unicode)
+        self.assertIsInstance(result, str)
         self.assertEqual(result, u"A")
 
     def test_normalizeIdentifier_stringMaximumLength(self):
         result = normalizers.normalizeIdentifier("A" * 100)
-        self.assertIsInstance(result, unicode)
+        self.assertIsInstance(result, str)
         self.assertEqual(result, u"A" * 100)
 
     def test_normalizeIdentifier_stringMinimumCharacter(self):
         result = normalizers.normalizeIdentifier(chr(0x20))
-        self.assertIsInstance(result, unicode)
+        self.assertIsInstance(result, str)
         self.assertEqual(result, chr(0x20))
 
     def test_normalizeIdentifier_stringMaximumCharacter(self):
         result = normalizers.normalizeIdentifier(chr(0x7E))
-        self.assertIsInstance(result, unicode)
+        self.assertIsInstance(result, str)
         self.assertEqual(result, chr(0x7E))
 
     def test_normalizeIdentifier_stringTooShort(self):
@@ -1405,12 +1403,12 @@ class TestNormalizers(unittest.TestCase):
 
     def test_normalizeGlyphNote_string(self):
         result = normalizers.normalizeGlyphNote("A")
-        self.assertIsInstance(result, unicode)
+        self.assertIsInstance(result, str)
         self.assertEqual(result, u"A")
 
     def test_normalizeGlyphNote_emptyString(self):
         result = normalizers.normalizeGlyphNote("")
-        self.assertIsInstance(result, unicode)
+        self.assertIsInstance(result, str)
         self.assertEqual(result, u"")
 
     def test_normalizeGlyphNote_notString(self):
@@ -1421,12 +1419,12 @@ class TestNormalizers(unittest.TestCase):
 
     def test_normalizeFilePath_string(self):
         result = normalizers.normalizeFilePath("A")
-        self.assertIsInstance(result, unicode)
+        self.assertIsInstance(result, str)
         self.assertEqual(result, u"A")
 
     def test_normalizeFilePath_emptyString(self):
         result = normalizers.normalizeFilePath("")
-        self.assertIsInstance(result, unicode)
+        self.assertIsInstance(result, str)
         self.assertEqual(result, u"")
 
     def test_normalizeFilePath_notString(self):
@@ -1913,18 +1911,28 @@ class TestNormalizers(unittest.TestCase):
         with self.assertRaises(ValueError):
             normalizers.normalizeTransformationScale((2, 2, 2))
 
-    # normalizeRounding
+    # normalizeVisualRounding
 
-    def test_normalizeRounding_int(self):
-        result = normalizers.normalizeRounding(1)
+    def test_normalizeVisualRounding_int(self):
+        result = normalizers.normalizeVisualRounding(1)
         self.assertIsInstance(result, int)
         self.assertEqual(result, 1)
 
-    def test_normalizeRounding_float(self):
-        result = normalizers.normalizeRounding(1.0)
+    def test_normalizeVisualRounding_float(self):
+        result = normalizers.normalizeVisualRounding(1.0)
         self.assertIsInstance(result, int)
         self.assertEqual(result, 1)
 
-    def test_normalizeRounding_notNumber(self):
+    def test_normalizeVisualRounding_half(self):
+        result = normalizers.normalizeVisualRounding(1.5)
+        self.assertIsInstance(result, int)
+        self.assertEqual(result, 2)
+
+    def test_normalizeVisualRounding_half_even(self):
+        result = normalizers.normalizeVisualRounding(2.5)
+        self.assertIsInstance(result, int)
+        self.assertEqual(result, 3)
+
+    def test_normalizeVisualRounding_notNumber(self):
         with self.assertRaises(TypeError):
-            normalizers.normalizeRounding("1")
+            normalizers.normalizeVisualRounding("1")

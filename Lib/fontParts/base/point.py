@@ -68,7 +68,8 @@ class BasePoint(
         return self._contour()
 
     def _set_contour(self, contour):
-        assert self._contour is None
+        if self._contour is not None:
+            raise AssertionError("contour for point already set")
         if contour is not None:
             contour = reference(contour)
         self._contour = contour
@@ -416,5 +417,5 @@ class BasePoint(
 
         Subclasses may override this method.
         """
-        self.x = normalizers.normalizeRounding(self.x)
-        self.y = normalizers.normalizeRounding(self.y)
+        self.x = normalizers.normalizeVisualRounding(self.x)
+        self.y = normalizers.normalizeVisualRounding(self.y)

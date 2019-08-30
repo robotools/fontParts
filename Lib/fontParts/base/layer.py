@@ -86,7 +86,7 @@ class _BaseGlyphVendor(
         """
         name = normalizers.normalizeGlyphName(name)
         if name not in self:
-            raise ValueError("No glyph named '%s'." % name)
+            raise KeyError("No glyph named '%s'." % name)
         glyph = self._getItem(name)
         self._setLayerInGlyph(glyph)
         return glyph
@@ -106,11 +106,35 @@ class _BaseGlyphVendor(
 
     def __setitem__(self, name, glyph):
         """
-        Set the :class:`BaseGlyph` with name into the layer. ::
+        Insert **glyph** into the layer. ::
 
-            >>> layer["A"] = glyph
+            >>> glyph = layer["A"] = otherGlyph
+
+        This will not insert the glyph directly. Rather, a
+        new glyph will be created and the data from **glyph**
+        will be copied to the new glyph. **name** indicates
+        the name that should be assigned to the glyph after
+        insertion. If **name** is not given, the glyph's original
+        name must be used. If the glyph does not have a name,
+        an error must be raised. The data that will be inserted
+        from **glyph** is the same data as documented in
+        :meth:`BaseGlyph.copy`.
         """
-        self.insertGlyph(glyph, name)
+        name = normalizers.normalizeGlyphName(name)
+        if name in self:
+            del self[name]
+        return self._insertGlyph(glyph, name=name)
+
+    def __delitem__(self, name):
+        """
+        Remove the glyph with name from the layer. ::
+
+            >>> del layer["A"]
+        """
+        name = normalizers.normalizeGlyphName(name)
+        if name not in self:
+            raise KeyError("No glyph named '%s'." % name)
+        self._removeGlyph(name)
 
     def keys(self):
         """
@@ -202,11 +226,10 @@ class _BaseGlyphVendor(
         Remove the glyph with name from the layer. ::
 
             >>> layer.removeGlyph("A")
+
+        This method is deprecated. :meth:`BaseFont.__delitem__` instead.
         """
-        name = normalizers.normalizeGlyphName(name)
-        if name not in self:
-            raise ValueError("No glyph with the name '%s' exists." % name)
-        self._removeGlyph(name)
+        del self[name]
 
     def _removeGlyph(self, name, **kwargs):
         """
@@ -227,32 +250,21 @@ class _BaseGlyphVendor(
 
             >>> glyph = layer.insertGlyph(otherGlyph, name="A")
 
-        This does not necessarily insert the glyph directly.
-        In many cases, the environment will create a new
-        glyph and copy the data from **glyph** to the new
-        glyph. **name** indicates the name that should be
-        assigned to the glyph after insertion. If **name**
-        is not given, the glyph's original name must be used.
-        If the glyph does not have a name, an error must be raised.
-        The data that will be inserted from **glyph** is the
-        same data as documented in :meth:`BaseGlyph.copy`.
+        This method is deprecated. :meth:`BaseFont.__setitem__` instead.
         """
         if name is None:
             name = glyph.name
-        name = normalizers.normalizeGlyphName(name)
-        if name in self:
-            self.removeGlyph(name)
-        return self._insertGlyph(glyph, name=name)
+        self[name] = glyph
 
     def _insertGlyph(self, glyph, name, **kwargs):
         """
         This is the environment implementation of
-        :meth:`BaseLayer.insertGlyph` and :meth:`BaseFont.insertGlyph`.
+        :meth:`BaseLayer.__setitem__` and :meth:`BaseFont.__setitem__`.
         This must return an instance of a :class:`BaseGlyph` subclass.
         **glyph** will be a glyph object with the attributes necessary
         for copying as defined in :meth:`BaseGlyph.copy` An environment
-        may choose to not insert **glyph** directly, opting to copy
-        the data from **glyph** into a new glyph instead. **name**
+        must not insert **glyph** directly. Instead the data from
+        **glyph** should be copied to a new glyph instead. **name**
         will be a :ref:`type-string` representing a glyph name. It
         will have been normalized with :func:`normalizers.normalizeGlyphName`.
         **name** will have been tested to make sure that no glyph with
@@ -260,10 +272,10 @@ class _BaseGlyphVendor(
 
         Subclasses may override this method.
         """
-        if name != glyph.name and glyph.name in self:
+        if glyph.name is None or (name != glyph.name and glyph.name in self):
             glyph = glyph.copy()
             glyph.name = name
-        dest = self.newGlyph(name)
+        dest = self.newGlyph(name, clear=kwargs.get("clear", True))
         dest.copyData(glyph)
         return dest
 
@@ -424,7 +436,8 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
         return self._font()
 
     def _set_font(self, font):
-        assert self._font is None
+        if self._font is not None:
+            raise AssertionError("font for layer already set")
         if font is not None:
             font = reference(font)
         self._font = font

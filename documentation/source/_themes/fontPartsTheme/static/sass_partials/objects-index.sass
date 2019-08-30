@@ -1,0 +1,51 @@
+.genindex-jumpbox
+    position: sticky
+    top: 3.5rem
+    background: $offwhite-gray
+    padding: 0 1rem
+    margin: 1rem -1rem 0
+    border-radius: 1rem
+    color: rgba($light-gray,0.5)
+    z-index: 1
+    min-height: 2.5rem
+    display: flex
+    align-items: center
+    justify-content: space-between
+    flex-wrap: wrap
+
+    @media (max-width: $tablet-landscape)
+        padding: 0 2rem
+        margin: 1rem -2rem 0
+
+    strong
+        color: inherit
+    a
+        font-family: $monofont
+        padding: 0.5em 0.25rem
+        // color: white
+        background: rgba($light-gray,0)
+        transition: .25s ease
+        &:hover
+            color: white
+            background: rgba($light-gray,1)
+
+#content 
+    .genindextable 
+        ul
+            padding-left: 0.75em
+            // &:first-child
+            //     padding-left: 0.5em
+        ul li
+            margin: 0
+            line-height: 1.25
+        ul li:before
+            font-family: $monofont
+            content: '→'
+            color: $light-gray
+
+        ul:not(:first-child) li:before
+            content: '•'
+        
+        a
+            display: inline-block
+            margin-bottom: 0.75em

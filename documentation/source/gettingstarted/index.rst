@@ -1,4 +1,4 @@
-s.. highlight:: python
+.. highlight:: python
 
 ###############
 Getting Started

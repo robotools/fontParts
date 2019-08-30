@@ -1,3 +1,8 @@
+try:
+    from itertools import zip_longest as zip_longest
+except ImportError:
+    from itertools import izip_longest as zip_longest
+import collections
 import os
 from copy import deepcopy
 from fontParts.base.errors import FontPartsError
@@ -73,24 +78,13 @@ class BaseGlyph(BaseObject,
     def copyData(self, source):
         super(BaseGlyph, self).copyData(source)
         for contour in source.contours:
-            contour = contour.copy()
             self.appendContour(contour)
         for component in source.components:
-            c = self.appendComponent(component.baseGlyph)
-            c.transformation = component.transformation
-        for sourceAnchor in source.anchors:
-            self.appendAnchor(
-                sourceAnchor.name,
-                (sourceAnchor.x, sourceAnchor.y),
-                sourceAnchor.color
-            )
-        for sourceGuideline in source.guidelines:
-            self.appendGuideline(
-                (sourceGuideline.x, sourceGuideline.y),
-                sourceGuideline.angle,
-                sourceGuideline.name,
-                sourceGuideline.color
-            )
+            self.appendComponent(component=component)
+        for anchor in source.anchors:
+            self.appendAnchor(anchor=anchor)
+        for guideline in source.guidelines:
+            self.appendGuideline(guideline=guideline)
         sourceImage = source.image
         if sourceImage.data is not None:
             selfImage = self.addImage(data=sourceImage.data)
@@ -358,7 +352,8 @@ class BaseGlyph(BaseObject,
             35
             >>> glyph.leftMargin = 45
 
-        The value will be a :ref:`type-int-float`.
+        The value will be a :ref:`type-int-float`
+        or `None` if the glyph has no outlines.
         """
     )
 
@@ -374,12 +369,13 @@ class BaseGlyph(BaseObject,
     def _get_leftMargin(self):
         """
         This must return an int or float.
+        If the glyph has no outlines, this must return `None`.
 
         Subclasses may override this method.
         """
         bounds = self.bounds
         if bounds is None:
-            return 0
+            return None
         xMin, yMin, xMax, yMax = bounds
         return xMin
 
@@ -402,7 +398,8 @@ class BaseGlyph(BaseObject,
             35
             >>> glyph.rightMargin = 45
 
-        The value will be a :ref:`type-int-float`.
+        The value will be a :ref:`type-int-float`
+        or `None` if the glyph has no outlines.
         """
     )
 
@@ -418,12 +415,13 @@ class BaseGlyph(BaseObject,
     def _get_rightMargin(self):
         """
         This must return an int or float.
+        If the glyph has no outlines, this must return `None`.
 
         Subclasses may override this method.
         """
         bounds = self.bounds
         if bounds is None:
-            return self.width
+            return None
         xMin, yMin, xMax, yMax = bounds
         return self.width - xMax
 
@@ -489,7 +487,8 @@ class BaseGlyph(BaseObject,
             35
             >>> glyph.bottomMargin = 45
 
-        The value will be a :ref:`type-int-float`.
+        The value will be a :ref:`type-int-float`
+        or `None` if the glyph has no outlines.
         """
     )
 
@@ -505,12 +504,13 @@ class BaseGlyph(BaseObject,
     def _get_bottomMargin(self):
         """
         This must return an int or float.
+        If the glyph has no outlines, this must return `None`.
 
         Subclasses may override this method.
         """
         bounds = self.bounds
         if bounds is None:
-            return 0
+            return None
         xMin, yMin, xMax, yMax = bounds
         return yMin
 
@@ -533,7 +533,8 @@ class BaseGlyph(BaseObject,
             35
             >>> glyph.topMargin = 45
 
-        The value will be a :ref:`type-int-float`.
+        The value will be a :ref:`type-int-float`
+        or `None` if the glyph has no outlines.
         """
     )
 
@@ -549,12 +550,13 @@ class BaseGlyph(BaseObject,
     def _get_topMargin(self):
         """
         This must return an int or float.
+        If the glyph has no outlines, this must return `None`.
 
         Subclasses may override this method.
         """
         bounds = self.bounds
         if bounds is None:
-            return self.height
+            return None
         xMin, yMin, xMax, yMax = bounds
         return self.height - yMax
 
@@ -715,24 +717,13 @@ class BaseGlyph(BaseObject,
         if offset != (0, 0):
             other.moveBy(offset)
         for contour in other.contours:
-            contour = contour.copy()
             self.appendContour(contour)
         for component in other.components:
-            c = self.appendComponent(component.baseGlyph)
-            c.transformation = component.transformation
-        for sourceAnchor in other.anchors:
-            self.appendAnchor(
-                sourceAnchor.name,
-                (sourceAnchor.x, sourceAnchor.y),
-                sourceAnchor.color
-            )
-        for sourceGuideline in other.guidelines:
-            self.appendGuideline(
-                (sourceGuideline.x, sourceGuideline.y),
-                sourceGuideline.angle,
-                sourceGuideline.name,
-                sourceGuideline.color
-            )
+            self.appendComponent(component=component)
+        for anchor in other.anchors:
+            self.appendAnchor(anchor=anchor)
+        for guideline in other.guidelines:
+            self.appendGuideline(guideline=guideline)
 
     # Contours
 
@@ -914,6 +905,7 @@ class BaseGlyph(BaseObject,
 
         The behavior of this may vary across environments.
         """
+        self._removeOverlap()
 
     def _removeOverlap(self):
         """
@@ -981,7 +973,7 @@ class BaseGlyph(BaseObject,
                 return i
         raise FontPartsError("The component could not be found.")
 
-    def appendComponent(self, baseGlyph, offset=None, scale=None):
+    def appendComponent(self, baseGlyph=None, offset=None, scale=None, component=None):
         """
         Append a component to this glyph.
 
@@ -1001,11 +993,33 @@ class BaseGlyph(BaseObject,
         the scale will be ``(1.0, 1.0)``.
 
             >>> component = glyph.appendComponent("A", scale=(1.0, 2.0))
+
+        ``component`` may be a :class:`BaseComponent` object from which
+        attribute values will be copied. If ``baseGlyph``, ``offset``
+        or ``scale`` are specified as arguments, those values will be used
+        instead of the values in the given component object.
         """
+        identifier = None
+        sxy = 0
+        syx = 0
+        if component is not None:
+            component = normalizers.normalizeComponent(component)
+            if baseGlyph is None:
+                baseGlyph = component.baseGlyph
+            sx, sxy, syx, sy, ox, oy = component.transformation
+            if offset is None:
+                offset = (ox, oy)
+            if scale is None:
+                scale = (sx, sy)
+            if baseGlyph is None:
+                baseGlyph = component.baseGlyph
+            if component.identifier is not None:
+                existing = set([c.identifier for c in self.components if c.identifier is not None])
+                if component.identifier not in existing:
+                    identifier = component.identifier
         baseGlyph = normalizers.normalizeGlyphName(baseGlyph)
         if self.name == baseGlyph:
-            raise FontPartsError(("A glyph cannot contain a component "
-                                  "referencing itself."))
+            raise FontPartsError(("A glyph cannot contain a component referencing itself."))
         if offset is None:
             offset = (0, 0)
         if scale is None:
@@ -1014,23 +1028,25 @@ class BaseGlyph(BaseObject,
         scale = normalizers.normalizeTransformationScale(scale)
         ox, oy = offset
         sx, sy = scale
-        transformation = (sx, 0, 0, sy, ox, oy)
-        return self._appendComponent(baseGlyph, transformation=transformation)
+        transformation = (sx, sxy, syx, sy, ox, oy)
+        identifier = normalizers.normalizeIdentifier(identifier)
+        return self._appendComponent(baseGlyph, transformation=transformation, identifier=identifier)
 
-    def _appendComponent(self, baseGlyph, transformation=None, **kwargs):
+    def _appendComponent(self, baseGlyph, transformation=None, identifier=None, **kwargs):
         """
         baseGlyph will be a valid glyph name.
         The baseGlyph may or may not be in the layer.
 
         offset will be a valid offset (x, y).
         scale will be a valid scale (x, y).
+        identifier will be a valid, nonconflicting identifier.
 
         This must return the new component.
 
         Subclasses may override this method.
         """
         pointPen = self.getPointPen()
-        pointPen.addComponent(baseGlyph, transformation=transformation)
+        pointPen.addComponent(baseGlyph, transformation=transformation, identifier=identifier)
         return self.components[-1]
 
     def removeComponent(self, component):
@@ -1149,7 +1165,7 @@ class BaseGlyph(BaseObject,
                 return i
         raise FontPartsError("The anchor could not be found.")
 
-    def appendAnchor(self, name, position, color=None):
+    def appendAnchor(self, name=None, position=None, color=None, anchor=None):
         """
         Append an anchor to this glyph.
 
@@ -1165,18 +1181,38 @@ class BaseGlyph(BaseObject,
         or ``None``.
 
             >>> anchor = glyph.appendAnchor("top", (10, 20), color=(1, 0, 0, 1))
+
+        ``anchor`` may be a :class:`BaseAnchor` object from which
+        attribute values will be copied. If ``name``, ``position``
+        or ``color`` are specified as arguments, those values will
+        be used instead of the values in the given anchor object.
         """
+        identifier = None
+        if anchor is not None:
+            anchor = normalizers.normalizeAnchor(anchor)
+            if name is None:
+                name = anchor.name
+            if position is None:
+                position = anchor.position
+            if color is None:
+                color = anchor.color
+            if anchor.identifier is not None:
+                existing = set([a.identifier for a in self.anchors if a.identifier is not None])
+                if anchor.identifier not in existing:
+                    identifier = anchor.identifier
         name = normalizers.normalizeAnchorName(name)
         position = normalizers.normalizeCoordinateTuple(position)
         if color is not None:
             color = normalizers.normalizeColor(color)
-        return self._appendAnchor(name, position=position, color=color)
+        identifier = normalizers.normalizeIdentifier(identifier)
+        return self._appendAnchor(name, position=position, color=color, identifier=identifier)
 
-    def _appendAnchor(self, name, position=None, color=None, **kwargs):
+    def _appendAnchor(self, name, position=None, color=None, identifier=None, **kwargs):
         """
         name will be a valid anchor name.
         position will be a valid position (x, y).
         color will be None or a valid color.
+        identifier will be a valid, nonconflicting identifier.
 
         This must return the new anchor.
 
@@ -1287,7 +1323,7 @@ class BaseGlyph(BaseObject,
                 return i
         raise FontPartsError("The guideline could not be found.")
 
-    def appendGuideline(self, position, angle, name=None, color=None):
+    def appendGuideline(self, position=None, angle=None, name=None, color=None, guideline=None):
         """
         Append a guideline to this glyph.
 
@@ -1308,22 +1344,45 @@ class BaseGlyph(BaseObject,
         It must be a :ref:`type-color` or ``None``.
 
             >>> guideline = glyph.appendGuideline((100, 0), 90, color=(1, 0, 0, 1))
+
+        ``guideline`` may be a :class:`BaseGuideline` object from which
+        attribute values will be copied. If ``position``, ``angle``, ``name``
+        or ``color`` are specified as arguments, those values will be used
+        instead of the values in the given guideline object.
         """
+        identifier = None
+        if guideline is not None:
+            guideline = normalizers.normalizeGuideline(guideline)
+            if position is None:
+                position = guideline.position
+            if angle is None:
+                angle = guideline.angle
+            if name is None:
+                name = guideline.name
+            if color is None:
+                color = guideline.color
+            if guideline.identifier is not None:
+                existing = set([g.identifier for g in self.guidelines if g.identifier is not None])
+                if guideline.identifier not in existing:
+                    identifier = guideline.identifier
         position = normalizers.normalizeCoordinateTuple(position)
         angle = normalizers.normalizeRotationAngle(angle)
         if name is not None:
             name = normalizers.normalizeGuidelineName(name)
         if color is not None:
             color = normalizers.normalizeColor(color)
-        return self._appendGuideline(position, angle, name=name, color=color)
+        identifier = normalizers.normalizeIdentifier(identifier)
+        guideline = self._appendGuideline(position, angle, name=name, color=color, identifier=identifier)
+        guideline.glyph = self
+        return guideline
 
-    def _appendGuideline(self, position, angle, name=None,
-                         color=None, **kwargs):
+    def _appendGuideline(self, position, angle, name=None, color=None, identifier=None, **kwargs):
         """
         position will be a valid position (x, y).
         angle will be a valid angle.
         name will be a valid guideline name or None.
         color will be a valid color or None .
+        identifier will be a valid, nonconflicting identifier.
 
         This must return the new guideline.
 
@@ -1405,8 +1464,8 @@ class BaseGlyph(BaseObject,
             anchor.round()
         for guideline in self.guidelines:
             guideline.round()
-        self.width = normalizers.normalizeRounding(self.width)
-        self.height = normalizers.normalizeRounding(self.height)
+        self.width = normalizers.normalizeVisualRounding(self.width)
+        self.height = normalizers.normalizeVisualRounding(self.height)
 
     def correctDirection(self, trueType=False):
         """
@@ -1769,22 +1828,41 @@ class BaseGlyph(BaseObject,
             reporter.fatal = True
             reporter.componentCountDifference = True
         # component check
-        selfComponentBases = []
-        otherComponentBases = []
-        for source, bases in ((self, selfComponentBases),
-                              (other, otherComponentBases)):
-            for i, component in enumerate(source.components):
-                bases.append((component.baseGlyph, i))
-        components1 = set(selfComponentBases)
-        components2 = set(otherComponentBases)
-        if len(components1.difference(components2)) != 0:
+        component_diff = []
+        selfComponents = [component.baseGlyph for component in glyph1.components]
+        otherComponents = [component.baseGlyph for component in glyph2.components]
+        for index, (left, right) in enumerate(
+            zip_longest(selfComponents, otherComponents)
+        ):
+            if left != right:
+                component_diff.append((index, left, right))
+
+        if component_diff:
             reporter.warning = True
-            reporter.componentsMissingFromGlyph2 = list(
-                components1.difference(components2))
-        if len(components2.difference(components1)) != 0:
-            reporter.warning = True
-            reporter.componentsMissingFromGlyph1 = list(
-                components2.difference(components1))
+            reporter.componentDifferences = component_diff
+            if not reporter.componentCountDifference and set(selfComponents) == set(
+                otherComponents
+            ):
+                reporter.componentOrderDifference = True
+
+            selfComponents_counted_set = collections.Counter(selfComponents)
+            otherComponents_counted_set = collections.Counter(otherComponents)
+            missing_from_glyph1 = (
+                otherComponents_counted_set - selfComponents_counted_set
+            )
+            if missing_from_glyph1:
+                reporter.fatal = True
+                reporter.componentsMissingFromGlyph1 = sorted(
+                    missing_from_glyph1.elements()
+                )
+            missing_from_glyph2 = (
+                selfComponents_counted_set - otherComponents_counted_set
+            )
+            if missing_from_glyph2:
+                reporter.fatal = True
+                reporter.componentsMissingFromGlyph2 = sorted(
+                    missing_from_glyph2.elements()
+                )
         # guideline count
         if len(self.guidelines) != len(glyph2.guidelines):
             reporter.warning = True
@@ -1811,21 +1889,33 @@ class BaseGlyph(BaseObject,
             reporter.warning = True
             reporter.anchorCountDifference = True
         # anchor check
-        selfAnchors = []
-        otherAnchors = []
-        for source, names in ((self, selfAnchors), (other, otherAnchors)):
-            for i, anchor in enumerate(source.anchors):
-                names.append((anchor.name, i))
-        anchors1 = set(selfAnchors)
-        anchors2 = set(otherAnchors)
-        if len(anchors1.difference(anchors2)) != 0:
+        anchor_diff = []
+        selfAnchors = [anchor.name for anchor in glyph1.anchors]
+        otherAnchors = [anchor.name for anchor in glyph2.anchors]
+        for index, (left, right) in enumerate(zip_longest(selfAnchors, otherAnchors)):
+            if left != right:
+                anchor_diff.append((index, left, right))
+
+        if anchor_diff:
             reporter.warning = True
-            reporter.anchorsMissingFromGlyph2 = list(
-                anchors1.difference(anchors2))
-        if len(anchors2.difference(anchors1)) != 0:
-            reporter.warning = True
-            reporter.anchorsMissingFromGlyph1 = list(
-                anchors2.difference(anchors1))
+            reporter.anchorDifferences = anchor_diff
+            if not reporter.anchorCountDifference and set(selfAnchors) == set(
+                otherAnchors
+            ):
+                reporter.anchorOrderDifference = True
+
+            selfAnchors_counted_set = collections.Counter(selfAnchors)
+            otherAnchors_counted_set = collections.Counter(otherAnchors)
+            missing_from_glyph1 = otherAnchors_counted_set - selfAnchors_counted_set
+            if missing_from_glyph1:
+                reporter.anchorsMissingFromGlyph1 = sorted(
+                    missing_from_glyph1.elements()
+                )
+            missing_from_glyph2 = selfAnchors_counted_set - otherAnchors_counted_set
+            if missing_from_glyph2:
+                reporter.anchorsMissingFromGlyph2 = sorted(
+                    missing_from_glyph2.elements()
+                )
 
     # ------------
     # Data Queries
@@ -2219,13 +2309,18 @@ class BaseGlyph(BaseObject,
     # ---
 
     lib = dynamicProperty(
-        "lib",
+        "base_lib",
         """
         The :class:`BaseLib` for the glyph.
 
             >>> lib = glyph.lib
         """
     )
+
+    def _get_base_lib(self):
+        lib = self._get_lib()
+        lib.glyph = self
+        return lib
 
     def _get_lib(self):
         """
@@ -2236,6 +2331,23 @@ class BaseGlyph(BaseObject,
     # ---
     # API
     # ---
+
+    def isEmpty(self):
+        """
+        This will return :ref:`type-bool` indicating if there are contours and/or
+        components in the glyph.
+
+            >>> glyph.isEmpty()
+
+        Note: This method only checks for the presence of contours and components.
+        Other attributes (guidelines, anchors, a lib, etc.) will not affect what
+        this method returns.
+        """
+        if self.contours:
+            return False
+        if self.components:
+            return False
+        return True
 
     def loadFromGLIF(self, glifData):
         """
@@ -2265,7 +2377,7 @@ class BaseGlyph(BaseObject,
         """
         glyphFormatVersion = normalizers.normalizeGlyphFormatVersion(
             glyphFormatVersion)
-        self._dumpToGLIF(glyphFormatVersion)
+        return self._dumpToGLIF(glyphFormatVersion)
 
     def _dumpToGLIF(self, glyphFormatVersion):
         """

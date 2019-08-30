@@ -1,0 +1,71 @@
+#searchbox
+    width: 60vw
+
+#searchbox form
+    font-family: $monofont
+    display: flex
+    height: 1.75rem
+    padding-left: 1.75rem
+    margin-right: 1rem
+    justify-content: flex-end
+
+#searchbox img
+    display: block
+    width: 16px
+    height: 16px
+    position: relative
+    top: 6px
+    left: 24px
+
+#searchbox input[type="text"]
+    border-radius: 0.25rem
+    font-family: $monofont
+    font-size: 1em
+    background: transparent
+    border: #444 1px solid
+    color: white
+    transition: 0.25s ease
+    height: 100%
+    padding-left: 1.75rem
+    width: 60%
+    min-width: 100px
+    max-width: 200px
+
+    &:hover
+        border: $green 1px solid
+
+
+    &:focus
+        outline: none
+        background: #444
+        border: #444 1px solid
+        // border: none // white 1px solid
+        width: 100%
+        max-width: 400px
+
+        + button
+            background: $blue
+            border: $blue 1px solid
+
+#searchbox p
+    display: none
+
+
+.highlighted
+    background: $green-highlight
+    border: $green 1px solid
+    border-radius: $rounded-corner-2
+    font-style: normal
+
+#content #search-results
+    ul
+        padding-left: 0
+
+        li
+            margin-bottom: $padding*2
+
+            &:before
+                content: none
+    a
+        font-family: $sansfont
+        font-size: 1.5rem
