@@ -5,6 +5,7 @@ from fontParts.opentype.contour import OTContour
 from fontParts.opentype.component import OTComponent
 # from fontParts.fontshell.point import RPoint
 import defcon
+from fontTools.pens.areaPen import AreaPen
 import fontTools.ttLib.tables._g_l_y_f
 
 class OTGlyph(RBaseObject, BaseGlyph):
@@ -91,14 +92,14 @@ class OTGlyph(RBaseObject, BaseGlyph):
     # ----
     # Area
     # ----
-    # XXX
     def _get_area(self):
-        return self.naked().area
+        pen = AreaPen()
+        self.naked().draw(pen, self.font.naked()["glyf"])
+        return abs(pen.value)
 
     # ----
     # Pens
     # ----
-    # XXX
 
     def getPen(self):
         from fontTools.pens.pointPen import SegmentToPointPen

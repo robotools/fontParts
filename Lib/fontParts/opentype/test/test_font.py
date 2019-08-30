@@ -88,3 +88,9 @@ class TestOTFont(unittest.TestCase):
 
     tt = TTFont("OS-H51.ttf")
     self.assertEqual(tt["hmtx"]["H"][1], 51)
+
+  def test_area(self):
+    f = OTFont("OpenSans-Regular.ttf")
+    # Use notdef because it consists of a positive box and a negative box.
+    self.assertEqual(f.layers[0][".notdef"].area, 1462*841-633*1254)
+
