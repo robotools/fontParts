@@ -4,6 +4,7 @@ import tempfile
 import os
 import shutil
 from fontParts.opentype.font import OTFont
+from fontTools.ttLib import TTFont
 
 class TestOTFont(unittest.TestCase):
 
@@ -52,3 +53,38 @@ class TestOTFont(unittest.TestCase):
     self.assertEqual(a.components[2].baseGlyph, "dotbelow")
     self.assertEqual(a.components[2].offset, (1257,0))
 
+  def test_write_sidebearings1(self):
+    f = OTFont("OpenSans-Regular.ttf")
+    self.assertEqual(f.layers[0]["H"].leftMargin, 201)
+    self.assertEqual(f.layers[0]["H"].rightMargin, 200)
+
+    f.layers[0]["H"].leftMargin = 51
+    self.assertEqual(f.layers[0]["H"].leftMargin, 51)
+    self.assertEqual(f.layers[0]["H"].rightMargin, 200)
+
+    f.layers[0]["H"].rightMargin = 52
+    self.assertEqual(f.layers[0]["H"].leftMargin, 51)
+    self.assertEqual(f.layers[0]["H"].rightMargin, 52)
+    self.assertEqual(f.layers[0]["H"].width,1213)
+    f.save("OS-H51.ttf")
+
+    tt = TTFont("OS-H51.ttf")
+    self.assertEqual(tt["hmtx"]["H"][1], 51)
+
+  def test_write_sidebearings2(self):
+    f = OTFont("OpenSans-Regular.ttf")
+    self.assertEqual(f.layers[0]["H"].leftMargin, 201)
+    self.assertEqual(f.layers[0]["H"].rightMargin, 200)
+
+    f.layers[0]["H"].rightMargin = 52
+    self.assertEqual(f.layers[0]["H"].leftMargin, 201)
+    self.assertEqual(f.layers[0]["H"].rightMargin, 52)
+
+    f.layers[0]["H"].leftMargin = 51
+    self.assertEqual(f.layers[0]["H"].leftMargin, 51)
+    self.assertEqual(f.layers[0]["H"].rightMargin, 52)
+    self.assertEqual(f.layers[0]["H"].width,1213)
+    f.save("OS-H51.ttf")
+
+    tt = TTFont("OS-H51.ttf")
+    self.assertEqual(tt["hmtx"]["H"][1], 51)

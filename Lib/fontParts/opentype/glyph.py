@@ -60,9 +60,10 @@ class OTGlyph(RBaseObject, BaseGlyph):
     def _set_leftMargin(self, value):
         oldLSB = self.font.naked()["hmtx"][self._name][1]
         delta = value - oldLSB
+        oldWidth = self.width
         self.font.naked()["hmtx"][self._name] = (self.font.naked()["hmtx"][self._name][0], value)
         self.move((delta,0))
-        self.width = self.width + delta
+        self.width = oldWidth + delta
 
     def _get_rightMargin(self):
         return self.width - self.bounds[2]
@@ -152,6 +153,7 @@ class OTGlyph(RBaseObject, BaseGlyph):
         for j in range(0,len(clist)):
             glyph.coordinates[j+startPt] = (clist[j].x,clist[j].y)
             glyph.flags[j+startPt] = int(clist[j].segmentType != "offcurve")
+        glyph.recalcBounds(self.font.naked()["glyf"])
 
     def _removeContour(self, index, **kwargs):
         glyph = self.naked()
