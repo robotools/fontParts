@@ -94,3 +94,10 @@ class TestOTFont(unittest.TestCase):
     # Use notdef because it consists of a positive box and a negative box.
     self.assertEqual(f.layers[0][".notdef"].area, 1462*841-633*1254)
 
+  def test_kern_ttf(self):
+    f = OTFont("OpenSans-Regular.ttf")
+    self.assertEqual(f.kerning[("A","V")],-82)
+
+  def test_kern_otf(self):
+    f = OTFont("OpenSans-Regular.otf")
+    self.assertEqual(f.kerning[("A","V")],-82)

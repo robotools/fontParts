@@ -4,7 +4,8 @@ from fontTools.ttLib import TTFont
 from fontParts.fontshell.base import RBaseObject
 from fontParts.opentype.glyph import OTGlyph
 # from fontParts.opentype.groups import OTGroups
-# from fontParts.opentype.kerning import OTKerning
+from fontParts.opentype.kerning import OTKerning_kernTable
+from fontParts.opentype.kerning import OTKerning_GPOSTable
 # from fontParts.opentype.features import OTFeatures
 # from fontParts.opentype.lib import OTLib
 # from fontParts.opentype.guideline import OTGuideline
@@ -100,7 +101,10 @@ class OTFont(RBaseObject, BaseFont):
     # kerning
 
     def _get_kerning(self):
-        return self.kerningClass(wrap=self.naked().kerning)
+        if "kern" in self.naked():
+            return OTKerning_kernTable(wrap=self.naked()['kern'].getkern(0))
+        else:
+            return OTKerning_GPOSTable(wrap=self.naked())
 
     # features
 
