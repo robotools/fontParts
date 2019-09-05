@@ -17,11 +17,6 @@ class OTGlyph(RBaseObject, BaseGlyph):
         self._wrapped = kwargs["wrap"]
         self._name = kwargs["name"]
 
-    def changed(self, *args, **kwargs):
-        print("Notified of change")
-        print(args)
-        print(kwargs)
-
     # --------------
     # Identification
     # --------------
@@ -40,8 +35,7 @@ class OTGlyph(RBaseObject, BaseGlyph):
         return list(self.font.naked()["cmap"].buildReversed()[self._name])
 
     def _set_unicodes(self, value):
-        # XXX
-        self.naked().unicodes = value
+        self.raiseNotImplementedError()
 
     # -------
     # Metrics
@@ -177,65 +171,41 @@ class OTGlyph(RBaseObject, BaseGlyph):
         return self.componentClass(component)
 
     def _removeComponent(self, index, **kwargs): # XXX
-        glyph = self.naked()
-        component = glyph.components[index]
-        glyph.removeComponent(component)
+        self.raiseNotImplementedError()
 
     # Guidelines
     def _lenGuidelines(self, **kwargs):
         return 0 # len(self.naked().anchors)
 
-    # Anchors
+    # Anchors XXX
 
     def _lenAnchors(self, **kwargs):
         return 0 # len(self.naked().anchors)
 
     def _getAnchor(self, index, **kwargs):
         return None
-        # glyph = self.naked()
-        # anchor = glyph.anchors[index]
-        # return self.anchorClass(anchor)
 
     def _appendAnchor(self, name, position=None, color=None, identifier=None, **kwargs):
-        glyph = self.naked()
-        anchor = self.anchorClass().naked()
-        anchor.name = name
-        anchor.x = position[0]
-        anchor.y = position[1]
-        anchor.color = color
-        anchor.identifier = identifier
-        glyph.appendAnchor(anchor)
-        wrapped = self.anchorClass(anchor)
-        wrapped.glyph = self
-        return wrapped
+        self.raiseNotImplementedError()
 
     def _removeAnchor(self, index, **kwargs):
-        glyph = self.naked()
-        anchor = glyph.anchors[index]
-        glyph.removeAnchor(anchor)
+        self.raiseNotImplementedError()
 
     # ----
     # Note
     # ----
-
-    # Mark
-
-    def _get_markColor(self):
-        value = self.naked().markColor
-        if value is not None:
-            value = tuple(value)
-        return value
-
-    def _set_markColor(self, value):
-        self.naked().markColor = value
-
-    # Note
-
     def _get_note(self):
-        return self.naked().note
+        return None
 
     def _set_note(self, value):
-        self.naked().note = value
+        self.raiseNotImplementedError()
+
+    # Mark
+    def _get_markColor(self):
+        return None
+
+    def _set_markColor(self, value):
+        self.raiseNotImplementedError()
 
     # -----------
     # Sub-Objects
@@ -244,27 +214,6 @@ class OTGlyph(RBaseObject, BaseGlyph):
     # lib
 
     def _get_lib(self):
-        return self.libClass(wrap=self.naked().lib)
-
-    # ---
-    # API
-    # ---
-
-    def _loadFromGLIF(self, glifData):
-        try:
-            readGlyphFromString(
-                aString=glifData,
-                glyphObject=self.naked(),
-                pointPen=self.getPointPen()
-            )
-        except GlifLibError:
-            raise FontPartsError("Not valid glif data")
-
-    def _dumpToGLIF(self, glyphFormatVersion):
-        glyph = self.naked()
-        return writeGlyphToString(
-            glyphName=glyph.name,
-            glyphObject=glyph,
-            drawPointsFunc=glyph.drawPoints,
-            formatVersion=glyphFormatVersion
-        )
+        return None
+    def _get_base_lib(self):
+        return None

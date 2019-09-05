@@ -70,6 +70,7 @@ class TestOTFont(unittest.TestCase):
 
     tt = TTFont("OS-H51.ttf")
     self.assertEqual(tt["hmtx"]["H"][1], 51)
+    os.unlink("OS-H51.ttf")
 
   def test_write_sidebearings2(self):
     f = OTFont("OpenSans-Regular.ttf")
@@ -88,6 +89,7 @@ class TestOTFont(unittest.TestCase):
 
     tt = TTFont("OS-H51.ttf")
     self.assertEqual(tt["hmtx"]["H"][1], 51)
+    os.unlink("OS-H51.ttf")
 
   def test_area(self):
     f = OTFont("OpenSans-Regular.ttf")
@@ -101,3 +103,32 @@ class TestOTFont(unittest.TestCase):
   def test_kern_otf(self):
     f = OTFont("OpenSans-Regular.otf")
     self.assertEqual(f.kerning[("A","V")],-82)
+
+  def test_write_kern_ttf(self):
+    f = OTFont("OpenSans-Regular.ttf")
+    f.kerning[("A","V")] = -100
+    f.save("OS-AV100.ttf")
+
+    f2 = OTFont("OS-AV100.ttf")
+    self.assertEqual(f2.kerning[("A","V")],-100)
+    os.unlink("OS-AV100.ttf")
+
+  def test_info(self):
+    f = OTFont("OpenSans-Regular.ttf")
+    self.assertEqual(f.info.familyName, "Open Sans")
+    self.assertEqual(f.info.styleName, "Regular")
+    # styleMapFamilyName
+    # styleMapStyleName
+    self.assertEqual(f.info.versionMajor, 1)
+    self.assertEqual(f.info.versionMinor, 10)
+    # year
+    self.assertEqual(f.info.copyright, u"Digitized data copyright © 2010-2011, Google Corporation.")
+    self.assertEqual(f.info.trademark, u"Open Sans is a trademark of Google and may be registered in certain jurisdictions.")
+    self.assertEqual(f.info.unitsPerEm,  2048)
+    self.assertEqual(f.info.descender,   -600)
+    self.assertEqual(f.info.xHeight,     1096)
+    self.assertEqual(f.info.capHeight,   1462)
+    self.assertEqual(f.info.ascender,    2189)
+    self.assertEqual(f.info.italicAngle, 0)
+    # note
+

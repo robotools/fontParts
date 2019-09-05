@@ -3,7 +3,7 @@ from fontParts.base import BaseFont
 from fontTools.ttLib import TTFont
 from fontParts.fontshell.base import RBaseObject
 from fontParts.opentype.glyph import OTGlyph
-# from fontParts.opentype.groups import OTGroups
+from fontParts.opentype.info import OTInfo
 from fontParts.opentype.kerning import OTKerning_kernTable
 from fontParts.opentype.kerning import OTKerning_GPOSTable
 # from fontParts.opentype.features import OTFeatures
@@ -46,7 +46,7 @@ class OTLayer(RBaseObject, BaseLayer):
 
 class OTFont(RBaseObject, BaseFont):
     wrapClass = TTFont
-    # infoClass = OTInfo
+    infoClass = OTInfo
     # groupsClass = OTGroups
     # kerningClass = OTKerning
     # featuresClass = OTFeatures
@@ -91,7 +91,7 @@ class OTFont(RBaseObject, BaseFont):
     # info
 
     def _get_info(self):
-        return self.infoClass(wrap=self.naked().info)
+        return self.infoClass(wrap=self.naked())
 
     # groups
 
@@ -109,12 +109,14 @@ class OTFont(RBaseObject, BaseFont):
     # features
 
     def _get_features(self):
-        return self.featuresClass(wrap=self.naked().features)
+        return self.raiseNotImplementedError()
 
     # lib
 
     def _get_lib(self):
-        return self.libClass(wrap=self.naked().lib)
+        return None
+    def _get_base_lib(self):
+        return None
 
     # ------
     # Layers
