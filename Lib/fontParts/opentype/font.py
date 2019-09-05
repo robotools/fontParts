@@ -141,3 +141,9 @@ class OTFont(RBaseObject, BaseFont):
 
     def _set_glyphOrder(self, value):
         self.naked().glyphOrder = value
+
+    def _lenGuidelines(self, **kwargs):
+        return 0
+
+    def _getGuideline(self, index, **kwargs):
+        return None
