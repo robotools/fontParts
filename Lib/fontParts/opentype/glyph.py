@@ -7,9 +7,10 @@ from fontParts.opentype.component import OTComponent
 import defcon
 from fontTools.pens.areaPen import AreaPen
 import fontTools.ttLib.tables._g_l_y_f
+from fontTools.ttLib.ttFont import _TTGlyph
 
 class OTGlyph(RBaseObject, BaseGlyph):
-    wrapClass = fontTools.ttLib.tables._g_l_y_f.Glyph
+    wrapClass = fontTools.ttLib.ttFont._TTGlyph
     contourClass = OTContour
     componentClass = OTComponent
 
@@ -44,7 +45,7 @@ class OTGlyph(RBaseObject, BaseGlyph):
     # horizontal
 
     def _get_width(self):
-        return self.font.naked()["hmtx"][self._name][0]
+        return self.naked().width
 
     def _set_width(self, value):
         self.font.naked()["hmtx"][self._name] = (value, self.font.naked()["hmtx"][self._name][1])
@@ -80,7 +81,10 @@ class OTGlyph(RBaseObject, BaseGlyph):
     # ------
 
     def _get_bounds(self):
-        naked = self.naked()
+        if hasattr(self.naked()._glyph, "calcBounds"): # CFF
+            self._glyphset = self.font.naked().getGlyphSet()
+            return self.naked()._glyph.calcBounds(self._glyphset)
+        naked = self.naked()._glyph
         return (naked.xMin, naked.yMin, naked.xMax, naked.yMax)
 
     # ----
@@ -88,7 +92,7 @@ class OTGlyph(RBaseObject, BaseGlyph):
     # ----
     def _get_area(self):
         pen = AreaPen()
-        self.naked().draw(pen, self.font.naked()["glyf"])
+        self.naked().draw(pen)
         return abs(pen.value)
 
     # ----
@@ -111,7 +115,7 @@ class OTGlyph(RBaseObject, BaseGlyph):
     # Contours
 
     def _contourStartAndEnd(self,index):
-        glyph = self.naked()
+        glyph = self.naked()._glyph # XXX Only TTF
         endPt = glyph.endPtsOfContours[index]
         if index > 0:
             startPt = glyph.endPtsOfContours[index-1]
@@ -120,10 +124,10 @@ class OTGlyph(RBaseObject, BaseGlyph):
         return startPt, endPt
 
     def _lenContours(self, **kwargs):
-        return max(self.naked().numberOfContours,0)
+        return max(self.naked()._glyph.numberOfContours,0)
 
     def _getContour(self, index, **kwargs):
-        glyph = self.naked()
+        glyph = self.naked()._glyph # XXX Only TTF
         startPt, endPt = self._contourStartAndEnd(index)
         contour = []
         for j in range(startPt, endPt+1):
@@ -143,7 +147,7 @@ class OTGlyph(RBaseObject, BaseGlyph):
         clist = contour.naked()
         if len(old.naked()) != len(clist):
             self.raiseNotImplementedError()
-        glyph = self.naked()
+        glyph = self.naked()._glyph # XXX Only TTF
         startPt, endPt = self._contourStartAndEnd(index)
         for j in range(0,len(clist)):
             glyph.coordinates[j+startPt] = (clist[j].x,clist[j].y)
@@ -161,12 +165,12 @@ class OTGlyph(RBaseObject, BaseGlyph):
     # Components
 
     def _lenComponents(self, **kwargs):
-        if hasattr(self.naked(),"components"):
-            return len(self.naked().components)
+        if hasattr(self.naked()._glyph,"components"):
+            return len(self.naked()._glyph.components)
         return 0
 
     def _getComponent(self, index, **kwargs):
-        glyph = self.naked()
+        glyph = self.naked()._glyph
         component = glyph.components[index]
         return self.componentClass(component)
 

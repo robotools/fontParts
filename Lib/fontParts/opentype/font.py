@@ -28,21 +28,20 @@ class OTLayer(RBaseObject, BaseLayer):
     # -----------------
 
     def _getItem(self, name, **kwargs):
-        glyftable = self.naked()["glyf"]
-        glyph = glyftable[name]
+        glyph = self.naked().getGlyphSet()[name]
         return self.glyphClass(wrap=glyph,name=name)
 
     def _keys(self, **kwargs):
-        return self.naked()["glyf"].keys()
+        return self.naked().getGlyphSet().keys()
 
-    def _newGlyph(self, name, **kwargs):
-        layer = self.naked()
-        layer.newGlyph(name)
-        return self[name]
+    # def _newGlyph(self, name, **kwargs):
+    #     layer = self.naked()
+    #     layer.newGlyph(name)
+    #     return self[name]
 
-    def _removeGlyph(self, name, **kwargs):
-        layer = self.naked()
-        del layer[name]
+    # def _removeGlyph(self, name, **kwargs):
+    #     layer = self.naked()
+    #     del layer[name]
 
 class OTFont(RBaseObject, BaseFont):
     wrapClass = TTFont
@@ -138,7 +137,7 @@ class OTFont(RBaseObject, BaseFont):
     # ------
 
     def _get_glyphOrder(self):
-        return self.naked().glyphOrder
+        return self.naked().getGlyphOrder()
 
     def _set_glyphOrder(self, value):
         self.naked().glyphOrder = value
