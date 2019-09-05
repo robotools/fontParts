@@ -366,7 +366,6 @@ class BaseFontList(list):
             >>> fonts.sortBy("magic")
         """
         from types import FunctionType
-        from fontTools.misc.py23 import basestring
         valueGetters = dict(
             familyName=_sortValue_familyName,
             styleName=_sortValue_styleName,
@@ -377,7 +376,7 @@ class BaseFontList(list):
             isProportional=_sortValue_isProportional,
             isMonospace=_sortValue_isMonospace
         )
-        if isinstance(sortOptions, basestring) or isinstance(sortOptions, FunctionType):
+        if isinstance(sortOptions, str) or isinstance(sortOptions, FunctionType):
             sortOptions = [sortOptions]
         if not isinstance(sortOptions, (list, tuple)):
             raise ValueError("sortOptions must a string, list or function.")
@@ -473,6 +472,7 @@ def _sortValue_familyName(font):
         value = ""
     return value
 
+
 def _sortValue_styleName(font):
     """
     Returns font.info.styleName.
@@ -481,6 +481,7 @@ def _sortValue_styleName(font):
     if value is None:
         value = ""
     return value
+
 
 def _sortValue_isRoman(font):
     """
@@ -491,6 +492,7 @@ def _sortValue_isRoman(font):
     if italic == 1:
         return 0
     return 1
+
 
 def _sortValue_isItalic(font):
     """
@@ -505,6 +507,7 @@ def _sortValue_isItalic(font):
         return 0
     return 1
 
+
 def _sortValue_widthValue(font):
     """
     Returns font.info.openTypeOS2WidthClass.
@@ -513,6 +516,7 @@ def _sortValue_widthValue(font):
     if value is None:
         value = -1
     return value
+
 
 def _sortValue_weightValue(font):
     """
@@ -523,6 +527,7 @@ def _sortValue_weightValue(font):
         value = -1
     return value
 
+
 def _sortValue_isProportional(font):
     """
     Returns 0 if the font is proportional.
@@ -532,6 +537,7 @@ def _sortValue_isProportional(font):
     if monospace == 1:
         return 0
     return 1
+
 
 def _sortValue_isMonospace(font):
     """

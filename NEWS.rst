@@ -1,3 +1,22 @@
+0.9.0 (released 2019-08-30)
+---------------------------
+This release only supports Python 3, if you need Python 2 support, use 0.8.9.
+
+- 2019-08-30: Remove Python 2 support.
+- 2019-08-30: Change rounding to always round to the higher number, matching what fontTools does for anything visual.
+
+
+0.8.9 (released 2019-08-25)
+---------------------------
+- 2019-08-25: Simplify `removeOverlap` in fontShell
+- 2019-08-25: Fixup dev-requirements
+
+Note: This will be one of the last releases to support Python2.
+
+0.8.8 (released 2019-08-23)
+---------------------------
+- 2019-08-23: Fix `removeOverlap` and add `removeOverlap` to fontShell.
+- 2019-07-23: Added support for `fileStructure`, for UFOZ.
 - 2019-06-07: Allow first point of a contour to be smooth.
 
 0.8.7 (released 2019-06-04)

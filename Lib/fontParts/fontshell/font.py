@@ -1,5 +1,4 @@
 import defcon
-from fontTools.misc.py23 import basestring
 from fontParts.base import BaseFont
 from fontParts.fontshell.base import RBaseObject
 from fontParts.fontshell.info import RInfo
@@ -29,7 +28,7 @@ class RFont(RBaseObject, BaseFont):
     # Initialize
 
     def _init(self, pathOrObject=None, showInterface=True, **kwargs):
-        if isinstance(pathOrObject, basestring):
+        if isinstance(pathOrObject, str):
             font = self.wrapClass(pathOrObject)
         elif pathOrObject is None:
             font = self.wrapClass()

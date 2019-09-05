@@ -905,6 +905,7 @@ class BaseGlyph(BaseObject,
 
         The behavior of this may vary across environments.
         """
+        self._removeOverlap()
 
     def _removeOverlap(self):
         """
@@ -1463,8 +1464,8 @@ class BaseGlyph(BaseObject,
             anchor.round()
         for guideline in self.guidelines:
             guideline.round()
-        self.width = normalizers.normalizeRounding(self.width)
-        self.height = normalizers.normalizeRounding(self.height)
+        self.width = normalizers.normalizeVisualRounding(self.width)
+        self.height = normalizers.normalizeVisualRounding(self.height)
 
     def correctDirection(self, trueType=False):
         """

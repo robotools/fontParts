@@ -1,6 +1,5 @@
 import unittest
 import collections
-from fontTools.misc.py23 import basestring
 from fontParts.base import FontPartsError
 from .test_image import testImageData
 
@@ -121,7 +120,7 @@ class TestGlyph(unittest.TestCase):
         for value in valid_uni_values:
             glyph = self.get_generic_object("glyph")
             glyph.unicode = value
-            result = int(value, 16) if isinstance(value, basestring) else value
+            result = int(value, 16) if isinstance(value, str) else value
             self.assertEqual(
                 glyph.unicode,
                 result
@@ -1150,6 +1149,12 @@ class TestGlyph(unittest.TestCase):
         glyph.clear()
         glyph.appendComponent("component 1")
         self.assertFalse(glyph.isEmpty())
+
+    def test_removeOverlap(self):
+        glyph = self.getGlyph_generic()
+        self.assertEquals(len(glyph), 2)
+        glyph.removeOverlap()
+        self.assertEquals(len(glyph), 1)
 
 
 def test_generator(test_name, metric, value):

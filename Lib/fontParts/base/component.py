@@ -306,8 +306,8 @@ class BaseComponent(
         Subclasses may override this method.
         """
         x, y = self.offset
-        x = normalizers.normalizeRounding(x)
-        y = normalizers.normalizeRounding(y)
+        x = normalizers.normalizeVisualRounding(x)
+        y = normalizers.normalizeVisualRounding(y)
         self.offset = (x, y)
 
     def decompose(self):

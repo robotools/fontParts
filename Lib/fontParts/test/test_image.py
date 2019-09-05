@@ -1,7 +1,6 @@
 import unittest
 import collections
 from fontParts.base import FontPartsError
-from fontTools.misc.py23 import basestring
 
 testPNGData = """
 89504e470d0a1a0a0000000d4948445200000080000000800806000000c33e61cb0000
@@ -277,7 +276,7 @@ class TestImage(unittest.TestCase):
         color = False
         glyph = False
         for i in value:
-            self.assertIsInstance(i, basestring)
+            self.assertIsInstance(i, str)
             if "color" in i:
                 color = True
             if "in glyph" in i:
@@ -293,7 +292,7 @@ class TestImage(unittest.TestCase):
         color = False
         glyph = False
         for i in value:
-            self.assertIsInstance(i, basestring)
+            self.assertIsInstance(i, str)
             if "color" in i:
                 color = True
             if "in glyph" in i:
@@ -309,7 +308,7 @@ class TestImage(unittest.TestCase):
         color = False
         glyph = False
         for i in value:
-            self.assertIsInstance(i, basestring)
+            self.assertIsInstance(i, str)
             if "color=" in value:
                 color = i
             if "in glyph" in i:
@@ -326,7 +325,7 @@ class TestImage(unittest.TestCase):
         color = False
         glyph = False
         for i in value:
-            self.assertIsInstance(i, basestring)
+            self.assertIsInstance(i, str)
             if "color=" in i:
                 color = True
             if "in glyph" in i:

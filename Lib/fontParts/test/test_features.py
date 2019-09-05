@@ -1,6 +1,5 @@
 import unittest
 import collections
-from fontTools.misc.py23 import basestring
 
 
 class TestFeatures(unittest.TestCase):
@@ -21,7 +20,7 @@ class TestFeatures(unittest.TestCase):
         value = features._reprContents()
         self.assertIsInstance(value, list)
         for i in value:
-            self.assertIsInstance(i, basestring)
+            self.assertIsInstance(i, str)
 
     def test_reprContents_noFont(self):
         features, _ = self.objectGenerator("features")

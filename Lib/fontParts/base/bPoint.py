@@ -381,14 +381,14 @@ class BaseBPoint(
         Round coordinates.
         """
         x, y = self.anchor
-        self.anchor = (normalizers.normalizeRounding(x),
-                       normalizers.normalizeRounding(y))
+        self.anchor = (normalizers.normalizeVisualRounding(x),
+                       normalizers.normalizeVisualRounding(y))
         x, y = self.bcpIn
-        self.bcpIn = (normalizers.normalizeRounding(x),
-                      normalizers.normalizeRounding(y))
+        self.bcpIn = (normalizers.normalizeVisualRounding(x),
+                      normalizers.normalizeVisualRounding(y))
         x, y = self.bcpOut
-        self.bcpOut = (normalizers.normalizeRounding(x),
-                       normalizers.normalizeRounding(y))
+        self.bcpOut = (normalizers.normalizeVisualRounding(x),
+                       normalizers.normalizeVisualRounding(y))
 
 
 def relativeBCPIn(anchor, BCPIn):

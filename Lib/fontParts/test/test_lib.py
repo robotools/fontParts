@@ -23,7 +23,7 @@ class TestLib(unittest.TestCase):
         value = lib._reprContents()
         self.assertIsInstance(value, list)
         for i in value:
-            self.assertIsInstance(i, basestring)
+            self.assertIsInstance(i, str)
 
     # ---
     # len
