@@ -85,25 +85,58 @@ class OTInfo_nameTable(WrappedOTTable, BaseInfo):
         if name_rec:
           return name_rec.toUnicode()
 
+    def set_name_table_id(self, idlist, newstring):
+        name_rec = None
+        for plat_id, enc_id, lang_id in (self.WINDOWS_ENGLISH_IDS, self.MAC_ROMAN_IDS):
+            for name_id in idlist:
+                self.naked().setName(newstring,
+                    nameID=self.NAME_IDS[name_id],
+                    platformID=plat_id,
+                    platEncID=enc_id,
+                    langID=lang_id,
+                )
+
     def _get_copyright(self):
       return self.get_name_table_id(["COPYRIGHT"])
+    def _set_copyright(self,s):
+      return self.set_name_table_id(["COPYRIGHT"],s)
 
     def _get_trademark(self):
       return self.get_name_table_id(["TRADEMARK"])
+    def _set_trademark(self,s):
+      return self.set_name_table_id(["TRADEMARK"],s)
 
     def _get_familyName(self):
       return self.get_name_table_id(["PREFERRED_FAMILY", "LEGACY_FAMILY"])
+    def _set_familyName(self,s):
+      return self.set_name_table_id(["PREFERRED_FAMILY", "LEGACY_FAMILY"],s)
 
     def _get_styleName(self):
       return self.get_name_table_id(["PREFERRED_SUBFAMILY", "LEGACY_SUBFAMILY"])
+    def _set_styleName(self,s):
+      return self.set_name_table_id(["PREFERRED_SUBFAMILY", "LEGACY_SUBFAMILY"],s)
 
     def _get_versionMajor(self):
       v = self.get_name_table_id(["VERSION_STRING"])
-      return int(re.search('^Version (\d+)\.(\d+)', v)[1])
+      if v is None: return 0
+      m = re.search('^Version (\d+)\.(\d+)', v)
+      if m is None: return 0
+      return int(m[1])
+
+    def _set_versionMajor(self,i):
+      newstring = "Version %i.%i" % (i, self.versionMinor)
+      return self.set_name_table_id(["VERSION_STRING"], newstring)
 
     def _get_versionMinor(self):
       v = self.get_name_table_id(["VERSION_STRING"])
-      return int(re.search('^Version (\d+)\.(\d+)', v)[2])
+      if v is None: return 0
+      m = re.search('^Version (\d+)\.(\d+)', v)
+      if m is None: return 0
+      return int(m[2])
+
+    def _set_versionMinor(self,i):
+      newstring = "Version %i.%i" % (self.versionMajor, i)
+      return self.set_name_table_id(["VERSION_STRING"], newstring)
 
 class OTInfo(RBaseObject, BaseInfo):
     wrapClass = TTFont

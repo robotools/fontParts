@@ -113,7 +113,7 @@ class TestOTFont(unittest.TestCase):
     self.assertEqual(f2.kerning[("A","V")],-100)
     os.unlink("OS-AV100.ttf")
 
-  def test_info(self):
+  def test_read_info(self):
     f = OTFont("OpenSans-Regular.ttf")
     self.assertEqual(f.info.familyName, "Open Sans")
     self.assertEqual(f.info.styleName, "Regular")
@@ -131,4 +131,16 @@ class TestOTFont(unittest.TestCase):
     self.assertEqual(f.info.ascender,    2189)
     self.assertEqual(f.info.italicAngle, 0)
     # note
+
+  def test_write_info(self):
+    f = OTFont("OpenSans-Regular.ttf")
+    f.info.versionMinor = 9
+    f.info.versionMajor = 2
+    f.info.familyName = "Renamed Open Sans"
+    f.save("OpenSans-Renamed.ttf")
+
+    g = OTFont("OpenSans-Renamed.ttf")
+    self.assertEqual(f.info.versionMinor, 9)
+    self.assertEqual(f.info.versionMajor, 2)
+    self.assertEqual(f.info.familyName, "Renamed Open Sans")
 
