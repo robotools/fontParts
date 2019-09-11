@@ -8,6 +8,7 @@ import defcon
 from fontTools.pens.areaPen import AreaPen
 import fontTools.ttLib.tables._g_l_y_f
 from fontTools.ttLib.ttFont import _TTGlyph
+from fontTools.ttLib.tables._g_l_y_f import GlyphComponent
 
 class OTGlyph(RBaseObject, BaseGlyph):
     wrapClass = fontTools.ttLib.ttFont._TTGlyph
@@ -176,6 +177,19 @@ class OTGlyph(RBaseObject, BaseGlyph):
 
     def _removeComponent(self, index, **kwargs): # XXX
         self.raiseNotImplementedError()
+
+    def _appendComponent(self, baseGlyph, transformation=None, identifier=None, **kwargs):
+        c = GlyphComponent()
+        c.transformation = transformation
+        c.glyphName = baseGlyph
+        c.x = 0
+        c.y = 0
+        c.flags = 0 # XXX
+        glyph = self.naked()._glyph
+        if hasattr(self.naked()._glyph,"components"):
+            glyph.components.append(c)
+        else:
+            glyph.components = [c]
 
     # Guidelines
     def _lenGuidelines(self, **kwargs):
