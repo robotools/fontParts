@@ -9,6 +9,7 @@ from fontParts.opentype.kerning import OTKerning_GPOSTable
 # from fontParts.opentype.features import OTFeatures
 # from fontParts.opentype.lib import OTLib
 # from fontParts.opentype.guideline import OTGuideline
+from fontTools.ttLib.tables._g_l_y_f import Glyph
 
 from fontParts.base import BaseLayer
 
@@ -147,3 +148,14 @@ class OTFont(RBaseObject, BaseFont):
 
     def _getGuideline(self, index, **kwargs):
         return None
+
+
+    def _newGlyph(self, name, **kwargs):
+        layer = self.naked()
+        layer["hmtx"][name] = (0,0)
+        layer.glyphOrder.append(name)
+        # newId = layer["maxp"].numGlyphs
+        # layer["maxp"].numGlyphs = newId + 1
+        layer["glyf"][name] = Glyph() # XXX Only TTF
+        layer["glyf"][name].numberOfContours = -1 # Only components right now
+        return self[name]

@@ -27,11 +27,6 @@ class OTLayer(RBaseObject, BaseLayer):
     def _keys(self, **kwargs):
         return self.naked().keys()
 
-    def _newGlyph(self, name, **kwargs):
-        layer = self.naked()
-        layer.newGlyph(name)
-        return self[name]
-
     def _removeGlyph(self, name, **kwargs):
         layer = self.naked()
         del layer[name]
