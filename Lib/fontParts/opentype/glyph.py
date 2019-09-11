@@ -176,7 +176,9 @@ class OTGlyph(RBaseObject, BaseGlyph):
         return self.componentClass(component)
 
     def _removeComponent(self, index, **kwargs): # XXX
-        self.raiseNotImplementedError()
+        glyph = self.naked()._glyph
+        if hasattr(self.naked()._glyph,"components"):
+            return glyph.components.pop(index)
 
     def _appendComponent(self, baseGlyph, transformation=None, identifier=None, **kwargs):
         c = GlyphComponent()
