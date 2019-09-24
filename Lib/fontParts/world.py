@@ -402,7 +402,7 @@ class BaseFontList(list):
                 elif hasattr(font.info, valueName):
                     value = getattr(font.info, valueName)
                 else:
-                    raise ValueError("Unknown sort option: %s" % repr(valueGetter))
+                    raise ValueError("Unknown sort option: %s" % repr(valueName))
                 sortable.append(value)
             sortable.append(originalIndex)
             sortable.append(font)
