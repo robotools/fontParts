@@ -1,3 +1,8 @@
+0.9.1 (released 2019-09-28)
+---------------------------
+- 2019-09-28: Change how `glyph.unicode` behaves. Instead of adding to `glyph.unicodes`, on a `set` it sets `glyph.unicodes` to the single value provided (or an empty list if the value was `None`.)
+- 2019-09-23: Fix an error in world.py
+
 0.9.0 (released 2019-08-30)
 ---------------------------
 This release only supports Python 3, if you need Python 2 support, use 0.8.9.
