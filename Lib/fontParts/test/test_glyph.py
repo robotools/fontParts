@@ -132,7 +132,7 @@ class TestGlyph(unittest.TestCase):
         glyph.unicode = 20
         self.assertEqual(
             glyph.unicodes,
-            (20)
+            (20,)
         )
 
     def test_set_unicode_value_none(self):
