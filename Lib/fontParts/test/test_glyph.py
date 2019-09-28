@@ -126,13 +126,22 @@ class TestGlyph(unittest.TestCase):
                 result
             )
 
-    def test_set_unicode_primary_value(self):
+    def test_set_unicode_value(self):
         glyph = self.get_generic_object("glyph")
         glyph.unicodes = (10, 20)
         glyph.unicode = 20
         self.assertEqual(
             glyph.unicodes,
-            (20, 10)
+            (20,)
+        )
+
+    def test_set_unicode_value_none(self):
+        glyph = self.get_generic_object("glyph")
+        glyph.unicodes = (10, 20)
+        glyph.unicode = None
+        self.assertEqual(
+            glyph.unicodes,
+            ()
         )
 
     def test_set_unicode_invalid(self):

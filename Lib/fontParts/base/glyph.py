@@ -238,6 +238,19 @@ class BaseGlyph(BaseObject,
             65
             >>> glyph.unicode = None
 
+        This is equivalent to ``glyph.unicodes[0]``. Setting a
+        ``glyph.unicode`` value will reset ``glyph.unicodes`` to a tuple
+        containing that value or an empty tuple if ``value`` is ``None``.
+
+            >>> glyph.unicodes
+            (65, 67)
+            >>> glyph.unicode = 65
+            >>> glyph.unicodes
+            (65,)
+            >>> glyph.unicode = None
+            >>> glyph.unicodes
+            ()
+
         The returned value will be an :ref:`type-int` or ``None``.
         When setting you may send :ref:`type-int` or :ref:`type-hex`
         values or ``None``.
@@ -276,11 +289,10 @@ class BaseGlyph(BaseObject,
 
         Subclasses may override this method.
         """
-        values = list(self.unicodes)
-        if value in values:
-            values.remove(value)
-        values.insert(0, value)
-        self.unicodes = values
+        if value is None:
+            self.unicodes = []
+        else:
+            self.unicodes = [value]
 
     def autoUnicodes(self):
         """
