@@ -135,6 +135,15 @@ class TestGlyph(unittest.TestCase):
             (20)
         )
 
+    def test_set_unicode_value_none(self):
+        glyph = self.get_generic_object("glyph")
+        glyph.unicodes = (10, 20)
+        glyph.unicode = None
+        self.assertEqual(
+            glyph.unicodes,
+            ()
+        )
+
     def test_set_unicode_invalid(self):
         invalid_uni_values = (
             ('GG', ValueError),
