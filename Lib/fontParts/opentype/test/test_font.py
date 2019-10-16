@@ -144,3 +144,12 @@ class TestOTFont(unittest.TestCase):
     self.assertEqual(f.info.versionMajor, 2)
     self.assertEqual(f.info.familyName, "Renamed Open Sans")
 
+  def test_contours_otf(self):
+    f = OTFont("OpenSans-Regular.otf")
+    a = f.layers[0]["a"]
+    self.assertEqual(len(a.contours), 2)
+    self.assertEqual(len(a.contours[0].points),28)
+    self.assertEqual(a.contours[0].points[0].x, 973)
+    self.assertEqual(a.contours[0].points[0].y, 0)
+    self.assertEqual(a.contours[0].points[-1].x, 850)
+    self.assertEqual(a.contours[0].points[-1].y, 0)
