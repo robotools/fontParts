@@ -142,13 +142,16 @@ class OTGlyph(RBaseObject, BaseGlyph):
             self._contourlist = []
             startPt = (0,0)
             lastPt = (0,0)
+            index = 0
             for c in contours:
                 if c[0] == "moveTo":
                     startPt = c[1][0]
                 elif c[0] == "closePath":
                     if startPt != lastPt:
                         lastcontour.append(defcon.Point(startPt,segmentType = "line"))
-                    self._contourlist.append(lastcontour)
+                    contour = self.contourClass(wrap=lastcontour, index=index)
+                    self._contourlist.append(contour)
+                    index = index + 1
                     lastcontour = []
                 elif c[0] == "curveTo":
                     lastcontour.append(defcon.Point(c[1][0],segmentType = "offcurve"))
@@ -163,7 +166,7 @@ class OTGlyph(RBaseObject, BaseGlyph):
 
     def _getContour_CFF(self, index, **kwargs):
         self._build_CFF_contour_list()
-        return self.contourClass(wrap=self._contourlist[index], index=index)
+        return self._contourlist[index]
 
     def _getContour(self, index, **kwargs):
         if isinstance(self.naked(), _TTGlyphCFF):
@@ -184,12 +187,35 @@ class OTGlyph(RBaseObject, BaseGlyph):
             contour.append(defcon.Point(coords,segmentType = t))
         return self.contourClass(wrap=contour, index=index)
 
+    def _setContour_CFF(self,index,contour):
+        self._build_CFF_contour_list()
+        self._contourlist[index] = contour
+        from fontTools.pens.t2CharStringPen import T2CharStringPen
+        width = 0 # self.width # Really?
+        pen = T2CharStringPen(width, None)
+        # ?
+        for c in self._contourlist:
+            pen.moveTo(c.segments[-1].points[-1])
+            for s in c.segments:
+                if s.type == "line":
+                    pen.lineTo(*s.points)
+                elif s.type == "curve" and len(s.points) == 3:
+                    pen.curveTo(*s.points)
+                elif s.type == "curve" and len(s.points) == 2:
+                    pen.qCurveTo(*s.points)
+            pen.closePath()
+            cs = pen.getCharString()
+            cs.private = self.font.naked()["CFF "].cff.topDictIndex[0].CharStrings[self.name].private
+            self.font.naked()["CFF "].cff.topDictIndex[0].CharStrings[self.name] = cs
+
     def _setContour(self,index,contour):
+        if isinstance(self.naked(), _TTGlyphCFF):
+            return self._setContour_CFF(index,contour)
         old = self._getContour(index)
         clist = contour.naked()
         if len(old.naked()) != len(clist):
             self.raiseNotImplementedError()
-        glyph = self.naked()._glyph # XXX Only TTF
+        glyph = self.naked()._glyph
         startPt, endPt = self._contourStartAndEnd(index)
         for j in range(0,len(clist)):
             glyph.coordinates[j+startPt] = (clist[j].x,clist[j].y)

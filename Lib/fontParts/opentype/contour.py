@@ -11,6 +11,10 @@ class OTPoint(RPoint):
             return
         contour._pointsChanged()
 
+    # This really helps some of the CFF writing code
+    def __iter__(self):
+        return iter((self.x, self.y))
+
 class OTContour(RBaseObject, BaseContour):
     pointClass = OTPoint
     segmentClass = RSegment
