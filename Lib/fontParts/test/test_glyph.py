@@ -395,8 +395,18 @@ class TestGlyph(unittest.TestCase):
     def test_appendContour_offset_valid(self):
         glyph = self.getGlyph_generic()
         contour = self.get_generic_object("contour")
-        glyph.appendContour(contour, (50, 50))
+        contour.insertPoint(0,position=(0,0))
+        contour.insertPoint(1,position=(100,100))
+        contour.insertPoint(2,position=(0,100))
+
+        self.assertEqual(len(glyph), 2)
+        glyph.appendContour(contour, (45, 50))
         self.assertEqual(len(glyph), 3)
+
+        newcontour = glyph[2]
+        self.assertEqual(len(newcontour.points),3)
+        self.assertEqual(newcontour.points[0].x, 45)
+        self.assertEqual(newcontour.points[0].y, 50)
 
     def test_removeContour_valid(self):
         glyph = self.getGlyph_generic()
@@ -806,6 +816,7 @@ class TestGlyph(unittest.TestCase):
             glyph.selectedContours,
             ()
         )
+
 
     # Components
 
