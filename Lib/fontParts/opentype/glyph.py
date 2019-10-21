@@ -230,6 +230,13 @@ class OTGlyph(RBaseObject, BaseGlyph):
             print("C[%i-%i]: %s" % (start,end,s))
             start = end+1
 
+    def _coords_and_flags_for(self,contour):
+        import array
+        clist = contour.naked()
+        coords = [(c.x,c.y) for c in clist]
+        flags = array.array("B",[int(c.segmentType != "offcurve") for c in clist])
+        return coords,flags
+
     def _setContour(self,index,contour):
         if isinstance(self.naked(), _TTGlyphCFF):
             return self._setContour_CFF(index,contour)
@@ -241,9 +248,9 @@ class OTGlyph(RBaseObject, BaseGlyph):
         for ix in range(index, len(glyph.endPtsOfContours)):
             glyph.endPtsOfContours[ix] += adjustment
 
-        import array
-        points = glyph.coordinates[0:oldStartPt] + [(c.x,c.y) for c in clist] + glyph.coordinates[oldEndPt+1:]
-        flags = glyph.flags[0:oldStartPt] + array.array("B",[int(c.segmentType != "offcurve") for c in clist]) + glyph.flags[oldEndPt+1:]
+        coords, flags = self._coords_and_flags_for(contour)
+        points = glyph.coordinates[0:oldStartPt] + coords + glyph.coordinates[oldEndPt+1:]
+        flags = glyph.flags[0:oldStartPt] + flags + glyph.flags[oldEndPt+1:]
         glyph.coordinates = GlyphCoordinates(points)
         glyph.flags = flags
         assert(len(glyph.flags) == len(glyph.coordinates))
@@ -258,10 +265,26 @@ class OTGlyph(RBaseObject, BaseGlyph):
         if isinstance(self.naked(), _TTGlyphCFF):
             return self._removeContour_CFF(index)
         self._setContour(index,self.contourClass(wrap=[], index=index))
+        glyph = self.naked()._glyph
+        glyph.endPtsOfContours.pop(index)
 
     def _correctDirection(self, trueType=False, **kwargs):
         return self.raiseNotImplementedError()
 
+    def _appendContour(self, contour, offset=None, **kwargs):
+        if offset:
+            contour = contour.copy()
+            contour.moveBy(offset)
+
+        if isinstance(self.naked(), _TTGlyphCFF):
+            self._build_CFF_contour_list()
+            self._contourlist.append(None)
+            return self._setContour_CFF(-1,contour)
+        glyph = self.naked()._glyph
+        coords, flags = self._coords_and_flags_for(contour)
+        glyph.flags = glyph.flags + flags
+        glyph.coordinates = GlyphCoordinates(list(glyph.coordinates) + coords)
+        glyph.endPtsOfContours.append(len(glyph.coordinates)-1)
     # Components
 
     def _lenComponents(self, **kwargs):
