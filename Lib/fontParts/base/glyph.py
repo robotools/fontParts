@@ -861,11 +861,13 @@ class BaseGlyph(BaseObject,
 
         Subclasses may override this method.
         """
-        copy = contour.copy()
-        if offset != (0, 0):
-            copy.moveBy(offset)
         pointPen = self.getPointPen()
-        contour.drawPoints(pointPen)
+        if offset != (0, 0):
+            copy = contour.copy()
+            copy.moveBy(offset)
+            copy.drawPoints(pointPen)
+        else:
+            contour.drawPoints(pointPen)
         return self[-1]
 
     def removeContour(self, contour):
