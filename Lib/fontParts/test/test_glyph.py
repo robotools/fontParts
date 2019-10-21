@@ -400,10 +400,10 @@ class TestGlyph(unittest.TestCase):
         contour.insertPoint(2,position=(0,100))
 
         self.assertEqual(len(glyph), 2)
-        glyph.appendContour(contour, (45, 50))
+        newcontour = glyph.appendContour(contour, (45, 50))
         self.assertEqual(len(glyph), 3)
 
-        newcontour = glyph[2]
+        self.assertEqual(newcontour, glyph[-1])
         self.assertEqual(len(newcontour.points),3)
         self.assertEqual(newcontour.points[0].x, 45)
         self.assertEqual(newcontour.points[0].y, 50)
