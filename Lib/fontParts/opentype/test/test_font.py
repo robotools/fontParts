@@ -32,6 +32,11 @@ class TestOTFont(unittest.TestCase):
     f = OTFont("OpenSans-Regular.ttf")
     a = f.layers[0]["a"]
     self.assertEqual(len(a.contours), 2)
+    self.assertEqual(len(a.contours[0].points),26)
+    self.assertEqual(a.contours[0].points[0].x, 850)
+    self.assertEqual(a.contours[0].points[0].y, 0)
+    self.assertEqual(a.contours[0].points[-1].x, 973)
+    self.assertEqual(a.contours[0].points[-1].y, 0)
 
   def test_read_sidebearings(self):
     f = OTFont("OpenSans-Regular.ttf")

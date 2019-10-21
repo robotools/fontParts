@@ -110,9 +110,10 @@ class OTContour(RBaseObject, BaseContour):
         point.name = name
         point = point.naked()
         point.identifier = identifier
-        self.naked().insertPoint(index, point)
+        self.naked().insert(index, point)
+        self._pointsChanged()
 
     def _removePoint(self, index, preserveCurve, **kwargs):
         contour = self.naked()
-        point = contour[index]
-        contour.removePoint(point)
+        contour.pop(index)
+        self._pointsChanged()

@@ -8,7 +8,7 @@ import defcon
 from fontTools.pens.areaPen import AreaPen
 import fontTools.ttLib.tables._g_l_y_f
 from fontTools.ttLib.ttFont import _TTGlyph, _TTGlyphCFF
-from fontTools.ttLib.tables._g_l_y_f import GlyphComponent
+from fontTools.ttLib.tables._g_l_y_f import GlyphComponent,GlyphCoordinates
 from fontTools.pens.recordingPen import RecordingPen
 
 class OTGlyph(RBaseObject, BaseGlyph):
@@ -121,7 +121,7 @@ class OTGlyph(RBaseObject, BaseGlyph):
         glyph = self.naked()._glyph # XXX Only TTF
         endPt = glyph.endPtsOfContours[index]
         if index > 0:
-            startPt = glyph.endPtsOfContours[index-1]
+            startPt = glyph.endPtsOfContours[index-1] + 1
         else:
             startPt = 0
         return startPt, endPt
@@ -190,6 +190,13 @@ class OTGlyph(RBaseObject, BaseGlyph):
     def _setContour_CFF(self,index,contour):
         self._build_CFF_contour_list()
         self._contourlist[index] = contour
+        self._rebuild_CFF_contours()
+
+    def _rebuild_CFF_contours(self):
+        cff = self.font.naked()["CFF "].cff
+        fontname = cff.keys()[0]
+        cffFont = cff[fontname]
+        cffFont.decompileAllCharStrings()
         from fontTools.pens.t2CharStringPen import T2CharStringPen
         width = 0 # self.width # Really?
         pen = T2CharStringPen(width, None)
@@ -205,30 +212,55 @@ class OTGlyph(RBaseObject, BaseGlyph):
                     pen.qCurveTo(*s.points)
             pen.closePath()
             cs = pen.getCharString()
-            cs.private = self.font.naked()["CFF "].cff.topDictIndex[0].CharStrings[self.name].private
+            # cs.private = self.font.naked()["CFF "].cff.topDictIndex[0].CharStrings[self.name].private
+            cs.private = cffFont.Private
             self.font.naked()["CFF "].cff.topDictIndex[0].CharStrings[self.name] = cs
+
+    def _debugContours(self):
+        glyph = self.naked()._glyph
+        start = 0
+        for end in glyph.endPtsOfContours:
+            s = ""
+            for j in range(start,end+1):
+                s = s + str(glyph.coordinates[j])
+                if glyph.flags[j]:
+                    s = s + "..."
+                else:
+                    s = s + "--"
+            print("C[%i-%i]: %s" % (start,end,s))
+            start = end+1
 
     def _setContour(self,index,contour):
         if isinstance(self.naked(), _TTGlyphCFF):
             return self._setContour_CFF(index,contour)
-        old = self._getContour(index)
         clist = contour.naked()
-        if len(old.naked()) != len(clist):
-            self.raiseNotImplementedError()
+        old = self._getContour(index)
+        adjustment = len(clist) - len(old.naked())
         glyph = self.naked()._glyph
-        startPt, endPt = self._contourStartAndEnd(index)
-        for j in range(0,len(clist)):
-            glyph.coordinates[j+startPt] = (clist[j].x,clist[j].y)
-            glyph.flags[j+startPt] = int(clist[j].segmentType != "offcurve")
+        oldStartPt, oldEndPt = self._contourStartAndEnd(index)
+        for ix in range(index, len(glyph.endPtsOfContours)):
+            glyph.endPtsOfContours[ix] += adjustment
+
+        import array
+        points = glyph.coordinates[0:oldStartPt] + [(c.x,c.y) for c in clist] + glyph.coordinates[oldEndPt+1:]
+        flags = glyph.flags[0:oldStartPt] + array.array("B",[int(c.segmentType != "offcurve") for c in clist]) + glyph.flags[oldEndPt+1:]
+        glyph.coordinates = GlyphCoordinates(points)
+        glyph.flags = flags
+        assert(len(glyph.flags) == len(glyph.coordinates))
         glyph.recalcBounds(self.font.naked()["glyf"])
 
+    def _removeContour_CFF(self, index, **kwargs):
+        self._build_CFF_contour_list()
+        self._contourlist.pop(index)
+        self._rebuild_CFF_contours()
+
     def _removeContour(self, index, **kwargs):
-        glyph = self.naked()
-        contour = glyph[index]
-        glyph.removeContour(contour)
+        if isinstance(self.naked(), _TTGlyphCFF):
+            return self._removeContour_CFF(index)
+        self._setContour(index,self.contourClass(wrap=[], index=index))
 
     def _correctDirection(self, trueType=False, **kwargs):
-        self.naked().correctContourDirection(trueType=trueType)
+        return self.raiseNotImplementedError()
 
     # Components
 
