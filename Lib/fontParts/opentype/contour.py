@@ -21,11 +21,15 @@ class OTContour(RBaseObject, BaseContour):
     bPointClass = RBPoint
 
     def _init(self, *args, **kwargs):
+        if not ("wrap" in kwargs):
+            kwargs["wrap"] = []
         self._wrapped = kwargs["wrap"]
-        self._index = kwargs["index"]
+        if "index" in kwargs:
+            self._index = kwargs["index"]
 
     def _pointsChanged(self):
-        self.glyph._setContour(self._index,self)
+        if self.glyph:
+            self.glyph._setContour(self._index,self)
 
     # --------------
     # Identification
