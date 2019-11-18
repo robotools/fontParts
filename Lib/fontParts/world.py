@@ -624,11 +624,25 @@ dispatcher["FontList"] = BaseFontList
 
 try:
     from fontParts import fontshell
-
+    import os
     # OpenFont, RFont
 
     def _fontshellRFont(pathOrObject=None, showInterface=True):
-        return fontshell.RFont(pathOrObject=pathOrObject, showInterface=showInterface)
+        if os.path.isdir(pathOrObject):
+            # It's probably a UFO
+            return fontshell.RFont(pathOrObject=pathOrObject, showInterface=showInterface)
+        # But is it a TTF or an OTF? Trust the contents, not the extension
+        import fontTools
+        try:
+            f = fontTools.ttLib.TTFont(pathOrObject)
+            if f.sfntVersion == "OTTO":
+                from fontParts.fontshell.otf.font import OTFont
+                return OTFont(pathOrObject=pathOrObject, showInterface=showInterface)
+            else:
+                from fontParts.fontshell.ttf.font import TTFont
+                return TTFont(pathOrObject=pathOrObject, showInterface=showInterface)
+        except Exception as e:
+            raise ValueError("Not a UFO, TTF or OTF file")
 
     dispatcher["OpenFont"] = _fontshellRFont
     dispatcher["RFont"] = _fontshellRFont
