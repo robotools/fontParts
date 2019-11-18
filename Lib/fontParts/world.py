@@ -628,8 +628,8 @@ try:
     # OpenFont, RFont
 
     def _fontshellRFont(pathOrObject=None, showInterface=True):
-        if os.path.isdir(pathOrObject):
-            # It's probably a UFO
+        if pathOrObject is None or os.path.isdir(pathOrObject):
+            # It's probably a UFO or we want a new (UFO-based) font
             return fontshell.RFont(pathOrObject=pathOrObject, showInterface=showInterface)
         # But is it a TTF or an OTF? Trust the contents, not the extension
         import fontTools
