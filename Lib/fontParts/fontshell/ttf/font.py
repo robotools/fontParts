@@ -1,20 +1,17 @@
 from fontTools.misc.py23 import basestring
 from fontParts.base import BaseFont
-from fontTools.ttLib import TTFont
+import fontTools
 from fontParts.fontshell.base import RBaseObject
-from fontParts.opentype.glyph import OTGlyph
-from fontParts.opentype.info import OTInfo
-from fontParts.opentype.kerning import OTKerning_kernTable
-from fontParts.opentype.kerning import OTKerning_GPOSTable
-# from fontParts.opentype.features import OTFeatures
-# from fontParts.opentype.lib import OTLib
-# from fontParts.opentype.guideline import OTGuideline
+from fontParts.fontshell.ttf.glyph import TTGlyph
+from fontParts.fontshell.ttf.info import TTInfo
+from fontParts.fontshell.ttf.kerning import TTKerning_kernTable
+from fontParts.fontshell.ttf.kerning import TTKerning_GPOSTable
 from fontTools.ttLib.tables._g_l_y_f import Glyph
 
 from fontParts.base import BaseLayer
 
-class OTLayer(RBaseObject, BaseLayer):
-    glyphClass = OTGlyph
+class TTLayer(RBaseObject, BaseLayer):
+    glyphClass = TTGlyph
 
     # For now only deal with single masters
     def _get_name(self):
@@ -35,23 +32,15 @@ class OTLayer(RBaseObject, BaseLayer):
     def _keys(self, **kwargs):
         return self.naked().getGlyphSet().keys()
 
-    # def _newGlyph(self, name, **kwargs):
-    #     layer = self.naked()
-    #     layer.newGlyph(name)
-    #     return self[name]
+class TTFont(RBaseObject, BaseFont):
+    wrapClass = fontTools.ttLib.TTFont
 
-    # def _removeGlyph(self, name, **kwargs):
-    #     layer = self.naked()
-    #     del layer[name]
-
-class OTFont(RBaseObject, BaseFont):
-    wrapClass = TTFont
-    infoClass = OTInfo
-    # groupsClass = OTGroups
-    # kerningClass = OTKerning
-    # featuresClass = OTFeatures
-    # libClass = OTLib
-    layerClass = OTLayer
+    infoClass = TTInfo
+    # groupsClass = TTGroups
+    # kerningClass = TTKerning
+    # featuresClass = TTFeatures
+    # libClass = TTLib
+    layerClass = TTLayer
 
     # ---------------
     # File Operations
@@ -102,9 +91,9 @@ class OTFont(RBaseObject, BaseFont):
 
     def _get_kerning(self):
         if "kern" in self.naked():
-            return OTKerning_kernTable(wrap=self.naked()['kern'].getkern(0))
+            return TTKerning_kernTable(wrap=self.naked()['kern'].getkern(0))
         else:
-            return OTKerning_GPOSTable(wrap=self.naked())
+            return TTKerning_GPOSTable(wrap=self.naked())
 
     # features
 

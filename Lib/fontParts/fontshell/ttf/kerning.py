@@ -2,9 +2,9 @@ import defcon
 from fontParts.base import BaseKerning
 from fontParts.fontshell.base import RBaseObject
 from fontTools.ttLib import TTFont
-from fontParts.opentype.getKerningPairsFromOTF import OTFKernReader
+from fontParts.fontshell.ttf.getKerningPairsFromOTF import OTFKernReader
 
-class OTKerning_kernTable(RBaseObject, BaseKerning):
+class TTKerning_kernTable(RBaseObject, BaseKerning):
     def _items(self):
         return self.naked().items()
 
@@ -23,7 +23,7 @@ class OTKerning_kernTable(RBaseObject, BaseKerning):
     def _find(self, pair, default=0):
         return self.naked().find(pair, default)
 
-class OTKerning_GPOSTable(RBaseObject, BaseKerning):
+class TTKerning_GPOSTable(RBaseObject, BaseKerning):
     wrapClass = TTFont
     def _init(self, *args, **kwargs):
         self._wrapped = OTFKernReader(kwargs["wrap"].reader.file.name).kerningPairs

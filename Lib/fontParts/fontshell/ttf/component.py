@@ -3,7 +3,7 @@ from fontParts.base import BaseComponent
 from fontParts.fontshell.base import RBaseObject
 import fontTools.ttLib.tables._g_l_y_f
 
-class OTComponent(RBaseObject, BaseComponent):
+class TTComponent(RBaseObject, BaseComponent):
 
     wrapClass = fontTools.ttLib.tables._g_l_y_f.GlyphComponent
 

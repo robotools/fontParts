@@ -4,7 +4,7 @@ from fontParts.fontshell.point import RPoint
 from fontParts.fontshell.segment import RSegment
 from fontParts.fontshell.bPoint import RBPoint
 
-class OTPoint(RPoint):
+class TTPoint(RPoint):
     def _postChangeNotification(self):
         contour = self.contour
         if contour is None:
@@ -15,8 +15,8 @@ class OTPoint(RPoint):
     def __iter__(self):
         return iter((self.x, self.y))
 
-class OTContour(RBaseObject, BaseContour):
-    pointClass = OTPoint
+class TTContour(RBaseObject, BaseContour):
+    pointClass = TTPoint
     segmentClass = RSegment
     bPointClass = RBPoint
 
@@ -40,7 +40,7 @@ class OTContour(RBaseObject, BaseContour):
     def _set_index(self, value):
         self._index = value
 
-    # identifier - OT fonts don't do this.
+    # identifier - TT fonts don't do this.
 
     def _get_identifier(self):
         return None

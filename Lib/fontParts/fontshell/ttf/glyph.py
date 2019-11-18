@@ -1,8 +1,8 @@
 from fontParts.base import BaseGlyph
 from fontParts.base.errors import FontPartsError
 from fontParts.fontshell.base import RBaseObject
-from fontParts.opentype.contour import OTContour
-from fontParts.opentype.component import OTComponent
+from fontParts.fontshell.ttf.contour import TTContour
+from fontParts.fontshell.ttf.component import TTComponent
 # from fontParts.fontshell.point import RPoint
 import defcon
 from fontTools.pens.areaPen import AreaPen
@@ -11,10 +11,10 @@ from fontTools.ttLib.ttFont import _TTGlyph, _TTGlyphCFF
 from fontTools.ttLib.tables._g_l_y_f import GlyphComponent,GlyphCoordinates
 from fontTools.pens.recordingPen import RecordingPen
 
-class OTGlyph(RBaseObject, BaseGlyph):
+class TTGlyph(RBaseObject, BaseGlyph):
     wrapClass = fontTools.ttLib.ttFont._TTGlyph
-    contourClass = OTContour
-    componentClass = OTComponent
+    contourClass = TTContour
+    componentClass = TTComponent
 
     def _init(self, *args, **kwargs):
         self._wrapped = kwargs["wrap"]

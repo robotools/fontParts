@@ -1,11 +1,11 @@
 from fontParts.base import BaseLayer
 from fontParts.fontshell.base import RBaseObject
-from fontParts.opentype.glyph import OTGlyph
-import fontParts.opentype.font
+from fontParts.fontshell.ttf.glyph import TTGlyph
+import fontParts.fontshell.ttf.font
 
-class OTLayer(RBaseObject, BaseLayer):
-    wrapClass = fontParts.opentype.font.OTFont
-    glyphClass = OTGlyph
+class TTLayer(RBaseObject, BaseLayer):
+    wrapClass = fontParts.fontshell.ttf.font.TTFont
+    glyphClass = TTGlyph
 
     # For now only deal with single masters
     def _get_name(self):

@@ -8,7 +8,7 @@ import fontTools.ttLib.tables._p_o_s_t
 import fontTools.ttLib.tables.O_S_2f_2
 import re
 
-class WrappedOTTable(RBaseObject):
+class WrappedTTTable(RBaseObject):
     wrappedAttributes = {}
 
     def _getAttr(self,attr):
@@ -21,33 +21,33 @@ class WrappedOTTable(RBaseObject):
         return setattr(self.naked(), self.wrappedAttributes[attr], value)
       return BaseInfo._setAttr(self,attr, value)
 
-class OTInfo_headTable(WrappedOTTable, BaseInfo):
+class TTInfo_headTable(WrappedTTTable, BaseInfo):
     wrapClass = fontTools.ttLib.tables._h_e_a_d
     wrappedAttributes = {
       "unitsPerEm": "unitsPerEm"
     }
 
-class OTInfo_OS2Table(WrappedOTTable, BaseInfo):
+class TTInfo_OS2Table(WrappedTTTable, BaseInfo):
     wrapClass = fontTools.ttLib.tables.O_S_2f_2
     wrappedAttributes = {
       "xHeight": "sxHeight",
       "capHeight": "sCapHeight",
     }
 
-class OTInfo_hheaTable(WrappedOTTable, BaseInfo):
+class TTInfo_hheaTable(WrappedTTTable, BaseInfo):
     wrapClass = fontTools.ttLib.tables._h_h_e_a
     wrappedAttributes = {
       "ascender": "ascent",
       "descender": "descent"
     }
 
-class OTInfo_postTable(WrappedOTTable, BaseInfo):
+class TTInfo_postTable(WrappedTTTable, BaseInfo):
     wrapClass = fontTools.ttLib.tables._p_o_s_t
     wrappedAttributes = {
       "italicAngle": "italicAngle",
     }
 
-class OTInfo_nameTable(WrappedOTTable, BaseInfo):
+class TTInfo_nameTable(WrappedTTTable, BaseInfo):
     wrapClass = fontTools.ttLib.tables._n_a_m_e
 
     # Borrowed from fonttools/Snippets/rename-fonts.py
@@ -138,15 +138,15 @@ class OTInfo_nameTable(WrappedOTTable, BaseInfo):
       newstring = "Version %i.%i" % (self.versionMajor, i)
       return self.set_name_table_id(["VERSION_STRING"], newstring)
 
-class OTInfo(RBaseObject, BaseInfo):
+class TTInfo(RBaseObject, BaseInfo):
     wrapClass = TTFont
     def _init(self, *args, **kwargs):
         self.tables = [
-          OTInfo_nameTable(wrap=kwargs["wrap"]["name"]),
-          OTInfo_headTable(wrap=kwargs["wrap"]["head"]),
-          OTInfo_hheaTable(wrap=kwargs["wrap"]["hhea"]),
-          OTInfo_OS2Table(wrap=kwargs["wrap"]["OS/2"]),
-          OTInfo_postTable(wrap=kwargs["wrap"]["post"])
+          TTInfo_nameTable(wrap=kwargs["wrap"]["name"]),
+          TTInfo_headTable(wrap=kwargs["wrap"]["head"]),
+          TTInfo_hheaTable(wrap=kwargs["wrap"]["hhea"]),
+          TTInfo_OS2Table(wrap=kwargs["wrap"]["OS/2"]),
+          TTInfo_postTable(wrap=kwargs["wrap"]["post"])
         ]
 
     def _getAttr(self, attr):
