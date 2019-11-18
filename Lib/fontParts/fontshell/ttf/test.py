@@ -10,27 +10,27 @@ import shutil
 class TestTTFont(unittest.TestCase):
 
   def test_open(self):
-    f = TTFont("OpenSans-Regular.ttf")
+    f = TTFont("test-Fonts/OpenSans-Regular.ttf")
     self.assertTrue(f)
 
   def test_layer(self):
-    f = TTFont("OpenSans-Regular.ttf")
+    f = TTFont("test-Fonts/OpenSans-Regular.ttf")
     self.assertEqual(len(f.layers),1)
 
   def test_glyph_in_layers(self):
-    f = TTFont("OpenSans-Regular.ttf")
+    f = TTFont("test-Fonts/OpenSans-Regular.ttf")
     l = f.layers[0]
     self.assertTrue("Iota" in l)
     self.assertTrue("a" in l)
 
   def test_read_metadata(self):
-    f = TTFont("OpenSans-Regular.ttf")
+    f = TTFont("test-Fonts/OpenSans-Regular.ttf")
     g = f.layers[0]["Iota"]
     self.assertEqual("Iota", g.name)
     self.assertEqual(0x0399, g.unicode)
 
   def test_contours(self):
-    f = TTFont("OpenSans-Regular.ttf")
+    f = TTFont("test-Fonts/OpenSans-Regular.ttf")
     a = f.layers[0]["a"]
     self.assertEqual(len(a.contours), 2)
     self.assertEqual(len(a.contours[0].points),26)
@@ -40,7 +40,7 @@ class TestTTFont(unittest.TestCase):
     self.assertEqual(a.contours[0].points[-1].y, 0)
 
   def test_read_sidebearings(self):
-    f = TTFont("OpenSans-Regular.ttf")
+    f = TTFont("test-Fonts/OpenSans-Regular.ttf")
     self.assertEqual(f.layers[0]["H"].leftMargin, 201)
     self.assertEqual(f.layers[0]["H"].rightMargin, 200)
     self.assertEqual(f.layers[0]["H"].bottomMargin, 0)
@@ -50,7 +50,7 @@ class TestTTFont(unittest.TestCase):
     self.assertEqual(f.layers[0]["H"].bounds, (201, 0, 1311, 1462))
 
   def test_component_read(self):
-    f = TTFont("OpenSans-Regular.ttf")
+    f = TTFont("test-Fonts/OpenSans-Regular.ttf")
     a = f.layers[0]["uni1EB6"]
     self.assertEqual(len(a.components), 3)
     self.assertEqual(a.components[0].baseGlyph, "A")
@@ -60,7 +60,7 @@ class TestTTFont(unittest.TestCase):
     self.assertEqual(a.components[2].offset, (1257,0))
 
   def test_write_sidebearings1(self):
-    f = TTFont("OpenSans-Regular.ttf")
+    f = TTFont("test-Fonts/OpenSans-Regular.ttf")
     self.assertEqual(f.layers[0]["H"].leftMargin, 201)
     self.assertEqual(f.layers[0]["H"].rightMargin, 200)
 
@@ -74,12 +74,12 @@ class TestTTFont(unittest.TestCase):
     self.assertEqual(f.layers[0]["H"].width,1213)
     f.save("OS-H51.ttf")
 
-    tt = TTFont("OS-H51.ttf")
+    tt = fontTools.ttLib.TTFont("OS-H51.ttf")
     self.assertEqual(tt["hmtx"]["H"][1], 51)
     os.unlink("OS-H51.ttf")
 
   def test_write_sidebearings2(self):
-    f = TTFont("OpenSans-Regular.ttf")
+    f = TTFont("test-Fonts/OpenSans-Regular.ttf")
     self.assertEqual(f.layers[0]["H"].leftMargin, 201)
     self.assertEqual(f.layers[0]["H"].rightMargin, 200)
 
@@ -93,25 +93,25 @@ class TestTTFont(unittest.TestCase):
     self.assertEqual(f.layers[0]["H"].width,1213)
     f.save("OS-H51.ttf")
 
-    tt = TTFont("OS-H51.ttf")
+    tt = fontTools.ttLib.TTFont("OS-H51.ttf")
     self.assertEqual(tt["hmtx"]["H"][1], 51)
     os.unlink("OS-H51.ttf")
 
   def test_area(self):
-    f = TTFont("OpenSans-Regular.ttf")
+    f = TTFont("test-Fonts/OpenSans-Regular.ttf")
     # Use notdef because it consists of a positive box and a negative box.
     self.assertEqual(f.layers[0][".notdef"].area, 1462*841-633*1254)
 
   def test_kern_ttf(self):
-    f = TTFont("OpenSans-Regular.ttf")
+    f = TTFont("test-Fonts/OpenSans-Regular.ttf")
     self.assertEqual(f.kerning[("A","V")],-82)
 
   def test_kern_otf(self):
-    f = TTFont("OpenSans-Regular.otf")
+    f = OTFont("test-Fonts/OpenSans-Regular.otf")
     self.assertEqual(f.kerning[("A","V")],-82)
 
   def test_write_kern_ttf(self):
-    f = TTFont("OpenSans-Regular.ttf")
+    f = TTFont("test-Fonts/OpenSans-Regular.ttf")
     f.kerning[("A","V")] = -100
     f.save("OS-AV100.ttf")
 
@@ -120,7 +120,7 @@ class TestTTFont(unittest.TestCase):
     os.unlink("OS-AV100.ttf")
 
   def test_read_info(self):
-    f = TTFont("OpenSans-Regular.ttf")
+    f = TTFont("test-Fonts/OpenSans-Regular.ttf")
     self.assertEqual(f.info.familyName, "Open Sans")
     self.assertEqual(f.info.styleName, "Regular")
     # styleMapFamilyName
@@ -139,19 +139,19 @@ class TestTTFont(unittest.TestCase):
     # note
 
   def test_write_info(self):
-    f = TTFont("OpenSans-Regular.ttf")
+    f = TTFont("test-Fonts/OpenSans-Regular.ttf")
     f.info.versionMinor = 9
     f.info.versionMajor = 2
     f.info.familyName = "Renamed Open Sans"
-    f.save("OpenSans-Renamed.ttf")
+    f.save("test-Fonts/OpenSans-Renamed.ttf")
 
-    g = TTFont("OpenSans-Renamed.ttf")
+    g = TTFont("test-Fonts/OpenSans-Renamed.ttf")
     self.assertEqual(f.info.versionMinor, 9)
     self.assertEqual(f.info.versionMajor, 2)
     self.assertEqual(f.info.familyName, "Renamed Open Sans")
 
   def test_contours_otf(self):
-    f = TTFont("OpenSans-Regular.otf")
+    f = OTFont("test-Fonts/OpenSans-Regular.otf")
     a = f.layers[0]["a"]
     self.assertEqual(len(a.contours), 2)
     self.assertEqual(len(a.contours[0].points),28)
@@ -159,3 +159,6 @@ class TestTTFont(unittest.TestCase):
     self.assertEqual(a.contours[0].points[0].y, 0)
     self.assertEqual(a.contours[0].points[-1].x, 850)
     self.assertEqual(a.contours[0].points[-1].y, 0)
+
+if __name__ == '__main__':
+    unittest.main()
