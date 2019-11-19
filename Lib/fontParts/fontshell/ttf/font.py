@@ -93,7 +93,9 @@ class TTFont(RBaseObject, BaseFont):
         if "kern" in self.naked():
             return TTKerning_kernTable(wrap=self.naked()['kern'].getkern(0))
         else:
-            return TTKerning_GPOSTable(wrap=self.naked())
+            if not hasattr(self, "_kernCache"):
+                self._kernCache = TTKerning_GPOSTable(wrap=self.naked())
+            return self._kernCache
 
     # features
 
