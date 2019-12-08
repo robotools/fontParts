@@ -1612,14 +1612,6 @@ class BaseGlyph(BaseObject,
                 color=guideline.color
             )
             mathGlyph.guidelines.append(d)
-        image = self.image
-        mathGlyph.image = dict(
-            # MathGlyph works with image file names, hack
-            # around it by using the data as the file name.
-            fileName=image.data,
-            transformation=image.transformation,
-            color=image.color
-        )
         mathGlyph.lib = deepcopy(self.lib)
         mathGlyph.name = self.name
         mathGlyph.unicodes = self.unicodes
@@ -1671,12 +1663,6 @@ class BaseGlyph(BaseObject,
             identifier = guideline.get("identifier")
             if identifier is not None:
                 g._setIdentifier(identifier)
-        data = mathGlyph.image["fileName"]  # see _toMathGlyph
-        if data is not None:
-            image = self.image
-            image.data = data
-            image.transformation = mathGlyph.image["transformation"]
-            image.color = mathGlyph.image["color"]
         copied.lib.update(mathGlyph.lib)
         if not toThisGlyph:
             copied.name = mathGlyph.name
