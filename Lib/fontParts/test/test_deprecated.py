@@ -1,4 +1,4 @@
-import unittest2 as unittest
+import unittest
 from fontParts.base.deprecated import RemovedError
 
 
