@@ -1,3 +1,10 @@
+0.9.2 (released 2019-12-10)
+---------------------------
+- 2019-12-10: No longer send or recieve images from math glyphs. (thanks @letterror)
+- 2019-12-10: Removed unittest2 dependency.
+- 2019-10-21: Only use copy in _appendContour only if there’s an offset. (thanks @simoncozens)
+- 2019-09-29: [fontshell] Accept pathLikeObjects for opening.
+
 0.9.1 (released 2019-09-28)
 ---------------------------
 - 2019-09-28: Change how `glyph.unicode` behaves. Instead of adding to `glyph.unicodes`, on a `set` it sets `glyph.unicodes` to the single value provided (or an empty list if the value was `None`.)
