@@ -477,6 +477,8 @@ class BaseContour(
         Subclasses may override this method.
         """
         points = list(self.points)
+        if not points:
+            return []
         segments = [[]]
         lastWasOffCurve = False
         firstIsMove = points[0].type == "move"
