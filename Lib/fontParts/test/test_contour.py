@@ -539,3 +539,8 @@ class TestContour(unittest.TestCase):
         self.assertEqual(
             [segment.type for segment in segments], ["curve", "line", "curve"]
         )
+
+    def test_segments_empty(self):
+        contour, _ = self.objectGenerator("contour")
+        segments = contour.segments
+        self.assertEqual(segments, [])
