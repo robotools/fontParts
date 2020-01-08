@@ -62,6 +62,6 @@ class RImage(RBaseObject, BaseImage):
             images = image.font.images
             fileName = images.findDuplicateImage(value)
             if fileName is None:
-                fileName = images.makeFileName("image")
+                fileName = images.makeFileName("image.png")
                 images[fileName] = value
             image.fileName = fileName
