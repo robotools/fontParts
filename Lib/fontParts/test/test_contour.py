@@ -152,6 +152,35 @@ class TestContour(unittest.TestCase):
         contour = glyph.appendContour(contour)
         self.assertEqual(layer, contour.layer)
 
+    # -----
+    # Index
+    # -----
+
+    def test_index(self):
+        glyph, _ = self.objectGenerator("glyph")
+        contour1 = glyph.appendContour(self.getContour_bounds())
+        contour2 = glyph.appendContour(self.getContour_bounds())
+        contour3 = glyph.appendContour(self.getContour_bounds())
+        self.assertEqual(contour1.index, 0)
+        self.assertEqual(contour2.index, 1)
+        self.assertEqual(contour3.index, 2)
+
+    def test_set_index(self):
+        glyph, _ = self.objectGenerator("glyph")
+        contour1 = glyph.appendContour(self.getContour_bounds())
+        contour2 = glyph.appendContour(self.getContour_bounds())
+        contour3 = glyph.appendContour(self.getContour_bounds())
+
+        contour1.index = 2
+        self.assertEqual(contour1.index, 2)
+        self.assertEqual(contour2.index, 0)
+        self.assertEqual(contour3.index, 1)
+
+        contour1.index = 1
+        self.assertEqual(contour1.index, 1)
+        self.assertEqual(contour2.index, 0)
+        self.assertEqual(contour3.index, 2)
+
     # --------------
     # Identification
     # --------------
