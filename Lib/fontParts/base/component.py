@@ -18,7 +18,6 @@ from fontParts.base.deprecated import DeprecatedComponent, RemovedComponent
 class BaseComponent(
                     BaseObject,
                     TransformationMixin,
-                    PointPositionMixin,
                     InterpolationMixin,
                     SelectionMixin,
                     IdentifierMixin,
