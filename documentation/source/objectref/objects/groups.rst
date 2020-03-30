@@ -24,14 +24,14 @@ It is important to understand that any changes to the returned group contents wi
 
 ::
 
-    group = font.groups["myGroup"]
+    group = list(font.groups["myGroup"])
     group.remove("A")
 
 If one wants to make a change to the group contents, one should do the following instead:
 
 ::
 
-    group = font.groups["myGroup"]
+    group = list(font.groups["myGroup"])
     group.remove("A")
     font.groups["myGroup"] = group
 
