@@ -33,7 +33,7 @@ If one wants to make a change to the group contents, one should do the following
 
     group = list(font.groups["myGroup"])
     group.remove("A")
-    font.groups["myGroup"] = tuple(group)
+    font.groups["myGroup"] = group
 
 Kerning Groups
 ==============
