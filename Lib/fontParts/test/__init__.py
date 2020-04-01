@@ -23,9 +23,8 @@ from fontParts.test import test_color
 from fontParts.test import test_world
 
 
-def testEnvironment(objectGenerator, inApp=False, verbosity=1):
+def testEnvironment(objectGenerator, inApp=False, verbosity=1, testNormalizers=True):
     modules = [
-        test_normalizers,
         test_font,
         test_info,
         test_groups,
@@ -46,6 +45,9 @@ def testEnvironment(objectGenerator, inApp=False, verbosity=1):
         test_color,
         test_world
     ]
+    if testNormalizers:
+        modules.append(test_normalizers)
+
     globalSuite = unittest.TestSuite()
     loader = unittest.TestLoader()
     for module in modules:
