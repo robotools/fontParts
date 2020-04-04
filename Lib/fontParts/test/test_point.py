@@ -590,7 +590,7 @@ class TestPoint(unittest.TestCase):
 
     def test_copy_same_identifier_None(self):
         point = self.getPoint_generic()
-        point.identifer = None
+        point._setIdentifier(None)
         copied = point.copy()
         self.assertEqual(
             point.identifier,
