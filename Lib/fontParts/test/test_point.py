@@ -390,12 +390,12 @@ class TestPoint(unittest.TestCase):
 
     def test_identifier_generated_type(self):
         point = self.getPoint_generic()
-        point.generateIdentifier()
+        point.getIdentifier()
         self.assertIsInstance(point.identifier, str)
 
     def test_identifier_consistency(self):
         point = self.getPoint_generic()
-        point.generateIdentifier()
+        point.getIdentifier()
         # get: twice to test consistency
         self.assertEqual(point.identifier, point.identifier)
 
@@ -599,7 +599,7 @@ class TestPoint(unittest.TestCase):
 
     def test_copy_different_identifier(self):
         point = self.getPoint_generic()
-        point.generateIdentifier()
+        point.getIdentifier()
         copied = point.copy()
         self.assertNotEqual(
             point.identifier,
@@ -611,8 +611,8 @@ class TestPoint(unittest.TestCase):
         point = self.getPoint_generic()
         copied = point.copy()
         copied.contour = otherContour
-        point.generateIdentifier()
-        copied.generateIdentifier()
+        point.getIdentifier()
+        copied.getIdentifier()
         self.assertNotEqual(
             point.identifier,
             copied.identifier
