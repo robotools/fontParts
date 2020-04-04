@@ -666,7 +666,7 @@ class TestPoint(unittest.TestCase):
 
     def test_copyData_different_identifier(self):
         point = self.getPoint_generic()
-        point.generateIdentifier()
+        point.getIdentifier()
         pointOther, _ = self.objectGenerator("point")
         pointOther.copyData(point)
         self.assertNotEqual(
