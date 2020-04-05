@@ -442,8 +442,8 @@ class TestComponent(unittest.TestCase):
     def test_copy_generated_identifier_different(self):
         component = self.getComponent_copy()
         copied = component.copy()
-        component.generateIdentifier()
-        copied.generateIdentifier()
+        component.getIdentifier()
+        copied.getIdentifier()
         self.assertNotEqual(component.identifier, copied.identifier)
 
     # ----
