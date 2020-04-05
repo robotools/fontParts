@@ -131,12 +131,12 @@ class TestAnchor(unittest.TestCase):
 
     def test_identifier_generated_type(self):
         anchor = self.getAnchor_generic()
-        anchor.generateIdentifier()
+        anchor.getIdentifier()
         self.assertIsInstance(anchor.identifier, str)
 
     def test_identifier_consistency(self):
         anchor = self.getAnchor_generic()
-        anchor.generateIdentifier()
+        anchor.getIdentifier()
         # get: twice to test consistency
         self.assertEqual(anchor.identifier, anchor.identifier)
 
@@ -303,8 +303,8 @@ class TestAnchor(unittest.TestCase):
     def test_copy_generated_identifier_different(self):
         anchor = self.getAnchor_copy()
         copied = anchor.copy()
-        anchor.generateIdentifier()
-        copied.generateIdentifier()
+        anchor.getIdentifier()
+        copied.getIdentifier()
         self.assertNotEqual(anchor.identifier, copied.identifier)
 
     def test_copy_same_x(self):

@@ -384,12 +384,12 @@ class TestComponent(unittest.TestCase):
 
     def test_identifier_generated_type(self):
         component = self.getComponent_generic()
-        component.generateIdentifier()
+        component.getIdentifier()
         self.assertIsInstance(component.identifier, str)
 
     def test_identifier_consistency(self):
         component = self.getComponent_generic()
-        component.generateIdentifier()
+        component.getIdentifier()
         # get: twice to test consistency
         self.assertEqual(component.identifier, component.identifier)
 
@@ -435,7 +435,7 @@ class TestComponent(unittest.TestCase):
 
     def test_copy_not_identifier(self):
         component = self.getComponent_copy()
-        component.generateIdentifier()
+        component.getIdentifier()
         copied = component.copy()
         self.assertNotEqual(component.identifier, copied.identifier)
 

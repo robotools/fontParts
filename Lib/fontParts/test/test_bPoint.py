@@ -563,12 +563,12 @@ class TestBPoint(unittest.TestCase):
 
     def test_identifier_generated_type(self):
         bPoint = self.getBPoint_corner()
-        bPoint.generateIdentifier()
+        bPoint.getIdentifier()
         self.assertIsInstance(bPoint.identifier, str)
 
     def test_identifier_consistency(self):
         bPoint = self.getBPoint_corner()
-        bPoint.generateIdentifier()
+        bPoint.getIdentifier()
         # get: twice to test consistency
         self.assertEqual(bPoint.identifier, bPoint.identifier)
 
@@ -735,7 +735,7 @@ class TestBPoint(unittest.TestCase):
 
     # def test_copy_different_identifier(self):
     #     bPoint = self.getBPoint_corner()
-    #     bPoint.generateIdentifier()
+    #     bPoint.getIdentifier()
     #     copied = bPoint.copy()
     #     self.assertNotEqual(
     #         bPoint.identifier,
@@ -747,8 +747,8 @@ class TestBPoint(unittest.TestCase):
     #     bPoint = self.getBPoint_corner()
     #     copied = bPoint.copy()
     #     copied.contour = otherContour
-    #     bPoint.generateIdentifier()
-    #     copied.generateIdentifier()
+    #     bPoint.getIdentifier()
+    #     copied.getIdentifier()
     #     self.assertNotEqual(
     #         bPoint.identifier,
     #         copied.identifier
