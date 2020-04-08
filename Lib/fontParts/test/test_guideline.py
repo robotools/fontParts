@@ -567,8 +567,8 @@ class TestGuideline(unittest.TestCase):
     def test_copy_generated_identifier_different(self):
         guideline = self.getGuideline_copy()
         copied = guideline.copy()
-        guideline.generateIdentifier()
-        copied.generateIdentifier()
+        guideline.getIdentifier()
+        copied.getIdentifier()
         self.assertNotEqual(guideline.identifier, copied.identifier)
 
     def test_copy_same_x(self):
