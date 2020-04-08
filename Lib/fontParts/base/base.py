@@ -493,7 +493,7 @@ class TransformationMixin(object):
         """
         Move the object.
 
-            >>> obj.transformBy((10, 0))
+            >>> obj.moveBy((10, 0))
 
         **value** must be an iterable containing two
         :ref:`type-int-float` values defining the x and y
@@ -522,8 +522,8 @@ class TransformationMixin(object):
         """
         Scale the object.
 
-            >>> obj.transformBy(2.0)
-            >>> obj.transformBy((0.5, 2.0), origin=(500, 500))
+            >>> obj.scaleBy(2.0)
+            >>> obj.scaleBy((0.5, 2.0), origin=(500, 500))
 
         **value** must be an iterable containing two
         :ref:`type-int-float` values defining the x and y
@@ -560,8 +560,8 @@ class TransformationMixin(object):
         """
         Rotate the object.
 
-            >>> obj.transformBy(45)
-            >>> obj.transformBy(45, origin=(500, 500))
+            >>> obj.rotateBy(45)
+            >>> obj.rotateBy(45, origin=(500, 500))
 
         **value** must be a :ref:`type-int-float` values
         defining the angle to rotate the object by. **origin**
