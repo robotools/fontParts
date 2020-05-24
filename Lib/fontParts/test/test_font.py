@@ -518,10 +518,10 @@ class TestFont(unittest.TestCase):
     def test_save_formatVersion(self):
         from fontTools.ufoLib import UFOReader
 
-        for version in [2, 3]:  # fails on formatVersion 1 (but maybe we should not worry about it...)
+        for version in [(2, 0), (3, 0)]:  # fails on formatVersion 1 (but maybe we should not worry about it...)
             def testCases(path):
                 reader = UFOReader(path)
-                self.assertEqual(reader.formatVersion, version)
+                self.assertEqual(reader.formatVersionTuple, version)
             self._save(testCases, formatVersion=version)
 
     def test_save_fileStructure(self):

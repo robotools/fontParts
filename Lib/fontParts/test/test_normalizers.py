@@ -18,8 +18,8 @@ class TestNormalizers(unittest.TestCase):
 
     def test_normalizeFileFormatVersion_int(self):
         result = normalizers.normalizeFileFormatVersion(3)
-        self.assertIsInstance(result, int)
-        self.assertEqual(result, 3)
+        self.assertIsInstance(result, tuple)
+        self.assertEqual(result, (3, 0))
 
     def test_normalizeFileFormatVersion_float(self):
         with self.assertRaises(TypeError):
@@ -574,13 +574,13 @@ class TestNormalizers(unittest.TestCase):
 
     def test_normalizeGlyphFormatVersion_int1(self):
         result = normalizers.normalizeGlyphFormatVersion(1)
-        self.assertIsInstance(result, int)
-        self.assertEqual(result, 1)
+        self.assertIsInstance(result, tuple)
+        self.assertEqual(result, (1, 0))
 
     def test_normalizeGlyphFormatVersion_int2(self):
         result = normalizers.normalizeGlyphFormatVersion(2)
-        self.assertIsInstance(result, int)
-        self.assertEqual(result, 2)
+        self.assertIsInstance(result, tuple)
+        self.assertEqual(result, (2, 0))
 
     def test_normalizeGlyphFormatVersion_int3(self):
         with self.assertRaises(ValueError):
@@ -588,13 +588,13 @@ class TestNormalizers(unittest.TestCase):
 
     def test_normalizeGlyphFormatVersion_float1(self):
         result = normalizers.normalizeGlyphFormatVersion(1.0)
-        self.assertIsInstance(result, int)
-        self.assertEqual(result, 1)
+        self.assertIsInstance(result, tuple)
+        self.assertEqual(result, (1, 0))
 
     def test_normalizeGlyphFormatVersion_float2(self):
         result = normalizers.normalizeGlyphFormatVersion(2.0)
-        self.assertIsInstance(result, int)
-        self.assertEqual(result, 2)
+        self.assertIsInstance(result, tuple)
+        self.assertEqual(result, (2, 0))
 
     def test_normalizeGlyphFormatVersion_float3(self):
         with self.assertRaises(ValueError):

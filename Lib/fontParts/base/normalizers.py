@@ -12,13 +12,16 @@ def normalizeFileFormatVersion(value):
     """
     Normalizes a font's file format version.
 
-    * **value** must be a :ref:`type-int`.
+    * **value** must be a :ref:`type-int` or ``tuple``.
     * Returned value will be a ``int``.
     """
-    if not isinstance(value, int):
-        raise TypeError("File format versions must be instances of "
-                        ":ref:`type-int`, not %s."
-                        % type(value).__name__)
+    allowedUFOFormatVersions = [(1, 0), (2, 0), (3, 0)]
+    if isinstance(value, int):
+        value = (value, 0)
+    if not isinstance(value, tuple):
+        raise TypeError("File Format version must be an :ref:`type-int` or a ``tuple``.")
+    if value not in allowedUFOFormatVersions:
+        raise ValueError("File format version must be %s" % (", ".join([str(item) for item in allowedUFOFormatVersions])))
     return value
 
 
@@ -431,17 +434,16 @@ def normalizeGlyphFormatVersion(value):
     """
     Normalizes glyph format version for saving to XML string.
 
-    * **value** must be a :ref:`type-int-float` of either 1 or 2.
-    * Returned value will be an int.
+    * **value** must be a :ref:`type-int` or ``tuple`` of either 1 or 2.
+    * Returned value will be an ``tuple``.
     """
-    if not isinstance(value, (int, float)):
-        raise TypeError("Glyph Format Version must be an "
-                        ":ref:`type-int-float`, not %s."
-                        % type(value).__name__)
-    value = int(value)
-    if value not in (1, 2):
-        raise ValueError("Glyph Format Version must be either 1 or 2, not %s."
-                         % value)
+    allowedGlyphFormatVersion = [(1, 0), (2, 0)]
+    if isinstance(value, (int, float)):
+        value = (int(value), 0)
+    if not isinstance(value, tuple):
+        raise TypeError("Glyph Format version must be an :ref:`type-int` or a ``tuple``.")
+    if value not in allowedGlyphFormatVersion:
+        raise ValueError("Glyph Format Version must be an %s" % (", ".join([str(item) for item in allowedGlyphFormatVersion])))
     return value
 
 # -------
