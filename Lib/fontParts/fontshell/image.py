@@ -47,7 +47,7 @@ class RImage(RBaseObject, BaseImage):
         fileName = image.fileName
         if fileName is None:
             return None
-        return images[fileName]
+        return images.get(fileName, None)
 
     def _set_data(self, value):
         from fontTools.ufoLib.validators import pngValidator
