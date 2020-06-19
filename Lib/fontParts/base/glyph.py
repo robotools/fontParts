@@ -1590,6 +1590,10 @@ class BaseGlyph(BaseObject,
         Subclasses may override this method.
         """
         import fontMath
+        from fontMath.mathFunctions import setRoundIntegerFunction
+        from fontTools.misc.fixedTools import otRound
+
+        setRoundIntegerFunction(otRound)
         mathGlyph = fontMath.MathGlyph(None)
         pen = mathGlyph.getPointPen()
         self.drawPoints(pen)

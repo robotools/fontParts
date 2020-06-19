@@ -216,6 +216,10 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
         Subclasses may override this method.
         """
         import fontMath
+        from fontMath.mathFunctions import setRoundIntegerFunction
+        from fontTools.misc.fixedTools import otRound
+
+        setRoundIntegerFunction(otRound)
         # A little trickery is needed here because MathInfo
         # handles font level guidelines. Those are not in this
         # object so we temporarily fake them just enough for
