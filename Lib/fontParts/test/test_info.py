@@ -114,6 +114,7 @@ class TestInfo(unittest.TestCase):
         interpolated_font, _ = self.objectGenerator("font")
         font_min, _ = self.objectGenerator("font")
         font_max, _ = self.objectGenerator("font")
+        font_min.info.unitsPerEm = 1000
         font_max.info.unitsPerEm = 2000
         interpolated_font.info.interpolate(0.5154, font_min.info, font_max.info, round=False)
         self.assertEqual(
@@ -125,6 +126,7 @@ class TestInfo(unittest.TestCase):
         interpolated_font, _ = self.objectGenerator("font")
         font_min, _ = self.objectGenerator("font")
         font_max, _ = self.objectGenerator("font")
+        font_min.info.unitsPerEm = 1000
         font_max.info.unitsPerEm = 2000
         interpolated_font.info.interpolate(0.5154, font_min.info, font_max.info, round=True)
         self.assertEqual(
