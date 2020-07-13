@@ -1151,6 +1151,35 @@ class TestGlyph(unittest.TestCase):
         self.assertEqual(report.componentsMissingFromGlyph1, ["a", "b"])
         self.assertEqual(report.componentsMissingFromGlyph2, ["x", "y"])
 
+    # -------------
+    # Interpolation
+    # -------------
+
+    def test_interpolate_glyphWidth_without_rounding(self):
+        interpolated, _ = self.objectGenerator("glyph")
+        glyph_min, _ = self.objectGenerator("glyph")
+        glyph_max, _ = self.objectGenerator("glyph")
+        glyph_min.width = 1000
+        glyph_max.width = 2000
+        interpolated.interpolate(0.5154, glyph_min, glyph_max, round=False)
+        self.assertEqual(
+            interpolated.width,
+            1515.4
+        )
+
+    def test_interpolate_glyphWidth_with_rounding(self):
+        interpolated, _ = self.objectGenerator("glyph")
+        glyph_min, _ = self.objectGenerator("glyph")
+        glyph_max, _ = self.objectGenerator("glyph")
+        glyph_min.width = 1000
+        glyph_max.width = 2000
+        interpolated.interpolate(0.5154, glyph_min, glyph_max, round=True)
+        self.assertEqual(
+            interpolated.width,
+            1515
+        )
+
+
     # ---
     # API
     # ---

@@ -18,6 +18,20 @@ class TestKerning(unittest.TestCase):
         })
         return kerning
 
+    def getKerning_font2(self):
+        font, _ = self.objectGenerator("font")
+        groups = font.groups
+        groups["public.kern1.X"] = ["A", "B", "C"]
+        groups["public.kern2.X"] = ["A", "B", "C"]
+        kerning = font.kerning
+        kerning.update({
+            ("public.kern1.X", "public.kern2.X"): 200,
+            ("B", "public.kern2.X"): 201,
+            ("public.kern1.X", "B"): 202,
+            ("A", "A"): 203,
+        })
+        return kerning
+
     # ---
     # len
     # ---
@@ -258,4 +272,30 @@ class TestKerning(unittest.TestCase):
         self.assertNotEqual(
             kerning_two,
             a
+        )
+
+    # -------------
+    # Interpolation
+    # -------------
+
+    def test_interpolation_without_rounding(self):
+        interpolated = self.getKerning_generic()
+        kerning_min = self.getKerning_generic()
+        kerning_max = self.getKerning_font2()
+        interpolated.interpolate(0.515, kerning_min, kerning_max, round=False)
+
+        self.assertEqual(
+            interpolated[("public.kern1.X", "public.kern2.X")],
+            151.5
+        )
+
+    def test_interpolation_with_rounding(self):
+        interpolated = self.getKerning_generic()
+        kerning_min = self.getKerning_generic()
+        kerning_max = self.getKerning_font2()
+        interpolated.interpolate(0.515, kerning_min, kerning_max, round=True)
+
+        self.assertEqual(
+            interpolated[("public.kern1.X", "public.kern2.X")],
+            152
         )
