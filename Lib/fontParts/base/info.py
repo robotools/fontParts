@@ -183,6 +183,10 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
         """
         Subclasses may override this method.
         """
+        from fontMath.mathFunctions import setRoundIntegerFunction
+
+        setRoundIntegerFunction(normalizers.normalizeVisualRounding)
+
         mathInfo = self._toMathInfo(guidelines=False)
         mathInfo = mathInfo.round()
         self._fromMathInfo(mathInfo, guidelines=False)
@@ -216,10 +220,6 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
         Subclasses may override this method.
         """
         import fontMath
-        from fontMath.mathFunctions import setRoundIntegerFunction
-        from fontTools.misc.fixedTools import otRound
-
-        setRoundIntegerFunction(otRound)
         # A little trickery is needed here because MathInfo
         # handles font level guidelines. Those are not in this
         # object so we temporarily fake them just enough for
@@ -293,6 +293,10 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
         """
         Subclasses may override this method.
         """
+        from fontMath.mathFunctions import setRoundIntegerFunction
+
+        setRoundIntegerFunction(normalizers.normalizeVisualRounding)
+
         minInfo = minInfo._toMathInfo()
         maxInfo = maxInfo._toMathInfo()
         result = interpolate(minInfo, maxInfo, factor)

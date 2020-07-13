@@ -1590,10 +1590,6 @@ class BaseGlyph(BaseObject,
         Subclasses may override this method.
         """
         import fontMath
-        from fontMath.mathFunctions import setRoundIntegerFunction
-        from fontTools.misc.fixedTools import otRound
-
-        setRoundIntegerFunction(otRound)
         mathGlyph = fontMath.MathGlyph(None)
         pen = mathGlyph.getPointPen()
         self.drawPoints(pen)
@@ -1767,6 +1763,10 @@ class BaseGlyph(BaseObject,
         """
         Subclasses may override this method.
         """
+        from fontMath.mathFunctions import setRoundIntegerFunction
+
+        setRoundIntegerFunction(normalizers.normalizeVisualRounding)
+        
         minGlyph = minGlyph._toMathGlyph()
         maxGlyph = maxGlyph._toMathGlyph()
         try:

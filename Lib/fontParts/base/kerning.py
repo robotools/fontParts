@@ -171,9 +171,8 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         """
         import fontMath
         from fontMath.mathFunctions import setRoundIntegerFunction
-        from fontTools.misc.fixedTools import otRound
 
-        setRoundIntegerFunction(otRound)
+        setRoundIntegerFunction(normalizers.normalizeVisualRounding)
         kerningGroupCompatibility = self._testKerningGroupCompatibility(
                                                         minKerning,
                                                         maxKerning,
