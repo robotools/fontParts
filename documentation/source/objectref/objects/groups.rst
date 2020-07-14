@@ -16,7 +16,7 @@ Groups behave like a Python dictionary. Anything you can do with a dictionary in
 ::
 
     font = CurrentFont()
-    for name, members in font.groups.keys():
+    for name, members in font.groups.items():
         print name
         print members
 
