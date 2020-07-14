@@ -170,6 +170,9 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         Subclasses may override this method.
         """
         import fontMath
+        from fontMath.mathFunctions import setRoundIntegerFunction
+
+        setRoundIntegerFunction(normalizers.normalizeVisualRounding)
         kerningGroupCompatibility = self._testKerningGroupCompatibility(
                                                         minKerning,
                                                         maxKerning,
