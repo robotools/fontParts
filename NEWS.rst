@@ -1,3 +1,7 @@
+0.9.4 (released 2020-08-26)
+---------------------------
+- Fixed release build
+
 0.9.3 (released 2020-08-26)
 ---------------------------
 - 2020-07-14: All rounding uses otRound. #536, fixes #533. Thanks @colinmford!
