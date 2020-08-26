@@ -7,9 +7,6 @@ env:
 
 matrix:
   fast_finish: true
-  exclude:
-    # Exclude the default Python 3.6 build
-    - python: 3.6
   include:
     - python: 3.6
       env:
@@ -17,6 +14,8 @@ matrix:
         - BUILD_DIST=true
     - python: 3.7
       env: TOXENV=py37-cov
+    - python: 3.8
+      env: TOXENV=py38-cov
     - python: pypy3
       env: TOXENV=pypy3
     - language: generic
