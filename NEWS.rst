@@ -1,3 +1,18 @@
+0.9.4 (released 2020-08-26)
+---------------------------
+- Fixed release build
+
+0.9.3 (released 2020-08-26)
+---------------------------
+- 2020-07-14: All rounding uses otRound. #536, fixes #533. Thanks @colinmford!
+- 2019-12-23: Allow contour.segment to be empty (#480). Thanks @typemytype!
+- 2020-01-08: Image file names now get a png file extension (#482). Thanks @typemytype!
+- 2020-02-03: Fixed error in setting contour index (#488). Thanks @typemytype!
+- 2020-02-10: Fixed error in PointPositionMixin (#486, fixed by #491)
+- 2020-04-01: Added option to turn off normalizer tests
+- 2020-04-07: Test fixes and updates. #512. Thanks @schriftgestalt!
+- various: Documentation updates and corrections
+
 0.9.2 (released 2019-12-10)
 ---------------------------
 - 2019-12-10: No longer send or recieve images from math glyphs. (thanks @letterror)

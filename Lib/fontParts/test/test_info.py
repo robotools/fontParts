@@ -92,3 +92,44 @@ class TestInfo(unittest.TestCase):
             info_two,
             a
         )
+
+    # -----
+    # Round
+    # -----
+
+    def test_round_unitsPerEm(self):
+        info = self.getInfo_generic()
+        info.unitsPerEm = 2000.125
+        info.round()
+        self.assertEqual(
+            info.unitsPerEm,
+            2000
+        )
+
+    # -------------
+    # Interpolation
+    # -------------
+
+    def test_interpolate_unitsPerEm_without_rounding(self):
+        interpolated_font, _ = self.objectGenerator("font")
+        font_min, _ = self.objectGenerator("font")
+        font_max, _ = self.objectGenerator("font")
+        font_min.info.unitsPerEm = 1000
+        font_max.info.unitsPerEm = 2000
+        interpolated_font.info.interpolate(0.5154, font_min.info, font_max.info, round=False)
+        self.assertEqual(
+            interpolated_font.info.unitsPerEm,
+            1515.4
+        )
+
+    def test_interpolate_unitsPerEm_with_rounding(self):
+        interpolated_font, _ = self.objectGenerator("font")
+        font_min, _ = self.objectGenerator("font")
+        font_max, _ = self.objectGenerator("font")
+        font_min.info.unitsPerEm = 1000
+        font_max.info.unitsPerEm = 2000
+        interpolated_font.info.interpolate(0.5154, font_min.info, font_max.info, round=True)
+        self.assertEqual(
+            interpolated_font.info.unitsPerEm,
+            1515
+        )

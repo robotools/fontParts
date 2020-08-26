@@ -1763,6 +1763,10 @@ class BaseGlyph(BaseObject,
         """
         Subclasses may override this method.
         """
+        from fontMath.mathFunctions import setRoundIntegerFunction
+
+        setRoundIntegerFunction(normalizers.normalizeVisualRounding)
+        
         minGlyph = minGlyph._toMathGlyph()
         maxGlyph = maxGlyph._toMathGlyph()
         try:
