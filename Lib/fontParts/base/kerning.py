@@ -351,7 +351,9 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
 
     def find(self, pair, default=None):
         """
-        Returns the value for the kerning pair.
+        Returns the value for the kerning pair - even if the pair only exists
+        implicitly (one or both sides may be members of a kerning group).
+
         **pair** is a ``tuple`` of two :ref:`type-string`\s, and the returned
         values will either be :ref:`type-int-float` or ``None``
         if no pair was found. ::
