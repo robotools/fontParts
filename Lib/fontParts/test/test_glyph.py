@@ -227,7 +227,6 @@ class TestGlyph(unittest.TestCase):
             glyph.topMargin
         )
 
-
     # -------
     # Queries
     # -------
@@ -404,16 +403,16 @@ class TestGlyph(unittest.TestCase):
     def test_appendContour_offset_valid(self):
         glyph = self.getGlyph_generic()
         contour = self.get_generic_object("contour")
-        contour.insertPoint(0,position=(0,0))
-        contour.insertPoint(1,position=(100,100))
-        contour.insertPoint(2,position=(0,100))
+        contour.insertPoint(0, position=(0, 0))
+        contour.insertPoint(1, position=(100, 100))
+        contour.insertPoint(2, position=(0, 100))
 
         self.assertEqual(len(glyph), 2)
         newcontour = glyph.appendContour(contour, (45, 50))
         self.assertEqual(len(glyph), 3)
 
         self.assertEqual(newcontour, glyph[-1])
-        self.assertEqual(len(newcontour.points),3)
+        self.assertEqual(len(newcontour.points), 3)
         self.assertEqual(newcontour.points[0].x, 45)
         self.assertEqual(newcontour.points[0].y, 50)
 
@@ -826,9 +825,7 @@ class TestGlyph(unittest.TestCase):
             ()
         )
 
-
     # Components
-
     def test_selectedComponents_default(self):
         glyph = self.getGlyph_generic()
         glyph.appendComponent("component 1")
@@ -1178,7 +1175,6 @@ class TestGlyph(unittest.TestCase):
             interpolated.width,
             1515
         )
-
 
     # ---
     # API
