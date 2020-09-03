@@ -1176,6 +1176,23 @@ class TestGlyph(unittest.TestCase):
             1515
         )
 
+    # ---------------
+    # Transformations
+    # ---------------
+
+    def test_moveBy_only_contours(self):
+        glyph = self.getGlyph_generic()
+        glyph.moveBy((100, 0))
+        self.assertEqual(
+            glyph.bounds[0],
+            200
+        )
+        glyph.moveBy((0, 250))
+        self.assertEqual(
+            glyph.bounds[1],
+            240
+        )
+
     # ---
     # API
     # ---
