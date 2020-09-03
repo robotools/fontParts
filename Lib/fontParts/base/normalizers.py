@@ -128,7 +128,7 @@ def normalizeKerningKey(value):
             raise TypeError("Kerning key items must be strings, not %s."
                             % type(v).__name__)
         if len(v) < 1:
-            raise ValueError("Kerning key items must be one character long")
+            raise ValueError("Kerning key items must be at least one character long")
     if value[0].startswith("public.") and not value[0].startswith(
             "public.kern1."):
         raise ValueError("Left Kerning key group must start with "
