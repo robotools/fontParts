@@ -17,7 +17,7 @@ class RPoint(RBaseObject, BasePoint):
         if contour is None:
             return
         contour.naked().postNotification("Contour.PointsChanged")
-        contour.dirty = True
+        contour.naked().dirty = True
 
     # ----------
     # Attributes
