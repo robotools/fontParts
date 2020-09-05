@@ -1,3 +1,8 @@
+0.9.4 (released 2020-09-04)
+---------------------------
+- 2020-09-04: Fix for contours not getting updated in fontShell, thanks @justvanrossum!
+- 2020-09-03: Fix for error message in normalizeKerningKey, thanks @colinmford!
+
 0.9.4 (released 2020-08-26)
 ---------------------------
 - Fixed release build
