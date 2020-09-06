@@ -8,6 +8,9 @@ class RBaseObject(object):
         if wrap is not None:
             self._wrapped = wrap
 
+    def changed(self):
+        self.naked().dirty = True
+
     def naked(self):
         if hasattr(self, "_wrapped"):
             return self._wrapped
