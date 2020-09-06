@@ -1,3 +1,7 @@
+0.9.5 (released 2020-09-06)
+---------------------------
+- 2020-09-06: fontShell has `changed()` implemented now 
+
 0.9.4 (released 2020-09-04)
 ---------------------------
 - 2020-09-04: Fix for contours not getting updated in fontShell, thanks @justvanrossum!
