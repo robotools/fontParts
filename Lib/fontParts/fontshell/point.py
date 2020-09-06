@@ -11,13 +11,16 @@ class RPoint(RBaseObject, BasePoint):
         if wrap is None:
             wrap = self.wrapClass((0, 0))
         super(RPoint, self)._init(wrap=wrap)
-
+        
     def _postChangeNotification(self):
         contour = self.contour
         if contour is None:
             return
         contour.naked().postNotification("Contour.PointsChanged")
-        contour.naked().dirty = True
+        self.changed()
+        
+    def changed(self):
+        self.countour.naked().dirty = True
 
     # ----------
     # Attributes
