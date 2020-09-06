@@ -1,8 +1,8 @@
-0.9.5 (released 2020-09-06)
+0.9.6 (released 2020-09-06)
 ---------------------------
 - 2020-09-06: fontShell has `changed()` implemented now 
 
-0.9.4 (released 2020-09-04)
+0.9.5 (released 2020-09-04)
 ---------------------------
 - 2020-09-04: Fix for contours not getting updated in fontShell, thanks @justvanrossum!
 - 2020-09-03: Fix for error message in normalizeKerningKey, thanks @colinmford!
