@@ -20,7 +20,7 @@ class RPoint(RBaseObject, BasePoint):
         self.changed()
         
     def changed(self):
-        self.countour.naked().dirty = True
+        self.contour.naked().dirty = True
 
     # ----------
     # Attributes
