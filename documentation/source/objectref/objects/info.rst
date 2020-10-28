@@ -11,7 +11,7 @@ Description
 
 The :class:`Info <BaseInfo>` object contains all names, numbers, URLs, dimensions, values, etc. that would otherwise clutter up the font object. You don't have to create a :class:`Info <BaseInfo>` object yourself, :class:`Font <BaseFont>` makes one when it is created.
 
-:class:`Info <BaseInfo>` doesn’t check the validity of the entries, it just provides storage or access to them.
+:class:`Info <BaseInfo>` validates any value set for a `Info <BaseInfo>` item, but does not check if the data is sane (i.e., you can set valid but incorrect data).
 
 ********
 Overview
