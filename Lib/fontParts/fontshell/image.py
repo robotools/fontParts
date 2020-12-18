@@ -47,6 +47,8 @@ class RImage(RBaseObject, BaseImage):
         fileName = image.fileName
         if fileName is None:
             return None
+        if fileName not in images:
+            return None
         return images[fileName]
 
     def _set_data(self, value):
