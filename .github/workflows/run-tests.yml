@@ -12,20 +12,6 @@ on:
         required: true
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    # https://github.community/t/github-actions-does-not-respect-skip-ci/17325/8
-    if: "! contains(toJSON(github.event.commits.*.message), '[skip ci]')"
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.x
-      uses: actions/setup-python@v2
-      with:
-        python-version: "3.x"
-    - name: Install packages
-      run: pip install tox
-    - name: Run Tox
-      run: tox -e mypy,package_readme
 
   test:
     runs-on: ${{ matrix.platform }}
@@ -53,8 +39,6 @@ jobs:
       run: pip install tox coverage
     - name: Run Tox
       run: tox -e py-cov
-    - name: Run Tox without lxml
-      run: tox -e py-cov-nolxml
     - name: Produce coverage files
       run: |
         coverage combine
@@ -79,7 +63,7 @@ jobs:
     - name: Install packages
       run: pip install tox
     - name: Run Tox
-      run: tox -e py-cy-nolxml
+      run: tox -e py-cy
 
   test-pypy3:
     runs-on: ubuntu-latest
@@ -93,4 +77,4 @@ jobs:
     - name: Install packages
       run: pip install tox
     - name: Run Tox
-      run: tox -e pypy3-nolxml
+      run: tox -e pypy3
