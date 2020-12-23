@@ -1,4 +1,4 @@
-|Build Status| |Appveyor| |Coverage| |Codacy| |PyPI| |Versions|
+|Coverage| |Codacy| |PyPI| |Versions|
 
 FontParts
 ~~~~~~~~~
@@ -116,18 +116,15 @@ or the ``TOXENV`` environment variable:
 
 .. code:: sh
 
-    tox -e py27-nocov
+    tox -e py39-nocov
     TOXENV="py36-cov,htmlcov" tox
 
-.. |Build Status| image:: https://travis-ci.org/robotools/fontParts.svg?branch=master
-   :target: https://travis-ci.org/robotools/fontParts
+
 .. |PyPI| image:: https://img.shields.io/pypi/v/fontParts.svg
    :target: https://pypi.org/project/fontParts
-.. |Versions| image:: https://img.shields.io/badge/python-3.6%2C%203.7-blue.svg
+.. |Versions| image:: https://img.shields.io/badge/python-3.6%2C%203.7%2C%203.8%2C%203.9-blue.svg
    :alt: Python Versions
 .. |Coverage| image:: https://codecov.io/gh/robotools/fontParts/branch/master/graph/badge.svg
    :target: https://codecov.io/gh/robotools/fontParts
 .. |Codacy| image:: https://api.codacy.com/project/badge/Grade/f99cc7af19964717b67a79ebf1523234
    :target: https://www.codacy.com/app/fontParts/fontParts?utm_source=github.com&amp;utm_campaign=Badge_Grade
-.. |Appveyor| image:: https://ci.appveyor.com/api/projects/status/3x64dg9nbaiwl965/branch/master?svg=true
-   :target: https://ci.appveyor.com/project/robotools/fontparts/
