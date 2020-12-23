@@ -50,31 +50,3 @@ jobs:
         flags: unittests
         name: codecov-umbrella
         fail_ci_if_error: true
-
-  test-cython:
-    runs-on: ubuntu-latest
-    if: "! contains(toJSON(github.event.commits.*.message), '[skip ci]')"
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.x
-      uses: actions/setup-python@v2
-      with:
-        python-version: "3.x"
-    - name: Install packages
-      run: pip install tox
-    - name: Run Tox
-      run: tox -e py-cy
-
-  test-pypy3:
-    runs-on: ubuntu-latest
-    if: "! contains(toJSON(github.event.commits.*.message), '[skip ci]')"
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python pypy3
-      uses: actions/setup-python@v2
-      with:
-        python-version: "pypy3"
-    - name: Install packages
-      run: pip install tox
-    - name: Run Tox
-      run: tox -e pypy3
