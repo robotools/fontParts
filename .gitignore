@@ -20,3 +20,6 @@ doc/*
 .pytest_cache
 
 htmlcov
+
+# scm version
+Lib/fontParts/_version.py

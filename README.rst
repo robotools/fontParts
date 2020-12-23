@@ -1,4 +1,4 @@
-|Coverage| |Codacy| |PyPI| |Versions|
+|CI Build Status| |Coverage| |Codacy| |PyPI| |Versions|
 
 FontParts
 ~~~~~~~~~
@@ -119,7 +119,8 @@ or the ``TOXENV`` environment variable:
     tox -e py39-nocov
     TOXENV="py36-cov,htmlcov" tox
 
-
+.. |CI Build Status| image:: https://github.com/robotools/fontParts/workflows/Tests/badge.svg
+   :target: https://github.com/robotools/fontParts/actions?query=workflow%3ATests
 .. |PyPI| image:: https://img.shields.io/pypi/v/fontParts.svg
    :target: https://pypi.org/project/fontParts
 .. |Versions| image:: https://img.shields.io/badge/python-3.6%2C%203.7%2C%203.8%2C%203.9-blue.svg
