@@ -1,3 +1,8 @@
+0.9.7 (released 2020-12-23)
+---------------------------
+- 2020-12-23: Change to github actions for CI and release. 
+- 2020-12-18: fontShell returns `None` when referenced file name doesn't exist for an `Image` (#567, thanks @typemytype)
+
 0.9.6 (released 2020-09-06)
 ---------------------------
 - 2020-09-06: fontShell has `changed()` implemented now 
