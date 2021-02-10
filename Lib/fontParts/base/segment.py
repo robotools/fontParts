@@ -279,7 +279,15 @@ class BaseSegment(
         """
         Subclasses may override this method.
         """
-        return self.points[-1]
+        value = self.points[-1]
+        if value.type == "offcurve":
+            # create a dummy implied on curve point
+            firstPoint = self.points[0]
+            value = self.contour.pointClass()
+            value.x = (value.x + firstPoint.x) / 2
+            value.y = (value.y + firstPoint.y) / 2
+            value.type = "qcurve"
+        return value
 
     offCurve = dynamicProperty("base_offCurve",
                                "The off curve points in the segment.")

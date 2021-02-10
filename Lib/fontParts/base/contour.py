@@ -492,7 +492,7 @@ class BaseContour(
         if lastWasOffCurve and firstIsMove:
             # ignore trailing off curves
             del segments[-1]
-        if lastWasOffCurve and not firstIsMove:
+        if lastWasOffCurve and not firstIsMove and len(segments) > 1:
             segment = segments.pop(-1)
             segment.extend(segments[0])
             del segments[0]
