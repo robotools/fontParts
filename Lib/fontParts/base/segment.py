@@ -302,6 +302,8 @@ class BaseSegment(
         """
         Subclasses may override this method.
         """
+        if self.points and self.points[-1].type == "offcurve":
+            return self.points
         return self.points[:-1]
 
     # --------------
