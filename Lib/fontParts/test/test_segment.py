@@ -141,7 +141,7 @@ class TestSegment(unittest.TestCase):
         contour.appendPoint((100, 100), "offcurve")
         contour.appendPoint((0, 100), "offcurve")
         segment = contour[0]
-        # oncruve is an dummy implied oncurve point
+        # onCurve is a dummy None value, telling this is an on-curve-less quad blob
         self.assertIsNone(
             segment.onCurve,
         )
