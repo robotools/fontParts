@@ -153,8 +153,10 @@ class BaseSegment(
         """
         Subclasses may override this method.
         """
-        value = self.onCurve.type
-        return value
+        onCurve = self.onCurve
+        if onCurve is None:
+            return "qcurve"
+        return onCurve.type
 
     def _set_type(self, newType):
         """
@@ -162,6 +164,10 @@ class BaseSegment(
         """
         oldType = self.type
         if oldType == newType:
+            return
+        if self.onCurve is None:
+            # special case with a single qcurve segment
+            # and only offcurves, don't convert
             return
         contour = self.contour
         if contour is None:
@@ -210,13 +216,18 @@ class BaseSegment(
         """
         Subclasses may override this method.
         """
-        return self.onCurve.smooth
+        onCurve = self.onCurve
+        if onCurve is None:
+            return True
+        return onCurve.smooth
 
     def _set_smooth(self, value):
         """
         Subclasses may override this method.
         """
-        self.onCurve.smooth = value
+        onCurve = self.onCurve
+        if onCurve is not None:
+            self.onCurve.smooth = value
 
     # ------
     # Points
@@ -279,7 +290,10 @@ class BaseSegment(
         """
         Subclasses may override this method.
         """
-        return self.points[-1]
+        value = self.points[-1]
+        if value.type == "offcurve":
+            return None
+        return value
 
     offCurve = dynamicProperty("base_offCurve",
                                "The off curve points in the segment.")
@@ -294,6 +308,8 @@ class BaseSegment(
         """
         Subclasses may override this method.
         """
+        if self.points and self.points[-1].type == "offcurve":
+            return self.points
         return self.points[:-1]
 
     # --------------

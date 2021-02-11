@@ -133,6 +133,32 @@ class TestSegment(unittest.TestCase):
         with self.assertRaises(TypeError):
             segment.type = 123
 
+    def test_offCurve_only_segment(self):
+        contour, unrequested = self.objectGenerator("contour")
+        unrequested.append(contour)
+        contour.appendPoint((0, 0), "offcurve")
+        contour.appendPoint((100, 0), "offcurve")
+        contour.appendPoint((100, 100), "offcurve")
+        contour.appendPoint((0, 100), "offcurve")
+        segment = contour[0]
+        self.assertEqual(
+            len(contour),
+            1
+        )
+        # onCurve is a dummy None value, telling this is an on-curve-less quad blob
+        self.assertIsNone(
+            segment.onCurve,
+        )
+        self.assertEqual(
+            segment.points,
+            segment.offCurve
+        )
+        self.assertEqual(
+            segment.type,
+            "qcurve"
+        )
+
+
     # ----
     # Hash
     # ----
