@@ -136,15 +136,14 @@ class TestSegment(unittest.TestCase):
     def test_offCurve_only_segment(self):
         contour, unrequested = self.objectGenerator("contour")
         unrequested.append(contour)
-        contour.appendPoint((0, 0), None)
-        contour.appendPoint((100, 0), None)
-        contour.appendPoint((100, 100), None)
-        contour.appendPoint((0, 100), None)
+        contour.appendPoint((0, 0), "offcurve")
+        contour.appendPoint((100, 0), "offcurve")
+        contour.appendPoint((100, 100), "offcurve")
+        contour.appendPoint((0, 100), "offcurve")
         segment = contour[0]
         # oncruve is an dummy implied oncurve point
-        self.assertEqual(
-            (segment.onCurve.x, segment.onCurve.y),
-            (0, 50)
+        self.assertIsNone(
+            segment.onCurve,
         )
 
     # ----
