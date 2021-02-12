@@ -1,3 +1,7 @@
+0.9.8 (released 2021-02-12)
+---------------------------
+- 2021-02-11: Add support for quadratic curves with no on-curve points in Contour and Segment. (#572, thanks @typemytype!) 
+
 0.9.7 (released 2020-12-23)
 ---------------------------
 - 2020-12-23: Change to github actions for CI and release. 
