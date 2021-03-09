@@ -1,3 +1,7 @@
+0.9.10 (released 2021-03-09)
+---------------------------
+- 2021-03-09: Update to Defcon 0.8.0 (thanks @justvanrossum!)
+
 0.9.9 (released 2021-02-13)
 ---------------------------
 - 2021-02-13: Fixed import of version. (#573, thanks @gyscos!) 
