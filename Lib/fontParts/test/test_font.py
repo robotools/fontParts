@@ -507,6 +507,7 @@ class TestFont(unittest.TestCase):
         path = self._saveFontPath(".ufo")
         font = self.getFont_glyphs()
         font.save(path, **kwargs)
+        font.close()
         testCallback(path)
         self._tearDownPath(path)
 
