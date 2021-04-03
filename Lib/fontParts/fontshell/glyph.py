@@ -43,6 +43,15 @@ class RGlyph(RBaseObject, BaseGlyph):
     def _set_unicodes(self, value):
         self.naked().unicodes = value
 
+    # strict
+
+    def _get_strict(self):
+        return self.naked().strict
+
+    def _set_strict(self, value=False):
+        self.naked().strict = value
+
+
     # -------
     # Metrics
     # -------

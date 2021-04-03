@@ -40,7 +40,8 @@ class BaseGlyph(BaseObject,
         "height",
         "note",
         "markColor",
-        "lib"
+        "lib",
+        "strict"
     )
 
     def _reprContents(self):
@@ -72,6 +73,7 @@ class BaseGlyph(BaseObject,
         - anchors
         - guidelines
         - image
+        - strict
         """
         return super(BaseGlyph, self).copy()
 
@@ -1576,18 +1578,35 @@ class BaseGlyph(BaseObject,
     # Interpolation & Math
     # --------------------
 
-    def toMathGlyph(self, strict=False):
+    strict = dynamicProperty(
+        "strict",
+        """
+        Flag for strict adherance to the point structue
+        when converting to and from mathGlyph.
+        """
+    )
+
+    def _get_strict(self):
+        pass
+
+    def _set_strict(self, value=False):
+        pass
+
+    def toMathGlyph(self, strict=None):
         """
         Returns the glyph as an object that follows the
         `MathGlyph protocol <https://github.com/typesupply/fontMath>`_.
 
             >>> mg = glyph.toMathGlyph()
 
-        strict (bool) If True: on-point offcurves will be added to 
+        strict (bool) If False: on-point offcurves will be added to 
             line segments to facilitate compatibility.
-            If False: no points are added.
+            If True: no points are added.
 
         """
+        if strict is None:
+            # so we can override the 
+            strict = self.strict
         return self._toMathGlyph(strict=strict)
 
     def _toMathGlyph(self, strict=False):
