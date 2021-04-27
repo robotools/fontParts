@@ -1,4 +1,4 @@
-FontTools[lxml,ufo,unicode]==4.22.0
+FontTools[unicode,ufo,lxml]==4.22.1
 fontMath==0.6.0
 defcon[pens]==0.8.1
 booleanOperations==0.9.0
