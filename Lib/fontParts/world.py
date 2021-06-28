@@ -313,7 +313,7 @@ class BaseFontList(list):
 
         ::
 
-            >>> fonts.sortBy("familyName", "styleName")
+            >>> fonts.sortBy(("familyName", "styleName"))
 
 
         Font Info Attribute Names
