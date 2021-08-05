@@ -573,3 +573,99 @@ class TestContour(unittest.TestCase):
         contour, _ = self.objectGenerator("contour")
         segments = contour.segments
         self.assertEqual(segments, [])
+
+    def test_segment_insert_open(self):
+        # at index 0
+        contour, _ = self.objectGenerator("contour")
+        contour.appendPoint((0, 0), "move")
+        contour.appendPoint((2, 2), "line")
+        contour.appendPoint((3, 3), "line")
+        contour.insertSegment(0, "line", [(1, 1)])
+        self.assertEqual(
+            [(point.x, point.y) for point in contour.points],
+            [(0, 0), (1, 1), (2, 2), (3, 3)]
+        )
+        # at index 1
+        contour, _ = self.objectGenerator("contour")
+        contour.appendPoint((0, 0), "move")
+        contour.appendPoint((2, 2), "line")
+        contour.appendPoint((3, 3), "line")
+        contour.insertSegment(1, "line", [(1, 1)])
+        self.assertEqual(
+            [(point.x, point.y) for point in contour.points],
+            [(0, 0), (2, 2), (1, 1), (3, 3)]
+        )
+
+    def test_segment_insert_curve_open(self):
+        # at index 0
+        contour, _ = self.objectGenerator("contour")
+        contour.appendPoint((0, 0), "move")
+        contour.appendPoint((2, 2), "offcurve")
+        contour.appendPoint((3, 3), "offcurve")
+        contour.appendPoint((4, 4), "curve")
+        contour.appendPoint((5, 5), "line")
+        contour.insertSegment(0, "line", [(1, 1)])
+        self.assertEqual(
+            [(point.x, point.y) for point in contour.points],
+            [(0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5)]
+        )
+        # at index 1
+        contour, _ = self.objectGenerator("contour")
+        contour.appendPoint((0, 0), "move")
+        contour.appendPoint((2, 2), "offcurve")
+        contour.appendPoint((3, 3), "offcurve")
+        contour.appendPoint((4, 4), "curve")
+        contour.appendPoint((5, 5), "line")
+        contour.insertSegment(1, "line", [(1, 1)])
+        self.assertEqual(
+            [(point.x, point.y) for point in contour.points],
+            [(0, 0), (2, 2), (3, 3), (4, 4), (1, 1), (5, 5)]
+        )
+
+    def test_segment_insert_closed(self):
+        # at index 0
+        contour, _ = self.objectGenerator("contour")
+        contour.appendPoint((0, 0), "line")
+        contour.appendPoint((2, 2), "line")
+        contour.appendPoint((3, 3), "line")
+        contour.insertSegment(0, "line", [(1, 1)])
+        self.assertEqual(
+            [(point.x, point.y) for point in contour.points],
+            [(0, 0), (1, 1), (2, 2), (3, 3)]
+        )
+        # at index 1
+        contour, _ = self.objectGenerator("contour")
+        contour.appendPoint((0, 0), "line")
+        contour.appendPoint((2, 2), "line")
+        contour.appendPoint((3, 3), "line")
+        contour.insertSegment(1, "line", [(1, 1)])
+        self.assertEqual(
+            [(point.x, point.y) for point in contour.points],
+            [(0, 0), (2, 2), (1, 1), (3, 3)]
+        )
+
+    def test_segment_insert_curve_closed(self):
+        # at index 0
+        contour, _ = self.objectGenerator("contour")
+        contour.appendPoint((0, 0), "line")
+        contour.appendPoint((2, 2), "offcurve")
+        contour.appendPoint((3, 3), "offcurve")
+        contour.appendPoint((4, 4), "curve")
+        contour.appendPoint((5, 5), "line")
+        contour.insertSegment(0, "line", [(1, 1)])
+        self.assertEqual(
+            [(point.x, point.y) for point in contour.points],
+            [(0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5)]
+        )
+        # at index 1
+        contour, _ = self.objectGenerator("contour")
+        contour.appendPoint((0, 0), "line")
+        contour.appendPoint((2, 2), "offcurve")
+        contour.appendPoint((3, 3), "offcurve")
+        contour.appendPoint((4, 4), "curve")
+        contour.appendPoint((5, 5), "line")
+        contour.insertSegment(1, "line", [(1, 1)])
+        self.assertEqual(
+            [(point.x, point.y) for point in contour.points],
+            [(0, 0), (2, 2), (3, 3), (4, 4), (1, 1), (5, 5)]
+        )
