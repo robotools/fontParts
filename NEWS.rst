@@ -1,3 +1,7 @@
+0.9.11 (released 2021-08-06)
+---------------------------
+- 2021-08-06: Fixes inserting a segment with an open contour, #601 (thanks @typemytype!)
+
 0.9.10 (released 2021-03-09)
 ---------------------------
 - 2021-03-09: Update to Defcon 0.8.0 (thanks @justvanrossum!)
