@@ -588,7 +588,11 @@ class BaseContour(
         onCurve = points[-1]
         offCurve = points[:-1]
         segments = self.segments
-        ptCount = sum([len(segments[s].points) for s in range(index)]) + 1
+        addPointCount = 1
+        if self.open:
+            index += 1
+            addPointCount = 0
+        ptCount = sum([len(segments[s].points) for s in range(index)]) + addPointCount
         self.insertPoint(ptCount, onCurve, type=type, smooth=smooth)
         for offCurvePoint in reversed(offCurve):
             self.insertPoint(ptCount, offCurvePoint, type="offcurve")
