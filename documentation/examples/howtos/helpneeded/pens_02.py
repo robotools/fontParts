@@ -4,7 +4,7 @@
 
 from fontParts.world import OpenFont
 from fontParts.pens.digestPen import DigestPointStructurePen
- 
+
 f = OpenFont("test.ufo")
 
 myPen = DigestPointStructurePen()

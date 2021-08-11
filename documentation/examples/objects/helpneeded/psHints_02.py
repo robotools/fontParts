@@ -6,7 +6,7 @@ f = OpenFont("test.ufo")
 print(f.psHints.asDict())
 
 # a math operation returns a new, unbound object
-ps2 = f.psHints * .5       
+ps2 = f.psHints * .5
 
 # it needs to be rounded first
 ps2.round()

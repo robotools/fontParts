@@ -4,17 +4,17 @@
 
 # a script to generate all necessary accented characters.
 # this assumes all anchor points are set correctly.
-# including doublelayer accents. so, add anchorpoints 
+# including doublelayer accents. so, add anchorpoints
 # on the accents too!
 # (c) evb
- 
+
 from fontParts.world import OpenFont
 from fontParts.tools.toolsAll import readGlyphConstructions
- 
+
 f = OpenFont("test.ufo")
- 
+
 import string
- 
+
 theList = [
     # caps
     'AEacute',
@@ -26,7 +26,7 @@ theList = [
 
 con = readGlyphConstructions()
 theList.sort()
- 
+
 def accentify(f, preflight=False):
     print('start accentification', f.info.fullName)
     slots = list(con.keys())
@@ -51,6 +51,6 @@ def accentify(f, preflight=False):
         f[k].autoUnicodes()
         f[k].update()
     f.update()
- 
+
 accentify(f)
 print('done')

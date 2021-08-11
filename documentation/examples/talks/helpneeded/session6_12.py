@@ -1,5 +1,5 @@
 # robothon06
-# show encoding 
+# show encoding
 
 from fontParts.world import OpenFont
 

@@ -1,8 +1,8 @@
 # robothon 2009
 # set basic attributes in a glyph
- 
+
 from fontParts.world import OpenFont
- 
+
 font = OpenFont("test.ufo")
 glyph = font['A']
 

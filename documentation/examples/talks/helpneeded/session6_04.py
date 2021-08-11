@@ -3,12 +3,12 @@
 # find (nested) fontlab files in the folder
 # open the fonts
 # Demonstrates: recursive function,, dialog, os module
- 
+
 import os.path
 from fontParts.interface.all.dialogs import GetFolder
 from fontParts.world import OpenFont
- 
-# this function looks for fontlab files in a folder 
+
+# this function looks for fontlab files in a folder
 def walk(someFolder, extension):
     extension = extension.lower()
     files = []

@@ -10,7 +10,7 @@ myPen = g.getPen()
 # myPen is a pen object of a type meant for
 # constructing paths in a glyph.
 # So rather than use this pen with the glyph's
-# own draw() method, we're going to tell it 
+# own draw() method, we're going to tell it
 # to do things ourselves. (Just like DrawBot!)
 print(myPen)
 
