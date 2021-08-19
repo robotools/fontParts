@@ -87,7 +87,7 @@ class BaseComponent(
     # baseGlyph
 
     baseGlyph = dynamicProperty("base_baseGlyph",
-                                "The glyph the component references.")
+                                "The name of the glyph the component references.")
 
     def _get_base_baseGlyph(self):
         value = self._get_baseGlyph()
