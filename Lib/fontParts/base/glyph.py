@@ -1766,7 +1766,7 @@ class BaseGlyph(BaseObject,
         from fontMath.mathFunctions import setRoundIntegerFunction
 
         setRoundIntegerFunction(normalizers.normalizeVisualRounding)
-        
+
         minGlyph = minGlyph._toMathGlyph()
         maxGlyph = maxGlyph._toMathGlyph()
         try:
@@ -2327,6 +2327,30 @@ class BaseGlyph(BaseObject,
         return lib
 
     def _get_lib(self):
+        """
+        Subclasses must override this method.
+        """
+        self.raiseNotImplementedError()
+
+    # --------
+    # Temp Lib
+    # --------
+
+    tempLib = dynamicProperty(
+        "base_tempLib",
+        """
+        The :class:`BaseLib` for the glyph.
+
+            >>> tempLib = glyph.tempLib
+        """
+    )
+
+    def _get_base_tempLib(self):
+        lib = self._get_tempLib()
+        lib.glyph = self
+        return lib
+
+    def _get_tempLib(self):
         """
         Subclasses must override this method.
         """

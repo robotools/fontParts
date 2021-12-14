@@ -297,6 +297,11 @@ class RGlyph(RBaseObject, BaseGlyph):
     def _get_lib(self):
         return self.libClass(wrap=self.naked().lib)
 
+    # tempLib
+
+    def _get_tempLib(self):
+        return self.libClass(wrap=self.naked().tempLib)
+
     # ---
     # API
     # ---
