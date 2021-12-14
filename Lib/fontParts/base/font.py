@@ -589,6 +589,30 @@ class BaseFont(
         """
         self.raiseNotImplementedError()
 
+    # tempLib
+
+    tempLib = dynamicProperty(
+        "base_tempLib",
+        """
+        The font's :class:`BaseLib` object. ::
+
+            >>> font.tempLib["org.robofab.hello"]
+            "world"
+        """
+    )
+
+    def _get_base_tempLib(self):
+        lib = self._get_tempLib()
+        lib.font = self
+        return lib
+
+    def _get_tempLib(self):
+        """
+        This is the environment implementation of :attr:`BaseLayer.tempLib`.
+        This must return an instance of a :class:`BaseLib` subclass.
+        """
+        self.raiseNotImplementedError()
+
     # -----------------
     # Layer Interaction
     # -----------------

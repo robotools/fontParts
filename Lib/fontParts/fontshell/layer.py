@@ -20,6 +20,11 @@ class RLayer(RBaseObject, BaseLayer):
     def _get_lib(self):
         return self.libClass(wrap=self.naked().lib)
 
+    # tempLib
+
+    def _get_tempLib(self):
+        return self.libClass(wrap=self.naked().tempLib)
+
     # --------------
     # Identification
     # --------------
