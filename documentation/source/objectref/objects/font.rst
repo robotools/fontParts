@@ -57,6 +57,7 @@ Sub-Objects
     BaseFont.kerning
     BaseFont.features
     BaseFont.lib
+    BaseFont.tempLib
 
 Layers
 ======
