@@ -812,7 +812,7 @@ class TestGuideline(unittest.TestCase):
     def test_is_hashable(self):
         guideline_one = self.getGuideline_generic()
         self.assertTrue(
-            isinstance(guideline_one, collections.Hashable)
+            isinstance(guideline_one, collections.abc.Hashable)
         )
 
     # -------

@@ -279,7 +279,7 @@ class TestContour(unittest.TestCase):
     def test_is_hashable(self):
         contour_one = self.getContour_bounds()
         self.assertTrue(
-            isinstance(contour_one, collections.Hashable)
+            isinstance(contour_one, collections.abc.Hashable)
         )
 
     # --------

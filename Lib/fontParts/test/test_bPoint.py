@@ -595,7 +595,7 @@ class TestBPoint(unittest.TestCase):
     def test_hash(self):
         bPoint = self.getBPoint_corner()
         self.assertEqual(
-            isinstance(bPoint, collections.Hashable),
+            isinstance(bPoint, collections.abc.Hashable),
             False
         )
 

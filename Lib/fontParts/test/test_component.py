@@ -847,7 +847,7 @@ class TestComponent(unittest.TestCase):
     def test_is_hashable(self):
         component_one = self.getComponent_generic()
         self.assertTrue(
-            isinstance(component_one, collections.Hashable)
+            isinstance(component_one, collections.abc.Hashable)
         )
 
     # --------

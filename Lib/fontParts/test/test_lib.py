@@ -130,7 +130,7 @@ class TestLib(unittest.TestCase):
     def test_hash(self):
         lib = self.getLib_generic()
         self.assertEqual(
-            isinstance(lib, collections.Hashable),
+            isinstance(lib, collections.abc.Hashable),
             True
         )
 

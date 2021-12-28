@@ -234,7 +234,7 @@ class TestKerning(unittest.TestCase):
     def test_hash(self):
         kerning = self.getKerning_generic()
         self.assertEqual(
-            isinstance(kerning, collections.Hashable),
+            isinstance(kerning, collections.abc.Hashable),
             True
         )
 

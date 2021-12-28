@@ -715,7 +715,7 @@ class TestImage(unittest.TestCase):
     def test_is_hashable(self):
         image_one = self.getImage_generic()
         self.assertTrue(
-            isinstance(image_one, collections.Hashable)
+            isinstance(image_one, collections.abc.Hashable)
         )
 
     # --------

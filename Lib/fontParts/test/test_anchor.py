@@ -516,7 +516,7 @@ class TestAnchor(unittest.TestCase):
     def test_is_hashable(self):
         anchor_one = self.getAnchor_generic()
         self.assertTrue(
-            isinstance(anchor_one, collections.Hashable)
+            isinstance(anchor_one, collections.abc.Hashable)
         )
 
     # -------

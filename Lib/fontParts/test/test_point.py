@@ -454,7 +454,7 @@ class TestPoint(unittest.TestCase):
     def test_is_hashable(self):
         point_one = self.getPoint_generic()
         self.assertTrue(
-            isinstance(point_one, collections.Hashable)
+            isinstance(point_one, collections.abc.Hashable)
         )
 
     # --------
