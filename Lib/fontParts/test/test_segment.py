@@ -166,7 +166,7 @@ class TestSegment(unittest.TestCase):
     def test_hash(self):
         segment = self.getSegment_line()
         self.assertEqual(
-            isinstance(segment, collections.Hashable),
+            isinstance(segment, collections.abc.Hashable),
             False
         )
 

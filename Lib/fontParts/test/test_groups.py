@@ -228,7 +228,7 @@ class TestGroups(unittest.TestCase):
     def test_hash(self):
         groups = self.getGroups_generic()
         self.assertEqual(
-            isinstance(groups, collections.Hashable),
+            isinstance(groups, collections.abc.Hashable),
             True
         )
 

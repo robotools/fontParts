@@ -53,7 +53,7 @@ class TestInfo(unittest.TestCase):
     def test_hash(self):
         info = self.getInfo_generic()
         self.assertEqual(
-            isinstance(info, collections.Hashable),
+            isinstance(info, collections.abc.Hashable),
             True
         )
 

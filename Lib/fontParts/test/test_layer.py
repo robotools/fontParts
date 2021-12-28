@@ -96,7 +96,7 @@ class TestLayer(unittest.TestCase):
     def test_is_hashable(self):
         layer_one = self.getLayer_glyphs()
         self.assertTrue(
-            isinstance(layer_one, collections.Hashable)
+            isinstance(layer_one, collections.abc.Hashable)
         )
 
     # --------
