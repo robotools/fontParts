@@ -694,7 +694,7 @@ class TestGlyph(unittest.TestCase):
     def test_is_hashable(self):
         glyph_one = self.getGlyph_generic()
         self.assertTrue(
-            isinstance(glyph_one, collections.Hashable)
+            isinstance(glyph_one, collections.abc.Hashable)
         )
 
     # --------

@@ -106,7 +106,7 @@ class TestFeatures(unittest.TestCase):
     def test_hash(self):
         features = self.getFeatures_generic()
         self.assertEqual(
-            isinstance(features, collections.Hashable),
+            isinstance(features, collections.abc.Hashable),
             True
         )
 

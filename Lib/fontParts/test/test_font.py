@@ -200,7 +200,7 @@ class TestFont(unittest.TestCase):
     def test_hash_is_hasbable(self):
         font_one = self.getFont_glyphs()
         self.assertEqual(
-            isinstance(font_one, collections.Hashable),
+            isinstance(font_one, collections.abc.Hashable),
             True
         )
 
