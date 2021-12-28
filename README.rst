@@ -123,7 +123,7 @@ or the ``TOXENV`` environment variable:
    :target: https://github.com/robotools/fontParts/actions?query=workflow%3ATests
 .. |PyPI| image:: https://img.shields.io/pypi/v/fontParts.svg
    :target: https://pypi.org/project/fontParts
-.. |Versions| image:: https://img.shields.io/badge/python-3.7%2C%203.8%2C%203.9-blue.svg
+.. |Versions| image:: https://img.shields.io/badge/python-3.7%2C%203.8%2C%203.9%2C%203.10-blue.svg
    :alt: Python Versions
 .. |Coverage| image:: https://codecov.io/gh/robotools/fontParts/branch/master/graph/badge.svg
    :target: https://codecov.io/gh/robotools/fontParts
