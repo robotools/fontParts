@@ -1,3 +1,9 @@
+0.10.0 (released 2021-12-28)
+---------------------------
+- 2021-12-28: Drops support for Python 3.6
+- 2021-12-14: Adds tempLib, #615 (thanks @typemytype!)
+- Improved docs with #605 and #607. Thanks @driehuis and @arrowtype!
+
 0.9.11 (released 2021-08-06)
 ---------------------------
 - 2021-08-06: Fixes inserting a segment with an open contour, #601 (thanks @typemytype!)
