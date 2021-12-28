@@ -49,6 +49,7 @@ Sub-Objects
     :nosignatures:
 
     BaseLayer.lib
+    BaseLayer.tempLib
 
 Glyphs
 ======
