@@ -1,7 +1,7 @@
 0.10.1 (released 2021-12-28)
 ---------------------------
-- Update to use Collections.abc.Hashable by @benkiel in https://github.com/robotools/fontParts/pull/622
-- Start testing Python 3.10 by @benkiel in https://github.com/robotools/fontParts/pull/619
+- Update to use Collections.abc.Hashable by @benkiel in #622
+- Start testing Python 3.10 by @benkiel in #619
 
 0.10.0 (released 2021-12-28)
 ---------------------------
