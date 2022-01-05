@@ -306,12 +306,13 @@ class RGlyph(RBaseObject, BaseGlyph):
     # API
     # ---
 
-    def _loadFromGLIF(self, glifData):
+    def _loadFromGLIF(self, glifData, validate=True):
         try:
             readGlyphFromString(
                 aString=glifData,
                 glyphObject=self.naked(),
-                pointPen=self.getPointPen()
+                pointPen=self.getPointPen(),
+                validate=validate
             )
         except GlifLibError:
             raise FontPartsError("Not valid glif data")
