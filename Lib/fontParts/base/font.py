@@ -1533,9 +1533,13 @@ class BaseFont(
 
     def getReverseComponentMapping(self):
         """
-        Create a dictionary of unicode -> [glyphname, ...] mappings.
-        All glyphs are loaded. Note that one glyph can have multiple unicode values,
-        and a unicode value can have multiple glyphs pointing to it.
+        Get a reversed map of component references in the font.
+        {
+        'A' : ['Aacute', 'Aring']
+        'acute' : ['Aacute']
+        'ring' : ['Aring']
+        etc.
+        }
         """
         return self._getReverseComponentMapping()
 
@@ -1551,13 +1555,9 @@ class BaseFont(
 
     def getCharacterMapping(self):
         """
-        Get a reversed map of component references in the font.
-        {
-        'A' : ['Aacute', 'Aring']
-        'acute' : ['Aacute']
-        'ring' : ['Aring']
-        etc.
-        }
+        Create a dictionary of unicode -> [glyphname, ...] mappings.
+        All glyphs are loaded. Note that one glyph can have multiple unicode values,
+        and a unicode value can have multiple glyphs pointing to it.
         """
         return self._getCharacterMapping()
 
