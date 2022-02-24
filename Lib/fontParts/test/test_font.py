@@ -538,3 +538,32 @@ class TestFont(unittest.TestCase):
                     expectedFileStructure = UFOFileStructure(fileStructure)
                 self.assertEqual(reader.fileStructure, expectedFileStructure)
             self._save(testCases, fileStructure=fileStructure)
+
+    # copy
+
+    def test_copy(self):
+        font = self.getFont_glyphs()
+        copy = font.copy()
+        self.assertEqual(
+            font.keys(),
+            copy.keys()
+        )
+
+        font = self.getFont_glyphs()
+        font.defaultLayer.name = "hello"
+        copy = font.copy()
+        self.assertEqual(
+            font.keys(),
+            copy.keys()
+        )
+        self.assertEqual(
+            font.defaultLayerName,
+            copy.defaultLayerName
+        )
+
+        font = self.getFont_guidelines()
+        copy = font.copy()
+        self.assertEqual(
+            copy.selectedGuidelines,
+            font.selectedGuidelines
+        )

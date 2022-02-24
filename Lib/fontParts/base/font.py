@@ -86,6 +86,8 @@ class BaseFont(
         Refer to :meth:`BaseFont.copy` for a list
         of values that will be copied.
         """
+        # set the default layer name
+        self.defaultLayer.name = source.defaultLayerName
         for layerName in source.layerOrder:
             if layerName in self.layerOrder:
                 layer = self.getLayer(layerName)
