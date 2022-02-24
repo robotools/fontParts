@@ -553,7 +553,7 @@ class TestFont(unittest.TestCase):
         font.defaultLayer.name = "hello"
         copy = font.copy()
         self.assertEqual(
-            font.key(),
+            font.keys(),
             copy.keys()
         )
         self.assertEqual(
