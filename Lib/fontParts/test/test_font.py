@@ -545,7 +545,7 @@ class TestFont(unittest.TestCase):
         font = self.getFont_glyphs()
         copy = font.copy()
         self.assertEqual(
-            font.key(),
+            font.keys(),
             copy.keys()
         )
 
