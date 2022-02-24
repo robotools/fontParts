@@ -1,3 +1,11 @@
+0.10.3 (released 2022-02-24)
+---------------------------
+- Fixes issue with `defaultLayer` and copying a `font`. Issue #630. (thanks @typemytype!)
+
+0.10.2 (released 2022-01-05)
+---------------------------
+- Add vaidate kwarg to _loadFromGlyph #623. (thanks @ctrlcctrlv)
+
 0.10.1 (released 2021-12-28)
 ---------------------------
 - Update to use Collections.abc.Hashable by @benkiel in #622
