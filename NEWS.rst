@@ -1,3 +1,7 @@
+0.10.4 (released 2022-03-17)
+---------------------------
+- Fixes issue with setting glyph name when copying. Issue #633. (thanks @typemytype!)
+
 0.10.3 (released 2022-02-24)
 ---------------------------
 - Fixes issue with `defaultLayer` and copying a `font`. Issue #630. (thanks @typemytype!)
