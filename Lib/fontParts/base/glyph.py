@@ -20,6 +20,21 @@ from fontParts.base.color import Color
 from fontParts.base.deprecated import DeprecatedGlyph, RemovedGlyph
 
 
+class FuzzyNumber(object):
+
+    def __init__(self, value, threshold):
+        self.value = value
+        self.threshold = threshold
+
+    def __lt__(self, other):
+        if abs(self.value - other.value) < self.threshold:
+            return 0
+        else:
+            return (self.value > other.value) - (self.value < other.value)
+
+    __cmp__ = __lt__
+
+
 class BaseGlyph(BaseObject,
                 TransformationMixin,
                 InterpolationMixin,
@@ -1511,13 +1526,46 @@ class BaseGlyph(BaseObject,
 
     def _autoContourOrder(self, **kwargs):
         """
-        XXX
-
-        This can be ported from RoboFab.
-
-        XXX
+        Sorting is based on (in this order):
+        - the (negative) point count
+        - the (negative) segment count
+        - fuzzy x value of the center of the contour
+        - fuzzy y value of the center of the contour
+        - the (negative) surface of the bounding box of the contour: width * height
+        the latter is a safety net for for instances like a very thin 'O' where the
+        x centers could be close enough to rely on the y for the sort which could
+        very well be the same for both contours. We use the _negative_ of the surface
+        to ensure that larger contours appear first, which seems more natural.
         """
-        self.raiseNotImplementedError()
+        tempContourList = []
+        contourList = []
+        xThreshold = None
+        yThreshold = None
+
+        for contour in self:
+            bounds = contour.bounds
+            if bounds is None:
+                continue
+            xMin, yMin, xMax, yMax = bounds
+            width = xMax - xMin
+            height = yMax - yMin
+            xC = 0.5 * (xMin + xMax)
+            yC = 0.5 * (yMin + yMax)
+            xTh = abs(width * 0.5)
+            yTh = abs(height * 0.5)
+            if xThreshold is None or xThreshold > xTh:
+                xThreshold = xTh
+            if yThreshold is None or yThreshold > yTh:
+                yThreshold = yTh
+            tempContourList.append((-len(contour.points), -len(contour.segments), xC, yC, -(width * height), contour))
+
+        for points, segments, x, y, surface, contour in tempContourList:
+            contourList.append((points, segments, FuzzyNumber(x, xThreshold), FuzzyNumber(y, yThreshold), surface, contour))
+        contourList.sort()
+
+        self.clearContours()
+        for points, segments, xO, yO, surface, contour in contourList:
+            self.appendContour(contour)
 
     # --------------
     # Transformation

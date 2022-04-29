@@ -1,6 +1,7 @@
 import unittest
 import collections
 from fontParts.base import FontPartsError
+from fontTools.pens.areaPen import AreaPen
 from .test_image import testImageData
 
 
@@ -441,6 +442,104 @@ class TestGlyph(unittest.TestCase):
         self.assertEqual(len(glyph), 2)
         glyph.clearContours()
         self.assertEqual(len(glyph), 0)
+
+    def test_autoContourOrder_points(self):
+        glyph = self.getGlyph_generic()
+        pen = glyph.getPen()
+        pen.moveTo((287, 212))
+        pen.lineTo((217, 108))
+        pen.lineTo((407, 109))
+        pen.closePath()
+
+        pen = glyph.getPen()
+        pen.moveTo((73, 184))
+        pen.lineTo((39, 112))
+        pen.lineTo((147, 61))
+        pen.lineTo((140, 137))
+        pen.lineTo((110, 176))
+        pen.closePath()
+
+        pen = glyph.getPen()
+        pen.moveTo((60, 351))
+        pen.lineTo((149, 421))
+        pen.lineTo((225, 398))
+        pen.lineTo((237, 290))
+        pen.lineTo((183, 239))
+        pen.lineTo((129, 245))
+        pen.lineTo((70, 285))
+        pen.closePath()
+
+        glyph.autoContourOrder()
+        self.assertEqual([len(c.points) for c in glyph.contours], [7, 5, 3])
+
+    def test_autoContourOrder_segments(self):
+        glyph = self.getGlyph_generic()
+
+        pen = glyph.getPen()
+        pen.moveTo((116, 202))
+        pen.curveTo((116, 308), (156, 348), (245, 348))
+        pen.closePath()
+
+        pen = glyph.getPen()
+        pen.moveTo((261, 212))
+        pen.lineTo((335, 212))
+        pen.lineTo((335, 301))
+        pen.lineTo((261, 301))
+        pen.closePath()
+
+        glyph.autoContourOrder()
+        self.assertEqual([len(c.segments) for c in glyph.contours], [4, 2])
+
+    def test_autoContourOrder_center(self):
+        glyph = self.getGlyph_generic()
+
+        pen = glyph.getPen()
+        pen.moveTo((218, 129))
+        pen.curveTo((279, 129), (329, 179), (329, 240))
+        pen.curveTo((329, 301), (279, 351), (218, 351))
+        pen.curveTo((157, 351), (107, 301), (107, 240))
+        pen.curveTo((107, 179), (157, 129), (218, 129))
+        pen.closePath()
+
+        pen = glyph.getPen()
+        pen.moveTo((188, 99))
+        pen.curveTo((249, 99), (299, 149), (299, 210))
+        pen.curveTo((299, 271), (249, 321), (188, 321))
+        pen.curveTo((127, 321), (77, 271), (77, 210))
+        pen.curveTo((77, 149), (127, 99), (188, 99))
+        pen.closePath()
+
+        glyph.autoContourOrder()
+        self.assertTrue(glyph.contours[0].bounds < glyph.contours[1].bounds)
+
+    def test_autoContourOrder_surface(self):
+        glyph = self.getGlyph_generic()
+
+        pen = glyph.getPen()
+        pen.moveTo((192, 30))
+        pen.curveTo((282, 30), (355, 103), (355, 193))
+        pen.curveTo((355, 282), (282, 356), (192, 356))
+        pen.curveTo((102, 356), (29, 282), (29, 193))
+        pen.curveTo((29, 103), (102, 30), (192, 30))
+        pen.closePath()
+
+        pen = glyph.getPen()
+        pen.moveTo((192, 30))
+        pen.curveTo((355, 30), (355, 30), (355, 193))
+        pen.curveTo((355, 356), (355, 356), (192, 356))
+        pen.curveTo((29, 356), (29, 356), (29, 193))
+        pen.curveTo((29, 30), (29, 30), (192, 30))
+        pen.closePath()
+
+        glyph.autoContourOrder()
+
+        firstAreaPen = AreaPen()
+        glyph.contours[0].draw(firstAreaPen)
+
+        secondAreaPen = AreaPen()
+        glyph.contours[1].draw(firstAreaPen)
+
+        self.assertTrue(firstAreaPen.value > secondAreaPen.value)
 
     # ----------
     # Components
