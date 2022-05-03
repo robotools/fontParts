@@ -121,6 +121,7 @@ Dictionary
 .. automethod:: BaseKerning.__setitem__
 .. automethod:: BaseKerning.__getitem__
 .. automethod:: BaseKerning.get
+.. automethod:: BaseKerning.find
 .. automethod:: BaseKerning.__delitem__
 .. automethod:: BaseKerning.pop
 .. automethod:: BaseKerning.__iter__
