@@ -54,6 +54,7 @@ Dictionary
     BaseKerning.__setitem__
     BaseKerning.__getitem__
     BaseKerning.get
+    BaseKerning.find
     BaseKerning.__delitem__
     BaseKerning.pop
     BaseKerning.__iter__
