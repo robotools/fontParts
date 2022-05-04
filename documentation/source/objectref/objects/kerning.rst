@@ -54,6 +54,7 @@ Dictionary
     BaseKerning.__setitem__
     BaseKerning.__getitem__
     BaseKerning.get
+    BaseKerning.find
     BaseKerning.__delitem__
     BaseKerning.pop
     BaseKerning.__iter__
@@ -120,6 +121,7 @@ Dictionary
 .. automethod:: BaseKerning.__setitem__
 .. automethod:: BaseKerning.__getitem__
 .. automethod:: BaseKerning.get
+.. automethod:: BaseKerning.find
 .. automethod:: BaseKerning.__delitem__
 .. automethod:: BaseKerning.pop
 .. automethod:: BaseKerning.__iter__
