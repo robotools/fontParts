@@ -1,7 +1,6 @@
 import unittest
 import collections
 from fontParts.base import FontPartsError
-from fontTools.pens.areaPen import AreaPen
 from .test_image import testImageData
 
 
