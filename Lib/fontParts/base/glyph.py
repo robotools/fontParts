@@ -18,6 +18,7 @@ from fontParts.base import normalizers
 from fontParts.base.compatibility import GlyphCompatibilityReporter
 from fontParts.base.color import Color
 from fontParts.base.deprecated import DeprecatedGlyph, RemovedGlyph
+from defcon.tools.fuzzyNumber import FuzzyNumber
 
 
 class BaseGlyph(BaseObject,
@@ -1524,9 +1525,6 @@ class BaseGlyph(BaseObject,
         very well be the same for both contours. We use the _negative_ of the surface
         to ensure that larger contours appear first, which seems more natural.
         """
-        def roundToThreshold(value, threshold):
-            return round(value / float(threshold)) * threshold
-
         tempContourList = []
         contourList = []
         xThreshold = None
@@ -1550,7 +1548,7 @@ class BaseGlyph(BaseObject,
             tempContourList.append((-len(contour.points), -len(contour.segments), xC, yC, -(width * height), contour))
 
         for points, segments, x, y, surface, contour in tempContourList:
-            contourList.append((points, segments, roundToThreshold(x, xThreshold), roundToThreshold(y, yThreshold), surface, contour))
+            contourList.append((points, segments, FuzzyNumber(x, xThreshold), FuzzyNumber(y, yThreshold), surface, contour))
         contourList.sort()
 
         self.clearContours()
