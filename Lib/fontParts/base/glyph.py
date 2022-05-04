@@ -1514,8 +1514,10 @@ class BaseGlyph(BaseObject,
         Sorting is based on (in this order):
         - the (negative) point count
         - the (negative) segment count
-        - fuzzy x value of the center of the contour
-        - fuzzy y value of the center of the contour
+        - x value of the center of the contour rounded to a threshold
+        - y value of the center of the contour rounded to a threshold
+          (such threshold is calculated as the smallest contour width
+          or height in the glyph divided by two)
         - the (negative) surface of the bounding box of the contour: width * height
         the latter is a safety net for for instances like a very thin 'O' where the
         x centers could be close enough to rely on the y for the sort which could
