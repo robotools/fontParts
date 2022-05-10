@@ -12,13 +12,13 @@ from fontParts.base.base import (
     InterpolationMixin,
     SelectionMixin,
     dynamicProperty,
-    interpolate
+    interpolate,
+    FuzzyNumber
 )
 from fontParts.base import normalizers
 from fontParts.base.compatibility import GlyphCompatibilityReporter
 from fontParts.base.color import Color
 from fontParts.base.deprecated import DeprecatedGlyph, RemovedGlyph
-from defcon.tools.fuzzyNumber import FuzzyNumber
 
 
 class BaseGlyph(BaseObject,
