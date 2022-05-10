@@ -29,6 +29,14 @@ class TestGlyph(unittest.TestCase):
         glyph.appendGuideline((3, 4), 90, "Test Guideline 2")
         return glyph
 
+    def getGlyph_empty(self):
+        glyph, _ = self.objectGenerator("glyph")
+        glyph.name = "Test Glyph 2"
+        glyph.unicode = int(ord("X"))
+        glyph.width = 0
+        glyph.height = 0
+        return glyph
+
     def get_generic_object(self, obj_name):
         fp_object, _ = self.objectGenerator(obj_name)
         return fp_object
@@ -441,6 +449,140 @@ class TestGlyph(unittest.TestCase):
         self.assertEqual(len(glyph), 2)
         glyph.clearContours()
         self.assertEqual(len(glyph), 0)
+
+    def test_autoContourOrder_points(self):
+        glyph = self.getGlyph_empty()
+        pen = glyph.getPen()
+        pen.moveTo((287, 212))
+        pen.lineTo((217, 108))
+        pen.lineTo((407, 109))
+        pen.closePath()
+
+        pen = glyph.getPen()
+        pen.moveTo((73, 184))
+        pen.lineTo((39, 112))
+        pen.lineTo((147, 61))
+        pen.lineTo((140, 137))
+        pen.lineTo((110, 176))
+        pen.closePath()
+
+        pen = glyph.getPen()
+        pen.moveTo((60, 351))
+        pen.lineTo((149, 421))
+        pen.lineTo((225, 398))
+        pen.lineTo((237, 290))
+        pen.lineTo((183, 239))
+        pen.lineTo((129, 245))
+        pen.lineTo((70, 285))
+        pen.closePath()
+
+        glyph.autoContourOrder()
+        self.assertEqual([len(c.points) for c in glyph.contours], [7, 5, 3])
+
+    def test_autoContourOrder_segments(self):
+        glyph = self.getGlyph_empty()
+
+        pen = glyph.getPen()
+        pen.moveTo((116, 202))
+        pen.curveTo((116, 308), (156, 348), (245, 348))
+        pen.closePath()
+
+        pen = glyph.getPen()
+        pen.moveTo((261, 212))
+        pen.lineTo((335, 212))
+        pen.lineTo((335, 301))
+        pen.lineTo((261, 301))
+        pen.closePath()
+
+        glyph.autoContourOrder()
+        self.assertEqual([len(c.segments) for c in glyph.contours], [4, 2])
+
+    def test_autoContourOrder_fuzzycenter(self):
+        glyph = self.getGlyph_empty()
+
+        # the contours are overlapping too much
+        # the different position of their center points
+        # should not matter
+        pen = glyph.getPen()
+        pen.moveTo((313, 44))
+        pen.curveTo((471, 44), (600, 174), (600, 332))
+        pen.curveTo((600, 490), (471, 619), (313, 619))
+        pen.curveTo((155, 619), (26, 490), (26, 332))
+        pen.curveTo((26, 174), (155, 44), (313, 44))
+        pen.closePath()
+
+        pen = glyph.getPen()
+        pen.moveTo((288, 122))
+        pen.curveTo((383, 122), (461, 200), (461, 295))
+        pen.curveTo((461, 390), (383, 468), (288, 468))
+        pen.curveTo((192, 468), (114, 390), (114, 295))
+        pen.curveTo((114, 200), (192, 122), (288, 122))
+        pen.closePath()
+
+        glyph.autoContourOrder()
+
+        self.assertTrue(
+            glyph.contours[0].points[0].x == 313
+            and glyph.contours[1].points[0].x == 288
+        )
+
+    def test_autoContourOrder_distantCenter(self):
+        glyph = self.getGlyph_empty()
+
+        # both outlines have same structure
+        # but their center points are far away
+        # so, the center points should inform
+        # the sorting
+        # from left to right first, then bottom to top
+        pen = glyph.getPen()
+        pen.moveTo((313, 44))
+        pen.curveTo((471, 44), (600, 174), (600, 332))
+        pen.curveTo((600, 490), (471, 619), (313, 619))
+        pen.curveTo((155, 619), (26, 490), (26, 332))
+        pen.curveTo((26, 174), (155, 44), (313, 44))
+        pen.closePath()
+
+        pen = glyph.getPen()
+        pen.moveTo((-142, -118))
+        pen.curveTo((-47, -118), (31, -40), (31, 55))
+        pen.curveTo((31, 150), (-47, 228), (-142, 228))
+        pen.curveTo((-238, 228), (-316, 150), (-316, 55))
+        pen.curveTo((-316, -40), (-238, -118), (-142, -118))
+        pen.closePath()
+
+        glyph.autoContourOrder()
+        self.assertTrue(
+            glyph.contours[0].points[0].x == -142
+            and glyph.contours[1].points[0].x == 313
+        )
+
+    def test_autoContourOrder_bboxsurface(self):
+        glyph = self.getGlyph_empty()
+
+        # both outlines share the same center
+        # so, the surface of the bounding box should inform
+        # the sorting, from larger to smaller
+        pen = glyph.getPen()
+        pen.moveTo((100, 50))
+        pen.curveTo((128, 50), (150, 72), (150, 100))
+        pen.curveTo((150, 128), (128, 150), (100, 150))
+        pen.curveTo((72, 150), (50, 128), (50, 100))
+        pen.curveTo((50, 72), (72, 50), (100, 50))
+        pen.closePath()
+
+        pen = glyph.getPen()
+        pen.moveTo((100, 0))
+        pen.curveTo((155, 0), (200, 45), (200, 100))
+        pen.curveTo((200, 155), (155, 200), (100, 200))
+        pen.curveTo((45, 200), (0, 155), (0, 100))
+        pen.curveTo((0, 45), (45, 0), (100, 0))
+        pen.closePath()
+
+        glyph.autoContourOrder()
+        self.assertTrue(
+            glyph.contours[0].points[0].y == 0
+            and glyph.contours[1].points[0].y == 50
+        )
 
     # ----------
     # Components
