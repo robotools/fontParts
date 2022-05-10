@@ -1,3 +1,8 @@
+0.10.5 (released 2022-05-10)
+---------------------------
+- Adds `glyph.autoContourOrder`. Issue #645. (thanks @roberto-arista!)
+- Adds `FuzzyNumber` to `base.py`. Needed for the above, copied from defcon. (thanks @typemytype!)
+
 0.10.4 (released 2022-03-17)
 ---------------------------
 - Fixes issue with setting glyph name when copying. Issue #633. (thanks @typemytype!)
