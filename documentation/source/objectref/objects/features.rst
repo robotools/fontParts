@@ -15,8 +15,8 @@ Features is text in the `Adobe Font Development Kit <http://www.adobe.com/devnet
 
 ::
 
-	font = CurrentFont()
-	print font.features
+    font = CurrentFont()
+    print(font.features)
 
 ********
 Overview
