@@ -1,7 +1,7 @@
 import unittest
 import tempfile
 import os
-from fontParts.world import RFont, FontList, OpenFont
+from fontParts.world import RFont, FontList, OpenFont, OpenFonts
 
 class TestFontList(unittest.TestCase):
 
@@ -294,6 +294,27 @@ class TestFontOpen(unittest.TestCase):
 
     def test_font_open(self):
         OpenFont(self.font_path)
+
+
+class TestOpenFonts(unittest.TestCase):
+
+    def setUp(self):
+        self.font_dir = tempfile.mkdtemp()
+        for i in range(3):
+            font, _ = self.objectGenerator("font")
+            path = os.path.join(self.font_dir, f"test{i}.ufo")
+            font.save(path)
+
+    def tearDown(self):
+        import shutil
+        shutil.rmtree(self.font_dir)
+
+    def test_font_open(self):
+        fonts = OpenFonts(self.font_dir)
+        fileNames = [os.path.basename(font.path) for font in fonts]
+        fileNames.sort()
+        expected = ["test0.ufo", "test1.ufo", "test2.ufo"]
+        self.assertEqual(fileNames, expected)
 
 
 class TestFontShell_RFont(unittest.TestCase):

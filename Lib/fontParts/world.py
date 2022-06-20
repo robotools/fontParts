@@ -1,3 +1,54 @@
+import os
+import glob
+
+def OpenFonts(directory=None, showInterface=True, fileExtensions=None):
+    """
+    Open all fonts with the given **fileExtensions** located in
+    **directory**. If **directory** is ``None``, a dialog for
+    selecting a directory will be opened. **directory** may also
+    be a list of directories. If **showInterface** is ``False``,
+    the font should be opened without graphical interface. The default
+    for **showInterface** is ``True``.
+
+    The fonts are located within the directory using the `glob`
+    <https://docs.python.org/library/glob.html>`_ module. The
+    patterns are created with ``os.path.join(glob, "*" + fileExtension)``
+    for every file extension in ``fileExtensions``. If ``fileExtensions``
+    if ``None`` the environment will use its default fileExtensions.
+
+    ::
+
+        from fontParts.world import *
+
+        fonts = OpenFonts()
+        fonts = OpenFonts(showInterface=False)
+    """
+    from fontParts.ui import GetFileOrFolder
+    if fileExtensions is None:
+        fileExtensions = dispatcher["OpenFontsFileExtensions"]
+    if isinstance(directory, str):
+        directories = [directory]
+    elif directory is None:
+        directories = GetFileOrFolder(allowsMultipleSelection=True)
+    else:
+        directories = directory
+    if directories:
+        globPatterns = []
+        for directory in directories:
+            if os.path.splitext(directory)[-1] in fileExtensions:
+                globPatterns.append(directory)
+            elif not os.path.isdir(directory):
+                pass
+            else:
+                for ext in fileExtensions:
+                    globPatterns.append(os.path.join(directory, "*" + ext))
+        paths = []
+        for pattern in globPatterns:
+            paths.extend(glob.glob(pattern))
+        for path in paths:
+            yield OpenFont(path, showInterface=showInterface)
+
+
 def OpenFont(path, showInterface=True):
     """
     Open font located at **path**. If **showInterface**
@@ -218,7 +269,6 @@ def AllFonts(sortOptions=None):
     Get a list of all open fonts. Optionally, provide a
     value for ``sortOptions`` to sort the fonts. See
     :meth:`world.FontList.sortBy` for options.
-
 
     ::
 
@@ -578,6 +628,7 @@ class _EnvironmentDispatcher(object):
 
 
 dispatcher = _EnvironmentDispatcher([
+    "OpenFontsFileExtensions",
     "OpenFont",
     "NewFont",
     "AllFonts",
@@ -624,6 +675,10 @@ dispatcher["FontList"] = BaseFontList
 
 try:
     from fontParts import fontshell
+
+    # OpenFonts
+
+    dispatcher["OpenFontsFileExtensions"] = [".ufo"]
 
     # OpenFont, RFont
 
