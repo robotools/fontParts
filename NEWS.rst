@@ -1,3 +1,7 @@
+0.10.6 (released 2022-06-21)
+---------------------------
+- Adds `openFonts` (more than one font). Issue #545. (thanks @typesupply!)
+
 0.10.5 (released 2022-05-10)
 ---------------------------
 - Adds `glyph.autoContourOrder`. Issue #645. (thanks @roberto-arista!)
