@@ -702,14 +702,15 @@ class BaseGlyph(BaseObject,
     def appendGlyph(self, other, offset=None):
         """
         Append the data from ``other`` to new objects in this glyph.
+
+            >>> glyph.appendGlyph(otherGlyph)
+
         This will append:
 
         - contours
         - components
         - anchors
         - guidelines
-
-            >>> glyph.appendGlyph(otherGlyph)
 
         ``offset`` indicates the x and y shift values that should
         be applied to the appended data. It must be a :ref:`type-coordinate`
