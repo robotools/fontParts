@@ -1,3 +1,7 @@
+0.10.7 (released 2022-07-11)
+---------------------------
+- Small documentation update and fix for scm tools.
+
 0.10.6 (released 2022-06-21)
 ---------------------------
 - Adds `openFonts` (more than one font). Issue #545. (thanks @typesupply!)
