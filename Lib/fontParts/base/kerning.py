@@ -122,6 +122,8 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         """
         Interpolates all pairs between two :class:`BaseKerning` objects:
 
+            >>> myKerning.interpolate(kerningOne, kerningTwo)
+
         **minKerning** and **maxKerning**. The interpolation occurs on a
         0 to 1.0 range where **minKerning** is located at 0 and
         **maxKerning** is located at 1.0. The kerning data is replaced by
@@ -137,8 +139,6 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         * **suppressError** is a ``bool`` indicating if incompatible data should
           be ignored or if an error should be raised when such incompatibilities
           are found. The default behavior is to ignore incompatible data.
-
-            >>> myKerning.interpolate(kerningOne, kerningTwo)
         """
         factor = normalizers.normalizeInterpolationFactor(factor)
         if not isinstance(minKerning, BaseKerning):
