@@ -957,6 +957,45 @@ class BaseContour(
         """
         self.raiseNotImplementedError()
 
+    def setStartPoint(self, point):
+        """
+        Set the first point on the contour.
+        point can be a segment object or an index.
+        """
+        if self.open:
+            raise FontPartsError("An open contour can not change the starting point.")
+
+        points = self.points
+        if not isinstance(point, int):
+            pointIndex = points.index(point)
+        else:
+            pointIndex = point
+        if pointIndex == 0:
+            return
+
+        if pointIndex >= len(points):
+            raise ValueError(("The contour does not contain a point "
+                              "at index %d" % pointIndex))
+        self._setStartPoint(pointIndex)
+
+    def _setStartPoint(self, pointIndex, **kwargs):
+        """
+        Subclasses may override this method.
+        """
+        points = self.points
+        points = points[pointIndex:] + points[:pointIndex]
+        # Clear the points.
+        for point in self.points:
+            self.removePoint(point)
+        # Add the points.
+        for point in points:
+            self.appendPoint(
+                (point.x, point.y),
+                type=point.type,
+                smooth=point.smooth,
+                name=point.name,
+                identifier=point.identifier
+            )
     # ---------
     # Selection
     # ---------

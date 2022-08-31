@@ -669,3 +669,20 @@ class TestContour(unittest.TestCase):
             [(point.x, point.y) for point in contour.points],
             [(0, 0), (2, 2), (3, 3), (4, 4), (1, 1), (5, 5)]
         )
+
+    # ------
+    # points
+    # ------
+
+    def test_setStartPoint(self):
+        contour, _ = self.objectGenerator("contour")
+        contour.appendPoint((0, 0), "line")
+        contour.appendPoint((1, 1), "line")
+        contour.appendPoint((2, 2), "line")
+        contour.appendPoint((3, 3), "line")
+
+        contour.setStartPoint(2)
+        self.assertEqual(
+            [(point.x, point.y) for point in contour.points],
+            [(2, 2), (3, 3), (0, 0), (1, 1)]
+        )
