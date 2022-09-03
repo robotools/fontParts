@@ -2,7 +2,6 @@
 ---------------------------
 - Adds `setStartPoint` to the contour object. Thanks @typemytype! See #668.
 
-
 0.10.7 (released 2022-07-11)
 ---------------------------
 - Small documentation update and fix for scm tools.
