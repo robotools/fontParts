@@ -1613,21 +1613,29 @@ class BaseGlyph(BaseObject,
     # Interpolation & Math
     # --------------------
 
-    def toMathGlyph(self):
+    def toMathGlyph(self, scaleComponentTransform=True, strict=False):
         """
         Returns the glyph as an object that follows the
         `MathGlyph protocol <https://github.com/typesupply/fontMath>`_.
 
             >>> mg = glyph.toMathGlyph()
-        """
-        return self._toMathGlyph()
 
-    def _toMathGlyph(self):
+        **scaleComponentTransform** Enables the MathGlyph
+          `scaleComponentTransform` option.
+        **strict**  Enables the MathGlyph `strict` option.
+        """
+        return self._toMathGlyph(scaleComponentTransform=scaleComponentTransform, strict=strict)
+
+    def _toMathGlyph(self, scaleComponentTransform=True, strict=False):
         """
         Subclasses may override this method.
         """
         import fontMath
-        mathGlyph = fontMath.MathGlyph(None)
+        mathGlyph = fontMath.MathGlyph(
+            None,
+            scaleComponentTransform=scaleComponentTransform,
+            strict=strict
+        )
         pen = mathGlyph.getPointPen()
         self.drawPoints(pen)
         for anchor in self.anchors:
@@ -1657,7 +1665,7 @@ class BaseGlyph(BaseObject,
         mathGlyph.note = self.note
         return mathGlyph
 
-    def fromMathGlyph(self, mathGlyph):
+    def fromMathGlyph(self, mathGlyph, filterRedundantPoints=True):
         """
         Replaces the contents of this glyph with the contents of ``mathGlyph``.
 
@@ -1665,10 +1673,13 @@ class BaseGlyph(BaseObject,
 
         ``mathGlyph`` must be an object following the
         `MathGlyph protocol <https://github.com/typesupply/fontMath>`_.
-        """
-        return self._fromMathGlyph(mathGlyph, toThisGlyph=True)
 
-    def _fromMathGlyph(self, mathGlyph, toThisGlyph=False):
+        **filterRedundantPoints** enables the MathGlyph `drawPoints`
+          `filterRedundantPoints` option.
+        """
+        return self._fromMathGlyph(mathGlyph, toThisGlyph=True, filterRedundantPoints=filterRedundantPoints)
+
+    def _fromMathGlyph(self, mathGlyph, toThisGlyph=False, filterRedundantPoints=True):
         # make the destination
         if toThisGlyph:
             copied = self
@@ -1680,7 +1691,7 @@ class BaseGlyph(BaseObject,
             copied = copyClass()
         # populate
         pen = copied.getPointPen()
-        mathGlyph.drawPoints(pen, filterRedundantPoints=True)
+        mathGlyph.drawPoints(pen, filterRedundantPoints=filterRedundantPoints)
         for anchor in mathGlyph.anchors:
             a = copied.appendAnchor(
                 name=anchor["name"],
