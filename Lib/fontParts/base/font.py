@@ -1454,7 +1454,10 @@ class BaseFont(
             dstLayer.interpolate(factor, minLayer, maxLayer,
                                  round=round, suppressError=suppressError)
         if self.layerOrder:
-            self.defaultLayer = self.getLayer(self.layerOrder[0])
+            if "public.default" in self.layerOrder:
+                self.defaultLayer = self.getLayer("public.default")
+            else:
+                self.defaultLayer = self.getLayer(self.layerOrder[0])
         # kerning and groups
         self.kerning.interpolate(factor, minFont.kerning, maxFont.kerning,
                                  round=round, suppressError=suppressError)
