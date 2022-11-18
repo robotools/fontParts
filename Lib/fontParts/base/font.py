@@ -1,4 +1,5 @@
 import os
+from fontTools import ufoLib
 from fontParts.base.errors import FontPartsError
 from fontParts.base.base import dynamicProperty, InterpolationMixin
 from fontParts.base.layer import _BaseGlyphVendor
@@ -1454,7 +1455,10 @@ class BaseFont(
             dstLayer.interpolate(factor, minLayer, maxLayer,
                                  round=round, suppressError=suppressError)
         if self.layerOrder:
-            self.defaultLayer = self.getLayer(self.layerOrder[0])
+            if ufoLib.DEFAULT_LAYER_NAME in self.layerOrder:
+                self.defaultLayer = self.getLayer(ufoLib.DEFAULT_LAYER_NAME)
+            else:
+                self.defaultLayer = self.getLayer(self.layerOrder[0])
         # kerning and groups
         self.kerning.interpolate(factor, minFont.kerning, maxFont.kerning,
                                  round=round, suppressError=suppressError)

@@ -50,7 +50,7 @@ Do this: ::
 Don't do this: ::
 
   import random
-  from fontTools.world import *
+  from fontParts.world import *
 
   font = CurrentFont()
   print(font.glyphOrder)
@@ -225,7 +225,7 @@ fontParts
 * ``:ref:`type-identifier```
 * ``:ref:`type-color```
 * ``:ref:`type-transformation```
-* ``:ref:`type-immutable-list``` 
+* ``:ref:`type-immutable-list```
 
 general
 ^^^^^^^
