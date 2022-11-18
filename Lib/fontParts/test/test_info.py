@@ -106,6 +106,22 @@ class TestInfo(unittest.TestCase):
             2000
         )
 
+    # ------
+    # Update
+    # ------
+
+    def test_update(self):
+        from fontTools.ufoLib import fontInfoAttributesVersion3ValueData
+        info1 = self.getInfo_generic()
+        info1.familyName = "test1"
+        info1.unitsPerEm = 1000
+        info2 = self.getInfo_generic()
+        info2.familyName = "test2"
+        info2.unitsPerEm = 2000
+        info1.update(info2)
+        self.assertEqual(info1.familyName, "test2")
+        self.assertEqual(info1.unitsPerEm, 2000)
+
     # -------------
     # Interpolation
     # -------------

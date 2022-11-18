@@ -403,12 +403,6 @@ class TestDeprecated(unittest.TestCase):
             info.getParent()
         self.assertEqual(info.getParent(), info.font)
 
-    def test_info_deprecated_update(self):
-        # As changed() is defined by the environment, only test if a Warning is issued.
-        info, _ = self.objectGenerator("info")
-        with self.assertWarnsRegex(DeprecationWarning, "Info.changed()"):
-            info.update()
-
     def test_info_deprecated_setChanged(self):
         # As changed() is defined by the environment, only test if a Warning is issued.
         info, _ = self.objectGenerator("info")

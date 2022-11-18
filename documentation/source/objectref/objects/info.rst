@@ -24,6 +24,7 @@ Overview
     BaseInfo.font
     BaseInfo.interpolate
     BaseInfo.round
+    BaseInfo.update
     BaseInfo.naked
     BaseInfo.changed
 
@@ -52,6 +53,11 @@ Normalization
 =============
 
 .. automethod:: BaseInfo.round
+
+Update
+======
+
+.. automethod:: BaseInfo.update
 
 Environment
 ===========

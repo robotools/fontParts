@@ -191,6 +191,28 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
         mathInfo = mathInfo.round()
         self._fromMathInfo(mathInfo, guidelines=False)
 
+    # --------
+    # Updating
+    # --------
+
+    def update(self, other):
+        """
+        Update this object with the values
+        from **otherInfo**.
+        """
+        self._update(other)
+
+    def _update(self, other):
+        """
+        Subclasses may override this method.
+        """
+        from fontTools.ufoLib import fontInfoAttributesVersion3
+        for attr in fontInfoAttributesVersion3:
+            if attr == "guidelines":
+                continue
+            value = getattr(other, attr)
+            setattr(self, attr, value)
+
     # -------------
     # Interpolation
     # -------------
