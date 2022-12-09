@@ -1,3 +1,9 @@
+0.11.0 (released 2022-12-09)
+---------------------------
+- Expose the `mathGlyph` options. Thanks @typesupply! See #672
+- Set defaultLayer to "public.default" when its available. Fixes issue #674. Thanks @typemytype! See #675.
+- Add `info.update` to the info object. Thanks @typesupply! See #676
+
 0.10.8 (released 2022-09-03)
 ---------------------------
 - Adds `setStartPoint` to the contour object. Thanks @typemytype! See #668.
