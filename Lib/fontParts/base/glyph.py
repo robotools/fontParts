@@ -1694,7 +1694,7 @@ class BaseGlyph(BaseObject,
         mathGlyph.drawPoints(pen, filterRedundantPoints=filterRedundantPoints)
         for anchor in mathGlyph.anchors:
             a = copied.appendAnchor(
-                name=anchor["name"],
+                name=anchor.get("name"),
                 position=(anchor["x"], anchor["y"]),
                 color=anchor["color"]
             )
