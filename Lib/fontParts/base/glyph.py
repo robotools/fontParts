@@ -1696,7 +1696,7 @@ class BaseGlyph(BaseObject,
             a = copied.appendAnchor(
                 name=anchor.get("name"),
                 position=(anchor["x"], anchor["y"]),
-                color=anchor["color"]
+                color=anchor.get("color")
             )
             identifier = anchor.get("identifier")
             if identifier is not None:
