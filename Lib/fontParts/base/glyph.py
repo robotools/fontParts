@@ -1706,7 +1706,7 @@ class BaseGlyph(BaseObject,
                 position=(guideline["x"], guideline["y"]),
                 angle=guideline["angle"],
                 name=guideline.get("name"),
-                #color=guideline.get("color") # XX
+                color=guideline.get("color") # XX
             )
             identifier = guideline.get("identifier")
             if identifier is not None:
