@@ -13,6 +13,8 @@ The :class:`Info <BaseInfo>` object contains all names, numbers, URLs, dimension
 
 :class:`Info <BaseInfo>` validates any value set for a `Info <BaseInfo>` item, but does not check if the data is sane (i.e., you can set valid but incorrect data).
 
+For a list of info attributes, refer to the `UFO fontinfo.plist Specification <https://unifiedfontobject.org/versions/ufo3/fontinfo.plist/#specification>`_.
+
 ********
 Overview
 ********
