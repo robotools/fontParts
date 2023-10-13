@@ -916,21 +916,47 @@ def normalizeColor(value):
     * **value** color components must be between 0 and 1.
     * Returned value is a ``tuple`` containing four ``float`` values.
     """
+    inRobo = False
     from fontParts.base.color import Color
-    if not isinstance(value, (tuple, list, Color)):
+    try:
+        from mojo.UI import getDefault
+        inRobo = True
+    except ImportError:
+        raise ImportError("must be in RoboFont to import mojo.UI")
+
+    if not isinstance(value, (tuple, list, str, Color)):
         raise TypeError("Colors must be tuple instances, not %s."
                         % type(value).__name__)
-    if not len(value) == 4:
-        raise ValueError("Colors must contain four values, not %d."
-                         % len(value))
-    for component, v in zip("rgba", value):
-        if not isinstance(v, (int, float)):
-            raise TypeError("The value for the %s component (%s) is not "
-                            "an int or float." % (component, v))
-        if v < 0 or v > 1:
-            raise ValueError("The value for the %s component (%s) is not "
-                             "between 0 and 1." % (component, v))
-    return tuple([float(v) for v in value])
+    # this will only work in RoboFont
+    if isinstance(value, str) and inRobo:
+        colors = {}
+        for mc in getDefault("markColors"):
+            colorTuple, colorName = mc
+            if colorName in colors.keys():
+                # can only use the first color
+                raise ValueError("Color name %d appears twice, using first occurence."
+                             % len(value))
+            else:
+                colors[colorName] = tuple(colorTuple)
+        colorItem = colors.get(value)
+        if colorItem:
+            return colorItem
+        else:
+            raise ValueError("Color name '%s' does not exist."
+                             % value)
+    else:
+        if not len(value) == 4:
+            raise ValueError("Colors must contain four values, not %d."
+                             % len(value))
+        for component, v in zip("rgba", value):
+            if not isinstance(v, (int, float)):
+                raise TypeError("The value for the %s component (%s) is not "
+                                "an int or float." % (component, v))
+            if v < 0 or v > 1:
+                raise ValueError("The value for the %s component (%s) is not "
+                                 "between 0 and 1." % (component, v))
+        return tuple([float(v) for v in value])
+
 
 
 # Note
