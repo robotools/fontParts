@@ -628,6 +628,8 @@ class BaseContour(
         Set the first segment on the contour.
         segment can be a segment object or an index.
         """
+        if self.open:
+            raise FontPartsError("An open contour can not change the starting segment.")
         segments = self.segments
         if not isinstance(segment, int):
             segmentIndex = segments.index(segment)
@@ -638,8 +640,7 @@ class BaseContour(
         if segmentIndex == 0:
             return
         if segmentIndex >= len(segments):
-            raise ValueError(("The contour does not contain a segment "
-                              "at index %d" % segmentIndex))
+            raise ValueError(("The contour does not contain a segment at index %d" % segmentIndex))
         self._setStartSegment(segmentIndex)
 
     def _setStartSegment(self, segmentIndex, **kwargs):
@@ -647,41 +648,8 @@ class BaseContour(
         Subclasses may override this method.
         """
         segments = self.segments
-        oldStart = segments[-1]
-        oldLast = segments[0]
-        # If the contour ends with a curve on top of a move,
-        # delete the move.
-        if oldLast.type == "curve" or oldLast.type == "qcurve":
-            startOn = oldStart.onCurve
-            lastOn = oldLast.onCurve
-            if startOn.x == lastOn.x and startOn.y == lastOn.y:
-                self.removeSegment(0)
-                # Shift new the start index.
-                segmentIndex = segmentIndex - 1
-                segments = self.segments
-        # If the first point is a move, convert it to a line.
-        if segments[0].type == "move":
-            segments[0].type = "line"
-        # Reorder the points internally.
-        segments = segments[segmentIndex - 1:] + segments[:segmentIndex - 1]
-        points = []
-        for segment in segments:
-            for point in segment:
-                points.append(((point.x, point.y), point.type,
-                               point.smooth, point.name, point.identifier))
-        # Clear the points.
-        for point in self.points:
-            self.removePoint(point)
-        # Add the points.
-        for point in points:
-            position, type, smooth, name, identifier = point
-            self.appendPoint(
-                position,
-                type=type,
-                smooth=smooth,
-                name=name,
-                identifier=identifier
-            )
+        segment = segments[segmentIndex]
+        self.setStartPoint(segment.points[-1])
 
     # -------
     # bPoints
@@ -960,11 +928,10 @@ class BaseContour(
     def setStartPoint(self, point):
         """
         Set the first point on the contour.
-        point can be a segment object or an index.
+        point can be a point object or an index.
         """
         if self.open:
             raise FontPartsError("An open contour can not change the starting point.")
-
         points = self.points
         if not isinstance(point, int):
             pointIndex = points.index(point)
@@ -972,10 +939,8 @@ class BaseContour(
             pointIndex = point
         if pointIndex == 0:
             return
-
         if pointIndex >= len(points):
-            raise ValueError(("The contour does not contain a point "
-                              "at index %d" % pointIndex))
+            raise ValueError(("The contour does not contain a point at index %d" % pointIndex))
         self._setStartPoint(pointIndex)
 
     def _setStartPoint(self, pointIndex, **kwargs):
@@ -996,6 +961,7 @@ class BaseContour(
                 name=point.name,
                 identifier=point.identifier
             )
+
     # ---------
     # Selection
     # ---------
