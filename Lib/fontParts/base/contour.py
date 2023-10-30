@@ -647,6 +647,11 @@ class BaseContour(
         """
         Subclasses may override this method.
         """
+        # get the previous segment and set
+        # its on curve as the first point
+        # in the contour. this matches the
+        # iteration behavior of self.segments.
+        segmentIndex -= 1
         segments = self.segments
         segment = segments[segmentIndex]
         self.setStartPoint(segment.points[-1])
