@@ -1,3 +1,7 @@
+0.12.1 (released 2023-10-30)
+---------------------------
+- Tweak to logic of `setStartSegment`
+
 0.12.0 (released 2023-10-30)
 ---------------------------
 - Fixes to `setStartSegment` so that it keeps the start point on-curve and prevents setting a setting a start segment on an open contour (issues #709 and #412). Thanks @typesupply!
