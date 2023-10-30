@@ -1,3 +1,8 @@
+0.12.0 (released 2023-10-30)
+---------------------------
+- Fixes to `setStartSegment` so that it keeps the start point on-curve and prevents setting a setting a start segment on an open contour (issues #709 and #412). Thanks @typesupply!
+- Fixes to docs and test setup. Boring things.
+
 0.11.0 (released 2022-12-09)
 ---------------------------
 - Expose the `mathGlyph` options. Thanks @typesupply! See #672
