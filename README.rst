@@ -87,7 +87,7 @@ Before you can run the test suite you’ll need to install the test dependencies
 
 .. code:: sh
 
-    pip install -r dev-requirements.txt
+    pip install -r requirements-dev.txt
 
 To run the test suite you can do:
 
