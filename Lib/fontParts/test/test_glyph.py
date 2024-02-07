@@ -1356,9 +1356,9 @@ class TestGlyph(unittest.TestCase):
 
     def test_removeOverlap(self):
         glyph = self.getGlyph_generic()
-        self.assertEquals(len(glyph), 2)
+        self.assertEqual(len(glyph), 2)
         glyph.removeOverlap()
-        self.assertEquals(len(glyph), 1)
+        self.assertEqual(len(glyph), 1)
 
 
 def test_generator(test_name, metric, value):
