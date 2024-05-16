@@ -72,6 +72,7 @@ Layers
     BaseFont.newLayer
     BaseFont.removeLayer
     BaseFont.insertLayer
+    BaseFont.duplicateLayer
 
 Glyphs
 ======
