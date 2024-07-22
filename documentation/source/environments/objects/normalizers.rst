@@ -45,6 +45,7 @@ Layers
 Glyphs
 ******
 
+.. autofunction:: normalizeGlyph
 .. autofunction:: normalizeGlyphOrder
 
 Identification
