@@ -102,7 +102,7 @@ Environment
 Reference
 *********
 
-.. autoclass:: BaseFont
+.. autoclass:: BasePoint
 
 Copy
 ====
