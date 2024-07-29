@@ -343,23 +343,23 @@ class BaseFontList(list):
 
         The sort description strings, and how they modify the sort, are:
 
-        +--------------------+--------------------------------------+
-        | ``"familyName"``   | Family names by alphabetical order.  |
-        +--------------------+--------------------------------------+
-        | ``"styleName"``    | Style names by alphabetical order.   |
-        +--------------------+--------------------------------------+
-        | ``"isItalic"``     | Italics before romans.               |
-        +--------------------+--------------------------------------+
-        | ``"isRoman"``      | Romans before italics.               |
-        +--------------------+--------------------------------------+
-        | ``"widthValue"``   | Width values by numerical order.     |
-        +--------------------+--------------------------------------+
-        | ``"weightValue"``  | Weight values by numerical order.    |
-        +--------------------+--------------------------------------+
-        | ``"monospace"``    | Monospaced before proportional.      |
-        +--------------------+--------------------------------------+
-        | ``"proportional"`` | Proportional before monospaced.      |
-        +--------------------+--------------------------------------+
+        +----------------------+--------------------------------------+
+        | ``"familyName"``     | Family names by alphabetical order.  |
+        +----------------------+--------------------------------------+
+        | ``"styleName"``      | Style names by alphabetical order.   |
+        +----------------------+--------------------------------------+
+        | ``"isItalic"``       | Italics before romans.               |
+        +----------------------+--------------------------------------+
+        | ``"isRoman"``        | Romans before italics.               |
+        +----------------------+--------------------------------------+
+        | ``"widthValue"``     | Width values by numerical order.     |
+        +----------------------+--------------------------------------+
+        | ``"weightValue"``    | Weight values by numerical order.    |
+        +----------------------+--------------------------------------+
+        | ``"monospace"``      | Monospaced before proportional.      |
+        +----------------------+--------------------------------------+
+        | ``"isProportional"`` | Proportional before monospaced.      |
+        +----------------------+--------------------------------------+
 
         ::
 
@@ -387,9 +387,9 @@ class BaseFontList(list):
 
         ::
 
-            def glyphCountSortValue(font):
-                return len(font)
-
+            >>> def glyphCountSortValue(font):
+            >>>   return len(font)
+            >>>
             >>> fonts.sortBy(glyphCountSortValue)
 
         A list of sort description strings and/or sort functions
