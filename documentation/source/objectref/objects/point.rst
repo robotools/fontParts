@@ -102,6 +102,8 @@ Environment
 Reference
 *********
 
+.. autoclass:: BasePoint
+
 Copy
 ====
 
