@@ -266,11 +266,10 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
         """
         Subclasses may override this method.
         """
-        self.guidelines = []
         mathInfo.extractInfo(self)
         font = self.font
         if guidelines:
-            for guideline in self.guidelines:
+            for guideline in mathInfo.guidelines:
                 font.appendGuideline(
                     position=(guideline["x"], guideline["y"]),
                     angle=guideline["angle"],
@@ -278,7 +277,6 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
                     color=guideline["color"]
                     # XXX identifier is lost
                 )
-        del self.guidelines
 
     def interpolate(self, factor, minInfo, maxInfo, round=True, suppressError=True):
         """
