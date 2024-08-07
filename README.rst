@@ -26,7 +26,7 @@ into something that you wish fontParts did/didn't do.
 Installation
 ~~~~~~~~~~~~
 
-FontParts requires `Python <http://www.python.org/download/>`__ 3.6 or later.
+FontParts requires `Python <http://www.python.org/download/>`__ 3.8 or later.
 
 The package is listed in the Python Package Index (PyPI), so you can
 install it with `pip <https://pip.pypa.io>`__:
