@@ -1,3 +1,9 @@
+0.12.2 (released 2024-08-07)
+---------------------------
+- Replace remaining usage of assertEquals with assertEqual. See #720
+- Fixes/tweaks to documentation
+- Get guidelines from the mathInfo object directly. See #738
+
 0.12.1 (released 2023-10-30)
 ---------------------------
 - Tweak to logic of `setStartSegment`
