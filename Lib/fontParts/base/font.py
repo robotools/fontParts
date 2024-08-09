@@ -12,7 +12,7 @@ from fontParts.base.layer import _BaseGlyphVendor
 from fontParts.base import normalizers
 from fontParts.base.compatibility import FontCompatibilityReporter
 from fontParts.base.deprecated import DeprecatedFont, RemovedFont
-from fontParts.base.types import (
+from fontParts.base.type import (
     CharacterMapping,
     Color,
     Coordinate,
