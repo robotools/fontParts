@@ -2,7 +2,7 @@
 from __future__ import annotations
 import os
 from typing import (
-    TYPE_CHECKING, Any, Generic, List, Optional, Tuple, Union
+    TYPE_CHECKING, Any, Dict, Generic, List, Optional, Tuple, TypeVar, Union
 )
 
 from fontTools import ufoLib
@@ -1016,16 +1016,16 @@ class BaseFont(_BaseGlyphVendor,
         """
     )
 
-    def _get_base_defaultLayer(self) -> BaseLayer:
+    def _get_defaultLayer(self) -> BaseLayer:
         layer = self._get_base_defaultLayer()
         layer = normalizers.normalizeLayer(layer)
         return layer
 
-    def _set_base_defaultLayer(self, layer: BaseLayer) -> None:
+    def _set_defaultLayer(self, layer: BaseLayer) -> None:
         layer = normalizers.normalizeLayer(layer)
         self._set_base_defaultLayer(layer)
 
-    def _get_defaultLayer(self) -> LayerType:
+    def _get_base_defaultLayer(self) -> LayerType:
         """Get the native font's default layer.
 
         This is the environment implementation of the
@@ -1044,7 +1044,7 @@ class BaseFont(_BaseGlyphVendor,
         layer = self.getLayer(name)
         return layer
 
-    def _set_defaultLayer(self, value: LayerType) -> None:
+    def _set_base_defaultLayer(self, value: LayerType) -> None:
         """Set the native font's default layer.
 
         This is the environment implementation of the
