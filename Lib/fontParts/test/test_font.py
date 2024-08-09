@@ -567,3 +567,23 @@ class TestFont(unittest.TestCase):
             copy.selectedGuidelines,
             font.selectedGuidelines
         )
+
+    # -------------
+    # Interpolation
+    # -------------
+
+    def test_interpolate_global_guidelines(self):
+        interpolated_font, _ = self.objectGenerator("font")
+        font_min, _ = self.objectGenerator("font")
+        font_min.appendGuideline(position=(0, 0), angle=0)
+        font_max, _ = self.objectGenerator("font")
+        font_max.appendGuideline(position=(200, 200), angle=0)
+        interpolated_font.info.interpolate(0.5, font_min.info, font_max.info, round=True)
+        self.assertEqual(
+            len(interpolated_font.guidelines),
+            1
+        )
+        self.assertEqual(
+            interpolated_font.guidelines[0].position,
+            (100, 100)
+        )
