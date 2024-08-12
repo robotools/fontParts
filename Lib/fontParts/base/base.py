@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import Any
 import math
 from copy import deepcopy
 from fontTools.misc import transform
@@ -84,7 +86,7 @@ class dynamicProperty(object):
         self.getterName = "_get_" + name
         self.setterName = "_set_" + name
 
-    def __get__(self, obj, cls):
+    def __get__(self, obj: Any, cls: Any) -> Any:
         getter = getattr(obj, self.getterName, None)
         if getter is not None:
             return getter()
@@ -95,7 +97,7 @@ class dynamicProperty(object):
                 return self
             raise FontPartsError("no getter for %r" % self.name)
 
-    def __set__(self, obj, value):
+    def __set__(self, obj: Any, value: Any):
         setter = getattr(obj, self.setterName, None)
         if setter is not None:
             setter(value)
