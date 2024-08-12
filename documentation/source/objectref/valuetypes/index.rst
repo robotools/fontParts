@@ -2,8 +2,7 @@
 Common Value Types
 ##################
 
-FontParts scripts are built on with objects that represent fonts, glyphs,
-contours and so on. The objects are obtained through :ref:`fontParts.world`.
+FontParts scripts are built on with objects that represent fonts, glyphs, contours and so on. The objects are obtained through :ref:`fontparts-world`.
 
 
 .. _fontparts-objects:
@@ -29,8 +28,7 @@ Unicode (unencoded) or string. Internally everything is a unicode string.
 Integer/Float
 -------------
 
-Integers and floats are interchangeable in FontParts (unless the specification
-states that only one is allowed).
+Integers and floats are interchangeable in FontParts (unless the specification states that only one is allowed).
 
 
 .. _type-coordinate:
@@ -49,8 +47,7 @@ An immutable iterable containing two :ref:`type-int-float` representing:
 Angle
 -----
 
-XXX define the angle specifications here. Direction, degrees, etc. This will
-always be a float.
+XXX define the angle specifications here. Direction, degrees, etc. This will always be a float.
 
 
 .. _type-identifier:
@@ -58,8 +55,7 @@ always be a float.
 Identifier
 ----------
 
-A :ref:`type-string` following the
-`UFO identifier conventions <http://unifiedfontobject.org/versions/ufo3/conventions/#identifiers>`_.
+A :ref:`type-string` following the `UFO identifier conventions <http://unifiedfontobject.org/versions/ufo3/conventions/#identifiers>`_.
 
 
 .. _type-color:
@@ -82,8 +78,7 @@ Values are from 0 to 1.0.
 Transformation Matrix
 ---------------------
 
-An immutable iterable defining a 2x2 transformation plus offset
-(aka Affine transform). The default is ``(1, 0, 0, 1, 0, 0)``.
+An immutable iterable defining a 2x2 transformation plus offset (aka Affine transform). The default is ``(1, 0, 0, 1, 0, 0)``.
 
 
 .. _type-immutable-list:

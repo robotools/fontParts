@@ -89,37 +89,20 @@ The code within fontParts itself should be written such that what the code is do
 Documentation Strings
 *********************
 
-Most of the documentation will be contained with the source code itself. Docstrings should be written in `reSstructuredText <https://docutils.sourceforge.io/rst.html>`_, following a standardized structure:
-
-    #. Summary line: A single line explanation of what the object does, written in imperative form.
-    #. Deprecation directive: Any notice of deprecation, created with the `.. deprecated::` directive.
-    #. Description: A more detailed explanation of functionality, if needed.
-    #. Parameters: A detailded explanation of each parameter.
-    #. Return: A detailed explanation of any return value.
-    #. Examples: Any documentation examples. Use the preceding text `Example::` (or plural) if no explanatory text is necessary.
-    #. Admonitions: Any especially notable or useful additional information created using one of the directives listed under :ref:`special-sections`.
-
-Here's the structure of how it should be done:
+Most of the documentation will be contained with the source code itself. Here's the structure of how it should be done:
 
 ::
 
     class BaseThing(BaseOtherThing):
 
-        """A one-line summary in imperative form.
-
-        A more elaborate explanation of functionality, inheritance,
-        initialization, etc.
-
-        :param parameter1: A detailed explanation of parameter1.
-        :param parameter2: A detailed explanation of parameter2.
-
+        """
+        This is a very brief explanation of the object.
+        A note about when to create this object may be added.
+        This text will be prepended to the string in __init__
+        in the compiled documentation.
         """
 
-        def __init__(self, parameter1, parameter2):
-            self.parameter1 = parameter1
-            self.parameter2 = parameter2
-
-        def aMethod(parameter3, kwarg="blah"):
+        def aMethod(arg, kwarg="blah"):
             """
             A very brief description calling out majorly significant ``args``.
 
@@ -283,15 +266,13 @@ Heading Levels
     Level 6
     """""""
 
-.. _special-sections:
 
 Special Sections
 ================
 
 ::
 
-    .. note:: (typically used for optional override notices)
-    .. important:: (typically used for mandatory override notices)
+    .. note::
     .. warning::
     .. versionadded::
     .. versionchanged::

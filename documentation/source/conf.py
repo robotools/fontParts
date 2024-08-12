@@ -105,7 +105,7 @@ source_suffix = '.rst'
 #source_encoding = 'utf-8-sig'
 
 # The master toctree document.
-master_doc = 'contents'  # was 'index'
+master_doc = 'contents' # was 'index'
 
 # General information about the project.
 project = u'FontParts'
@@ -268,17 +268,17 @@ htmlhelp_basename = 'FontPartsdoc'
 # -- Options for LaTeX output ---------------------------------------------
 
 latex_elements = {
-    # The paper size ('letterpaper' or 'a4paper').
-    #'papersize': 'letterpaper',
+# The paper size ('letterpaper' or 'a4paper').
+#'papersize': 'letterpaper',
 
-    # The font size ('10pt', '11pt' or '12pt').
-    #'pointsize': '10pt',
+# The font size ('10pt', '11pt' or '12pt').
+#'pointsize': '10pt',
 
-    # Additional stuff for the LaTeX preamble.
-    #'preamble': '',
+# Additional stuff for the LaTeX preamble.
+#'preamble': '',
 
-    # Latex figure (float) alignment
-    #'figure_align': 'htbp',
+# Latex figure (float) alignment
+#'figure_align': 'htbp',
 }
 
 # Grouping the document tree into LaTeX files. List of tuples
@@ -428,23 +428,21 @@ class AutosummaryMethodList(Autosummary):
 
         return [table_spec, table]
 
-
 def setup(app):
     app.add_directive('autosummarymethodlist', AutosummaryMethodList)
 
 
 from pygments.style import Style
 from pygments.token import Keyword, Name, Comment, String, Error, \
-    Number, Operator, Generic
-
+     Number, Operator, Generic
 
 class YourStyle(Style):
     default_style = ""
     styles = {
-        Comment: 'italic #888',
-        Keyword: 'bold #005',
-        Name: '#f00',
-        Name.Function: '#0f0',
-        Name.Class: 'bold #0f0',
-        String: 'bg:#eee #111'
+        Comment:                'italic #888',
+        Keyword:                'bold #005',
+        Name:                   '#f00',
+        Name.Function:          '#0f0',
+        Name.Class:             'bold #0f0',
+        String:                 'bg:#eee #111'
     }
