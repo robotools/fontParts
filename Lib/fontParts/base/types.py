@@ -1,4 +1,4 @@
-from typing import Dict, Generic, Iterator, List, Set, Tuple, TypeVar, Union
+from typing import Dict, Generic, Iterator, List, Tuple, TypeVar, Union
 
 try:
     from fontParts.base.info import BaseInfo
@@ -28,5 +28,5 @@ GlyphType = TypeVar('GlyphType', bound='BaseGlyph')
 GuidelineType = TypeVar('GuidelineType', bound='BaseGuideline')
 KerningKey = Tuple[str, str]
 KerningDict = Dict[KerningKey, IntFloat]
-ReverseComponentMapping = Dict[str, Set[str]]
-CharacterMapping = Dict[int, List[str]]
+ReverseComponentMapping = Dict[str, Tuple[str]]
+CharacterMapping = Dict[int, Tuple[str]]
