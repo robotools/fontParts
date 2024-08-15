@@ -252,8 +252,10 @@ d7085ec287e7994dab3d53f971b1085c2a1f3f4669fcd3c46f160e2064598141bd5ee1
 59e8e6221c093874437fa68a4d64da8303a1a0e3fe3d12371b2041359bbe5eba38adf8
 73bdbc1371cd7100c18726fe1cc635e5ff7f6d102cb21055ee1c0000000049454e44ae
 426082
-""".strip().replace("\n", "")
-testImageData = b"\x89PNG\r\n\x1a\n" + testPNGData.encode('utf-8')
+""".strip().replace(
+    "\n", ""
+)
+testImageData = b"\x89PNG\r\n\x1a\n" + testPNGData.encode("utf-8")
 
 
 class TestImage(unittest.TestCase):
@@ -348,7 +350,7 @@ class TestImage(unittest.TestCase):
     def test_bool_data_len_zero(self):
         image, _ = self.objectGenerator("image")
         try:
-            image.data = "".encode('utf-8')
+            image.data = "".encode("utf-8")
         except FontPartsError:
             raise unittest.SkipTest("Cannot set zero data")
         self.assertFalse(image)
@@ -363,10 +365,7 @@ class TestImage(unittest.TestCase):
         glyph = layer.newGlyph("X")
         image = glyph.image
         self.assertIsNotNone(image.font)
-        self.assertEqual(
-            image.font,
-            font
-        )
+        self.assertEqual(image.font, font)
 
     def test_get_parent_noFont(self):
         layer, _ = self.objectGenerator("layer")
@@ -379,10 +378,7 @@ class TestImage(unittest.TestCase):
         glyph = layer.newGlyph("X")
         image = glyph.image
         self.assertIsNotNone(image.layer)
-        self.assertEqual(
-            image.layer,
-            layer
-        )
+        self.assertEqual(image.layer, layer)
 
     def test_get_parent_noLayer(self):
         glyph, _ = self.objectGenerator("glyph")
@@ -394,10 +390,7 @@ class TestImage(unittest.TestCase):
         glyph, _ = self.objectGenerator("glyph")
         image = glyph.image
         self.assertIsNotNone(image.glyph)
-        self.assertEqual(
-            image.glyph,
-            glyph
-        )
+        self.assertEqual(image.glyph, glyph)
 
     def test_get_parent_noGlyph(self):
         image, _ = self.objectGenerator("image")
@@ -410,10 +403,7 @@ class TestImage(unittest.TestCase):
         image = self.getImage_generic()
         image.glyph = glyph
         self.assertIsNotNone(image.glyph)
-        self.assertEqual(
-            image.glyph,
-            glyph
-        )
+        self.assertEqual(image.glyph, glyph)
 
     def test_set_parent_glyph_none(self):
         image, _ = self.objectGenerator("image")
@@ -434,34 +424,22 @@ class TestImage(unittest.TestCase):
     def test_data_get(self):
         image = self.getImage_generic()
         # get
-        self.assertEqual(
-            image.data,
-            testImageData
-        )
+        self.assertEqual(image.data, testImageData)
 
     def test_data_set_valid(self):
         image = self.getImage_generic()
         image.data = testImageData
-        self.assertEqual(
-            image.data,
-            testImageData
-        )
+        self.assertEqual(image.data, testImageData)
 
     def test_data_get_direct(self):
         image = self.getImage_generic()
         # get
-        self.assertEqual(
-            image._get_base_data(),
-            testImageData
-        )
+        self.assertEqual(image._get_base_data(), testImageData)
 
     def test_data_set_valid_direct(self):
         image = self.getImage_generic()
         image._set_base_data(testImageData)
-        self.assertEqual(
-            image.data,
-            testImageData
-        )
+        self.assertEqual(image.data, testImageData)
 
     def test_data_set_invalid(self):
         image = self.getImage_generic()
@@ -471,7 +449,7 @@ class TestImage(unittest.TestCase):
     def test_data_set_invalid_png(self):
         image, _ = self.objectGenerator("image")
         with self.assertRaises(FontPartsError):
-            image.data = testPNGData.encode('utf-8')
+            image.data = testPNGData.encode("utf-8")
 
     # -----
     # Color
@@ -479,10 +457,7 @@ class TestImage(unittest.TestCase):
 
     def test_get_color_no_parent(self):
         image = self.getImage_generic()
-        self.assertEqual(
-            image.color,
-            (1, 0, 1, 1)
-        )
+        self.assertEqual(image.color, (1, 0, 1, 1))
 
     def test_get_color_parent(self):
         font, _ = self.objectGenerator("font")
@@ -492,18 +467,12 @@ class TestImage(unittest.TestCase):
         image.data = testImageData
         image.transformation = (1, 0, 0, 1, 0, 0)
         image.color = (1, 0, 1, 1)
-        self.assertEqual(
-            image.color,
-            (1, 0, 1, 1)
-        )
+        self.assertEqual(image.color, (1, 0, 1, 1))
 
     def test_get_color_no_parent_none(self):
         image = self.getImage_generic()
         image.color = None
-        self.assertEqual(
-            image.color,
-            None
-        )
+        self.assertEqual(image.color, None)
 
     def test_get_color_parent_none(self):
         font, _ = self.objectGenerator("font")
@@ -512,23 +481,14 @@ class TestImage(unittest.TestCase):
         image = glyph.image
         image.data = testImageData
         image.transformation = (1, 0, 0, 1, 0, 0)
-        self.assertEqual(
-            image.color,
-            None
-        )
+        self.assertEqual(image.color, None)
 
     def test_set_color(self):
         image = self.getImage_generic()
         image.color = (0, 1, 0, 0)
-        self.assertEqual(
-            image.color,
-            (0, 1, 0, 0)
-        )
+        self.assertEqual(image.color, (0, 1, 0, 0))
         image.color = (0.5, 0.5, 0.5, 0.5)
-        self.assertEqual(
-            image.color,
-            (0.5, 0.5, 0.5, 0.5)
-        )
+        self.assertEqual(image.color, (0.5, 0.5, 0.5, 0.5))
 
     def test_set_color_invalid(self):
         image = self.getImage_generic()
@@ -541,23 +501,14 @@ class TestImage(unittest.TestCase):
 
     def test_get_transformation(self):
         image = self.getImage_generic()
-        self.assertEqual(
-            image.transformation,
-            (1, 0, 0, 1, 0, 0)
-        )
+        self.assertEqual(image.transformation, (1, 0, 0, 1, 0, 0))
 
     def test_set_tranformation(self):
         image = self.getImage_generic()
         image.transformation = (0, 1, 1, 0, 1, 1)
-        self.assertEqual(
-            image.transformation,
-            (0, 1, 1, 0, 1, 1)
-        )
+        self.assertEqual(image.transformation, (0, 1, 1, 0, 1, 1))
         image.transformation = (0.5, 0.5, 0.5, 0.5, 0.5, 0.5)
-        self.assertEqual(
-            image.transformation,
-            (0.5, 0.5, 0.5, 0.5, 0.5, 0.5)
-        )
+        self.assertEqual(image.transformation, (0.5, 0.5, 0.5, 0.5, 0.5, 0.5))
 
     def test_set_tranformation_invalid(self):
         image = self.getImage_generic()
@@ -567,18 +518,12 @@ class TestImage(unittest.TestCase):
     def test_transformBy_valid_no_origin(self):
         image = self.getImage_generic()
         image.transformBy((2, 0, 0, 3, -3, 2))
-        self.assertEqual(
-            image.transformation,
-            (2, 0, 0, 3, -3, 2)
-        )
+        self.assertEqual(image.transformation, (2, 0, 0, 3, -3, 2))
 
     def test_transformBy_valid_origin(self):
         image = self.getImage_generic()
         image.transformBy((2, 0, 0, 2, 0, 0), origin=(1, 2))
-        self.assertEqual(
-            image.transformation,
-            (2, 0, 0, 2, -1, -2)
-        )
+        self.assertEqual(image.transformation, (2, 0, 0, 2, -1, -2))
 
     # ------
     # Offset
@@ -586,26 +531,17 @@ class TestImage(unittest.TestCase):
 
     def test_get_offset(self):
         image = self.getImage_generic()
-        self.assertEqual(
-            image.offset,
-            (0, 0)
-        )
+        self.assertEqual(image.offset, (0, 0))
 
     def test_get_offset_set(self):
         image = self.getImage_generic()
         image.offset = (1, 4.5)
-        self.assertEqual(
-            image.offset,
-            (1, 4.5)
-        )
+        self.assertEqual(image.offset, (1, 4.5))
 
     def test_set_offset(self):
         image = self.getImage_generic()
         image.offset = (2.3, 5)
-        self.assertEqual(
-            image.offset,
-            (2.3, 5)
-        )
+        self.assertEqual(image.offset, (2.3, 5))
 
     def test_set_offset_invalid_none(self):
         image = self.getImage_generic()
@@ -623,26 +559,17 @@ class TestImage(unittest.TestCase):
 
     def test_get_scale(self):
         image = self.getImage_generic()
-        self.assertEqual(
-            image.scale,
-            (1, 1)
-        )
+        self.assertEqual(image.scale, (1, 1))
 
     def test_get_scale_set(self):
         image = self.getImage_generic()
         image.scale = (2, 2.5)
-        self.assertEqual(
-            image.scale,
-            (2, 2.5)
-        )
+        self.assertEqual(image.scale, (2, 2.5))
 
     def test_set_scale(self):
         image = self.getImage_generic()
         image.scale = (2.3, 5)
-        self.assertEqual(
-            image.scale,
-            (2.3, 5)
-        )
+        self.assertEqual(image.scale, (2.3, 5))
 
     def test_set_scale_invalid_none(self):
         image = self.getImage_generic()
@@ -662,19 +589,13 @@ class TestImage(unittest.TestCase):
         image = self.getImage_generic()
         image.offset = (1.1, 1.1)
         image.round()
-        self.assertEqual(
-            image.offset,
-            (1, 1)
-        )
+        self.assertEqual(image.offset, (1, 1))
 
     def test_round_half(self):
         image = self.getImage_generic()
         image.offset = (1.5, 1.5)
         image.round()
-        self.assertEqual(
-            image.offset,
-            (2, 2)
-        )
+        self.assertEqual(image.offset, (2, 2))
 
     # ----
     # Hash
@@ -682,41 +603,27 @@ class TestImage(unittest.TestCase):
 
     def test_hash_object_self(self):
         image_one = self.getImage_generic()
-        self.assertEqual(
-            hash(image_one),
-            hash(image_one)
-        )
+        self.assertEqual(hash(image_one), hash(image_one))
 
     def test_hash_object_other(self):
         image_one = self.getImage_generic()
         image_two = self.getImage_generic()
-        self.assertNotEqual(
-            hash(image_one),
-            hash(image_two)
-        )
+        self.assertNotEqual(hash(image_one), hash(image_two))
 
     def test_hash_object_self_variable_assignment(self):
         image_one = self.getImage_generic()
         a = image_one
-        self.assertEqual(
-            hash(image_one),
-            hash(a)
-        )
+        self.assertEqual(hash(image_one), hash(a))
 
     def test_hash_object_other_variable_assignment(self):
         image_one = self.getImage_generic()
         image_two = self.getImage_generic()
         a = image_one
-        self.assertNotEqual(
-            hash(image_two),
-            hash(a)
-        )
+        self.assertNotEqual(hash(image_two), hash(a))
 
     def test_is_hashable(self):
         image_one = self.getImage_generic()
-        self.assertTrue(
-            isinstance(image_one, collections.abc.Hashable)
-        )
+        self.assertTrue(isinstance(image_one, collections.abc.Hashable))
 
     # --------
     # Equality
@@ -724,35 +631,23 @@ class TestImage(unittest.TestCase):
 
     def test_object_equal_self(self):
         image_one = self.getImage_generic()
-        self.assertEqual(
-            image_one,
-            image_one
-        )
+        self.assertEqual(image_one, image_one)
 
     def test_object_not_equal_other(self):
         image_one = self.getImage_generic()
         image_two = self.getImage_generic()
-        self.assertNotEqual(
-            image_one,
-            image_two
-        )
+        self.assertNotEqual(image_one, image_two)
 
     def test_object_equal_self_variable_assignment(self):
         image_one = self.getImage_generic()
         a = image_one
-        self.assertEqual(
-            image_one,
-            a
-        )
+        self.assertEqual(image_one, a)
 
     def test_object_not_equal_other_variable_assignment(self):
         image_one = self.getImage_generic()
         image_two = self.getImage_generic()
         a = image_one
-        self.assertNotEqual(
-            image_two,
-            a
-        )
+        self.assertNotEqual(image_two, a)
 
     # ---------
     # Selection
@@ -765,10 +660,7 @@ class TestImage(unittest.TestCase):
         except NotImplementedError:
             return
         image.selected = True
-        self.assertEqual(
-            image.selected,
-            True
-        )
+        self.assertEqual(image.selected, True)
 
     def test_selected_false(self):
         image = self.getImage_generic()
@@ -776,7 +668,4 @@ class TestImage(unittest.TestCase):
             image.selected = False
         except NotImplementedError:
             return
-        self.assertEqual(
-            image.selected,
-            False
-        )
+        self.assertEqual(image.selected, False)

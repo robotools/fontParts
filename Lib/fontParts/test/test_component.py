@@ -49,10 +49,7 @@ class TestComponent(unittest.TestCase):
         glyph = layer.newGlyph("X")
         component = glyph.appendComponent("A")
         self.assertIsNotNone(component.font)
-        self.assertEqual(
-            component.font,
-            font
-        )
+        self.assertEqual(component.font, font)
 
     def test_get_parent_noFont(self):
         layer, _ = self.objectGenerator("layer")
@@ -65,10 +62,7 @@ class TestComponent(unittest.TestCase):
         glyph = layer.newGlyph("X")
         component = glyph.appendComponent("A")
         self.assertIsNotNone(component.layer)
-        self.assertEqual(
-            component.layer,
-            layer
-        )
+        self.assertEqual(component.layer, layer)
 
     def test_get_parent_noLayer(self):
         glyph, _ = self.objectGenerator("glyph")
@@ -80,10 +74,7 @@ class TestComponent(unittest.TestCase):
         glyph, _ = self.objectGenerator("glyph")
         component = glyph.appendComponent("A")
         self.assertIsNotNone(component.glyph)
-        self.assertEqual(
-            component.glyph,
-            glyph
-        )
+        self.assertEqual(component.glyph, glyph)
 
     def test_get_parent_noGlyph(self):
         component, _ = self.objectGenerator("component")
@@ -96,10 +87,7 @@ class TestComponent(unittest.TestCase):
         component, _ = self.objectGenerator("component")
         component.glyph = glyph
         self.assertIsNotNone(component.glyph)
-        self.assertEqual(
-            component.glyph,
-            glyph
-        )
+        self.assertEqual(component.glyph, glyph)
 
     def test_set_parent_glyph_none(self):
         component, _ = self.objectGenerator("component")
@@ -121,18 +109,12 @@ class TestComponent(unittest.TestCase):
 
     def test_baseGlyph_generic(self):
         component = self.getComponent_generic()
-        self.assertEqual(
-            component.baseGlyph,
-            "A"
-        )
+        self.assertEqual(component.baseGlyph, "A")
 
     def test_baseGlyph_valid_set(self):
         component = self.getComponent_generic()
         component.baseGlyph = "B"
-        self.assertEqual(
-            component.baseGlyph,
-            "B"
-        )
+        self.assertEqual(component.baseGlyph, "B")
 
     def test_baseGlyph_invalid_set_none(self):
         component = self.getComponent_generic()
@@ -153,26 +135,17 @@ class TestComponent(unittest.TestCase):
 
     def test_transformation_generic(self):
         component = self.getComponent_generic()
-        self.assertEqual(
-            component.transformation,
-            (1, 0, 0, 1, 0, 0)
-        )
+        self.assertEqual(component.transformation, (1, 0, 0, 1, 0, 0))
 
     def test_transformation_valid_set_positive(self):
         component = self.getComponent_generic()
         component.transformation = (1, 2, 3, 4, 5, 6)
-        self.assertEqual(
-            component.transformation,
-            (1, 2, 3, 4, 5, 6)
-        )
+        self.assertEqual(component.transformation, (1, 2, 3, 4, 5, 6))
 
     def test_transformation_valid_set_negative(self):
         component = self.getComponent_generic()
         component.transformation = (-1, -2, -3, -4, -5, -6)
-        self.assertEqual(
-            component.transformation,
-            (-1, -2, -3, -4, -5, -6)
-        )
+        self.assertEqual(component.transformation, (-1, -2, -3, -4, -5, -6))
 
     def test_transformation_invalid_set_member(self):
         component = self.getComponent_generic()
@@ -188,50 +161,32 @@ class TestComponent(unittest.TestCase):
 
     def test_offset_generic(self):
         component = self.getComponent_generic()
-        self.assertEqual(
-            component.offset,
-            (0, 0)
-        )
+        self.assertEqual(component.offset, (0, 0))
 
     def test_offset_valid_set_zero(self):
         component = self.getComponent_generic()
         component.offset = (0, 0)
-        self.assertEqual(
-            component.offset,
-            (0, 0)
-        )
+        self.assertEqual(component.offset, (0, 0))
 
     def test_offset_valid_set_positive_positive(self):
         component = self.getComponent_generic()
         component.offset = (1, 2)
-        self.assertEqual(
-            component.offset,
-            (1, 2)
-        )
+        self.assertEqual(component.offset, (1, 2))
 
     def test_offset_valid_set_negative_positive(self):
         component = self.getComponent_generic()
         component.offset = (-1, 2)
-        self.assertEqual(
-            component.offset,
-            (-1, 2)
-        )
+        self.assertEqual(component.offset, (-1, 2))
 
     def test_offset_valid_set_positive_negative(self):
         component = self.getComponent_generic()
         component.offset = (1, -2)
-        self.assertEqual(
-            component.offset,
-            (1, -2)
-        )
+        self.assertEqual(component.offset, (1, -2))
 
     def test_offset_valid_set_negative_negative(self):
         component = self.getComponent_generic()
         component.offset = (-1, -2)
-        self.assertEqual(
-            component.offset,
-            (-1, -2)
-        )
+        self.assertEqual(component.offset, (-1, -2))
 
     def test_offset_invalid_set_real_bogus(self):
         component = self.getComponent_generic()
@@ -257,50 +212,32 @@ class TestComponent(unittest.TestCase):
 
     def test_scale_generic(self):
         component = self.getComponent_generic()
-        self.assertEqual(
-            component.scale,
-            (1, 1)
-        )
+        self.assertEqual(component.scale, (1, 1))
 
     def test_scale_valid_set_zero(self):
         component = self.getComponent_generic()
         component.scale = (0, 0)
-        self.assertEqual(
-            component.scale,
-            (0, 0)
-        )
+        self.assertEqual(component.scale, (0, 0))
 
     def test_scale_valid_set_positive_positive(self):
         component = self.getComponent_generic()
         component.scale = (1, 2)
-        self.assertEqual(
-            component.scale,
-            (1, 2)
-        )
+        self.assertEqual(component.scale, (1, 2))
 
     def test_scale_valid_set_negative_positive(self):
         component = self.getComponent_generic()
         component.scale = (-1, 2)
-        self.assertEqual(
-            component.scale,
-            (-1, 2)
-        )
+        self.assertEqual(component.scale, (-1, 2))
 
     def test_scale_valid_set_positive_negative(self):
         component = self.getComponent_generic()
         component.scale = (1, -2)
-        self.assertEqual(
-            component.scale,
-            (1, -2)
-        )
+        self.assertEqual(component.scale, (1, -2))
 
     def test_scale_valid_set_negative_negative(self):
         component = self.getComponent_generic()
         component.scale = (-1, -2)
-        self.assertEqual(
-            component.scale,
-            (-1, -2)
-        )
+        self.assertEqual(component.scale, (-1, -2))
 
     def test_scale_invalid_set_real_bogus(self):
         component = self.getComponent_generic()
@@ -353,28 +290,19 @@ class TestComponent(unittest.TestCase):
         glyph = self.getComponent_index()
         component = glyph.components[0]
         component.index = 2
-        self.assertEqual(
-            [c.baseGlyph for c in glyph.components],
-            ["B", "A", "C"]
-        )
+        self.assertEqual([c.baseGlyph for c in glyph.components], ["B", "A", "C"])
 
     def test_set_index_pastLength(self):
         glyph = self.getComponent_index()
         component = glyph.components[0]
         component.index = 20
-        self.assertEqual(
-            [c.baseGlyph for c in glyph.components],
-            ["B", "C", "A"]
-        )
+        self.assertEqual([c.baseGlyph for c in glyph.components], ["B", "C", "A"])
 
     def test_set_index_negative(self):
         glyph = self.getComponent_index()
         component = glyph.components[1]
         component.index = -1
-        self.assertEqual(
-            [c.baseGlyph for c in glyph.components],
-            ["B", "A", "C"]
-        )
+        self.assertEqual([c.baseGlyph for c in glyph.components], ["B", "A", "C"])
 
     # identifier
 
@@ -454,45 +382,43 @@ class TestComponent(unittest.TestCase):
 
     def test_draw(self):
         from fontTools.pens.recordingPen import RecordingPen
+
         component = self.getComponent_generic()
         component.transformation = (1, 2, 3, 4, 5, 6)
         pen = RecordingPen()
         component.draw(pen)
-        expected = [('addComponent', ('A', (1.0, 2.0, 3.0, 4.0, 5.0, 6.0)))]
-        self.assertEqual(
-            pen.value,
-            expected
-        )
+        expected = [("addComponent", ("A", (1.0, 2.0, 3.0, 4.0, 5.0, 6.0)))]
+        self.assertEqual(pen.value, expected)
 
     # drawPoints
 
     def test_drawPoints(self):
         from fontPens.recordingPointPen import RecordingPointPen
+
         component = self.getComponent_generic()
         component.transformation = (1, 2, 3, 4, 5, 6)
         identifier = component.getIdentifier()
         pointPen = RecordingPointPen()
         component.drawPoints(pointPen)
-        expected = [('addComponent',
-                    (u'A', (1.0, 2.0, 3.0, 4.0, 5.0, 6.0)),
-                    {'identifier': identifier})]
-        self.assertEqual(
-            pointPen.value,
-            expected
-        )
+        expected = [
+            (
+                "addComponent",
+                ("A", (1.0, 2.0, 3.0, 4.0, 5.0, 6.0)),
+                {"identifier": identifier},
+            )
+        ]
+        self.assertEqual(pointPen.value, expected)
 
     def test_drawPoints_legacy(self):
         from .legacyPointPen import LegacyPointPen
+
         component = self.getComponent_generic()
         component.transformation = (1, 2, 3, 4, 5, 6)
         component.getIdentifier()
         pointPen = LegacyPointPen()
         component.drawPoints(pointPen)
-        expected = [('addComponent', (u'A', (1.0, 2.0, 3.0, 4.0, 5.0, 6.0)), {})]
-        self.assertEqual(
-            pointPen.value,
-            expected
-        )
+        expected = [("addComponent", ("A", (1.0, 2.0, 3.0, 4.0, 5.0, 6.0)), {})]
+        self.assertEqual(pointPen.value, expected)
 
     # --------------
     # Transformation
@@ -508,18 +434,12 @@ class TestComponent(unittest.TestCase):
     def test_transformBy_valid_no_origin(self):
         component = self.getComponent_transform()
         component.transformBy((2, 0, 0, 3, -3, 2))
-        self.assertEqual(
-            component.transformation,
-            (2.0, 6.0, 6.0, 12.0, 7.0, 20.0)
-        )
+        self.assertEqual(component.transformation, (2.0, 6.0, 6.0, 12.0, 7.0, 20.0))
 
     def test_transformBy_valid_origin(self):
         component = self.getComponent_transform()
         component.transformBy((2, 0, 0, 2, 0, 0), origin=(1, 2))
-        self.assertEqual(
-            component.transformation,
-            (2.0, 4.0, 6.0, 8.0, 9.0, 10.0)
-        )
+        self.assertEqual(component.transformation, (2.0, 4.0, 6.0, 8.0, 9.0, 10.0))
 
     def test_transformBy_invalid_one_string_value(self):
         component = self.getComponent_transform()
@@ -541,10 +461,7 @@ class TestComponent(unittest.TestCase):
     def test_moveBy_valid(self):
         component = self.getComponent_transform()
         component.moveBy((-1, 2))
-        self.assertEqual(
-            component.transformation,
-            (1.0, 2.0, 3.0, 4.0, 4.0, 8.0)
-        )
+        self.assertEqual(component.transformation, (1.0, 2.0, 3.0, 4.0, 4.0, 8.0))
 
     def test_moveBy_invalid_one_string_value(self):
         component = self.getComponent_transform()
@@ -567,25 +484,18 @@ class TestComponent(unittest.TestCase):
         component = self.getComponent_transform()
         component.scaleBy((-2))
         self.assertEqual(
-            component.transformation,
-            (-2.0, -4.0, -6.0, -8.0, -10.0, -12.0)
+            component.transformation, (-2.0, -4.0, -6.0, -8.0, -10.0, -12.0)
         )
 
     def test_scaleBy_valid_two_values_no_origin(self):
         component = self.getComponent_transform()
         component.scaleBy((-2, 3))
-        self.assertEqual(
-            component.transformation,
-            (-2.0, 6.0, -6.0, 12.0, -10.0, 18.0)
-        )
+        self.assertEqual(component.transformation, (-2.0, 6.0, -6.0, 12.0, -10.0, 18.0))
 
     def test_scaleBy_valid_two_values_origin(self):
         component = self.getComponent_transform()
         component.scaleBy((-2, 3), origin=(1, 2))
-        self.assertEqual(
-            component.transformation,
-            (-2.0, 6.0, -6.0, 12.0, -7.0, 14.0)
-        )
+        self.assertEqual(component.transformation, (-2.0, 6.0, -6.0, 12.0, -7.0, 14.0))
 
     def test_scaleBy_invalid_one_string_value(self):
         component = self.getComponent_transform()
@@ -609,7 +519,7 @@ class TestComponent(unittest.TestCase):
         component.rotateBy(45)
         self.assertEqual(
             [round(i, 3) for i in component.transformation],
-            [-0.707, 2.121, -0.707, 4.95, -0.707, 7.778]
+            [-0.707, 2.121, -0.707, 4.95, -0.707, 7.778],
         )
 
     def test_rotateBy_valid_origin(self):
@@ -617,7 +527,7 @@ class TestComponent(unittest.TestCase):
         component.rotateBy(45, origin=(1, 2))
         self.assertEqual(
             [round(i, 3) for i in component.transformation],
-            [-0.707, 2.121, -0.707, 4.95, 1.0, 7.657]
+            [-0.707, 2.121, -0.707, 4.95, 1.0, 7.657],
         )
 
     def test_rotateBy_invalid_string_value(self):
@@ -642,7 +552,7 @@ class TestComponent(unittest.TestCase):
         component.skewBy(100)
         self.assertEqual(
             [round(i, 3) for i in component.transformation],
-            [-10.343, 2.0, -19.685, 4.0, -29.028, 6.0]
+            [-10.343, 2.0, -19.685, 4.0, -29.028, 6.0],
         )
 
     def test_skewBy_valid_no_origin_two_values(self):
@@ -650,7 +560,7 @@ class TestComponent(unittest.TestCase):
         component.skewBy((100, 200))
         self.assertEqual(
             [round(i, 3) for i in component.transformation],
-            [-10.343, 2.364, -19.685, 5.092, -29.028, 7.82]
+            [-10.343, 2.364, -19.685, 5.092, -29.028, 7.82],
         )
 
     def test_skewBy_valid_origin_one_value(self):
@@ -658,7 +568,7 @@ class TestComponent(unittest.TestCase):
         component.skewBy(100, origin=(1, 2))
         self.assertEqual(
             [round(i, 3) for i in component.transformation],
-            [-10.343, 2.0, -19.685, 4.0, -17.685, 6.0]
+            [-10.343, 2.0, -19.685, 4.0, -17.685, 6.0],
         )
 
     def test_skewBy_valid_origin_two_values(self):
@@ -666,7 +576,7 @@ class TestComponent(unittest.TestCase):
         component.skewBy((100, 200), origin=(1, 2))
         self.assertEqual(
             [round(i, 3) for i in component.transformation],
-            [-10.343, 2.364, -19.685, 5.092, -17.685, 7.456]
+            [-10.343, 2.364, -19.685, 5.092, -17.685, 7.456],
         )
 
     # -------------
@@ -679,10 +589,7 @@ class TestComponent(unittest.TestCase):
         component = self.getComponent_generic()
         component.transformation = (1.2, 2.2, 3.3, 4.4, 5.1, 6.6)
         component.round()
-        self.assertEqual(
-            component.transformation,
-            (1.2, 2.2, 3.3, 4.4, 5, 7)
-        )
+        self.assertEqual(component.transformation, (1.2, 2.2, 3.3, 4.4, 5, 7))
 
     # decompose
 
@@ -693,6 +600,7 @@ class TestComponent(unittest.TestCase):
 
     def test_decompose_digest(self):
         from fontPens.digestPointPen import DigestPointPen
+
         component = self.getComponent_generic()
         glyph = component.glyph
         glyph.layer[component.baseGlyph]
@@ -700,17 +608,14 @@ class TestComponent(unittest.TestCase):
         pointPen = DigestPointPen()
         glyph.drawPoints(pointPen)
         expected = (
-            ('beginPath', None),
-            ((0, 0), u'line', False, 'point 0'),
-            ((0, 100), u'line', False, 'point 1'),
-            ((100, 100), u'line', False, 'point 2'),
-            ((100, 0), u'line', False, 'point 3'),
-            'endPath'
+            ("beginPath", None),
+            ((0, 0), "line", False, "point 0"),
+            ((0, 100), "line", False, "point 1"),
+            ((100, 100), "line", False, "point 2"),
+            ((100, 0), "line", False, "point 3"),
+            "endPath",
         )
-        self.assertEqual(
-            pointPen.getDigest(),
-            expected
-        )
+        self.assertEqual(pointPen.getDigest(), expected)
 
     def test_decompose_identifiers(self):
         component = self.getComponent_generic()
@@ -722,15 +627,13 @@ class TestComponent(unittest.TestCase):
         component.decompose()
         self.assertEqual(
             [point.identifier for point in glyph[0].points],
-            [point.identifier for point in baseGlyph[0].points]
+            [point.identifier for point in baseGlyph[0].points],
         )
-        self.assertEqual(
-            glyph[0].identifier,
-            baseGlyph[0].identifier
-        )
+        self.assertEqual(glyph[0].identifier, baseGlyph[0].identifier)
 
     def test_decompose_transformation(self):
         from fontPens.digestPointPen import DigestPointPen
+
         component = self.getComponent_generic()
         component.scale = (2, 2)
         glyph = component.glyph
@@ -739,17 +642,14 @@ class TestComponent(unittest.TestCase):
         pointPen = DigestPointPen()
         glyph.drawPoints(pointPen)
         expected = (
-            ('beginPath', None),
-            ((0, 0), u'line', False, 'point 0'),
-            ((0, 200), u'line', False, 'point 1'),
-            ((200, 200), u'line', False, 'point 2'),
-            ((200, 0), u'line', False, 'point 3'),
-            'endPath'
+            ("beginPath", None),
+            ((0, 0), "line", False, "point 0"),
+            ((0, 200), "line", False, "point 1"),
+            ((200, 200), "line", False, "point 2"),
+            ((200, 0), "line", False, "point 3"),
+            "endPath",
         )
-        self.assertEqual(
-            pointPen.getDigest(),
-            expected
-        )
+        self.assertEqual(pointPen.getDigest(), expected)
 
     # ------------
     # Data Queries
@@ -759,10 +659,7 @@ class TestComponent(unittest.TestCase):
 
     def test_bounds_get(self):
         component = self.getComponent_generic()
-        self.assertEqual(
-            component.bounds,
-            (0, 0, 100, 100)
-        )
+        self.assertEqual(component.bounds, (0, 0, 100, 100))
 
     def test_bounds_none(self):
         component = self.getComponent_generic()
@@ -774,18 +671,12 @@ class TestComponent(unittest.TestCase):
     def test_bounds_on_move(self):
         component = self.getComponent_generic()
         component.moveBy((0.1, -0.1))
-        self.assertEqual(
-            component.bounds,
-            (0.1, -0.1, 100.1, 99.9)
-        )
+        self.assertEqual(component.bounds, (0.1, -0.1, 100.1, 99.9))
 
     def test_bounds_on_scale(self):
         component = self.getComponent_generic()
         component.scaleBy((2, 0.5))
-        self.assertEqual(
-            component.bounds,
-            (0, 0, 200, 50)
-        )
+        self.assertEqual(component.bounds, (0, 0, 200, 50))
 
     def test_bounds_invalid_set(self):
         component = self.getComponent_generic()
@@ -796,17 +687,11 @@ class TestComponent(unittest.TestCase):
 
     def test_pointInside_true(self):
         component = self.getComponent_generic()
-        self.assertEqual(
-            component.pointInside((1, 1)),
-            True
-        )
+        self.assertEqual(component.pointInside((1, 1)), True)
 
     def test_pointInside_false(self):
         component = self.getComponent_generic()
-        self.assertEqual(
-            component.pointInside((-1, -1)),
-            False
-        )
+        self.assertEqual(component.pointInside((-1, -1)), False)
 
     # ----
     # Hash
@@ -814,41 +699,27 @@ class TestComponent(unittest.TestCase):
 
     def test_hash_object_self(self):
         component_one = self.getComponent_generic()
-        self.assertEqual(
-            hash(component_one),
-            hash(component_one)
-        )
+        self.assertEqual(hash(component_one), hash(component_one))
 
     def test_hash_object_other(self):
         component_one = self.getComponent_generic()
         component_two = self.getComponent_generic()
-        self.assertNotEqual(
-            hash(component_one),
-            hash(component_two)
-        )
+        self.assertNotEqual(hash(component_one), hash(component_two))
 
     def test_hash_object_self_variable_assignment(self):
         component_one = self.getComponent_generic()
         a = component_one
-        self.assertEqual(
-            hash(component_one),
-            hash(a)
-        )
+        self.assertEqual(hash(component_one), hash(a))
 
     def test_hash_object_other_variable_assignment(self):
         component_one = self.getComponent_generic()
         component_two = self.getComponent_generic()
         a = component_one
-        self.assertNotEqual(
-            hash(component_two),
-            hash(a)
-        )
+        self.assertNotEqual(hash(component_two), hash(a))
 
     def test_is_hashable(self):
         component_one = self.getComponent_generic()
-        self.assertTrue(
-            isinstance(component_one, collections.abc.Hashable)
-        )
+        self.assertTrue(isinstance(component_one, collections.abc.Hashable))
 
     # --------
     # Equality
@@ -856,36 +727,24 @@ class TestComponent(unittest.TestCase):
 
     def test_object_equal_self(self):
         component_one = self.getComponent_generic()
-        self.assertEqual(
-            component_one,
-            component_one
-        )
+        self.assertEqual(component_one, component_one)
 
     def test_object_not_equal_other(self):
         component_one = self.getComponent_generic()
         component_two = self.getComponent_generic()
-        self.assertNotEqual(
-            component_one,
-            component_two
-        )
+        self.assertNotEqual(component_one, component_two)
 
     def test_object_equal_assigned_variable(self):
         component_one = self.getComponent_generic()
         a = component_one
         a.baseGlyph = "C"
-        self.assertEqual(
-            component_one,
-            a
-        )
+        self.assertEqual(component_one, a)
 
     def test_object_not_equal_assigned_variable_other(self):
         component_one = self.getComponent_generic()
         component_two = self.getComponent_generic()
         a = component_one
-        self.assertNotEqual(
-            component_two,
-            a
-        )
+        self.assertNotEqual(component_two, a)
 
     # ---------
     # Selection
@@ -898,10 +757,7 @@ class TestComponent(unittest.TestCase):
         except NotImplementedError:
             return
         component.selected = True
-        self.assertEqual(
-            component.selected,
-            True
-        )
+        self.assertEqual(component.selected, True)
 
     def test_selected_false(self):
         component = self.getComponent_generic()
@@ -909,7 +765,4 @@ class TestComponent(unittest.TestCase):
             component.selected = False
         except NotImplementedError:
             return
-        self.assertEqual(
-            component.selected,
-            False
-        )
+        self.assertEqual(component.selected, False)

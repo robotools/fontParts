@@ -6,22 +6,21 @@ from fontParts.base.base import (
     SelectionMixin,
     IdentifierMixin,
     dynamicProperty,
-    reference
+    reference,
 )
 from fontParts.base import normalizers
 from fontParts.base.deprecated import DeprecatedPoint, RemovedPoint
 
 
 class BasePoint(
-                BaseObject,
-                TransformationMixin,
-                PointPositionMixin,
-                SelectionMixin,
-                IdentifierMixin,
-                DeprecatedPoint,
-                RemovedPoint
-                ):
-
+    BaseObject,
+    TransformationMixin,
+    PointPositionMixin,
+    SelectionMixin,
+    IdentifierMixin,
+    DeprecatedPoint,
+    RemovedPoint,
+):
     """
     A point object. This object is almost always
     created with :meth:`BaseContour.appendPoint`,
@@ -32,13 +31,7 @@ class BasePoint(
         >>> point = RPoint()
     """
 
-    copyAttributes = (
-        "type",
-        "smooth",
-        "x",
-        "y",
-        "name"
-    )
+    copyAttributes = ("type", "smooth", "x", "y", "name")
 
     def _reprContents(self):
         contents = [
@@ -59,8 +52,7 @@ class BasePoint(
 
     _contour = None
 
-    contour = dynamicProperty("contour",
-                              "The point's parent :class:`BaseContour`.")
+    contour = dynamicProperty("contour", "The point's parent :class:`BaseContour`.")
 
     def _get_contour(self):
         if self._contour is None:
@@ -124,7 +116,8 @@ class BasePoint(
         +----------+---------------------------------+
         | offcurve | An off-curve.                   |
         +----------+---------------------------------+
-        """)
+        """,
+    )
 
     def _get_base_type(self):
         value = self._get_type()
@@ -169,7 +162,7 @@ class BasePoint(
             False
             >>> point.smooth = True
 
-        """
+        """,
     )
 
     def _get_base_smooth(self):
@@ -214,7 +207,7 @@ class BasePoint(
             >>> point.x
             100
             >>> point.x = 101
-        """
+        """,
     )
 
     def _get_base_x(self):
@@ -257,7 +250,7 @@ class BasePoint(
             >>> point.y
             100
             >>> point.y = 101
-        """
+        """,
     )
 
     def _get_base_y(self):
@@ -304,7 +297,7 @@ class BasePoint(
 
             >>> point.index
             0
-        """
+        """,
     )
 
     def _get_base_index(self):
@@ -335,7 +328,7 @@ class BasePoint(
             >>> point.name
             'my point'
             >>> point.name = None
-        """
+        """,
     )
 
     def _get_base_name(self):

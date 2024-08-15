@@ -58,88 +58,55 @@ class TestGuideline(unittest.TestCase):
 
     def test_x_get_generic(self):
         guideline = self.getGuideline_generic()
-        self.assertEqual(
-            guideline.x,
-            1
-        )
+        self.assertEqual(guideline.x, 1)
 
     def test_x_get_fontGuideline(self):
         guideline = self.getGuideline_fontGuideline()
-        self.assertEqual(
-            guideline.x,
-            1
-        )
+        self.assertEqual(guideline.x, 1)
 
     def test_x_get_glyphGuideline(self):
         guideline = self.getGuideline_glyphGuideline()
-        self.assertEqual(
-            guideline.x,
-            1
-        )
+        self.assertEqual(guideline.x, 1)
 
     def test_x_set_valid_zero_generic(self):
         guideline = self.getGuideline_generic()
         guideline.x = 0
-        self.assertEqual(
-            guideline.x,
-            0
-        )
+        self.assertEqual(guideline.x, 0)
 
     def test_x_set_valid_zero_fontGuideline(self):
         guideline = self.getGuideline_fontGuideline()
         guideline.x = 0
-        self.assertEqual(
-            guideline.x,
-            0
-        )
+        self.assertEqual(guideline.x, 0)
 
     def test_x_set_valid_zero_glyphGuideline(self):
         guideline = self.getGuideline_glyphGuideline()
         guideline.x = 0
-        self.assertEqual(
-            guideline.x,
-            0
-        )
+        self.assertEqual(guideline.x, 0)
 
     def test_x_set_valid_positive(self):
         guideline = self.getGuideline_generic()
         guideline.x = 1
-        self.assertEqual(
-            guideline.x,
-            1
-        )
+        self.assertEqual(guideline.x, 1)
 
     def test_x_set_valid_negative(self):
         guideline = self.getGuideline_generic()
         guideline.x = -1
-        self.assertEqual(
-            guideline.x,
-            -1
-        )
+        self.assertEqual(guideline.x, -1)
 
     def test_x_set_valid_positive_float(self):
         guideline = self.getGuideline_generic()
         guideline.x = 1.1
-        self.assertEqual(
-            guideline.x,
-            1.1
-        )
+        self.assertEqual(guideline.x, 1.1)
 
     def test_x_set_valid_negative_float(self):
         guideline = self.getGuideline_generic()
         guideline.x = -1.1
-        self.assertEqual(
-            guideline.x,
-            -1.1
-        )
+        self.assertEqual(guideline.x, -1.1)
 
     def test_x_set_valid_None(self):
         guideline = self.getGuideline_generic()
         guideline.x = None
-        self.assertEqual(
-            guideline.x,
-            0
-        )
+        self.assertEqual(guideline.x, 0)
 
     def test_x_set_invalid_string(self):
         guideline = self.getGuideline_generic()
@@ -150,88 +117,55 @@ class TestGuideline(unittest.TestCase):
 
     def test_y_get_generic(self):
         guideline = self.getGuideline_generic()
-        self.assertEqual(
-            guideline.y,
-            2
-        )
+        self.assertEqual(guideline.y, 2)
 
     def test_y_get_fontGuideline(self):
         guideline = self.getGuideline_fontGuideline()
-        self.assertEqual(
-            guideline.y,
-            2
-        )
+        self.assertEqual(guideline.y, 2)
 
     def test_y_get_glyphGuideline(self):
         guideline = self.getGuideline_glyphGuideline()
-        self.assertEqual(
-            guideline.y,
-            2
-        )
+        self.assertEqual(guideline.y, 2)
 
     def test_y_set_valid_zero_generic(self):
         guideline = self.getGuideline_generic()
         guideline.y = 0
-        self.assertEqual(
-            guideline.y,
-            0
-        )
+        self.assertEqual(guideline.y, 0)
 
     def test_y_set_valid_zero_fontGuideline(self):
         guideline = self.getGuideline_fontGuideline()
         guideline.y = 0
-        self.assertEqual(
-            guideline.y,
-            0
-        )
+        self.assertEqual(guideline.y, 0)
 
     def test_y_set_valid_zero_glyphGuideline(self):
         guideline = self.getGuideline_glyphGuideline()
         guideline.y = 0
-        self.assertEqual(
-            guideline.y,
-            0
-        )
+        self.assertEqual(guideline.y, 0)
 
     def test_y_set_valid_positive(self):
         guideline = self.getGuideline_generic()
         guideline.y = 1
-        self.assertEqual(
-            guideline.y,
-            1
-        )
+        self.assertEqual(guideline.y, 1)
 
     def test_y_set_valid_negative(self):
         guideline = self.getGuideline_generic()
         guideline.y = -1
-        self.assertEqual(
-            guideline.y,
-            -1
-        )
+        self.assertEqual(guideline.y, -1)
 
     def test_y_set_valid_positive_float(self):
         guideline = self.getGuideline_generic()
         guideline.y = 1.1
-        self.assertEqual(
-            guideline.y,
-            1.1
-        )
+        self.assertEqual(guideline.y, 1.1)
 
     def test_y_set_valid_negative_float(self):
         guideline = self.getGuideline_generic()
         guideline.y = -1.1
-        self.assertEqual(
-            guideline.y,
-            -1.1
-        )
+        self.assertEqual(guideline.y, -1.1)
 
     def test_y_set_valid_None(self):
         guideline = self.getGuideline_generic()
         guideline.y = None
-        self.assertEqual(
-            guideline.y,
-            0
-        )
+        self.assertEqual(guideline.y, 0)
 
     def test_y_set_invalid_string(self):
         guideline = self.getGuideline_generic()
@@ -242,104 +176,65 @@ class TestGuideline(unittest.TestCase):
 
     def test_angle_get_generic(self):
         guideline = self.getGuideline_generic()
-        self.assertEqual(
-            guideline.angle,
-            90
-        )
+        self.assertEqual(guideline.angle, 90)
 
     def test_angle_get_fontGuideline(self):
         guideline = self.getGuideline_fontGuideline()
-        self.assertEqual(
-            guideline.angle,
-            90
-        )
+        self.assertEqual(guideline.angle, 90)
 
     def test_angle_get_glyphGuideline(self):
         guideline = self.getGuideline_glyphGuideline()
-        self.assertEqual(
-            guideline.angle,
-            90
-        )
+        self.assertEqual(guideline.angle, 90)
 
     def test_angle_set_valid_zero_generic(self):
         guideline = self.getGuideline_generic()
         guideline.angle = 0
-        self.assertEqual(
-            guideline.angle,
-            0
-        )
+        self.assertEqual(guideline.angle, 0)
 
     def test_angle_set_valid_zero_fontGuideline(self):
         guideline = self.getGuideline_fontGuideline()
         guideline.angle = 0
-        self.assertEqual(
-            guideline.angle,
-            0
-        )
+        self.assertEqual(guideline.angle, 0)
 
     def test_angle_set_valid_zero_glyphGuideline(self):
         guideline = self.getGuideline_glyphGuideline()
         guideline.angle = 0
-        self.assertEqual(
-            guideline.angle,
-            0
-        )
+        self.assertEqual(guideline.angle, 0)
 
     def test_angle_set_valid_positive(self):
         guideline = self.getGuideline_generic()
         guideline.angle = 10
-        self.assertEqual(
-            guideline.angle,
-            10
-        )
+        self.assertEqual(guideline.angle, 10)
 
     def test_angle_set_valid_negative(self):
         guideline = self.getGuideline_generic()
         guideline.angle = -10
-        self.assertEqual(
-            guideline.angle,
-            350
-        )
+        self.assertEqual(guideline.angle, 350)
 
     def test_angle_set_valid_positive_float(self):
         guideline = self.getGuideline_generic()
         guideline.angle = 10.1
-        self.assertEqual(
-            guideline.angle,
-            10.1
-        )
+        self.assertEqual(guideline.angle, 10.1)
 
     def test_angle_set_valid_negative_float(self):
         guideline = self.getGuideline_generic()
         guideline.angle = -10.1
-        self.assertEqual(
-            guideline.angle,
-            349.9
-        )
+        self.assertEqual(guideline.angle, 349.9)
 
     def test_angle_set_valid_positive_edge(self):
         guideline = self.getGuideline_generic()
         guideline.angle = 360
-        self.assertEqual(
-            guideline.angle,
-            360
-        )
+        self.assertEqual(guideline.angle, 360)
 
     def test_angle_set_valid_negative_edge(self):
         guideline = self.getGuideline_generic()
         guideline.angle = -360
-        self.assertEqual(
-            guideline.angle,
-            0
-        )
+        self.assertEqual(guideline.angle, 0)
 
     def test_angle_set_valid_None(self):
         guideline = self.getGuideline_generic()
         guideline.angle = None
-        self.assertEqual(
-            guideline.angle,
-            0
-        )
+        self.assertEqual(guideline.angle, 0)
 
     def test_angle_set_invalid_positive_edge(self):
         guideline = self.getGuideline_generic()
@@ -361,40 +256,28 @@ class TestGuideline(unittest.TestCase):
         guideline.x = 0
         guideline.y = 0
         guideline.angle = None
-        self.assertEqual(
-            guideline.angle,
-            0
-        )
+        self.assertEqual(guideline.angle, 0)
 
     def test_angle_set_valid_none_x1_y0(self):
         guideline = self.getGuideline_generic()
         guideline.x = 1
         guideline.y = 0
         guideline.angle = None
-        self.assertEqual(
-            guideline.angle,
-            90
-        )
+        self.assertEqual(guideline.angle, 90)
 
     def test_angle_set_valid_none_x0_y1(self):
         guideline = self.getGuideline_generic()
         guideline.x = 0
         guideline.y = 1
         guideline.angle = None
-        self.assertEqual(
-            guideline.angle,
-            0
-        )
+        self.assertEqual(guideline.angle, 0)
 
     def test_angle_set_valid_none_x1_y1(self):
         guideline = self.getGuideline_generic()
         guideline.x = 1
         guideline.y = 1
         guideline.angle = None
-        self.assertEqual(
-            guideline.angle,
-            0
-        )
+        self.assertEqual(guideline.angle, 0)
 
     # index
 
@@ -439,8 +322,8 @@ class TestGuideline(unittest.TestCase):
 
     def test_name_set_valid(self):
         guideline = self.getGuideline_generic()
-        guideline.name = u"foo"
-        self.assertEqual(guideline.name, u"foo")
+        guideline.name = "foo"
+        self.assertEqual(guideline.name, "foo")
 
     def test_name_set_none(self):
         guideline = self.getGuideline_generic()
@@ -779,41 +662,27 @@ class TestGuideline(unittest.TestCase):
 
     def test_hash_object_self(self):
         guideline_one = self.getGuideline_generic()
-        self.assertEqual(
-            hash(guideline_one),
-            hash(guideline_one)
-        )
+        self.assertEqual(hash(guideline_one), hash(guideline_one))
 
     def test_hash_object_other(self):
         guideline_one = self.getGuideline_generic()
         guideline_two = self.getGuideline_generic()
-        self.assertNotEqual(
-            hash(guideline_one),
-            hash(guideline_two)
-        )
+        self.assertNotEqual(hash(guideline_one), hash(guideline_two))
 
     def test_hash_object_self_variable_assignment(self):
         guideline_one = self.getGuideline_generic()
         a = guideline_one
-        self.assertEqual(
-            hash(guideline_one),
-            hash(a)
-        )
+        self.assertEqual(hash(guideline_one), hash(a))
 
     def test_hash_object_other_variable_assignment(self):
         guideline_one = self.getGuideline_generic()
         guideline_two = self.getGuideline_generic()
         a = guideline_one
-        self.assertNotEqual(
-            hash(guideline_two),
-            hash(a)
-        )
+        self.assertNotEqual(hash(guideline_two), hash(a))
 
     def test_is_hashable(self):
         guideline_one = self.getGuideline_generic()
-        self.assertTrue(
-            isinstance(guideline_one, collections.abc.Hashable)
-        )
+        self.assertTrue(isinstance(guideline_one, collections.abc.Hashable))
 
     # -------
     # Parents
@@ -825,10 +694,7 @@ class TestGuideline(unittest.TestCase):
         glyph = layer.newGlyph("X")
         guideline = glyph.appendGuideline((0, 0), 90, "Test Guideline")
         self.assertIsNotNone(guideline.font)
-        self.assertEqual(
-            guideline.font,
-            font
-        )
+        self.assertEqual(guideline.font, font)
 
     def test_get_parent_noFont(self):
         layer, _ = self.objectGenerator("layer")
@@ -841,10 +707,7 @@ class TestGuideline(unittest.TestCase):
         glyph = layer.newGlyph("X")
         guideline = glyph.appendGuideline((0, 0), 90, "Test Guideline")
         self.assertIsNotNone(guideline.layer)
-        self.assertEqual(
-            guideline.layer,
-            layer
-        )
+        self.assertEqual(guideline.layer, layer)
 
     def test_get_parent_noLayer(self):
         glyph, _ = self.objectGenerator("glyph")
@@ -856,10 +719,7 @@ class TestGuideline(unittest.TestCase):
         glyph, _ = self.objectGenerator("glyph")
         guideline = glyph.appendGuideline((0, 0), 90, "Test Guideline")
         self.assertIsNotNone(guideline.glyph)
-        self.assertEqual(
-            guideline.glyph,
-            glyph
-        )
+        self.assertEqual(guideline.glyph, glyph)
 
     def test_get_parent_noGlyph(self):
         guideline, _ = self.objectGenerator("guideline")
@@ -872,10 +732,7 @@ class TestGuideline(unittest.TestCase):
         guideline = self.getGuideline_generic()
         guideline.glyph = glyph
         self.assertIsNotNone(guideline.glyph)
-        self.assertEqual(
-            guideline.glyph,
-            glyph
-        )
+        self.assertEqual(guideline.glyph, glyph)
 
     def test_set_parent_glyph_none(self):
         guideline, _ = self.objectGenerator("guideline")
@@ -918,36 +775,24 @@ class TestGuideline(unittest.TestCase):
 
     def test_object_equal_self(self):
         guideline_one = self.getGuideline_generic()
-        self.assertEqual(
-            guideline_one,
-            guideline_one
-        )
+        self.assertEqual(guideline_one, guideline_one)
 
     def test_object_not_equal_other(self):
         guideline_one = self.getGuideline_generic()
         guideline_two = self.getGuideline_generic()
-        self.assertNotEqual(
-            guideline_one,
-            guideline_two
-        )
+        self.assertNotEqual(guideline_one, guideline_two)
 
     def test_object_equal_self_variable_assignment(self):
         guideline_one = self.getGuideline_generic()
         a = guideline_one
         a.x = 200
-        self.assertEqual(
-            guideline_one,
-            a
-        )
+        self.assertEqual(guideline_one, a)
 
     def test_object_not_equal_other_variable_assignment(self):
         guideline_one = self.getGuideline_generic()
         guideline_two = self.getGuideline_generic()
         a = guideline_one
-        self.assertNotEqual(
-            guideline_two,
-            a
-        )
+        self.assertNotEqual(guideline_two, a)
 
     # ---------
     # Selection
@@ -960,10 +805,7 @@ class TestGuideline(unittest.TestCase):
         except NotImplementedError:
             return
         guideline.selected = True
-        self.assertEqual(
-            guideline.selected,
-            True
-        )
+        self.assertEqual(guideline.selected, True)
 
     def test_not_selected_false(self):
         guideline = self.getGuideline_generic()
@@ -971,7 +813,4 @@ class TestGuideline(unittest.TestCase):
             guideline.selected = False
         except NotImplementedError:
             return
-        self.assertEqual(
-            guideline.selected,
-            False
-        )
+        self.assertEqual(guideline.selected, False)

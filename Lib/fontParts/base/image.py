@@ -5,7 +5,7 @@ from fontParts.base.base import (
     PointPositionMixin,
     SelectionMixin,
     dynamicProperty,
-    reference
+    reference,
 )
 from fontParts.base import normalizers
 from fontParts.base.color import Color
@@ -13,19 +13,15 @@ from fontParts.base.deprecated import DeprecatedImage, RemovedImage
 
 
 class BaseImage(
-                BaseObject,
-                TransformationMixin,
-                PointPositionMixin,
-                SelectionMixin,
-                DeprecatedImage,
-                RemovedImage
-                ):
+    BaseObject,
+    TransformationMixin,
+    PointPositionMixin,
+    SelectionMixin,
+    DeprecatedImage,
+    RemovedImage,
+):
 
-    copyAttributes = (
-        "transformation",
-        "color",
-        "data"
-    )
+    copyAttributes = ("transformation", "color", "data")
 
     def _reprContents(self):
         contents = [
@@ -104,7 +100,7 @@ class BaseImage(
             >>> image.transformation
             (1, 0, 0, 1, 0, 0)
             >>> image.transformation = (2, 0, 0, 2, 100, -50)
-        """
+        """,
     )
 
     def _get_base_transformation(self):
@@ -139,7 +135,7 @@ class BaseImage(
             >>> image.offset
             (0, 0)
             >>> image.offset = (100, -50)
-        """
+        """,
     )
 
     def _get_base_offset(self):
@@ -177,7 +173,7 @@ class BaseImage(
             >>> image.scale
             (1, 1)
             >>> image.scale = (2, 2)
-        """
+        """,
     )
 
     def _get_base_scale(self):
@@ -215,7 +211,7 @@ class BaseImage(
             >>> image.color
             None
             >>> image.color = (1, 0, 0, 0.5)
-        """
+        """,
     )
 
     def _get_base_color(self):
@@ -253,7 +249,7 @@ class BaseImage(
         """
         The image's raw byte data. The possible
         formats are defined by each environment.
-        """
+        """,
     )
 
     def _get_base_data(self):

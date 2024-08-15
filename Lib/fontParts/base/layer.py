@@ -3,7 +3,7 @@ from fontParts.base.base import (
     InterpolationMixin,
     SelectionMixin,
     dynamicProperty,
-    reference
+    reference,
 )
 from fontParts.base import normalizers
 from fontParts.base.compatibility import LayerCompatibilityReporter
@@ -12,10 +12,9 @@ from fontParts.base.deprecated import DeprecatedLayer, RemovedLayer
 
 
 class _BaseGlyphVendor(
-                       BaseObject,
-                       SelectionMixin,
-                       ):
-
+    BaseObject,
+    SelectionMixin,
+):
     """
     This class exists to provide common glyph
     interaction code to BaseFont and BaseLayer.
@@ -296,12 +295,13 @@ class _BaseGlyphVendor(
         Setting selected glyph objects:
 
             >>> layer.selectedGlyphs = someGlyphs
-        """
+        """,
     )
 
     def _get_base_selectedGlyphs(self):
-        selected = tuple([normalizers.normalizeGlyph(glyph) for glyph in
-                         self._get_selectedGlyphs()])
+        selected = tuple(
+            [normalizers.normalizeGlyph(glyph) for glyph in self._get_selectedGlyphs()]
+        )
         return selected
 
     def _get_selectedGlyphs(self):
@@ -333,12 +333,16 @@ class _BaseGlyphVendor(
         Setting selected glyph names:
 
             >>> layer.selectedGlyphNames = ["A", "B", "C"]
-        """
+        """,
     )
 
     def _get_base_selectedGlyphNames(self):
-        selected = tuple([normalizers.normalizeGlyphName(name) for name in
-                         self._get_selectedGlyphNames()])
+        selected = tuple(
+            [
+                normalizers.normalizeGlyphName(name)
+                for name in self._get_selectedGlyphNames()
+            ]
+        )
         return selected
 
     def _get_selectedGlyphNames(self):
@@ -370,7 +374,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
 
     def _reprContents(self):
         contents = [
-           "'%s'" % self.name,
+            "'%s'" % self.name,
         ]
         if self.color:
             contents.append("color=%r" % str(self.color))
@@ -380,11 +384,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
     # Copy
     # ----
 
-    copyAttributes = (
-        "name",
-        "color",
-        "lib"
-    )
+    copyAttributes = ("name", "color", "lib")
 
     def copy(self):
         """
@@ -427,7 +427,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
         The layer's parent :class:`BaseFont`. ::
 
             >>> font = layer.font
-        """
+        """,
     )
 
     def _get_font(self):
@@ -456,7 +456,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
             >>> layer.name
             "foreground"
             >>> layer.name = "top"
-        """
+        """,
     )
 
     def _get_base_name(self):
@@ -473,8 +473,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
         if font is not None:
             existing = self.font.layerOrder
             if value in existing:
-                raise ValueError("A layer with the name '%s' already exists."
-                                 % value)
+                raise ValueError("A layer with the name '%s' already exists." % value)
         self._set_name(value)
 
     def _get_name(self):
@@ -511,7 +510,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
             >>> layer.color
             None
             >>> layer.color = (1, 0, 0, 0.5)
-        """
+        """,
     )
 
     def _get_base_color(self):
@@ -563,7 +562,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
 
             >>> layer.lib["org.robofab.hello"]
             "world"
-        """
+        """,
     )
 
     def _get_base_lib(self):
@@ -587,7 +586,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
 
             >>> layer.tempLib["org.robofab.hello"]
             "world"
-        """
+        """,
     )
 
     def _get_base_tempLib(self):
@@ -652,8 +651,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
     # Interpolation
     # -------------
 
-    def interpolate(self, factor, minLayer, maxLayer, round=True,
-                    suppressError=True):
+    def interpolate(self, factor, minLayer, maxLayer, round=True, suppressError=True):
         """
         Interpolate all possible data in the layer. ::
 
@@ -673,20 +671,28 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
         """
         factor = normalizers.normalizeInterpolationFactor(factor)
         if not isinstance(minLayer, BaseLayer):
-            raise TypeError(("Interpolation to an instance of %r can not be "
-                             "performed from an instance of %r.")
-                            % (self.__class__.__name__, minLayer.__class__.__name__))
+            raise TypeError(
+                (
+                    "Interpolation to an instance of %r can not be "
+                    "performed from an instance of %r."
+                )
+                % (self.__class__.__name__, minLayer.__class__.__name__)
+            )
         if not isinstance(maxLayer, BaseLayer):
-            raise TypeError(("Interpolation to an instance of %r can not be "
-                             "performed from an instance of %r.")
-                            % (self.__class__.__name__, maxLayer.__class__.__name__))
+            raise TypeError(
+                (
+                    "Interpolation to an instance of %r can not be "
+                    "performed from an instance of %r."
+                )
+                % (self.__class__.__name__, maxLayer.__class__.__name__)
+            )
         round = normalizers.normalizeBoolean(round)
         suppressError = normalizers.normalizeBoolean(suppressError)
-        self._interpolate(factor, minLayer, maxLayer,
-                          round=round, suppressError=suppressError)
+        self._interpolate(
+            factor, minLayer, maxLayer, round=round, suppressError=suppressError
+        )
 
-    def _interpolate(self, factor, minLayer, maxLayer, round=True,
-                     suppressError=True):
+    def _interpolate(self, factor, minLayer, maxLayer, round=True, suppressError=True):
         """
         This is the environment implementation of
         :meth:`BaseLayer.interpolate`.
@@ -701,8 +707,9 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
             minGlyph = minLayer[glyphName]
             maxGlyph = maxLayer[glyphName]
             dstGlyph = self.newGlyph(glyphName)
-            dstGlyph.interpolate(factor, minGlyph, maxGlyph,
-                                 round=round, suppressError=suppressError)
+            dstGlyph.interpolate(
+                factor, minGlyph, maxGlyph, round=round, suppressError=suppressError
+            )
 
     compatibilityReporterClass = LayerCompatibilityReporter
 

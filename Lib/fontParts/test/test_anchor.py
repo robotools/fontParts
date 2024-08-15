@@ -59,8 +59,8 @@ class TestAnchor(unittest.TestCase):
 
     def test_set_valid(self):
         anchor = self.getAnchor_generic()
-        anchor.name = u"foo"
-        self.assertEqual(anchor.name, u"foo")
+        anchor.name = "foo"
+        self.assertEqual(anchor.name, "foo")
 
     def test_set_none(self):
         anchor = self.getAnchor_generic()
@@ -483,41 +483,27 @@ class TestAnchor(unittest.TestCase):
 
     def test_hash_object_self(self):
         anchor_one = self.getAnchor_generic()
-        self.assertEqual(
-            hash(anchor_one),
-            hash(anchor_one)
-        )
+        self.assertEqual(hash(anchor_one), hash(anchor_one))
 
     def test_hash_object_other(self):
         anchor_one = self.getAnchor_generic()
         anchor_two = self.getAnchor_generic()
-        self.assertNotEqual(
-            hash(anchor_one),
-            hash(anchor_two)
-        )
+        self.assertNotEqual(hash(anchor_one), hash(anchor_two))
 
     def test_hash_object_self_variable_assignment(self):
         anchor_one = self.getAnchor_generic()
         a = anchor_one
-        self.assertEqual(
-            hash(anchor_one),
-            hash(a)
-        )
+        self.assertEqual(hash(anchor_one), hash(a))
 
     def test_hash_object_other_variable_assignment(self):
         anchor_one = self.getAnchor_generic()
         anchor_two = self.getAnchor_generic()
         a = anchor_one
-        self.assertNotEqual(
-            hash(anchor_two),
-            hash(a)
-        )
+        self.assertNotEqual(hash(anchor_two), hash(a))
 
     def test_is_hashable(self):
         anchor_one = self.getAnchor_generic()
-        self.assertTrue(
-            isinstance(anchor_one, collections.abc.Hashable)
-        )
+        self.assertTrue(isinstance(anchor_one, collections.abc.Hashable))
 
     # -------
     # Parents
@@ -529,10 +515,7 @@ class TestAnchor(unittest.TestCase):
         glyph = layer.newGlyph("X")
         anchor = glyph.appendAnchor("anchor 0", (0, 0))
         self.assertIsNotNone(anchor.font)
-        self.assertEqual(
-            anchor.font,
-            font
-        )
+        self.assertEqual(anchor.font, font)
 
     def test_get_parent_noFont(self):
         layer, _ = self.objectGenerator("layer")
@@ -545,10 +528,7 @@ class TestAnchor(unittest.TestCase):
         glyph = layer.newGlyph("X")
         anchor = glyph.appendAnchor("anchor 0", (0, 0))
         self.assertIsNotNone(anchor.layer)
-        self.assertEqual(
-            anchor.layer,
-            layer
-        )
+        self.assertEqual(anchor.layer, layer)
 
     def test_get_parent_noLayer(self):
         glyph, _ = self.objectGenerator("glyph")
@@ -560,10 +540,7 @@ class TestAnchor(unittest.TestCase):
         glyph, _ = self.objectGenerator("glyph")
         anchor = glyph.appendAnchor("anchor 0", (0, 0))
         self.assertIsNotNone(anchor.glyph)
-        self.assertEqual(
-            anchor.glyph,
-            glyph
-        )
+        self.assertEqual(anchor.glyph, glyph)
 
     def test_get_parent_noGlyph(self):
         anchor, _ = self.objectGenerator("anchor")
@@ -576,10 +553,7 @@ class TestAnchor(unittest.TestCase):
         anchor = self.getAnchor_generic()
         anchor.glyph = glyph
         self.assertIsNotNone(anchor.glyph)
-        self.assertEqual(
-            anchor.glyph,
-            glyph
-        )
+        self.assertEqual(anchor.glyph, glyph)
 
     def test_set_parent_glyph_none(self):
         anchor, _ = self.objectGenerator("anchor")
@@ -599,36 +573,24 @@ class TestAnchor(unittest.TestCase):
 
     def test_object_equal_self(self):
         anchor_one = self.getAnchor_generic()
-        self.assertEqual(
-            anchor_one,
-            anchor_one
-        )
+        self.assertEqual(anchor_one, anchor_one)
 
     def test_object_not_equal_other(self):
         anchor_one = self.getAnchor_generic()
         anchor_two = self.getAnchor_generic()
-        self.assertNotEqual(
-            anchor_one,
-            anchor_two
-        )
+        self.assertNotEqual(anchor_one, anchor_two)
 
     def test_object_equal_variable_assignment_self(self):
         anchor_one = self.getAnchor_generic()
         a = anchor_one
         a.moveBy((-1, 2))
-        self.assertEqual(
-            anchor_one,
-            a
-        )
+        self.assertEqual(anchor_one, a)
 
     def test_object_not_equal_variable_assignment_other(self):
         anchor_one = self.getAnchor_generic()
         anchor_two = self.getAnchor_generic()
         a = anchor_one
-        self.assertNotEqual(
-            anchor_two,
-            a
-        )
+        self.assertNotEqual(anchor_two, a)
 
     # ---------
     # Selection
@@ -641,10 +603,7 @@ class TestAnchor(unittest.TestCase):
         except NotImplementedError:
             return
         anchor.selected = True
-        self.assertEqual(
-            anchor.selected,
-            True
-        )
+        self.assertEqual(anchor.selected, True)
 
     def test_selected_false(self):
         anchor = self.getAnchor_generic()
@@ -652,7 +611,4 @@ class TestAnchor(unittest.TestCase):
             anchor.selected = False
         except NotImplementedError:
             return
-        self.assertEqual(
-            anchor.selected,
-            False
-        )
+        self.assertEqual(anchor.selected, False)

@@ -5,7 +5,7 @@ from fontParts.base.base import (
     SelectionMixin,
     IdentifierMixin,
     dynamicProperty,
-    reference
+    reference,
 )
 from fontParts.base.errors import FontPartsError
 from fontParts.base import normalizers
@@ -13,13 +13,13 @@ from fontParts.base.deprecated import DeprecatedBPoint, RemovedBPoint
 
 
 class BaseBPoint(
-                 BaseObject,
-                 TransformationMixin,
-                 SelectionMixin,
-                 DeprecatedBPoint,
-                 IdentifierMixin,
-                 RemovedBPoint
-                 ):
+    BaseObject,
+    TransformationMixin,
+    SelectionMixin,
+    DeprecatedBPoint,
+    IdentifierMixin,
+    RemovedBPoint,
+):
 
     def _reprContents(self):
         contents = [
@@ -197,9 +197,9 @@ class BaseBPoint(
         x, y = absoluteBCPIn(self.anchor, value)
         segment = self._segment
         if segment.type == "move" and value != (0, 0):
-            raise FontPartsError(("Cannot set the bcpIn for the first "
-                                  "point in an open contour.")
-                                 )
+            raise FontPartsError(
+                ("Cannot set the bcpIn for the first " "point in an open contour.")
+            )
         else:
             offCurves = segment.offCurve
             if offCurves:
@@ -251,9 +251,9 @@ class BaseBPoint(
         segment = self._segment
         nextSegment = self._nextSegment
         if nextSegment.type == "move" and value != (0, 0):
-            raise FontPartsError(("Cannot set the bcpOut for the last "
-                                  "point in an open contour.")
-                                 )
+            raise FontPartsError(
+                ("Cannot set the bcpOut for the last " "point in an open contour.")
+            )
         else:
             offCurves = nextSegment.offCurve
             if offCurves:
@@ -304,8 +304,7 @@ class BaseBPoint(
             bType = "corner"
 
         if bType is None:
-            raise FontPartsError("A %s point can not be converted to a bPoint."
-                                         % typ)
+            raise FontPartsError("A %s point can not be converted to a bPoint." % typ)
         return bType
 
     def _set_type(self, value):
@@ -331,11 +330,14 @@ class BaseBPoint(
     # Identification
     # --------------
 
-    index = dynamicProperty("index",
-                            ("The index of the bPoint within the ordered "
-                             "list of the parent contour's bPoints. None "
-                             "if the bPoint does not belong to a contour.")
-                            )
+    index = dynamicProperty(
+        "index",
+        (
+            "The index of the bPoint within the ordered "
+            "list of the parent contour's bPoints. None "
+            "if the bPoint does not belong to a contour."
+        ),
+    )
 
     def _get_base_index(self):
         if self.contour is None:
@@ -381,14 +383,20 @@ class BaseBPoint(
         Round coordinates.
         """
         x, y = self.anchor
-        self.anchor = (normalizers.normalizeVisualRounding(x),
-                       normalizers.normalizeVisualRounding(y))
+        self.anchor = (
+            normalizers.normalizeVisualRounding(x),
+            normalizers.normalizeVisualRounding(y),
+        )
         x, y = self.bcpIn
-        self.bcpIn = (normalizers.normalizeVisualRounding(x),
-                      normalizers.normalizeVisualRounding(y))
+        self.bcpIn = (
+            normalizers.normalizeVisualRounding(x),
+            normalizers.normalizeVisualRounding(y),
+        )
         x, y = self.bcpOut
-        self.bcpOut = (normalizers.normalizeVisualRounding(x),
-                       normalizers.normalizeVisualRounding(y))
+        self.bcpOut = (
+            normalizers.normalizeVisualRounding(x),
+            normalizers.normalizeVisualRounding(y),
+        )
 
 
 def relativeBCPIn(anchor, BCPIn):

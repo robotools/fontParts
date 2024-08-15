@@ -60,10 +60,7 @@ class TestPoint(unittest.TestCase):
         contour = glyph.contours[0]
         point = contour.points[0]
         self.assertIsNotNone(point.font)
-        self.assertEqual(
-            point.font,
-            font
-        )
+        self.assertEqual(point.font, font)
 
     def test_get_parent_noFont(self):
         layer, _ = self.objectGenerator("layer")
@@ -84,10 +81,7 @@ class TestPoint(unittest.TestCase):
         contour = glyph.contours[0]
         point = contour.points[0]
         self.assertIsNotNone(point.layer)
-        self.assertEqual(
-            point.layer,
-            layer
-        )
+        self.assertEqual(point.layer, layer)
 
     def test_get_parent_noLayer(self):
         glyph, _ = self.objectGenerator("glyph")
@@ -107,10 +101,7 @@ class TestPoint(unittest.TestCase):
         contour = glyph.contours[0]
         point = contour.points[0]
         self.assertIsNotNone(point.glyph)
-        self.assertEqual(
-            point.glyph,
-            glyph
-        )
+        self.assertEqual(point.glyph, glyph)
 
     def test_get_parent_noGlyph(self):
         contour, _ = self.objectGenerator("contour")
@@ -123,10 +114,7 @@ class TestPoint(unittest.TestCase):
         contour.appendPoint((10, 20))
         point = contour.points[0]
         self.assertIsNotNone(point.contour)
-        self.assertEqual(
-            point.contour,
-            contour
-        )
+        self.assertEqual(point.contour, contour)
 
     def test_get_parent_noContour(self):
         point, _ = self.objectGenerator("point")
@@ -142,10 +130,7 @@ class TestPoint(unittest.TestCase):
         point, _ = self.objectGenerator("point")
         point.contour = contour
         self.assertIsNotNone(point.contour)
-        self.assertEqual(
-            point.contour,
-            contour
-        )
+        self.assertEqual(point.contour, contour)
 
     def test_set_already_set_parent_contour(self):
         contour, _ = self.objectGenerator("contour")
@@ -180,42 +165,27 @@ class TestPoint(unittest.TestCase):
 
     def test_get_type(self):
         point = self.getPoint_generic()
-        self.assertEqual(
-            point.type,
-            "line"
-        )
+        self.assertEqual(point.type, "line")
 
     def test_set_move(self):
         point = self.getPoint_generic()
         point.type = "move"
-        self.assertEqual(
-            point.type,
-            "move"
-        )
+        self.assertEqual(point.type, "move")
 
     def test_set_curve(self):
         point = self.getPoint_generic()
         point.type = "curve"
-        self.assertEqual(
-            point.type,
-            "curve"
-        )
+        self.assertEqual(point.type, "curve")
 
     def test_set_wcurve(self):
         point = self.getPoint_generic()
         point.type = "qcurve"
-        self.assertEqual(
-            point.type,
-            "qcurve"
-        )
+        self.assertEqual(point.type, "qcurve")
 
     def test_set_offcurve(self):
         point = self.getPoint_generic()
         point.type = "offcurve"
-        self.assertEqual(
-            point.type,
-            "offcurve"
-        )
+        self.assertEqual(point.type, "offcurve")
 
     def test_set_invalid_point_type_string(self):
         point = self.getPoint_generic()
@@ -231,18 +201,12 @@ class TestPoint(unittest.TestCase):
 
     def test_get_smooth(self):
         point = self.getPoint_generic()
-        self.assertEqual(
-            point.smooth,
-            True
-        )
+        self.assertEqual(point.smooth, True)
 
     def test_set_smooth_valid(self):
         point = self.getPoint_generic()
         point.smooth = True
-        self.assertEqual(
-            point.smooth,
-            True
-        )
+        self.assertEqual(point.smooth, True)
 
     def test_set_smooth_invalid(self):
         point = self.getPoint_generic()
@@ -253,26 +217,17 @@ class TestPoint(unittest.TestCase):
 
     def test_get_x(self):
         point = self.getPoint_generic()
-        self.assertEqual(
-            point.x,
-            101
-        )
+        self.assertEqual(point.x, 101)
 
     def test_set_x_valid_int(self):
         point = self.getPoint_generic()
         point.x = 100
-        self.assertEqual(
-            point.x,
-            100
-        )
+        self.assertEqual(point.x, 100)
 
     def test_set_x_valid_float(self):
         point = self.getPoint_generic()
         point.x = 100.5
-        self.assertEqual(
-            point.x,
-            100.5
-        )
+        self.assertEqual(point.x, 100.5)
 
     def test_set_x_invalidType(self):
         point = self.getPoint_generic()
@@ -283,26 +238,17 @@ class TestPoint(unittest.TestCase):
 
     def test_get_y(self):
         point = self.getPoint_generic()
-        self.assertEqual(
-            point.y,
-            202
-        )
+        self.assertEqual(point.y, 202)
 
     def test_set_y_valid_int(self):
         point = self.getPoint_generic()
         point.y = 200
-        self.assertEqual(
-            point.y,
-            200
-        )
+        self.assertEqual(point.y, 200)
 
     def test_set_y_valid_float(self):
         point = self.getPoint_generic()
         point.y = 200.5
-        self.assertEqual(
-            point.y,
-            200.5
-        )
+        self.assertEqual(point.y, 200.5)
 
     def test_set_y_invalidType(self):
         point = self.getPoint_generic()
@@ -323,17 +269,11 @@ class TestPoint(unittest.TestCase):
 
     def test_get_index(self):
         point = self.getPoint_generic()
-        self.assertEqual(
-            point.index,
-            1
-        )
+        self.assertEqual(point.index, 1)
 
     def test_get_index_noParentContour(self):
         point = self.getPoint_noParentContour()
-        self.assertEqual(
-            point.index,
-            None
-        )
+        self.assertEqual(point.index, None)
 
     def test_set_index(self):
         point = self.getPoint_generic()
@@ -349,33 +289,21 @@ class TestPoint(unittest.TestCase):
 
     def test_get_name_noName(self):
         point = self.getPoint_generic()
-        self.assertEqual(
-            point.name,
-            None
-        )
+        self.assertEqual(point.name, None)
 
     def test_get_name_hasName(self):
         point = self.getPoint_withName()
-        self.assertEqual(
-            point.name,
-            "P"
-        )
+        self.assertEqual(point.name, "P")
 
     def test_set_name_valid_str(self):
         point = self.getPoint_generic()
         point.name = "P"
-        self.assertEqual(
-            point.name,
-            "P"
-        )
+        self.assertEqual(point.name, "P")
 
     def test_set_name_valid_none(self):
         point = self.getPoint_generic()
         point.name = None
-        self.assertEqual(
-            point.name,
-            None
-        )
+        self.assertEqual(point.name, None)
 
     def test_set_name_invalidType(self):
         point = self.getPoint_generic()
@@ -421,41 +349,27 @@ class TestPoint(unittest.TestCase):
 
     def test_hash_object_self(self):
         point_one = self.getPoint_generic()
-        self.assertEqual(
-            hash(point_one),
-            hash(point_one)
-        )
+        self.assertEqual(hash(point_one), hash(point_one))
 
     def test_hash_object_other(self):
         point_one = self.getPoint_generic()
         point_two = self.getPoint_generic()
-        self.assertNotEqual(
-            hash(point_one),
-            hash(point_two)
-        )
+        self.assertNotEqual(hash(point_one), hash(point_two))
 
     def test_hash_object_self_variable_assignment(self):
         point_one = self.getPoint_generic()
         a = point_one
-        self.assertEqual(
-            hash(point_one),
-            hash(a)
-        )
+        self.assertEqual(hash(point_one), hash(a))
 
     def test_hash_object_other_variable_assignment(self):
         point_one = self.getPoint_generic()
         point_two = self.getPoint_generic()
         a = point_one
-        self.assertNotEqual(
-            hash(point_two),
-            hash(a)
-        )
+        self.assertNotEqual(hash(point_two), hash(a))
 
     def test_is_hashable(self):
         point_one = self.getPoint_generic()
-        self.assertTrue(
-            isinstance(point_one, collections.abc.Hashable)
-        )
+        self.assertTrue(isinstance(point_one, collections.abc.Hashable))
 
     # --------
     # Equality
@@ -463,35 +377,23 @@ class TestPoint(unittest.TestCase):
 
     def test_object_equal_self(self):
         point_one = self.getPoint_generic()
-        self.assertEqual(
-            point_one,
-            point_one
-        )
+        self.assertEqual(point_one, point_one)
 
     def test_object_not_equal_other(self):
         point_one = self.getPoint_generic()
         point_two = self.getPoint_generic()
-        self.assertNotEqual(
-            point_one,
-            point_two
-        )
+        self.assertNotEqual(point_one, point_two)
 
     def test_object_equal_self_variable_assignment(self):
         point_one = self.getPoint_generic()
         a = point_one
-        self.assertEqual(
-            point_one,
-            a
-        )
+        self.assertEqual(point_one, a)
 
     def test_object_not_equal_other_variable_assignment(self):
         point_one = self.getPoint_generic()
         point_two = self.getPoint_generic()
         a = point_one
-        self.assertNotEqual(
-            point_two,
-            a
-        )
+        self.assertNotEqual(point_two, a)
 
     # ---------
     # Selection
@@ -504,10 +406,7 @@ class TestPoint(unittest.TestCase):
         except NotImplementedError:
             return
         point.selected = True
-        self.assertEqual(
-            point.selected,
-            True
-        )
+        self.assertEqual(point.selected, True)
 
     def test_selected_false(self):
         point = self.getPoint_generic()
@@ -515,10 +414,7 @@ class TestPoint(unittest.TestCase):
             point.selected = False
         except NotImplementedError:
             return
-        self.assertEqual(
-            point.selected,
-            False
-        )
+        self.assertEqual(point.selected, False)
 
     # ----
     # Copy
@@ -527,66 +423,42 @@ class TestPoint(unittest.TestCase):
     def test_copy_seperate_objects(self):
         point = self.getPoint_generic()
         copied = point.copy()
-        self.assertIsNot(
-            point,
-            copied
-        )
+        self.assertIsNot(point, copied)
 
     def test_copy_different_contour(self):
         point = self.getPoint_generic()
         copied = point.copy()
-        self.assertIsNot(
-            point.contour,
-            copied.contour
-        )
+        self.assertIsNot(point.contour, copied.contour)
 
     def test_copy_none_contour(self):
         point = self.getPoint_generic()
         copied = point.copy()
-        self.assertEqual(
-            copied.contour,
-            None
-        )
+        self.assertEqual(copied.contour, None)
 
     def test_copy_same_type(self):
         point = self.getPoint_generic()
         copied = point.copy()
-        self.assertEqual(
-            point.type,
-            copied.type
-        )
+        self.assertEqual(point.type, copied.type)
 
     def test_copy_same_smooth(self):
         point = self.getPoint_generic()
         copied = point.copy()
-        self.assertEqual(
-            point.smooth,
-            copied.smooth
-        )
+        self.assertEqual(point.smooth, copied.smooth)
 
     def test_copy_same_x(self):
         point = self.getPoint_generic()
         copied = point.copy()
-        self.assertEqual(
-            point.x,
-            copied.x
-        )
+        self.assertEqual(point.x, copied.x)
 
     def test_copy_same_y(self):
         point = self.getPoint_generic()
         copied = point.copy()
-        self.assertEqual(
-            point.y,
-            copied.y
-        )
+        self.assertEqual(point.y, copied.y)
 
     def test_copy_same_name(self):
         point = self.getPoint_generic()
         copied = point.copy()
-        self.assertEqual(
-            point.name,
-            copied.name
-        )
+        self.assertEqual(point.name, copied.name)
 
     def test_copy_same_identifier_None(self):
         point = self.getPoint_generic()
@@ -613,10 +485,7 @@ class TestPoint(unittest.TestCase):
         copied.contour = otherContour
         point.getIdentifier()
         copied.getIdentifier()
-        self.assertNotEqual(
-            point.identifier,
-            copied.identifier
-        )
+        self.assertNotEqual(point.identifier, copied.identifier)
 
     def test_copyData_type(self):
         point = self.getPoint_generic()
@@ -681,18 +550,12 @@ class TestPoint(unittest.TestCase):
     def test_transformBy_valid_no_origin(self):
         point = self.getPoint_generic()
         point.transformBy((2, 0, 0, 3, -3, 2))
-        self.assertEqual(
-            (point.x, point.y),
-            (199.0, 608.0)
-        )
+        self.assertEqual((point.x, point.y), (199.0, 608.0))
 
     def test_transformBy_valid_origin(self):
         point = self.getPoint_generic()
         point.transformBy((2, 0, 0, 2, 0, 0), origin=(1, 2))
-        self.assertEqual(
-            (point.x, point.y),
-            (201.0, 402.0)
-        )
+        self.assertEqual((point.x, point.y), (201.0, 402.0))
 
     def test_transformBy_invalid_one_string_value(self):
         point = self.getPoint_generic()
@@ -714,10 +577,7 @@ class TestPoint(unittest.TestCase):
     def test_moveBy_valid(self):
         point = self.getPoint_generic()
         point.moveBy((-1, 2))
-        self.assertEqual(
-            (point.x, point.y),
-            (100.0, 204.0)
-        )
+        self.assertEqual((point.x, point.y), (100.0, 204.0))
 
     def test_moveBy_invalid_one_string_value(self):
         point = self.getPoint_generic()
@@ -739,26 +599,17 @@ class TestPoint(unittest.TestCase):
     def test_scaleBy_valid_one_value_no_origin(self):
         point = self.getPoint_generic()
         point.scaleBy((-2))
-        self.assertEqual(
-            (point.x, point.y),
-            (-202.0, -404.0)
-        )
+        self.assertEqual((point.x, point.y), (-202.0, -404.0))
 
     def test_scaleBy_valid_two_values_no_origin(self):
         point = self.getPoint_generic()
         point.scaleBy((-2, 3))
-        self.assertEqual(
-            (point.x, point.y),
-            (-202.0, 606.0)
-        )
+        self.assertEqual((point.x, point.y), (-202.0, 606.0))
 
     def test_scaleBy_valid_two_values_origin(self):
         point = self.getPoint_generic()
         point.scaleBy((-2, 3), origin=(1, 2))
-        self.assertEqual(
-            (point.x, point.y),
-            (-199.0, 602.0)
-        )
+        self.assertEqual((point.x, point.y), (-199.0, 602.0))
 
     def test_scaleBy_invalid_one_string_value(self):
         point = self.getPoint_generic()
@@ -780,18 +631,12 @@ class TestPoint(unittest.TestCase):
     def test_rotateBy_valid_no_origin(self):
         point = self.getPoint_generic()
         point.rotateBy(45)
-        self.assertEqual(
-            [(round(point.x, 3)), (round(point.y, 3))],
-            [-71.418, 214.253]
-        )
+        self.assertEqual([(round(point.x, 3)), (round(point.y, 3))], [-71.418, 214.253])
 
     def test_rotateBy_valid_origin(self):
         point = self.getPoint_generic()
         point.rotateBy(45, origin=(1, 2))
-        self.assertEqual(
-            [(round(point.x, 3)), (round(point.y, 3))],
-            [-69.711, 214.132]
-        )
+        self.assertEqual([(round(point.x, 3)), (round(point.y, 3))], [-69.711, 214.132])
 
     def test_rotateBy_invalid_string_value(self):
         point = self.getPoint_generic()
@@ -813,33 +658,25 @@ class TestPoint(unittest.TestCase):
     def test_skewBy_valid_no_origin_one_value(self):
         point = self.getPoint_generic()
         point.skewBy(100)
-        self.assertEqual(
-            [(round(point.x, 3)), (round(point.y, 3))],
-            [-1044.599, 202.0]
-        )
+        self.assertEqual([(round(point.x, 3)), (round(point.y, 3))], [-1044.599, 202.0])
 
     def test_skewBy_valid_no_origin_two_values(self):
         point = self.getPoint_generic()
         point.skewBy((100, 200))
         self.assertEqual(
-            [(round(point.x, 3)), (round(point.y, 3))],
-            [-1044.599, 238.761]
+            [(round(point.x, 3)), (round(point.y, 3))], [-1044.599, 238.761]
         )
 
     def test_skewBy_valid_origin_one_value(self):
         point = self.getPoint_generic()
         point.skewBy(100, origin=(1, 2))
-        self.assertEqual(
-            [(round(point.x, 3)), (round(point.y, 3))],
-            [-1033.256, 202.0]
-        )
+        self.assertEqual([(round(point.x, 3)), (round(point.y, 3))], [-1033.256, 202.0])
 
     def test_skewBy_valid_origin_two_values(self):
         point = self.getPoint_generic()
         point.skewBy((100, 200), origin=(1, 2))
         self.assertEqual(
-            [(round(point.x, 3)), (round(point.y, 3))],
-            [-1033.256, 238.397]
+            [(round(point.x, 3)), (round(point.y, 3))], [-1033.256, 238.397]
         )
 
     # -------------
@@ -857,15 +694,9 @@ class TestPoint(unittest.TestCase):
     def test_roundX(self):
         point = self.getPoint_floatXY()
         point.round()
-        self.assertEqual(
-            point.x,
-            101
-        )
+        self.assertEqual(point.x, 101)
 
     def test_roundY(self):
         point = self.getPoint_floatXY()
         point.round()
-        self.assertEqual(
-            point.y,
-            203
-        )
+        self.assertEqual(point.y, 203)

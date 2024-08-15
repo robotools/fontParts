@@ -3,6 +3,7 @@ import tempfile
 import os
 from fontParts.world import RFont, FontList, OpenFont, OpenFonts
 
+
 class TestFontList(unittest.TestCase):
 
     def getFont(self):
@@ -47,10 +48,7 @@ class TestFontList(unittest.TestCase):
     # familyName
 
     def test_sortBy_familyName(self):
-        fonts = self.getFonts_sortBy(
-            "familyName",
-            ["aaa", "bbb", "ccc", None]
-        )
+        fonts = self.getFonts_sortBy("familyName", ["aaa", "bbb", "ccc", None])
         font1, font2, font3, font4 = fonts
         fonts.sortBy("familyName")
         expected = [font4, font1, font2, font3]
@@ -59,10 +57,7 @@ class TestFontList(unittest.TestCase):
     # styleName
 
     def test_sortBy_styleName(self):
-        fonts = self.getFonts_sortBy(
-            "styleName",
-            ["aaa", "bbb", "ccc", None]
-        )
+        fonts = self.getFonts_sortBy("styleName", ["aaa", "bbb", "ccc", None])
         font1, font2, font3, font4 = fonts
         fonts.sortBy("styleName")
         expected = [font4, font1, font2, font3]
@@ -72,8 +67,7 @@ class TestFontList(unittest.TestCase):
 
     def test_sortBy_isRoman_styleMapStyleName(self):
         fonts = self.getFonts_sortBy(
-            "styleMapStyleName",
-            ["regular", "italic", "bold", "bold italic"]
+            "styleMapStyleName", ["regular", "italic", "bold", "bold italic"]
         )
         font1, font2, font3, font4 = fonts
         fonts.reverse()
@@ -82,10 +76,7 @@ class TestFontList(unittest.TestCase):
         self.assertEqual(fonts, expected)
 
     def test_sortBy_isRoman_italicAngle(self):
-        fonts = self.getFonts_sortBy(
-            "italicAngle",
-            [1, 2, 3, 0]
-        )
+        fonts = self.getFonts_sortBy("italicAngle", [1, 2, 3, 0])
         font1, font2, font3, font4 = fonts
         fonts.sortBy("isRoman")
         expected = [font4, font1, font2, font3]
@@ -95,8 +86,7 @@ class TestFontList(unittest.TestCase):
 
     def test_sortBy_isItalic_styleMapStyleName(self):
         fonts = self.getFonts_sortBy(
-            "styleMapStyleName",
-            ["regular", "italic", "bold", "bold italic"]
+            "styleMapStyleName", ["regular", "italic", "bold", "bold italic"]
         )
         font1, font2, font3, font4 = fonts
         fonts.sortBy("isItalic")
@@ -104,10 +94,7 @@ class TestFontList(unittest.TestCase):
         self.assertEqual(fonts, expected)
 
     def test_sortBy_isItalic_italicAngle(self):
-        fonts = self.getFonts_sortBy(
-            "italicAngle",
-            [0, 1, 2, 3]
-        )
+        fonts = self.getFonts_sortBy("italicAngle", [0, 1, 2, 3])
         font1, font2, font3, font4 = fonts
         fonts.sortBy("isItalic")
         expected = [font2, font3, font4, font1]
@@ -116,10 +103,7 @@ class TestFontList(unittest.TestCase):
     # widthValue
 
     def test_sortBy_widthValue(self):
-        fonts = self.getFonts_sortBy(
-            "openTypeOS2WidthClass",
-            [1, 2, 3, None]
-        )
+        fonts = self.getFonts_sortBy("openTypeOS2WidthClass", [1, 2, 3, None])
         font1, font2, font3, font4 = fonts
         fonts.sortBy("widthValue")
         expected = [font4, font1, font2, font3]
@@ -128,10 +112,7 @@ class TestFontList(unittest.TestCase):
     # weightValue
 
     def test_sortBy_weightValue(self):
-        fonts = self.getFonts_sortBy(
-            "openTypeOS2WeightClass",
-            [100, 200, 300, None]
-        )
+        fonts = self.getFonts_sortBy("openTypeOS2WeightClass", [100, 200, 300, None])
         font1, font2, font3, font4 = fonts
         fonts.sortBy("weightValue")
         expected = [font4, font1, font2, font3]
@@ -141,8 +122,7 @@ class TestFontList(unittest.TestCase):
 
     def test_sortBy_isMonospace_postscriptIsFixedPitch(self):
         fonts = self.getFonts_sortBy(
-            "postscriptIsFixedPitch",
-            [True, True, False, False]
+            "postscriptIsFixedPitch", [True, True, False, False]
         )
         font1, font2, font3, font4 = fonts
         fonts.reverse()
@@ -166,8 +146,7 @@ class TestFontList(unittest.TestCase):
 
     def test_sortBy_isProportional_postscriptIsFixedPitch(self):
         fonts = self.getFonts_sortBy(
-            "postscriptIsFixedPitch",
-            [False, False, True, True]
+            "postscriptIsFixedPitch", [False, False, True, True]
         )
         font1, font2, font3, font4 = fonts
         fonts.reverse()
@@ -189,10 +168,7 @@ class TestFontList(unittest.TestCase):
     # font.info Attributes
 
     def test_sortBy_fontInfoAttribute_xHeight(self):
-        fonts = self.getFonts_sortBy(
-            "xHeight",
-            [10, 20, 30, 40]
-        )
+        fonts = self.getFonts_sortBy("xHeight", [10, 20, 30, 40])
         font1, font2, font3, font4 = fonts
         fonts.reverse()
         fonts.sortBy("xHeight")
@@ -217,12 +193,13 @@ class TestFontList(unittest.TestCase):
         fonts = FontList()
         fonts.extend([font1, font2, font3, font4])
         fonts.reverse()
+
         def glyphCountSortValue(font):
             return len(font)
+
         fonts.sortBy(glyphCountSortValue)
         expected = [font1, font2, font3, font4]
         self.assertEqual(fonts, expected)
-
 
     # ------
     # Search
@@ -280,6 +257,7 @@ class TestFontList(unittest.TestCase):
         found = fonts.getFontsByFamilyNameStyleName("A", "1")
         self.assertEqual(found, [font1, font4])
 
+
 class TestFontOpen(unittest.TestCase):
 
     def setUp(self):
@@ -290,6 +268,7 @@ class TestFontOpen(unittest.TestCase):
 
     def tearDown(self):
         import shutil
+
         shutil.rmtree(self.font_dir)
 
     def test_font_open(self):
@@ -307,6 +286,7 @@ class TestOpenFonts(unittest.TestCase):
 
     def tearDown(self):
         import shutil
+
         shutil.rmtree(self.font_dir)
 
     def test_font_open(self):

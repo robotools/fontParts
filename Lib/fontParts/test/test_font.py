@@ -85,19 +85,13 @@ class TestFont(unittest.TestCase):
 
     def test_len_initial(self):
         font = self.getFont_glyphs()
-        self.assertEqual(
-            len(font),
-            4
-        )
+        self.assertEqual(len(font), 4)
 
     def test_len_two_layers(self):
         font = self.getFont_glyphs()
         layer = font.newLayer("test")
         layer.newGlyph("X")
-        self.assertEqual(
-            len(font),
-            4
-        )
+        self.assertEqual(len(font), 4)
 
     # insert glyphs
 
@@ -130,34 +124,34 @@ class TestFont(unittest.TestCase):
         # group, group kerning
         font.kerning["public.kern1.O", "public.kern2.O"] = -50
         expected = {
-            ('O', 'O'): -50,
-            ('Ograve', 'O'): -50,
-            ('O', 'Ograve'): -50,
-            ('Ograve', 'Ograve'): -50,
-            ('A', 'V'): -100,
-            ('V', 'A'): -200
+            ("O", "O"): -50,
+            ("Ograve", "O"): -50,
+            ("O", "Ograve"): -50,
+            ("Ograve", "Ograve"): -50,
+            ("A", "V"): -100,
+            ("V", "A"): -200,
         }
         self.assertEqual(font.getFlatKerning(), expected)
         # glyph, group exception
         font.kerning["O", "public.kern2.O"] = -30
         expected = {
-            ('O', 'O'): -30,
-            ('Ograve', 'O'): -50,
-            ('O', 'Ograve'): -30,
-            ('Ograve', 'Ograve'): -50,
-            ('A', 'V'): -100,
-            ('V', 'A'): -200
+            ("O", "O"): -30,
+            ("Ograve", "O"): -50,
+            ("O", "Ograve"): -30,
+            ("Ograve", "Ograve"): -50,
+            ("A", "V"): -100,
+            ("V", "A"): -200,
         }
         self.assertEqual(font.getFlatKerning(), expected)
         # glyph, glyph exception
         font.kerning["O", "Ograve"] = -70
         expected = {
-            ('O', 'O'): -30,
-            ('Ograve', 'O'): -50,
-            ('O', 'Ograve'): -70,
-            ('Ograve', 'Ograve'): -50,
-            ('A', 'V'): -100,
-            ('V', 'A'): -200
+            ("O", "O"): -30,
+            ("Ograve", "O"): -50,
+            ("O", "Ograve"): -70,
+            ("Ograve", "Ograve"): -50,
+            ("A", "V"): -100,
+            ("V", "A"): -200,
         }
         self.assertEqual(font.getFlatKerning(), expected)
 
@@ -167,42 +161,27 @@ class TestFont(unittest.TestCase):
 
     def test_hash_same_object(self):
         font_one = self.getFont_glyphs()
-        self.assertEqual(
-            hash(font_one),
-            hash(font_one)
-        )
+        self.assertEqual(hash(font_one), hash(font_one))
 
     def test_hash_different_object(self):
         font_one = self.getFont_glyphs()
         font_two = self.getFont_glyphs()
-        self.assertNotEqual(
-            hash(font_one),
-            hash(font_two)
-        )
+        self.assertNotEqual(hash(font_one), hash(font_two))
 
     def test_hash_same_object_variable_assignment(self):
         font_one = self.getFont_glyphs()
         a = font_one
-        self.assertEqual(
-            hash(font_one),
-            hash(a)
-        )
+        self.assertEqual(hash(font_one), hash(a))
 
     def test_hash_different_object_variable_assignment(self):
         font_one = self.getFont_glyphs()
         font_two = self.getFont_glyphs()
         a = font_one
-        self.assertNotEqual(
-            hash(font_two),
-            hash(a)
-        )
+        self.assertNotEqual(hash(font_two), hash(a))
 
     def test_hash_is_hasbable(self):
         font_one = self.getFont_glyphs()
-        self.assertEqual(
-            isinstance(font_one, collections.abc.Hashable),
-            True
-        )
+        self.assertEqual(isinstance(font_one, collections.abc.Hashable), True)
 
     # --------
     # Equality
@@ -210,36 +189,24 @@ class TestFont(unittest.TestCase):
 
     def test_object_equal_self(self):
         font_one = self.getFont_glyphs()
-        self.assertEqual(
-            font_one,
-            font_one
-        )
+        self.assertEqual(font_one, font_one)
 
     def test_object_not_equal_other(self):
         font_one = self.getFont_glyphs()
         font_two = self.getFont_glyphs()
-        self.assertNotEqual(
-            font_one,
-            font_two
-        )
+        self.assertNotEqual(font_one, font_two)
 
     def test_object_equal_self_variable_assignment(self):
         font_one = self.getFont_glyphs()
         a = font_one
         a.newGlyph("XYZ")
-        self.assertEqual(
-            font_one,
-            a
-        )
+        self.assertEqual(font_one, a)
 
     def test_object_not_equal_other_variable_assignment(self):
         font_one = self.getFont_glyphs()
         font_two = self.getFont_glyphs()
         a = font_one
-        self.assertNotEqual(
-            font_two,
-            a
-        )
+        self.assertNotEqual(font_two, a)
 
     # ---------
     # Selection
@@ -254,10 +221,7 @@ class TestFont(unittest.TestCase):
         except NotImplementedError:
             return
         font.selected = True
-        self.assertEqual(
-            font.selected,
-            True
-        )
+        self.assertEqual(font.selected, True)
 
     def test_selected_false(self):
         font = self.getFont_glyphs()
@@ -265,10 +229,7 @@ class TestFont(unittest.TestCase):
             font.selected = False
         except NotImplementedError:
             return
-        self.assertEqual(
-            font.selected,
-            False
-        )
+        self.assertEqual(font.selected, False)
 
     # Layers
 
@@ -278,10 +239,7 @@ class TestFont(unittest.TestCase):
             font.defaultLayer.selected = False
         except NotImplementedError:
             return
-        self.assertEqual(
-            font.selectedLayers,
-            ()
-        )
+        self.assertEqual(font.selectedLayers, ())
 
     def test_selectedLayer_setSubObject(self):
         font = self.getFont_layers()
@@ -293,10 +251,7 @@ class TestFont(unittest.TestCase):
         layer2 = font.getLayer("layer B")
         layer1.selected = True
         layer2.selected = True
-        self.assertEqual(
-            font.selectedLayers,
-            (layer1, layer2)
-        )
+        self.assertEqual(font.selectedLayers, (layer1, layer2))
 
     def test_selectedLayer_setFilledList(self):
         font = self.getFont_layers()
@@ -307,10 +262,7 @@ class TestFont(unittest.TestCase):
         layer3 = font.getLayer("layer C")
         layer4 = font.getLayer("layer D")
         font.selectedLayers = [layer3, layer4]
-        self.assertEqual(
-            font.selectedLayers,
-            (layer3, layer4)
-        )
+        self.assertEqual(font.selectedLayers, (layer3, layer4))
 
     def test_selectedLayer_setEmptyList(self):
         font = self.getFont_layers()
@@ -321,10 +273,7 @@ class TestFont(unittest.TestCase):
         layer1 = font.getLayer("layer A")
         layer1.selected = True
         font.selectedLayers = []
-        self.assertEqual(
-            font.selectedLayers,
-            ()
-        )
+        self.assertEqual(font.selectedLayers, ())
 
     # Glyphs
 
@@ -334,10 +283,7 @@ class TestFont(unittest.TestCase):
             font.defaultLayer.selected = False
         except NotImplementedError:
             return
-        self.assertEqual(
-            font.selectedGlyphs,
-            ()
-        )
+        self.assertEqual(font.selectedGlyphs, ())
 
     def test_selectedGlyphs_setSubObject(self):
         font = self.getFont_glyphs()
@@ -351,7 +297,7 @@ class TestFont(unittest.TestCase):
         glyph2.selected = True
         self.assertEqual(
             tuple(sorted(font.selectedGlyphs, key=lambda glyph: glyph.name)),
-            (glyph1, glyph2)
+            (glyph1, glyph2),
         )
 
     def test_selectedGlyphs_setFilledList(self):
@@ -365,7 +311,7 @@ class TestFont(unittest.TestCase):
         font.selectedGlyphs = [glyph3, glyph4]
         self.assertEqual(
             tuple(sorted(font.selectedGlyphs, key=lambda glyph: glyph.name)),
-            (glyph3, glyph4)
+            (glyph3, glyph4),
         )
 
     def test_selectedGlyphs_setEmptyList(self):
@@ -377,10 +323,7 @@ class TestFont(unittest.TestCase):
         glyph1 = font["A"]
         glyph1.selected = True
         font.selectedGlyphs = []
-        self.assertEqual(
-            font.selectedGlyphs,
-            ()
-        )
+        self.assertEqual(font.selectedGlyphs, ())
 
     # Glyph names
 
@@ -390,10 +333,7 @@ class TestFont(unittest.TestCase):
             font.defaultLayer.selected = False
         except NotImplementedError:
             return
-        self.assertEqual(
-            font.selectedGlyphs,
-            ()
-        )
+        self.assertEqual(font.selectedGlyphs, ())
 
     def test_selectedGlyphNames_setSubObject(self):
         font = self.getFont_glyphs()
@@ -405,10 +345,7 @@ class TestFont(unittest.TestCase):
         glyph2 = font["B"]
         glyph1.selected = True
         glyph2.selected = True
-        self.assertEqual(
-            tuple(sorted(font.selectedGlyphNames)),
-            ("A", "B")
-        )
+        self.assertEqual(tuple(sorted(font.selectedGlyphNames)), ("A", "B"))
 
     def test_selectedGlyphNames_setFilledList(self):
         font = self.getFont_glyphs()
@@ -417,10 +354,7 @@ class TestFont(unittest.TestCase):
         except NotImplementedError:
             return
         font.selectedGlyphNames = ["C", "D"]
-        self.assertEqual(
-            tuple(sorted(font.selectedGlyphNames)),
-            ("C", "D")
-        )
+        self.assertEqual(tuple(sorted(font.selectedGlyphNames)), ("C", "D"))
 
     def test_selectedGlyphNames_setEmptyList(self):
         font = self.getFont_glyphs()
@@ -431,10 +365,7 @@ class TestFont(unittest.TestCase):
         glyph1 = font["A"]
         glyph1.selected = True
         font.selectedGlyphNames = []
-        self.assertEqual(
-            font.selectedGlyphNames,
-            ()
-        )
+        self.assertEqual(font.selectedGlyphNames, ())
 
     # Guidelines
 
@@ -445,10 +376,7 @@ class TestFont(unittest.TestCase):
             guideline1.selected = False
         except NotImplementedError:
             return
-        self.assertEqual(
-            font.selectedGuidelines,
-            ()
-        )
+        self.assertEqual(font.selectedGuidelines, ())
 
     def test_selectedGuidelines_setSubObject(self):
         font = self.getFont_guidelines()
@@ -459,10 +387,7 @@ class TestFont(unittest.TestCase):
         except NotImplementedError:
             return
         guideline2.selected = True
-        self.assertEqual(
-            font.selectedGuidelines,
-            (guideline2,)
-        )
+        self.assertEqual(font.selectedGuidelines, (guideline2,))
 
     def test_selectedGuidelines_setFilledList(self):
         font = self.getFont_guidelines()
@@ -473,10 +398,7 @@ class TestFont(unittest.TestCase):
         except NotImplementedError:
             return
         font.selectedGuidelines = [guideline1, guideline2]
-        self.assertEqual(
-            font.selectedGuidelines,
-            (guideline1, guideline2)
-        )
+        self.assertEqual(font.selectedGuidelines, (guideline1, guideline2))
 
     def test_selectedGuidelines_setEmptyList(self):
         font = self.getFont_guidelines()
@@ -486,10 +408,7 @@ class TestFont(unittest.TestCase):
         except NotImplementedError:
             return
         font.selectedGuidelines = []
-        self.assertEqual(
-            font.selectedGuidelines,
-            ()
-        )
+        self.assertEqual(font.selectedGuidelines, ())
 
     # save
 
@@ -514,21 +433,28 @@ class TestFont(unittest.TestCase):
     def test_save(self):
         def testCases(path):
             self.assertTrue(os.path.exists(path) and os.path.isdir(path))
+
         self._save(testCases)
 
     def test_save_formatVersion(self):
         from fontTools.ufoLib import UFOReader
 
-        for version in [2, 3]:  # fails on formatVersion 1 (but maybe we should not worry about it...)
+        for version in [
+            2,
+            3,
+        ]:  # fails on formatVersion 1 (but maybe we should not worry about it...)
+
             def testCases(path):
                 reader = UFOReader(path)
                 self.assertEqual(reader.formatVersion, version)
+
             self._save(testCases, formatVersion=version)
 
     def test_save_fileStructure(self):
         from fontTools.ufoLib import UFOReader, UFOFileStructure
 
         for fileStructure in [None, "package", "zip"]:
+
             def testCases(path):
                 reader = UFOReader(path)
                 expectedFileStructure = fileStructure
@@ -537,6 +463,7 @@ class TestFont(unittest.TestCase):
                 else:
                     expectedFileStructure = UFOFileStructure(fileStructure)
                 self.assertEqual(reader.fileStructure, expectedFileStructure)
+
             self._save(testCases, fileStructure=fileStructure)
 
     # copy
@@ -544,29 +471,17 @@ class TestFont(unittest.TestCase):
     def test_copy(self):
         font = self.getFont_glyphs()
         copy = font.copy()
-        self.assertEqual(
-            font.keys(),
-            copy.keys()
-        )
+        self.assertEqual(font.keys(), copy.keys())
 
         font = self.getFont_glyphs()
         font.defaultLayer.name = "hello"
         copy = font.copy()
-        self.assertEqual(
-            font.keys(),
-            copy.keys()
-        )
-        self.assertEqual(
-            font.defaultLayerName,
-            copy.defaultLayerName
-        )
+        self.assertEqual(font.keys(), copy.keys())
+        self.assertEqual(font.defaultLayerName, copy.defaultLayerName)
 
         font = self.getFont_guidelines()
         copy = font.copy()
-        self.assertEqual(
-            copy.selectedGuidelines,
-            font.selectedGuidelines
-        )
+        self.assertEqual(copy.selectedGuidelines, font.selectedGuidelines)
 
     # -------------
     # Interpolation
@@ -578,12 +493,8 @@ class TestFont(unittest.TestCase):
         font_min.appendGuideline(position=(0, 0), angle=0)
         font_max, _ = self.objectGenerator("font")
         font_max.appendGuideline(position=(200, 200), angle=0)
-        interpolated_font.info.interpolate(0.5, font_min.info, font_max.info, round=True)
-        self.assertEqual(
-            len(interpolated_font.guidelines),
-            1
+        interpolated_font.info.interpolate(
+            0.5, font_min.info, font_max.info, round=True
         )
-        self.assertEqual(
-            interpolated_font.guidelines[0].position,
-            (100, 100)
-        )
+        self.assertEqual(len(interpolated_font.guidelines), 1)
+        self.assertEqual(interpolated_font.guidelines[0].position, (100, 100))

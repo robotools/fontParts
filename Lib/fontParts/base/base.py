@@ -9,8 +9,8 @@ from fontParts.base import normalizers
 # Helpers
 # -------
 
-class dynamicProperty(object):
 
+class dynamicProperty(object):
     """
     This implements functionality that is very similar
     to Python's built in property function, but makes
@@ -111,6 +111,7 @@ def interpolate(a, b, v):
 # Base Objects
 # ------------
 
+
 class BaseObject(object):
 
     # --------------
@@ -138,9 +139,7 @@ class BaseObject(object):
         else:
             contents = ""
         s = "<{className}{contents} at {address}>".format(
-            className=self.__class__.__name__,
-            contents=contents,
-            address=id(self)
+            className=self.__class__.__name__, contents=contents, address=id(self)
         )
         return s
 
@@ -228,8 +227,9 @@ class BaseObject(object):
         the base classes. So, it's here for convenience.
         """
         raise NotImplementedError(
-            "The {className} subclass does not implement this method."
-            .format(className=self.__class__.__name__)
+            "The {className} subclass does not implement this method.".format(
+                className=self.__class__.__name__
+            )
         )
 
     # ---------------------
@@ -290,8 +290,7 @@ class BaseDict(BaseObject):
         items = self._items()
         if self.keyNormalizer is not None and self.valueNormalizer is not None:
             values = [
-                (self.keyNormalizer.__func__(key),
-                 self.valueNormalizer.__func__(value))
+                (self.keyNormalizer.__func__(key), self.valueNormalizer.__func__(value))
                 for (key, value) in items
             ]
         return values
@@ -654,7 +653,8 @@ class InterpolationMixin(object):
             raise TypeError(
                 """Compatibility between an instance of %r and an \
                 instance of %r can not be checked."""
-                % (cls.__name__, other.__class__.__name__))
+                % (cls.__name__, other.__class__.__name__)
+            )
         reporter = self.compatibilityReporterClass(self, other)
         self._isCompatible(other, reporter)
         return not reporter.fatal, reporter
@@ -680,7 +680,7 @@ class SelectionMixin(object):
             >>> obj.selected
             False
             >>> obj.selected = True
-        """
+        """,
     )
 
     def _get_base_selected(self):
@@ -733,7 +733,6 @@ class SelectionMixin(object):
 
 
 class PointPositionMixin(object):
-
     """
     This adds a ``position`` attribute as a dyanmicProperty,
     for use as a mixin with objects that have ``x`` and ``y``
@@ -784,7 +783,7 @@ class IdentifierMixin(object):
 
         To request an identifier if it does not exist use
         `object.getIdentifier()`
-        """
+        """,
     )
 
     def _get_base_identifier(self):
@@ -834,6 +833,7 @@ def reference(obj):
     # return weakref.ref(obj)
     def wrapper():
         return obj
+
     return wrapper
 
 

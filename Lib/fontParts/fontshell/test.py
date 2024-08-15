@@ -22,6 +22,7 @@ from fontParts.fontshell.guideline import RGuideline
 # behavior with a small subclasses for testing
 # purposes only.
 
+
 def _get_selected(self):
     if isinstance(self, FSTestSegment):
         for point in self.points:
@@ -162,6 +163,7 @@ def fontshellObjectGenerator(cls):
 
 if __name__ == "__main__":
     import sys
+
     if {"-v", "--verbose"}.intersection(sys.argv):
         verbosity = 2
     else:

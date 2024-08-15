@@ -98,10 +98,7 @@ class TestBPoint(unittest.TestCase):
         contour = glyph.contours[0]
         bPoint = contour.bPoints[1]
         self.assertIsNotNone(bPoint.font)
-        self.assertEqual(
-            bPoint.font,
-            font
-        )
+        self.assertEqual(bPoint.font, font)
 
     def test_get_parent_noFont(self):
         layer, _ = self.objectGenerator("layer")
@@ -126,10 +123,7 @@ class TestBPoint(unittest.TestCase):
         contour = glyph.contours[0]
         bPoint = contour.bPoints[1]
         self.assertIsNotNone(bPoint.layer)
-        self.assertEqual(
-            bPoint.layer,
-            layer
-        )
+        self.assertEqual(bPoint.layer, layer)
 
     def test_get_parent_noLayer(self):
         glyph, _ = self.objectGenerator("glyph")
@@ -153,10 +147,7 @@ class TestBPoint(unittest.TestCase):
         contour = glyph.contours[0]
         bPoint = contour.bPoints[1]
         self.assertIsNotNone(bPoint.glyph)
-        self.assertEqual(
-            bPoint.glyph,
-            glyph
-        )
+        self.assertEqual(bPoint.glyph, glyph)
 
     def test_get_parent_noGlyph(self):
         contour, _ = self.objectGenerator("contour")
@@ -173,10 +164,7 @@ class TestBPoint(unittest.TestCase):
         contour.appendPoint((303, 0), "line")
         bPoint = contour.bPoints[1]
         self.assertIsNotNone(bPoint.contour)
-        self.assertEqual(
-            bPoint.contour,
-            contour
-        )
+        self.assertEqual(bPoint.contour, contour)
 
     def test_get_parent_noContour(self):
         bPoint, _ = self.objectGenerator("bPoint")
@@ -213,10 +201,7 @@ class TestBPoint(unittest.TestCase):
         bPoint, _ = self.objectGenerator("bPoint")
         bPoint.contour = contour
         self.assertIsNotNone(bPoint.contour)
-        self.assertEqual(
-            bPoint.contour,
-            contour
-        )
+        self.assertEqual(bPoint.contour, contour)
 
     def test_set_already_set_parent_contour(self):
         contour, _ = self.objectGenerator("contour")
@@ -253,93 +238,60 @@ class TestBPoint(unittest.TestCase):
 
     def test_get_type_corner(self):
         bPoint = self.getBPoint_corner()
-        self.assertEqual(
-            bPoint.type,
-            "corner"
-        )
+        self.assertEqual(bPoint.type, "corner")
 
     def test_get_type_curve(self):
         bPoint = self.getBPoint_curve()
-        self.assertEqual(
-            bPoint.type,
-            "curve"
-        )
+        self.assertEqual(bPoint.type, "curve")
 
     def test_set_type_corner(self):
         bPoint = self.getBPoint_curve()
         bPoint.type = "corner"
-        self.assertEqual(
-            bPoint.type,
-            "corner"
-        )
+        self.assertEqual(bPoint.type, "corner")
 
     def test_set_type_curve(self):
         bPoint = self.getBPoint_corner()
         bPoint.type = "curve"
-        self.assertEqual(
-            bPoint.type,
-            "curve"
-        )
+        self.assertEqual(bPoint.type, "curve")
 
     def test_type_not_equal(self):
         bPoint = self.getBPoint_corner()
-        self.assertNotEqual(
-            bPoint.type,
-            "curve"
-        )
+        self.assertNotEqual(bPoint.type, "curve")
 
     def test_set_bcpOutIn_type_change(self):
         bPoint = self.getBPoint_curve()
         bPoint.bcpOut = (0, 0)
         bPoint.bcpIn = (0, 0)
-        self.assertEqual(
-            bPoint.type,
-            "corner"
-        )
+        self.assertEqual(bPoint.type, "corner")
 
     def test_set_bcpInOut_type_change(self):
         bPoint = self.getBPoint_curve()
         bPoint.bcpIn = (0, 0)
         bPoint.bcpOut = (0, 0)
-        self.assertEqual(
-            bPoint.type,
-            "corner"
-        )
+        self.assertEqual(bPoint.type, "corner")
 
     # https://github.com/robotools/fontParts/issues/435
     def test_smooth_move_type_issue435(self):
         contour = self.getContour()
         contour.points[0].smooth = True
         bPoint = contour.bPoints[0]
-        self.assertEqual(
-            bPoint.type,
-            "curve"
-        )
+        self.assertEqual(bPoint.type, "curve")
 
     # anchor
 
     def test_get_anchor(self):
         bPoint = self.getBPoint_corner()
-        self.assertEqual(
-            bPoint.anchor,
-            (101, 202)
-        )
+        self.assertEqual(bPoint.anchor, (101, 202))
 
     def test_set_anchor_valid_tuple(self):
         bPoint = self.getBPoint_corner()
         bPoint.anchor = (51, 45)
-        self.assertEqual(
-            bPoint.anchor,
-            (51, 45)
-        )
+        self.assertEqual(bPoint.anchor, (51, 45))
 
     def test_set_anchor_valid_list(self):
         bPoint = self.getBPoint_corner()
         bPoint.anchor = [51, 45]
-        self.assertEqual(
-            bPoint.anchor,
-            (51, 45)
-        )
+        self.assertEqual(bPoint.anchor, (51, 45))
 
     def test_set_anchor_invalid_too_many_items(self):
         bPoint = self.getBPoint_corner()
@@ -370,41 +322,26 @@ class TestBPoint(unittest.TestCase):
 
     def test_get_bcpIn_corner(self):
         bPoint = self.getBPoint_corner()
-        self.assertEqual(
-            bPoint.bcpIn,
-            (0, 0)
-        )
+        self.assertEqual(bPoint.bcpIn, (0, 0))
 
     def test_get_bcpIn_curve(self):
         bPoint = self.getBPoint_curve()
-        self.assertEqual(
-            bPoint.bcpIn,
-            (-40, -12)
-        )
+        self.assertEqual(bPoint.bcpIn, (-40, -12))
 
     def test_set_bcpIn_corner_valid_tuple(self):
         bPoint = self.getBPoint_corner()
         bPoint.bcpIn = (51, 45)
-        self.assertEqual(
-            bPoint.bcpIn,
-            (51, 45)
-        )
+        self.assertEqual(bPoint.bcpIn, (51, 45))
 
     def test_set_bcpIn_corner_with_bcpOut(self):
         bPoint = self.getBPoint_corner_with_bcpOut()
         bPoint.bcpIn = (51, 45)
-        self.assertEqual(
-            bPoint.bcpIn,
-            (51, 45)
-        )
+        self.assertEqual(bPoint.bcpIn, (51, 45))
 
     def test_set_bcpIn_curve_valid_tuple(self):
         bPoint = self.getBPoint_curve()
         bPoint.bcpIn = (51, 45)
-        self.assertEqual(
-            bPoint.bcpIn,
-            (51, 45)
-        )
+        self.assertEqual(bPoint.bcpIn, (51, 45))
 
     def test_set_bcpIn_curve_firstPointOpenContour(self):
         bPoint = self.getBPoint_curve_firstPointOpenContour()
@@ -414,10 +351,7 @@ class TestBPoint(unittest.TestCase):
     def test_set_bcpIn_valid_list(self):
         bPoint = self.getBPoint_corner()
         bPoint.bcpIn = [51, 45]
-        self.assertEqual(
-            bPoint.bcpIn,
-            (51, 45)
-        )
+        self.assertEqual(bPoint.bcpIn, (51, 45))
 
     def test_set_bcpIn_invalid_too_many_items(self):
         bPoint = self.getBPoint_corner()
@@ -432,7 +366,7 @@ class TestBPoint(unittest.TestCase):
     def test_set_bcpIn_invalid_single_item_tuple(self):
         bPoint = self.getBPoint_corner()
         with self.assertRaises(TypeError):
-            bPoint.bcpIn = (51)
+            bPoint.bcpIn = 51
 
     def test_set_bcpIn_invalidType_int(self):
         bPoint = self.getBPoint_corner()
@@ -448,49 +382,31 @@ class TestBPoint(unittest.TestCase):
 
     def test_get_bcpOut_corner(self):
         bPoint = self.getBPoint_corner()
-        self.assertEqual(
-            bPoint.bcpOut,
-            (0, 0)
-        )
+        self.assertEqual(bPoint.bcpOut, (0, 0))
 
     def test_get_bcpOut_curve(self):
         bPoint = self.getBPoint_curve()
-        self.assertEqual(
-            bPoint.bcpOut,
-            (32, 10)
-        )
+        self.assertEqual(bPoint.bcpOut, (32, 10))
 
     def test_set_bcpOut_corner_valid_tuple(self):
         bPoint = self.getBPoint_corner()
         bPoint.bcpOut = (51, 45)
-        self.assertEqual(
-            bPoint.bcpOut,
-            (51, 45)
-        )
+        self.assertEqual(bPoint.bcpOut, (51, 45))
 
     def test_set_bcpOut_corner_with_bcpIn(self):
         bPoint = self.getBPoint_corner_with_bcpIn()
         bPoint.bcpOut = (51, 45)
-        self.assertEqual(
-            bPoint.bcpOut,
-            (51, 45)
-        )
+        self.assertEqual(bPoint.bcpOut, (51, 45))
 
     def test_set_bcpOut_curve_valid_tuple(self):
         bPoint = self.getBPoint_curve()
         bPoint.bcpOut = (51, 45)
-        self.assertEqual(
-            bPoint.bcpOut,
-            (51, 45)
-        )
+        self.assertEqual(bPoint.bcpOut, (51, 45))
 
     def test_set_bcpOut_valid_list(self):
         bPoint = self.getBPoint_curve()
         bPoint.bcpOut = [51, 45]
-        self.assertEqual(
-            bPoint.bcpOut,
-            (51, 45)
-        )
+        self.assertEqual(bPoint.bcpOut, (51, 45))
 
     def test_set_bcpOut_curve_lastPointOpenContour(self):
         bPoint = self.getBPoint_curve_lastPointOpenContour()
@@ -510,7 +426,7 @@ class TestBPoint(unittest.TestCase):
     def test_set_bcpOut_invalid_single_item_tuple(self):
         bPoint = self.getBPoint_corner()
         with self.assertRaises(TypeError):
-            bPoint.bcpOut = (51)
+            bPoint.bcpOut = 51
 
     def test_set_bcpOut_invalidType_int(self):
         bPoint = self.getBPoint_corner()
@@ -538,10 +454,7 @@ class TestBPoint(unittest.TestCase):
 
     def test_get_index(self):
         bPoint = self.getBPoint_corner()
-        self.assertEqual(
-            bPoint.index,
-            1
-        )
+        self.assertEqual(bPoint.index, 1)
 
     # def test_get_index_noParentContour(self):
     #     bPoint = self.getBPoint_noParentContour()
@@ -594,10 +507,7 @@ class TestBPoint(unittest.TestCase):
 
     def test_hash(self):
         bPoint = self.getBPoint_corner()
-        self.assertEqual(
-            isinstance(bPoint, collections.abc.Hashable),
-            False
-        )
+        self.assertEqual(isinstance(bPoint, collections.abc.Hashable), False)
 
     # --------
     # Equality
@@ -605,36 +515,24 @@ class TestBPoint(unittest.TestCase):
 
     def test_object_equal_self(self):
         bPoint_one = self.getBPoint_corner()
-        self.assertEqual(
-            bPoint_one,
-            bPoint_one
-        )
+        self.assertEqual(bPoint_one, bPoint_one)
 
     def test_object_not_equal_other(self):
         bPoint_one = self.getBPoint_corner()
         bPoint_two = self.getBPoint_corner()
-        self.assertNotEqual(
-            bPoint_one,
-            bPoint_two
-        )
+        self.assertNotEqual(bPoint_one, bPoint_two)
 
     def test_object_equal_self_variable_assignment(self):
         bPoint_one = self.getBPoint_corner()
         a = bPoint_one
         a.anchor = (51, 45)
-        self.assertEqual(
-            bPoint_one,
-            a
-        )
+        self.assertEqual(bPoint_one, a)
 
     def test_object_not_equal_other_variable_assignment(self):
         bPoint_one = self.getBPoint_corner()
         bPoint_two = self.getBPoint_corner()
         a = bPoint_one
-        self.assertNotEqual(
-            bPoint_two,
-            a
-        )
+        self.assertNotEqual(bPoint_two, a)
 
     # ---------
     # Selection
@@ -647,10 +545,7 @@ class TestBPoint(unittest.TestCase):
         except NotImplementedError:
             return
         bPoint.selected = True
-        self.assertEqual(
-            bPoint.selected,
-            True
-        )
+        self.assertEqual(bPoint.selected, True)
 
     def test_selected_false(self):
         bPoint = self.getBPoint_corner()
@@ -659,10 +554,7 @@ class TestBPoint(unittest.TestCase):
         except NotImplementedError:
             return
         bPoint.selected = False
-        self.assertEqual(
-            bPoint.selected,
-            False
-        )
+        self.assertEqual(bPoint.selected, False)
 
     # ----
     # Copy
@@ -671,26 +563,17 @@ class TestBPoint(unittest.TestCase):
     def test_copy_seperate_objects(self):
         bPoint = self.getBPoint_corner()
         copied = bPoint.copy()
-        self.assertIsNot(
-            bPoint,
-            copied
-        )
+        self.assertIsNot(bPoint, copied)
 
     def test_copy_different_contour(self):
         bPoint = self.getBPoint_corner()
         copied = bPoint.copy()
-        self.assertIsNot(
-            bPoint.contour,
-            copied.contour
-        )
+        self.assertIsNot(bPoint.contour, copied.contour)
 
     def test_copy_none_contour(self):
         bPoint = self.getBPoint_corner()
         copied = bPoint.copy()
-        self.assertEqual(
-            copied.contour,
-            None
-        )
+        self.assertEqual(copied.contour, None)
 
     # def test_copy_same_type(self):
     #     bPoint = self.getBPoint_corner()
@@ -799,50 +682,32 @@ class TestBPoint(unittest.TestCase):
     def test_transformBy_valid_no_origin_anchor(self):
         bPoint = self.getBPoint_curve()
         bPoint.transformBy((2, 0, 0, 3, -3, 2))
-        self.assertEqual(
-            bPoint.anchor,
-            (199.0, 608.0)
-        )
+        self.assertEqual(bPoint.anchor, (199.0, 608.0))
 
     def test_transformBy_valid_no_origin_bcpIn(self):
         bPoint = self.getBPoint_curve()
         bPoint.transformBy((2, 0, 0, 3, -3, 2))
-        self.assertEqual(
-            bPoint.bcpIn,
-            (-80.0, -36.0)
-        )
+        self.assertEqual(bPoint.bcpIn, (-80.0, -36.0))
 
     def test_transformBy_valid_no_origin_bcpOut(self):
         bPoint = self.getBPoint_curve()
         bPoint.transformBy((2, 0, 0, 3, -3, 2))
-        self.assertEqual(
-            bPoint.bcpOut,
-            (64.0, 30.0)
-        )
+        self.assertEqual(bPoint.bcpOut, (64.0, 30.0))
 
     def test_transformBy_valid_origin_anchor(self):
         bPoint = self.getBPoint_curve()
         bPoint.transformBy((2, 0, 0, 2, 0, 0), origin=(1, 2))
-        self.assertEqual(
-            bPoint.anchor,
-            (201.0, 402.0)
-        )
+        self.assertEqual(bPoint.anchor, (201.0, 402.0))
 
     def test_transformBy_valid_origin_bcpIn(self):
         bPoint = self.getBPoint_curve()
         bPoint.transformBy((2, 0, 0, 2, 0, 0), origin=(1, 2))
-        self.assertEqual(
-            bPoint.bcpIn,
-            (-80.0, -24.0)
-        )
+        self.assertEqual(bPoint.bcpIn, (-80.0, -24.0))
 
     def test_transformBy_valid_origin_bcpOut(self):
         bPoint = self.getBPoint_curve()
         bPoint.transformBy((2, 0, 0, 2, 0, 0), origin=(1, 2))
-        self.assertEqual(
-            bPoint.bcpOut,
-            (64.0, 20.0)
-        )
+        self.assertEqual(bPoint.bcpOut, (64.0, 20.0))
 
     def test_transformBy_invalid_one_string_value(self):
         point = self.getBPoint_curve()
@@ -864,28 +729,19 @@ class TestBPoint(unittest.TestCase):
     def test_moveBy_valid_anchor(self):
         bPoint = self.getBPoint_curve()
         bPoint.moveBy((-1, 2))
-        self.assertEqual(
-            bPoint.anchor,
-            (100.0, 204.0)
-        )
+        self.assertEqual(bPoint.anchor, (100.0, 204.0))
 
     def test_moveBy_noChange_bcpIn(self):
         bPoint = self.getBPoint_curve()
         bPoint.moveBy((-1, 2))
         otherBPoint = self.getBPoint_curve()
-        self.assertEqual(
-            bPoint.bcpIn,
-            otherBPoint.bcpIn
-        )
+        self.assertEqual(bPoint.bcpIn, otherBPoint.bcpIn)
 
     def test_moveBy_noChange_bcpOut(self):
         bPoint = self.getBPoint_curve()
         bPoint.moveBy((-1, 2))
         otherBPoint = self.getBPoint_curve()
-        self.assertEqual(
-            bPoint.bcpOut,
-            otherBPoint.bcpOut
-        )
+        self.assertEqual(bPoint.bcpOut, otherBPoint.bcpOut)
 
     def test_moveBy_invalid_one_string_value(self):
         bPoint = self.getBPoint_curve()
@@ -907,42 +763,27 @@ class TestBPoint(unittest.TestCase):
     def test_scaleBy_valid_one_value_no_origin_anchor(self):
         bPoint = self.getBPoint_curve()
         bPoint.scaleBy((-2))
-        self.assertEqual(
-            bPoint.anchor,
-            (-202.0, -404.0)
-        )
+        self.assertEqual(bPoint.anchor, (-202.0, -404.0))
 
     def test_scaleBy_valid_two_values_no_origin_anchor(self):
         bPoint = self.getBPoint_curve()
         bPoint.scaleBy((-2, 3))
-        self.assertEqual(
-            bPoint.anchor,
-            (-202.0, 606.0)
-        )
+        self.assertEqual(bPoint.anchor, (-202.0, 606.0))
 
     def test_scaleBy_valid_two_values_origin_anchor(self):
         bPoint = self.getBPoint_curve()
         bPoint.scaleBy((-2, 3), origin=(1, 2))
-        self.assertEqual(
-            bPoint.anchor,
-            (-199.0, 602.0)
-        )
+        self.assertEqual(bPoint.anchor, (-199.0, 602.0))
 
     def test_scaleBy_valid_two_values_origin_bcpIn(self):
         bPoint = self.getBPoint_curve()
         bPoint.scaleBy((-2, 3), origin=(1, 2))
-        self.assertEqual(
-            bPoint.bcpIn,
-            (80.0, -36.0)
-        )
+        self.assertEqual(bPoint.bcpIn, (80.0, -36.0))
 
     def test_scaleBy_valid_two_values_origin_bcpOut(self):
         bPoint = self.getBPoint_curve()
         bPoint.scaleBy((-2, 3), origin=(1, 2))
-        self.assertEqual(
-            bPoint.bcpOut,
-            (-64.0, 30.0)
-        )
+        self.assertEqual(bPoint.bcpOut, (-64.0, 30.0))
 
     def test_invalid_one_string_value_scaleBy(self):
         bPoint = self.getBPoint_curve()
@@ -966,7 +807,7 @@ class TestBPoint(unittest.TestCase):
         bPoint.rotateBy(45)
         self.assertEqual(
             [(round(bPoint.anchor[0], 3)), (round(bPoint.anchor[1], 3))],
-            [-71.418, 214.253]
+            [-71.418, 214.253],
         )
 
     def test_rotateBy_valid_origin_anchor(self):
@@ -974,7 +815,7 @@ class TestBPoint(unittest.TestCase):
         bPoint.rotateBy(45, origin=(1, 2))
         self.assertEqual(
             [(round(bPoint.anchor[0], 3)), (round(bPoint.anchor[1], 3))],
-            [-69.711, 214.132]
+            [-69.711, 214.132],
         )
 
     def test_rotateBy_valid_origin_bcpIn(self):
@@ -982,7 +823,7 @@ class TestBPoint(unittest.TestCase):
         bPoint.rotateBy(45, origin=(1, 2))
         self.assertEqual(
             [(round(bPoint.bcpIn[0], 3)), (round(bPoint.bcpIn[1], 3))],
-            [-19.799, -36.77]
+            [-19.799, -36.77],
         )
 
     def test_rotateBy_valid_origin_bcpOut(self):
@@ -990,7 +831,7 @@ class TestBPoint(unittest.TestCase):
         bPoint.rotateBy(45, origin=(1, 2))
         self.assertEqual(
             [(round(bPoint.bcpOut[0], 3)), (round(bPoint.bcpOut[1], 3))],
-            [15.556, 29.698]
+            [15.556, 29.698],
         )
 
     def test_rotateBy_invalid_string_value(self):
@@ -1015,7 +856,7 @@ class TestBPoint(unittest.TestCase):
         bPoint.skewBy(100)
         self.assertEqual(
             [(round(bPoint.anchor[0], 3)), (round(bPoint.anchor[1], 3))],
-            [-1044.599, 202.0]
+            [-1044.599, 202.0],
         )
 
     def test_skewBy_valid_no_origin_two_values_anchor(self):
@@ -1023,7 +864,7 @@ class TestBPoint(unittest.TestCase):
         bPoint.skewBy((100, 200))
         self.assertEqual(
             [(round(bPoint.anchor[0], 3)), (round(bPoint.anchor[1], 3))],
-            [-1044.599, 238.761]
+            [-1044.599, 238.761],
         )
 
     def test_skewBy_valid_origin_one_value_anchor(self):
@@ -1031,7 +872,7 @@ class TestBPoint(unittest.TestCase):
         bPoint.skewBy(100, origin=(1, 2))
         self.assertEqual(
             [(round(bPoint.anchor[0], 3)), (round(bPoint.anchor[1], 3))],
-            [-1033.256, 202.0]
+            [-1033.256, 202.0],
         )
 
     def test_skewBy_valid_origin_two_values_anchor(self):
@@ -1039,7 +880,7 @@ class TestBPoint(unittest.TestCase):
         bPoint.skewBy((100, 200), origin=(1, 2))
         self.assertEqual(
             [(round(bPoint.anchor[0], 3)), (round(bPoint.anchor[1], 3))],
-            [-1033.256, 238.397]
+            [-1033.256, 238.397],
         )
 
     def test_skewBy_valid_origin_two_values_bcpIn(self):
@@ -1047,7 +888,7 @@ class TestBPoint(unittest.TestCase):
         bPoint.skewBy((100, 200), origin=(1, 2))
         self.assertEqual(
             [(round(bPoint.bcpIn[0], 3)), (round(bPoint.bcpIn[1], 3))],
-            [28.055, -26.559]
+            [28.055, -26.559],
         )
 
     def test_skewBy_valid_origin_two_values_bcpOut(self):
@@ -1055,7 +896,7 @@ class TestBPoint(unittest.TestCase):
         bPoint.skewBy((100, 200), origin=(1, 2))
         self.assertEqual(
             [(round(bPoint.bcpOut[0], 3)), (round(bPoint.bcpOut[1], 3))],
-            [-24.713, 21.647]
+            [-24.713, 21.647],
         )
 
     def test_skewBy_invalid_string_value(self):
@@ -1094,23 +935,14 @@ class TestBPoint(unittest.TestCase):
     def test_round_anchor(self):
         bPoint = self.getBPoint_curve_float()
         bPoint.round()
-        self.assertEqual(
-            bPoint.anchor,
-            (102.0, 202.0)
-        )
+        self.assertEqual(bPoint.anchor, (102.0, 202.0))
 
     def test_round_bcpIn(self):
         bPoint = self.getBPoint_curve_float()
         bPoint.round()
-        self.assertEqual(
-            bPoint.bcpIn,
-            (-40.0, -11.0)
-        )
+        self.assertEqual(bPoint.bcpIn, (-40.0, -11.0))
 
     def test_round_bcpOut(self):
         bPoint = self.getBPoint_curve_float()
         bPoint.round()
-        self.assertEqual(
-            bPoint.bcpOut,
-            (32.0, 10.0)
-        )
+        self.assertEqual(bPoint.bcpOut, (32.0, 10.0))

@@ -46,9 +46,17 @@ class RFont(RBaseObject, BaseFont):
 
     # save
 
-    def _save(self, path=None, showProgress=False,
-              formatVersion=None, fileStructure=None, **kwargs):
-        self.naked().save(path=path, formatVersion=formatVersion, structure=fileStructure)
+    def _save(
+        self,
+        path=None,
+        showProgress=False,
+        formatVersion=None,
+        fileStructure=None,
+        **kwargs,
+    ):
+        self.naked().save(
+            path=path, formatVersion=formatVersion, structure=fileStructure
+        )
 
     # close
 
@@ -151,7 +159,9 @@ class RFont(RBaseObject, BaseFont):
         guideline = self.naked().guidelines[index]
         return self.guidelineClass(guideline)
 
-    def _appendGuideline(self, position, angle, name=None, color=None, identifier=None, **kwargs):
+    def _appendGuideline(
+        self, position, angle, name=None, color=None, identifier=None, **kwargs
+    ):
         guideline = self.guidelineClass().naked()
         guideline.x = position[0]
         guideline.y = position[1]
