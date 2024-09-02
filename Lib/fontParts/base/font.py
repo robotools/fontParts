@@ -2,32 +2,23 @@
 from __future__ import annotations
 import os
 from typing import (
-    TYPE_CHECKING, Any, Generic, List, Optional, Tuple, Union
+    TYPE_CHECKING, Any, Generic, List, Optional, Tuple, Type, Union
 )
 
-from fontTools import ufoLib
 from fontParts.base.errors import FontPartsError
 from fontParts.base.base import dynamicProperty, InterpolationMixin
 from fontParts.base.layer import _BaseGlyphVendor
 from fontParts.base import normalizers
 from fontParts.base.compatibility import FontCompatibilityReporter
 from fontParts.base.deprecated import DeprecatedFont, RemovedFont
-from fontParts.base.types import (
-    CharacterMapping,
+from fontParts.base.annotations import (
+    CharacterMappingType,
+    CollectionType,
     ColorType,
     CoordinateType,
     FactorType,
-    FeaturesType,
-    FontType,
-    GlyphType,
-    GroupsType,
-    GuidelineType,
-    InfoType,
-    KerningDict,
-    KerningType,
-    LayerType,
-    LibType,
-    ReverseComponentMapping
+    KerningDictType,
+    ReverseComponentMappingType
 )
 if TYPE_CHECKING:
     from fontParts.base.info import BaseInfo
@@ -43,9 +34,8 @@ if TYPE_CHECKING:
 class BaseFont(_BaseGlyphVendor,
                InterpolationMixin,
                DeprecatedFont,
-               RemovedFont,
-               Generic[FontType]):
-    """Base class representing a font object.
+               RemovedFont):
+    """Represent the basis for a font object.
 
     Instances of this class are almost always created with one of the
     font functions in :ref:`fontParts.world`.
@@ -71,7 +61,7 @@ class BaseFont(_BaseGlyphVendor,
                                        showInterface=showInterface)
 
     def _reprContents(self) -> List[str]:
-        contents = [
+        contents: List[str] = [
             "'%s %s'" % (self.info.familyName, self.info.styleName),
         ]
         if self.path is not None:
@@ -94,7 +84,7 @@ class BaseFont(_BaseGlyphVendor,
     )
 
     def copy(self) -> BaseFont:
-        """Copy the current font into a new font.
+        """Copy data from the the current font into a new font.
 
         This will copy:
 
@@ -153,7 +143,7 @@ class BaseFont(_BaseGlyphVendor,
     # Initialize
 
     def _init(self,
-              pathOrObject: Optional[Union[str, FontType]] = None,
+              pathOrObject: Optional[Union[str, BaseFont]] = None,
               showInterface: bool = True,
               **kwargs: Any) -> None:
         r"""Initialize the native font object.
@@ -182,7 +172,7 @@ class BaseFont(_BaseGlyphVendor,
 
     # path
 
-    path: Optional[str] = dynamicProperty(
+    path: dynamicProperty = dynamicProperty(
         "base_path",
         """Get the path to the font file.
 
@@ -199,7 +189,7 @@ class BaseFont(_BaseGlyphVendor,
     )
 
     def _get_base_path(self) -> Optional[str]:
-        path = self._get_path()
+        path: Optional[str] = self._get_path()
         if path is not None:
             path = normalizers.normalizeFilePath(path)
         return path
@@ -494,7 +484,7 @@ class BaseFont(_BaseGlyphVendor,
 
     def _generate(self,
                   format: str,
-                  path: str,
+                  path: Optional[str],
                   environmentOptions: dict,
                   **kwargs: object) -> None:
         """Generate the native font in another format.
@@ -531,7 +521,7 @@ class BaseFont(_BaseGlyphVendor,
 
     # info
 
-    info: BaseInfo = dynamicProperty(
+    info: dynamicProperty = dynamicProperty(
         "base_info",
         """Get the font's info object.
 
@@ -546,11 +536,11 @@ class BaseFont(_BaseGlyphVendor,
     )
 
     def _get_base_info(self) -> BaseInfo:
-        info = self._get_info()
+        info: BaseInfo = self._get_info()
         info.font = self
         return info
 
-    def _get_info(self) -> InfoType:
+    def _get_info(self) -> BaseInfo:
         """Get the native font's info object.
 
         This is the environment implementation of :attr:`BaseFont.info`.
@@ -568,7 +558,7 @@ class BaseFont(_BaseGlyphVendor,
 
     # groups
 
-    groups: BaseGroups = dynamicProperty(
+    groups: dynamicProperty = dynamicProperty(
         "base_groups",
         """Get the font's groups object.
 
@@ -583,11 +573,11 @@ class BaseFont(_BaseGlyphVendor,
     )
 
     def _get_base_groups(self) -> BaseGroups:
-        groups = self._get_groups()
+        groups: BaseGroups = self._get_groups()
         groups.font = self
         return groups
 
-    def _get_groups(self) -> GroupsType:
+    def _get_groups(self) -> BaseGroups:
         """Get the native font's groups object.
 
         This is the environment implementation
@@ -606,7 +596,7 @@ class BaseFont(_BaseGlyphVendor,
 
     # kerning
 
-    kerning: BaseKerning = dynamicProperty(
+    kerning: dynamicProperty = dynamicProperty(
         "base_kerning",
         """Get the font's kerning object.
 
@@ -621,11 +611,11 @@ class BaseFont(_BaseGlyphVendor,
     )
 
     def _get_base_kerning(self) -> BaseKerning:
-        kerning = self._get_kerning()
+        kerning: BaseKerning = self._get_kerning()
         kerning.font = self
         return kerning
 
-    def _get_kerning(self) -> KerningType:
+    def _get_kerning(self) -> BaseKerning:
         """Get the native font's kerning object.
 
         This is the environment implementation
@@ -642,7 +632,7 @@ class BaseFont(_BaseGlyphVendor,
         """
         self.raiseNotImplementedError()
 
-    def getFlatKerning(self) -> KerningDict:
+    def getFlatKerning(self) -> KerningDictType:
         """Get the font's kerning as a flat dictionary.
 
         :return: A :class:`dict` of the font's :class:`BaseKerning` keys
@@ -651,7 +641,7 @@ class BaseFont(_BaseGlyphVendor,
          """
         return self._getFlatKerning()
 
-    def _getFlatKerning(self) -> KerningDict:
+    def _getFlatKerning(self) -> KerningDictType:
         """Get the native font's kerning as a flat dictionary.
 
         This is the environment implementation of
@@ -703,7 +693,7 @@ class BaseFont(_BaseGlyphVendor,
 
     # features
 
-    features: BaseFeatures = dynamicProperty(
+    features: dynamicProperty = dynamicProperty(
         "base_features",
         """Get the font's features object.
 
@@ -718,11 +708,11 @@ class BaseFont(_BaseGlyphVendor,
     )
 
     def _get_base_features(self) -> BaseFeatures:
-        features = self._get_features()
+        features: BaseFeatures = self._get_features()
         features.font = self
         return features
 
-    def _get_features(self) -> FeaturesType:
+    def _get_features(self) -> BaseFeatures:
         """Get the native font's features object.
 
         This is the environment implementation of
@@ -741,7 +731,7 @@ class BaseFont(_BaseGlyphVendor,
 
     # lib
 
-    lib: BaseLib = dynamicProperty(
+    lib: dynamicProperty = dynamicProperty(
         "base_lib",
         """Get the font's lib object.
 
@@ -756,11 +746,11 @@ class BaseFont(_BaseGlyphVendor,
     )
 
     def _get_base_lib(self) -> BaseLib:
-        lib = self._get_lib()
+        lib: BaseLib = self._get_lib()
         lib.font = self
         return lib
 
-    def _get_lib(self) -> LibType:
+    def _get_lib(self) -> BaseLib:
         """Get the native font's lib object.
 
         This is the environment implementation of :attr:`BaseFont.lib`.
@@ -778,15 +768,15 @@ class BaseFont(_BaseGlyphVendor,
 
     # tempLib
 
-    tempLib: BaseLib = dynamicProperty(
+    tempLib: dynamicProperty = dynamicProperty(
         "base_tempLib",
         """Get the font's temporary lib object.
 
-        This attribute provides access to a temporary instance of
+        This property provides access to a temporary instance of
         the :class:`BaseLib` class, used for storing data that should
-        not be persisted. :attr:`BaseFont.tempLib` is similar
-        to :attr:`BaseFont.lib`, except that its contents will not be
-        saved when calling the :meth:`BaseFont.save` method.
+        not be persisted. It is similar to :attr:`BaseFont.lib`, except
+        that its contents will not be saved when calling
+        the :meth:`BaseFont.save` method.
 
         :return: A temporary instance of the :class:`BaseLib` class.
 
@@ -799,11 +789,11 @@ class BaseFont(_BaseGlyphVendor,
     )
 
     def _get_base_tempLib(self) -> BaseLib:
-        lib = self._get_tempLib()
+        lib: BaseLib = self._get_tempLib()
         lib.font = self
         return lib
 
-    def _get_tempLib(self) -> LibType:
+    def _get_tempLib(self) -> BaseLib:
         """Get the native font's temporary lib object.
 
         This is the environment implementation
@@ -824,7 +814,7 @@ class BaseFont(_BaseGlyphVendor,
     # Layer Interaction
     # -----------------
 
-    layers: Tuple[BaseLayer, ...] = dynamicProperty(
+    layers: dynamicProperty = dynamicProperty(
         "base_layers",
         """Get the font's layer objects.
 
@@ -842,12 +832,12 @@ class BaseFont(_BaseGlyphVendor,
     )
 
     def _get_base_layers(self) -> Tuple[BaseLayer, ...]:
-        layers = self._get_layers()
+        layers: Tuple[BaseLayer, ...] = self._get_layers()
         for layer in layers:
             self._setFontInLayer(layer)
         return tuple(layers)
 
-    def _get_layers(self, **kwargs: Any) -> Tuple[LayerType, ...]:
+    def _get_layers(self, **kwargs: Any) -> Tuple[BaseLayer, ...]:
         r"""Get the native font's layer objects.
 
         This is the environment implementation of
@@ -867,13 +857,16 @@ class BaseFont(_BaseGlyphVendor,
 
     # order
 
-    layerOrder: List[str] = dynamicProperty(
+    layerOrder: dynamicProperty = dynamicProperty(
         "base_layerOrder",
         """Get or set the order of the layers in the font.
 
-        :param value: A :class:`list` of layer names reflecting the
-            desired order of the font's :class:`BaseLayer` objects.
-        :return: A :class:`list` of layer names in their defined order.
+        The value must be a :class:`list` or :class:`tuple` of layer
+        names as :class:`str` reflecting the desired order of the
+        font's :class:`BaseLayer` objects.
+
+        :return: A :class:`tuple` of layer names as :class:`str` in
+            their defined order.
 
         Example::
 
@@ -884,16 +877,16 @@ class BaseFont(_BaseGlyphVendor,
         """
     )
 
-    def _get_base_layerOrder(self) -> List[str]:
-        value = self._get_layerOrder()
+    def _get_base_layerOrder(self) -> Tuple[str, ...]:
+        value: CollectionType[str] = self._get_layerOrder()
         value = normalizers.normalizeLayerOrder(value, self)
-        return list(value)
+        return value
 
-    def _set_base_layerOrder(self, value: List[str]) -> None:
+    def _set_base_layerOrder(self, value: CollectionType[str]) -> None:
         value = normalizers.normalizeLayerOrder(value, self)
         self._set_layerOrder(value)
 
-    def _get_layerOrder(self, **kwargs: Any) -> List[str]:
+    def _get_layerOrder(self, **kwargs: Any) -> Tuple[str, ...]:
         r"""Get the order of the layers in the native font.
 
         This is the environment implementation of the
@@ -914,16 +907,16 @@ class BaseFont(_BaseGlyphVendor,
         self.raiseNotImplementedError()
 
     def _set_layerOrder(self,
-                        value: List[str],
+                        value: CollectionType[str],
                         **kwargs: Any) -> None:
         r"""Set the order of the layers in the native font.
 
         This is the environment implementation of the
         :attr:`BaseFont.layerOrder` property setter.
 
-        :param value: A :class:`list` of layer names reflecting the
-            desired order of the font's :class:`BaseLayer` objects. The
-            value will be normalized
+        :param value: A :class:`list` or :class:`tuple` of layer names
+            reflecting the desired order of the font's :class:`BaseLayer` objects.
+            The value will be normalized
             with :func:`normalizers.normalizeLayerOrder`.
         :param \**kwargs: Additional keyword arguments.
         :raises NotImplementedError: If the method has not been
@@ -942,11 +935,13 @@ class BaseFont(_BaseGlyphVendor,
         if layer.font is None:
             layer.font = self
 
-    defaultLayerName: str = dynamicProperty(
+    defaultLayerName: dynamicProperty = dynamicProperty(
         "base_defaultLayerName",
         """Get or set the name of the font's default layer.
 
-        :param layer: The name of the desired default :class`BaseLayer`.
+        The value must be name of the desired default :class`BaseLayer`
+        instance as a :class:`str`.
+
         :return: The name of the current default :class`BaseLayer`
             instance.
 
@@ -1005,11 +1000,12 @@ class BaseFont(_BaseGlyphVendor,
         """
         self.raiseNotImplementedError()
 
-    defaultLayer: BaseLayer = dynamicProperty(
+    defaultLayer: dynamicProperty = dynamicProperty(
         "base_defaultLayer",
         """Get or set the font's default layer.
 
-        :param value: The desired default :class:`BaseLayer` instance.
+        The value must be the desired default :class:`BaseLayer` instance.
+
         :return: The current default :class:`BaseLayer` instance.
 
         Example::
@@ -1020,16 +1016,16 @@ class BaseFont(_BaseGlyphVendor,
         """
     )
 
-    def _get_defaultLayer(self) -> BaseLayer:
-        layer = self._get_base_defaultLayer()
+    def _get_base_defaultLayer(self) -> BaseLayer:
+        layer: BaseLayer = self._get_defaultLayer()
         layer = normalizers.normalizeLayer(layer)
         return layer
 
-    def _set_defaultLayer(self, layer: BaseLayer) -> None:
+    def _set_base_defaultLayer(self, layer: BaseLayer) -> None:
         layer = normalizers.normalizeLayer(layer)
-        self._set_base_defaultLayer(layer)
+        self._set_defaultLayer(layer)
 
-    def _get_base_defaultLayer(self) -> LayerType:
+    def _get_defaultLayer(self) -> BaseLayer:
         """Get the native font's default layer.
 
         This is the environment implementation of the
@@ -1048,7 +1044,7 @@ class BaseFont(_BaseGlyphVendor,
         layer = self.getLayer(name)
         return layer
 
-    def _set_base_defaultLayer(self, value: LayerType) -> None:
+    def _set_defaultLayer(self, value: BaseLayer) -> None:
         """Set the native font's default layer.
 
         This is the environment implementation of the
@@ -1068,7 +1064,7 @@ class BaseFont(_BaseGlyphVendor,
     # get
 
     def getLayer(self, name: str) -> BaseLayer:
-        """Get a specific layer by its name from the font.
+        """Get the named layer from the font.
 
         :param name: The name of the :class:`BaseLayer` instance to
             retrieve.
@@ -1089,8 +1085,8 @@ class BaseFont(_BaseGlyphVendor,
         self._setFontInLayer(layer)
         return layer
 
-    def _getLayer(self, name: str, **kwargs: Any) -> LayerType:
-        r"""Get a specific layer by its name from the native font.
+    def _getLayer(self, name: str, **kwargs: Any) -> BaseLayer:
+        r"""Get the named layer from the native font.
 
         This is the environment implementation of
         :meth:`BaseFont.getLayer`.
@@ -1110,6 +1106,8 @@ class BaseFont(_BaseGlyphVendor,
         for layer in self.layers:
             if layer.name == name:
                 return layer
+        else:
+            raise ValueError("No layer with the name '%s' exists." % name)
 
     # new
 
@@ -1143,7 +1141,7 @@ class BaseFont(_BaseGlyphVendor,
     def _newLayer(self,
                   name: str,
                   color: Optional[ColorType] = None,
-                  **kwargs: Any) -> LayerType:
+                  **kwargs: Any) -> BaseLayer:
         r"""Create a new layer in the native font.
 
         This is the environment implementation of
@@ -1230,14 +1228,14 @@ class BaseFont(_BaseGlyphVendor,
         """
         if name is None:
             name = layer.name
-        name = normalizers.normalizeLayerName(name)
-        if name in self:
-            self.removeLayer(name)
-        return self._insertLayer(layer, name=name)
+        normalizedName = normalizers.normalizeLayerName(name)
+        if normalizedName in self:
+            self.removeLayer(normalizedName)
+        return self._insertLayer(layer, name=normalizedName)
 
-    def _insertLayer(self, layer: LayerType,
+    def _insertLayer(self, layer: BaseLayer,
                      name: str,
-                     **kwargs: Any) -> LayerType:
+                     **kwargs: Any) -> BaseLayer:
         r"""Insert a specified layer into the native font.
 
         This is the environment implementation of :meth:`BaseFont.insertLayer`.
@@ -1303,7 +1301,7 @@ class BaseFont(_BaseGlyphVendor,
         newLayer = normalizers.normalizeLayer(newLayer)
         return newLayer
 
-    def _duplicateLayer(self, layerName: str, newLayerName: str) -> LayerType:
+    def _duplicateLayer(self, layerName: str, newLayerName: str) -> BaseLayer:
         """Duplicate the specified layer in the native font.
 
         This is the environment implementation
@@ -1405,7 +1403,7 @@ class BaseFont(_BaseGlyphVendor,
 
     # base implementation overrides
 
-    def _getItem(self, name: str, **kwargs: Any) -> GlyphType:
+    def _getItem(self, name: str, **kwargs: Any) -> BaseGlyph:
         r"""Get the specified glyph from the native default layer.
 
         This is the environment implementation of
@@ -1443,7 +1441,7 @@ class BaseFont(_BaseGlyphVendor,
         layer = self.defaultLayer
         return layer.keys()
 
-    def _newGlyph(self, name: str, **kwargs: Any) -> GlyphType:
+    def _newGlyph(self, name: str, **kwargs: Any) -> BaseGlyph:
         r"""Create a new glyph in the native default layer.
 
         :param name: The name to assign to the new glyph. The value will
@@ -1519,12 +1517,13 @@ class BaseFont(_BaseGlyphVendor,
 
     # order
 
-    glyphOrder: List[str] = dynamicProperty(
+    glyphOrder: dynamicProperty = dynamicProperty(
         "base_glyphOrder",
         """Get or set the order of the glyphs in the font.
 
-        :param value: A :class:`list` of glyph names reflecting the
-            desired order of the font's :class:`BaseGlyph` objects.
+        The value must be a :class:`list` of glyph names reflecting the
+        desired order of the font's :class:`BaseGlyph` objects.
+
         :return: A :class:`list` of glyph names in their defined order.
 
         Example::
@@ -1594,12 +1593,13 @@ class BaseFont(_BaseGlyphVendor,
         """Round all appropriate font data to integers.
 
         This method applies only to the glyphs in the default layer
-        of the font. It is the equivalent of calling the round method on:
+        of the font. It is the equivalent of calling the :meth:`round`
+        method on:
 
-        - :attr:`.info`
-        - :attr:`.kerning`
-        - :attr:`.defaultLayer`
-        - :attr:`.guidelines`
+        - :attr:`info`
+        - :attr:`kerning`
+        - :attr:`defaultLayer`
+        - :attr:`guidelines`
 
         Example::
 
@@ -1661,7 +1661,7 @@ class BaseFont(_BaseGlyphVendor,
         if guideline.font is None:
             guideline.font = self
 
-    guidelines: Tuple[BaseGuideline, ...] = dynamicProperty(
+    guidelines: dynamicProperty = dynamicProperty(
         "guidelines",
         """Get the font-level guideline objects.
 
@@ -1677,7 +1677,7 @@ class BaseFont(_BaseGlyphVendor,
         """
     )
 
-    def _get_guidelines(self) -> Tuple[GuidelineType, ...]:
+    def _get_guidelines(self) -> Tuple[BaseGuideline, ...]:
         """Get the native font-level guideline objects.
 
         This is the environment implementation of
@@ -1711,7 +1711,7 @@ class BaseFont(_BaseGlyphVendor,
         """
         self.raiseNotImplementedError()
 
-    def _getitem__guidelines(self, index: int) -> GuidelineType:
+    def _getitem__guidelines(self, index: int) -> BaseGuideline:
         index = normalizers.normalizeIndex(index)
         if index >= self._len__guidelines():
             raise ValueError("No guideline located at index %d." % index)
@@ -1719,7 +1719,7 @@ class BaseFont(_BaseGlyphVendor,
         self._setFontInGuideline(guideline)
         return guideline
 
-    def _getGuideline(self, index: int, **kwargs: Any) -> GuidelineType:
+    def _getGuideline(self, index: int, **kwargs: Any) -> BaseGuideline:
         r"""Return the guideline at the given index.
 
         :param index: The index of the guideline.
@@ -1780,22 +1780,22 @@ class BaseFont(_BaseGlyphVendor,
         """
         identifier = None
         if guideline is not None:
-            guideline = normalizers.normalizeGuideline(guideline)
+            normalizedGuideline = normalizers.normalizeGuideline(guideline)
             if position is None:
-                position = guideline.position
+                position = normalizedGuideline.position
             if angle is None:
-                angle = guideline.angle
+                angle = normalizedGuideline.angle
             if name is None:
-                name = guideline.name
+                name = normalizedGuideline.name
             if color is None:
-                color = guideline.color
-            if guideline.identifier is not None:
+                color = normalizedGuideline.color
+            if normalizedGuideline.identifier is not None:
                 existing = set(
                     [g.identifier for g in self.guidelines
                      if g.identifier is not None]
                 )
-                if guideline.identifier not in existing:
-                    identifier = guideline.identifier
+                if normalizedGuideline.identifier not in existing:
+                    identifier = normalizedGuideline.identifier
         position = normalizers.normalizeCoordinateTuple(position)
         angle = normalizers.normalizeRotationAngle(angle)
         if name is not None:
@@ -1803,19 +1803,19 @@ class BaseFont(_BaseGlyphVendor,
         if color is not None:
             color = normalizers.normalizeColor(color)
         identifier = normalizers.normalizeIdentifier(identifier)
-        guideline = self._appendGuideline(
+        newGuideline = self._appendGuideline(
             position, angle, name=name, color=color, identifier=identifier
         )
-        guideline.font = self
-        return guideline
+        newGuideline.font = self
+        return newGuideline
 
     def _appendGuideline(self,
-                         position: Optional[Coordinate] = None,
+                         position: Optional[CoordinateType] = None,
                          angle: Optional[float] = None,
                          name: Optional[str] = None,
                          color: Optional[ColorType] = None,
-                         guideline: Optional[GuidelineType] = None,
-                         **kwargs) -> GuidelineType:
+                         guideline: Optional[BaseGuideline] = None,
+                         **kwargs) -> BaseGuideline:
         r"""Append a new guideline to the native font.
 
         This is the environment implementation of
@@ -1963,9 +1963,9 @@ class BaseFont(_BaseGlyphVendor,
                           round=round, suppressError=suppressError)
 
     def _interpolate(self,
-                     factor: Union[float, Tuple[float, float]],
-                     minFont: FontType,
-                     maxFont: FontType,
+                     factor: FactorType,
+                     minFont: BaseFont,
+                     maxFont: BaseFont,
                      round: bool = True,
                      suppressError: bool = True) -> None:
         """Interpolate all possible data in the native font.
@@ -2014,18 +2014,18 @@ class BaseFont(_BaseGlyphVendor,
 
     compatibilityReporterClass = FontCompatibilityReporter
 
-    def isCompatible(self, other: BaseFont) -> tuple[bool, str]:
+    def isCompatible(self, other: BaseFont) -> Tuple[bool, str]:
         """Evaluate interpolation compatibility with another font.
 
-        This method will return a ``bool`` indicating if the font is
-        compatible for interpolation with `other`, and a :ref:`type-string`
+        This method will return a :class:`bool` indicating if the font is
+        compatible for interpolation with `other`, and a :class:`str`
         containing compatibility notes.
 
         :param other: The other :class:`BaseFont` instance to check
             compatibility with.
-        :return: A tuple where the first element is a `bool` indicating
-            compatibility, and the second element is a :class:`str` of
-            compatibility notes.
+        :return: A :class:`tuple` where the first element is a :class:`bool`
+            indicating compatibility, and the second element is a :class:`str`
+            of compatibility notes.
 
         Example::
 
@@ -2040,8 +2040,8 @@ class BaseFont(_BaseGlyphVendor,
         return super(BaseFont, self).isCompatible(other, BaseFont)
 
     def _isCompatible(self,
-                      other: FontType,
-                      reporter: FontCompatibilityReporter) -> tuple[bool, str]:
+                      other: BaseFont,
+                      reporter: FontCompatibilityReporter) -> None:
         """Evaluate interpolation compatibility with another native font.
 
         This is the environment implementation of :meth:`BaseFont.isCompatible`.
@@ -2049,9 +2049,6 @@ class BaseFont(_BaseGlyphVendor,
         :param other: The other :class:`BaseFont` subclass instance to check
             compatibility with.
         :param reporter: An object used to report compatibility issues.
-        :return: A tuple where the first element is a `bool` indicating
-            compatibility, and the second element is a :class:`str` of
-            compatibility notes.
 
         .. note::
 
@@ -2103,7 +2100,7 @@ class BaseFont(_BaseGlyphVendor,
     # mapping
     # -------
 
-    def getReverseComponentMapping(self) -> ReverseComponentMapping:
+    def getReverseComponentMapping(self) -> ReverseComponentMappingType:
         """Get a reversed map of all component references in the font.
 
         This method creates a :class:`dict` mapping each component glyph
@@ -2128,7 +2125,7 @@ class BaseFont(_BaseGlyphVendor,
         """
         return self._getReverseComponentMapping()
 
-    def _getReverseComponentMapping(self) -> ReverseComponentMapping:
+    def _getReverseComponentMapping(self) -> ReverseComponentMappingType:
         """Get a reversed map of all component references in the font.
 
         This is the environment implementation of
@@ -2145,15 +2142,16 @@ class BaseFont(_BaseGlyphVendor,
         layer = self.defaultLayer
         return layer.getReverseComponentMapping()
 
-    def getCharacterMapping(self) -> CharacterMapping:
+    def getCharacterMapping(self) -> CharacterMappingType:
         """Get the font's character mapping.
 
         :return: A :class:`dict` mapping Unicode values to lists of
             glyph names.
 
         """
+        return self._getCharacterMapping()
 
-    def _getCharacterMapping(self) -> CharacterMapping:
+    def _getCharacterMapping(self) -> CharacterMappingType:
         """Get the native font's character mapping.
 
         This is the environment implementation of
@@ -2178,7 +2176,7 @@ class BaseFont(_BaseGlyphVendor,
 
     # layers
 
-    selectedLayers: Tuple[BaseLayer, ...] = dynamicProperty(
+    selectedLayers: dynamicProperty = dynamicProperty(
         "base_selectedLayers",
         """Get or set the selected glyph layers in the default font layer.
 
@@ -2204,7 +2202,7 @@ class BaseFont(_BaseGlyphVendor,
                           layer in self._get_selectedLayers()])
         return selected
 
-    def _get_selectedLayers(self) -> Tuple[LayerType, ...]:
+    def _get_selectedLayers(self) -> Tuple[BaseLayer, ...]:
         """Get the selected glyph layers in the native default font layer.
 
         This is the environment implementation of
@@ -2224,7 +2222,7 @@ class BaseFont(_BaseGlyphVendor,
         normalized = [normalizers.normalizeLayer(layer) for layer in value]
         self._set_selectedLayers(normalized)
 
-    def _set_selectedLayers(self, value: List[LayerType]) -> None:
+    def _set_selectedLayers(self, value: List[BaseLayer]) -> None:
         """Set the selected glyph layers in the native default font layer.
 
         This is the environment implementation of
@@ -2240,7 +2238,7 @@ class BaseFont(_BaseGlyphVendor,
         """
         return self._setSelectedSubObjects(self.layers, value)
 
-    selectedLayerNames: Tuple[str, ...] = dynamicProperty(
+    selectedLayerNames: dynamicProperty = dynamicProperty(
         "base_selectedLayerNames",
         """Get or set the selected glyph layer names in the default font layer.
 
@@ -2280,8 +2278,7 @@ class BaseFont(_BaseGlyphVendor,
             Subclasses may override this method.
 
         """
-        selected = [layer.name for layer in self.selectedLayers]
-        return selected
+        return tuple(layer.name for layer in self.selectedLayers)
 
     def _set_base_selectedLayerNames(self, value: List[str]) -> None:
         normalized = [normalizers.normalizeLayerName(name) for name in value]
@@ -2306,7 +2303,7 @@ class BaseFont(_BaseGlyphVendor,
 
     # guidelines
 
-    selectedGuidelines: Tuple[BaseGuideline, ...] = dynamicProperty(
+    selectedGuidelines: dynamicProperty = dynamicProperty(
         "base_selectedGuidelines",
         """Get or set the selected guidelines in the font.
 
@@ -2362,7 +2359,7 @@ class BaseFont(_BaseGlyphVendor,
             normalized.append(i)
         self._set_selectedGuidelines(normalized)
 
-    def _set_selectedGuidelines(self, value: List[GuidelineType]) -> None:
+    def _set_selectedGuidelines(self, value: List[BaseGuideline]) -> None:
         """Set the selected guidelines in the native font.
 
         This is the environment implementation of

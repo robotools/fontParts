@@ -1,6 +1,6 @@
-# pylint: disable=C0103, W0613
+# pylint: disable=C0103, C0302, C0114, W0613
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, Iterator, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, Callable, Iterator, List, Optional, Tuple
 import collections
 
 from fontParts.base.base import (
@@ -14,14 +14,12 @@ from fontParts.base import normalizers
 from fontParts.base.compatibility import LayerCompatibilityReporter
 from fontParts.base.color import Color
 from fontParts.base.deprecated import DeprecatedLayer, RemovedLayer
-from fontParts.base.types import (
-    CharacterMapping,
+from fontParts.base.annotations import (
+    CharacterMappingType,
+    CollectionType,
     ColorType,
     FactorType,
-    GlyphType,
-    LayerType,
-    LibType,
-    ReverseComponentMapping
+    ReverseComponentMappingType
 )
 if TYPE_CHECKING:
     from fontParts.base.font import BaseFont
@@ -87,7 +85,7 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
         """
         return self._iter()
 
-    def _iter(self, **kwargs: Any) -> Iterator[GlyphType]:
+    def _iter(self, **kwargs: Any) -> Iterator[BaseGlyph]:
         """Iterate through the glyphs in the native layer.
 
         This is the environment implementation of
@@ -118,7 +116,7 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
         self._setLayerInGlyph(glyph)
         return glyph
 
-    def _getItem(self, name: str, **kwargs: Any) -> GlyphType:
+    def _getItem(self, name: str, **kwargs: Any) -> BaseGlyph:
         r"""Get the specified glyph from the native layer.
 
         This is the environment implementation of
@@ -169,7 +167,7 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
             raise KeyError(f"No glyph named '{name}'.")
         self._removeGlyph(name)
 
-    def keys(self) -> Tuple[str]:
+    def keys(self) -> Tuple[str, ...]:
         """Get the names of all glyphs in the layer.
 
         This method returns an unordered :class:`tuple` of glyph names
@@ -185,7 +183,7 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
         """
         return self._keys()
 
-    def _keys(self, **kwargs: Any) -> Tuple[str]:
+    def _keys(self, **kwargs: Any) -> Tuple[str, ...]:
         r"""Get the names of all glyphs in the native layer.
 
         This is the environment implementation of
@@ -277,7 +275,7 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
         self._setLayerInGlyph(glyph)
         return glyph
 
-    def _newGlyph(self, name: str, **kwargs: Any) -> GlyphType:
+    def _newGlyph(self, name: str, **kwargs: Any) -> BaseGlyph:
         r"""Create a new glyph in the native layer.
 
         This is the environment implementation of
@@ -334,6 +332,10 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
     def insertGlyph(self, glyph: BaseGlyph, name: Optional[str] = None) -> None:
         """Insert a specified glyph into the layer.
 
+        .. deprecated::
+
+            This method is deprecated. Use :meth:`BaseFont.__setitem__` instead.
+
         This method will not insert a glyph directly, but rather create
         a new :class:`BaseGlyph` instance containing the data from
         `glyph`. The data inserted from `glyph` is the same data as
@@ -354,7 +356,10 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
             name = glyph.name
         self[name] = glyph
 
-    def _insertGlyph(self, glyph: GlyphType, name: str, **kwargs: Any) -> GlyphType:
+    def _insertGlyph(self,
+                     glyph: BaseGlyph,
+                     name: str,
+                     **kwargs: Any) -> BaseGlyph:
         r"""Insert a specified glyph into the native layer.
 
         This is the environment implementation of
@@ -388,24 +393,25 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
     # Selection
     # ---------
 
-    selectedGlyphs: Tuple[BaseGlyph, ...] = dynamicProperty(
+    selectedGlyphs: dynamicProperty = dynamicProperty(
         "base_selectedGlyphs",
         """Get or set the selected glyphs in the layer.
 
-        :param value: A :class:`list` of :class:`BaseGlyph` instances
-            to select.
+        The value must be a :class:`list` or :class:`tuple`
+        of :class:`BaseGlyph` instances.
+
         :return: An unordered :class:`tuple` of currently selected
             :class:`BaseGlyph` instances.
 
         """
     )
 
-    def _get_base_selectedGlyphs(self) -> tuple[BaseGlyph, ...]:
+    def _get_base_selectedGlyphs(self) -> Tuple[BaseGlyph, ...]:
         selected = tuple(normalizers.normalizeGlyph(glyph)
                          for glyph in self._get_selectedGlyphs())
         return selected
 
-    def _get_selectedGlyphs(self) -> List[GlyphType]:
+    def _get_selectedGlyphs(self) -> Tuple[BaseGlyph]:
         """Get the selected glyphs in the native layer.
 
         This is the environment implementation of
@@ -421,18 +427,18 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
         """
         return self._getSelectedSubObjects(self)
 
-    def _set_base_selectedGlyphs(self, value: List[BaseGlyph]) -> None:
+    def _set_base_selectedGlyphs(self, value: CollectionType[BaseGlyph]) -> None:
         normalized = [normalizers.normalizeGlyph(glyph) for glyph in value]
         self._set_selectedGlyphs(normalized)
 
-    def _set_selectedGlyphs(self, value: List[GlyphType]) -> None:
+    def _set_selectedGlyphs(self, value: CollectionType[BaseGlyph]) -> None:
         """Set the selected glyphs in the native layer.
 
         This is the environment implementation of
         the :attr:`BaseLayer.selectedGlyphs` property setter.
 
-        :param value: A :class:`list` of :class:`BaseGlyph` subclass
-            instances to select.
+        :param value: A :class:`list` or :class:`tuple` of :class:`BaseGlyph`
+            subclass instances to select.
 
         .. note::
 
@@ -441,12 +447,13 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
         """
         return self._setSelectedSubObjects(self, value)
 
-    selectedGlyphNames: Tuple[str, ...] = dynamicProperty(
+    selectedGlyphNames: dynamicProperty = dynamicProperty(
         "base_selectedGlyphNames",
         """Get or set the selected glyph names in the layer.
 
-        :param value: A :class:`list` of names representing
-            the :class:`BaseGlyph` instances to select.
+        The value must be a :class:`list` or :class:`tuple` of names
+        representing :class:`BaseGlyph` instances.
+
         :return: An unordered :class:`tuple` of glyph names representing
             the currently selected :class:`BaseGlyph` instances.
 
@@ -472,20 +479,20 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
             Subclasses may override this method.
 
         """
-        selected = [glyph.name for glyph in self.selectedGlyphs]
+        selected = tuple(glyph.name for glyph in self.selectedGlyphs)
         return selected
 
-    def _set_base_selectedGlyphNames(self, value: List[str]) -> None:
+    def _set_base_selectedGlyphNames(self, value: CollectionType[str]) -> None:
         normalized = [normalizers.normalizeGlyphName(name) for name in value]
         self._set_selectedGlyphNames(normalized)
 
-    def _set_selectedGlyphNames(self, value: List[str]) -> None:
+    def _set_selectedGlyphNames(self, value: CollectionType[str]) -> None:
         """Set the selected glyph names in the layer.
 
         This is the environment implementation of
         the :attr:`BaseLayer.selectedGlyphNames` property setter.
 
-        :param value: A :class:`list` of names representing
+        :param value: A :class:`list` or :class:`tuple` of names representing
             the :class:`BaseGlyph` subclass instances to select.
 
         .. note::
@@ -500,16 +507,23 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
     # Legacy Compatibility
     # --------------------
 
-    has_key: bool = __contains__
+    has_key: Callable[[_BaseGlyphVendor, str], bool] = __contains__
 
 
 class BaseLayer(_BaseGlyphVendor,
                 InterpolationMixin,
                 DeprecatedLayer,
                 RemovedLayer):
+    """Represent the basis for a layer object.
+
+    This object will almost always be created by retrieving it from a
+    font object. It can exist at either the font or glyph level.
+    See :ref:`layers`.
+
+    """
 
     def _reprContents(self) -> List[str]:
-        contents = [
+        contents: List[str] = [
             "'%s'" % self.name,
         ]
         if self.color:
@@ -527,14 +541,14 @@ class BaseLayer(_BaseGlyphVendor,
     )
 
     def copy(self) -> BaseLayer:
-        """Copy the current layer into a new layer.
+        """Copy data from the current layer into a new layer.
 
         This will copy:
 
         - :attr:`~BaseLayer.name`
         - :attr:`~BaseLayer.color`
         - :attr:`~BaseLayer.lib`
-        - glyphs
+        - :meth:`glyphs<__iter__>`
 
         :return: A new :class:`BaseLayer` instance with the same attributes.
 
@@ -573,7 +587,7 @@ class BaseLayer(_BaseGlyphVendor,
 
     _font = None
 
-    font: BaseFont = dynamicProperty(
+    font: dynamicProperty = dynamicProperty(
         "font",
         """Get the layer's parent font object.
 
@@ -588,12 +602,12 @@ class BaseLayer(_BaseGlyphVendor,
         """
     )
 
-    def _get_font(self) -> BaseFont:
+    def _get_font(self) -> Optional[BaseFont]:
         if self._font is None:
             return None
         return self._font()
 
-    def _set_font(self, font: BaseFont) -> None:
+    def _set_font(self, font: Optional[BaseFont]) -> None:
         if self._font is not None:
             raise AssertionError("font for layer already set")
         if font is not None:
@@ -606,11 +620,12 @@ class BaseLayer(_BaseGlyphVendor,
 
     # name
 
-    name: Optional[str] = dynamicProperty(
+    name: dynamicProperty = dynamicProperty(
         "base_name",
         """Get or set the name of the layer.
 
-        :param value: The name to assign to the layer.
+        The value must be a :class:`str`.
+
         :return: A :class:`str` defining the name of the current layer
             or :obj:`None` if the layer is the default layer.
         :raises ValueError: If attempting to set the name to one that
@@ -631,7 +646,7 @@ class BaseLayer(_BaseGlyphVendor,
             value = normalizers.normalizeLayerName(value)
         return value
 
-    def _set_base_name(self, value: Optional[str]) -> None:
+    def _set_base_name(self, value: str) -> None:
         if value == self.name:
             return
         value = normalizers.normalizeLayerName(value)
@@ -685,14 +700,19 @@ class BaseLayer(_BaseGlyphVendor,
 
     # color
 
-    color: ColorType = dynamicProperty(
+    color: dynamicProperty = dynamicProperty(
         "base_color",
         """Get or set the color of the layer.
 
-        :param value: The :ref:`type-color` value to assign to the layer.
-        :return: The :ref:`type-color` assigned to the layer
-            or :obj`None` to indicate that the layer does not have an
-            assigned color.
+        The value must be a :class:`tuple` of :class:`int`
+        or :class:`float` numbers representing a :ref:`type-color`,
+        or :obj`None` to indicate that the layer does not have an
+        assigned color.
+
+        :return: A :class:`tuple` containing :class:`int`
+            or :class:`float` values representing the color,
+            or :obj:`None` if no color is assigned.
+
 
         Example::
 
@@ -721,7 +741,7 @@ class BaseLayer(_BaseGlyphVendor,
         This is the environment implementation of
         the :attr:`BaseLayer.color` property getter.
 
-        :return: A :ref:`type-color` defining the color assigned to the
+        :return: A : defining the :ref:`type-color` assigned to the
             layer or :obj`None` to indicate that the layer does not have
             an assigned color. The value will be normalized with
             :func:`normalizers.normalizeColor`.
@@ -737,8 +757,6 @@ class BaseLayer(_BaseGlyphVendor,
 
     def _set_color(self, value: ColorType, **kwargs: Any) -> None:
         r"""Get or set the color of the layer.
-
-        :param value: The :ref:`type-color` value to assign to the layer.
 
         This is the environment implementation of
         the :attr:`BaseLayer.color` property setter.
@@ -763,7 +781,7 @@ class BaseLayer(_BaseGlyphVendor,
 
     # lib
 
-    lib: BaseLib = dynamicProperty(
+    lib: dynamicProperty = dynamicProperty(
         "base_lib",
         """Get the layer's lib object.
 
@@ -782,7 +800,7 @@ class BaseLayer(_BaseGlyphVendor,
         lib.font = self
         return lib
 
-    def _get_lib(self) -> LibType:
+    def _get_lib(self) -> BaseLib:
         """Get the native layer's :class:`BaseLib` object.
 
         This is the environment implementation of
@@ -797,15 +815,15 @@ class BaseLayer(_BaseGlyphVendor,
 
     # tempLib
 
-    tempLib: BaseLib = dynamicProperty(
+    tempLib: dynamicProperty = dynamicProperty(
         "base_tempLib",
         """Get the layer's temporary lib object.
 
-        This attribute provides access to a temporary instance of
+        This property provides access to a temporary instance of
         the :class:`BaseLib` class, used for storing data that should
-        not be persisted. :attr:`BaseLayer.tempLib` is similar
-        to :attr:`BaseLayer.lib`, except that its contents will not be
-        saved when calling the :meth:`BaseLayer.save` method.
+        not be persisted. It is similar to :attr:`BaseLayer.lib`,
+        except that its contents will not be saved when calling
+        the :meth:`BaseLayer.save` method.
 
         :return: A temporary instance of the :class:`BaseLib` class.
 
@@ -822,7 +840,7 @@ class BaseLayer(_BaseGlyphVendor,
         lib.font = self
         return lib
 
-    def _get_tempLib(self) -> LibType:
+    def _get_tempLib(self) -> BaseLib:
         """Get the layer's temporary lib object.
 
         This is the environment implementation of
@@ -846,7 +864,7 @@ class BaseLayer(_BaseGlyphVendor,
     def round(self) -> None:
         """Round all approriate layer data to integers.
 
-        This is the equivalent of calling the :meth:`BaseGlyphround.round`
+        This is the equivalent of calling the :meth:`BaseGlyph.round`
         method on all glyphs in the layer.
 
         Example::
@@ -913,10 +931,10 @@ class BaseLayer(_BaseGlyphVendor,
         :param factor: The interpolation value as a single :class:`int`
             or :class:`float` or a :class:`tuple` of two :class:`int`
             or :class:`float` values representing the factors ``(x, y)``.
-        :param BaseLayer: The :class:`BaseLayer` instance corresponding to the 0.0
-            position in the interpolation.
-        :param BaseLayer: The :class:`BaseLayer` instance corresponding to the 1.0
-            position in the interpolation.
+        :param minLayer: The :class:`BaseLayer` instance corresponding to the
+            0.0 position in the interpolation.
+        :param maxLayer: The :class:`BaseLayer` instance corresponding to the
+            1.0 position in the interpolation.
         :param round: A :class:`bool` indicating whether the result should
             be rounded to integers. Defaults to :obj:`True`.
         :param suppressError: A :class:`bool` indicating whether to ignore
@@ -933,13 +951,17 @@ class BaseLayer(_BaseGlyphVendor,
         """
         factor = normalizers.normalizeInterpolationFactor(factor)
         if not isinstance(minLayer, BaseLayer):
-            raise TypeError(("Interpolation to an instance of %r can not be "
-                             "performed from an instance of %r.")
-                            % (self.__class__.__name__, minLayer.__class__.__name__))
+            raise TypeError(
+                ("Interpolation to an instance of %r can not be "
+                 "performed from an instance of %r.")
+                % (self.__class__.__name__, minLayer.__class__.__name__)
+            )
         if not isinstance(maxLayer, BaseLayer):
-            raise TypeError(("Interpolation to an instance of %r can not be "
-                             "performed from an instance of %r.")
-                            % (self.__class__.__name__, maxLayer.__class__.__name__))
+            raise TypeError(
+                ("Interpolation to an instance of %r can not be "
+                 "performed from an instance of %r.")
+                % (self.__class__.__name__, maxLayer.__class__.__name__)
+            )
         round = normalizers.normalizeBoolean(round)
         suppressError = normalizers.normalizeBoolean(suppressError)
         self._interpolate(factor, minLayer, maxLayer,
@@ -947,11 +969,11 @@ class BaseLayer(_BaseGlyphVendor,
 
     def _interpolate(self,
                      factor: FactorType,
-                     minLayer: LayerType,
-                     maxLayer: LayerType,
+                     minLayer: BaseLayer,
+                     maxLayer: BaseLayer,
                      round: bool = True,
                      suppressError: bool = True) -> None:
-        """Interpolate all possible data in the layer.
+        """Interpolate all possible data in the native layer.
 
         This is the environment implementation of :meth:`BaseLayer.interpolate`.
 
@@ -967,8 +989,8 @@ class BaseLayer(_BaseGlyphVendor,
         :param suppressError: A :class:`bool` indicating whether to ignore
             incompatible data or raise an error when such
             incompatibilities are found. Defaults to :obj:`True`.
-        :raises TypeError: If `minLayer` or `maxLayer` are not instances
-            of :class:`BaseLayer`.
+        :raises FontPartsError: If ``suppressError=False`` and the interpolation
+            data is incompatible.
 
         .. note::
 
@@ -991,15 +1013,11 @@ class BaseLayer(_BaseGlyphVendor,
     def isCompatible(self, other: BaseLayer) -> tuple[bool, str]:
         """Evaluate interpolation compatibility with another layer.
 
-        This method will return a ``bool`` indicating if the layer is
-        compatible for interpolation with `other`, and a :ref:`type-string`
-        containing compatibility notes.
-
         :param other: The other :class:`BaseLayer` instance to check
             compatibility with.
-        :return: A tuple where the first element is a `bool` indicating
-            compatibility, and the second element is a :class:`str` of
-            compatibility notes.
+        :return: A :class:`tuple` where the first element is a :class:`bool`
+            indicating compatibility, and the second element is a :class:`str`
+            of compatibility notes.
 
         Example::
 
@@ -1015,8 +1033,8 @@ class BaseLayer(_BaseGlyphVendor,
         return super(BaseLayer, self).isCompatible(other, BaseLayer)
 
     def _isCompatible(self,
-                      other: LibType,
-                      reporter: LayerCompatibilityReporter) -> tuple[bool, str]:
+                      other: BaseLib,
+                      reporter: LayerCompatibilityReporter) -> None:
         """Evaluate interpolation compatibility with another native layer.
 
         This is the environment implementation of :meth:`BaseFont.isCompatible`.
@@ -1024,9 +1042,6 @@ class BaseLayer(_BaseGlyphVendor,
         :param other: The other :class:`BaseLayer` subclass instance to check
             compatibility with.
         :param reporter: An object used to report compatibility issues.
-        :return: A tuple where the first element is a `bool` indicating
-            compatibility, and the second element is a :class:`str` of
-            compatibility notes.
 
         .. note::
 
@@ -1064,7 +1079,7 @@ class BaseLayer(_BaseGlyphVendor,
     # mapping
     # -------
 
-    def getReverseComponentMapping(self) -> ReverseComponentMapping:
+    def getReverseComponentMapping(self) -> ReverseComponentMappingType:
         """Get a reversed map of the layer's component references.
 
         This method creates a :class:`dict` mapping the name of each
@@ -1088,7 +1103,7 @@ class BaseLayer(_BaseGlyphVendor,
         """
         return self._getReverseComponentMapping()
 
-    def _getReverseComponentMapping(self) -> ReverseComponentMapping:
+    def _getReverseComponentMapping(self) -> ReverseComponentMappingType:
         """Get a reversed map of the native layer's component references.
 
         This is the environment implementation of
@@ -1106,11 +1121,10 @@ class BaseLayer(_BaseGlyphVendor,
             for component in glyph.components:
                 baseGlyph = component.baseGlyph
                 mapping[baseGlyph].append(glyph.name)
-        for baseGlyph in mapping:
-            mapping[baseGlyph] = tuple(mapping[baseGlyph])
-        return dict(mapping)
 
-    def getCharacterMapping(self) -> CharacterMapping:
+        return {k: tuple(v) for k, v in mapping.items()}
+
+    def getCharacterMapping(self) -> CharacterMappingType:
         """Get the layer's character mapping.
 
         This method creates a :class:`dict` mapping Unicode values to
@@ -1124,7 +1138,7 @@ class BaseLayer(_BaseGlyphVendor,
         """
         return self._getCharacterMapping()
 
-    def _getCharacterMapping(self) -> CharacterMapping:
+    def _getCharacterMapping(self) -> CharacterMappingType:
         """Get the native layer's character mapping.
 
         This is the environment implementation of
@@ -1141,6 +1155,4 @@ class BaseLayer(_BaseGlyphVendor,
                 continue
             for code in glyph.unicodes:
                 mapping[code].append(glyph.name)
-        for code in mapping:
-            mapping[code] = tuple(mapping[code])
-        return dict(mapping)
+        return {k: tuple(v) for k, v in mapping.items()}
