@@ -2203,7 +2203,7 @@ class BaseGlyph(BaseObject,
         """
         Center = Union[float, 'FuzzyNumber']  # float is used for temporary list
         SortKeys = Tuple[int, int, Center, Center, int]
-        ContourListType = List[Tuple[SortKeys, BaseContour]]
+        ContourListType = List[Tuple[SortKeys, 'BaseContour']]
 
         tempContourList: ContourListType = []
         contourList: ContourListType = []
