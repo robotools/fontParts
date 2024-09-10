@@ -44,7 +44,7 @@ setup_params = dict(
         "Topic :: Multimedia :: Graphics :: Graphics Conversion",
         "Topic :: Software Development :: Libraries",
     ],
-    python_requires='>=3.7',
+    python_requires='>=3.8',
     zip_safe=True,
 )
 
