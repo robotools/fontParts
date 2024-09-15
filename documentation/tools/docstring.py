@@ -8,10 +8,11 @@ from typing import (
     Any,
     Callable,
     Dict,
-    Optional,
     List,
-    Union,
-    Tuple
+    Optional,
+    Set,
+    Tuple,
+    Union
 )
 
 from abc import ABC, abstractmethod
@@ -107,7 +108,19 @@ DIRECTIVES: Dict[str, str] = {
 
 
 class DynamicPropertyMixin(ABC):
-    """Provide functionality specific to dynamicProperty objects."""
+    """Provide functionality specific to :class:`base.dynamicProperty` objects.
+
+    This mixin class provides methods for managing dynamic properties,
+    such as retrieving getter and setter methods, merging their signatures,
+    and combining type hints.
+
+    Subclasses must implement several abstract methods and properties,
+    including those for managing the object's type hints, signature information,
+    and object name. This mixin framework is designed for flexibility in
+    defining dynamic properties, ensuring that both getter and setter
+    functionalities can be handled in a consistent way.
+
+    """
 
     def _getGetterSetter(self) -> GetterSetterType:
         # Retrieve getter and setter functions for the dynamic property.
@@ -296,6 +309,60 @@ class DynamicPropertyMixin(ABC):
         return textwrap.fill(formatString, LINE_LENGTH)
 
 
+class CodeAnalyzer(ast.NodeVisitor):
+    """Analyze source code to retrieve specific elements.
+
+    This class traverses the Abstract Syntax Tree (AST) of the provided source
+    code to find:
+
+    - Raised exceptions using :keyword:`raise` statements.
+    - Calls to normalization functions from a specified module.
+
+    :param normalizationModule: The name of the module containing normalization
+        functions as a :class:`str`. Defaults to :const:`NORMALIZATION_MODULE`.
+    :ivar exceptions: A :class:`set` of exception names that are raised within
+        the source code.
+    :ivar normalizers: A :class:`dict` of argument names mapped to the
+        corresponding normalizer function names.
+
+    """
+
+    def __init__(self, normalizationModule: str = NORMALIZATION_MODULE):
+        self.exceptions: Set[str] = set()
+        self.normalizers: Dict[str, str] = {}
+        self.normalizationModule = normalizationModule
+
+    def visit_Raise(self, node):
+        """Analyze exception raises."""
+        # Extract raised exceptions
+        if node.exc and isinstance(node.exc, ast.Call):
+            if isinstance(node.exc.func, ast.Name):
+                self.exceptions.add(node.exc.func.id)
+        elif node.exc and isinstance(node.exc, ast.Name):
+            self.exceptions.add(node.exc.id)
+
+        self.generic_visit(node)
+
+    def visit_Call(self, node):
+        """Analyze function calls."""
+        # Handle `raiseNotImplementedError` call
+        if hasattr(node.func, 'attr') and node.func.attr == 'raiseNotImplementedError':
+            self.exceptions.add('NotImplementedError')
+
+        # Extract normalizer calls
+        if (isinstance(node.func, ast.Attribute)
+            and isinstance(node.func.value, ast.Name)
+                and node.func.value.id == self.normalizationModule):
+            normalizer = node.func.attr
+            qualifiedNormalizer = f'{self.normalizationModule}.{normalizer}'
+            if node.args and isinstance(node.args[0], ast.Name):
+                argName = node.args[0].id
+                self.normalizers[argName] = qualifiedNormalizer
+
+        # Continue visiting other child nodes
+        self.generic_visit(node)
+
+
 class Docstring(DynamicPropertyMixin):
     """Represent a formatted docstring for a given object.
 
@@ -390,31 +457,22 @@ class Docstring(DynamicPropertyMixin):
         return defaults
 
     def _getRaisedExceptions(self) -> List[str]:
-        # Get the exceptions raised by the object based on the source code.
+        # Get the exceptions raised by the object based on the `obj` source.
         source = inspect.getsource(self.obj)
         dedentedSource = textwrap.dedent(source)
         tree = ast.parse(dedentedSource)
-        exceptions = []
-        for node in ast.walk(tree):
-            if isinstance(node, ast.Raise):
-                if node.exc and isinstance(node.exc, ast.Call):
-                    if isinstance(node.exc.func, ast.Name):
-                        exceptions.append(node.exc.func.id)
-                elif node.exc and isinstance(node.exc, ast.Name):
-                    exceptions.append(node.exc.id)
-            elif isinstance(node, ast.Call):
-                if (hasattr(node.func, 'attr')
-                        and node.func.attr == 'raiseNotImplementedError'):
-                    exceptions.append('NotImplementedError')
-
-        return list(set(exceptions))
+        extractor = CodeAnalyzer()
+        extractor.visit(tree)
+        return list(extractor.exceptions)
 
     @staticmethod
     def _getNormalizers(source: str) -> Dict[str, str]:
         # Extract normalizer names from the given source.
-        pattern = rf'({NORMALIZATION_MODULE}\.\w+)\(([^)]*)\)'
-        results = re.findall(pattern, source)
-        return {v: k for k, v in results} or {}
+        dedentedSource = textwrap.dedent(source)
+        tree = ast.parse(dedentedSource)
+        extractor = CodeAnalyzer()
+        extractor.visit(tree)
+        return extractor.normalizers
 
     # ----------
     # Type hints
