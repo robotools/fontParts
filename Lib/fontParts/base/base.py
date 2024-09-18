@@ -1,8 +1,17 @@
+from __future__ import annotations
+from typing import Any, List, Tuple, Optional, Callable, Dict, Type, Union
+from numbers import Number
 import math
-from copy import deepcopy
 from fontTools.misc import transform
 from fontParts.base.errors import FontPartsError
 from fontParts.base import normalizers
+from fontParts.base.annotations import (
+    CoordinateType,
+    FactorType,
+    IntFloatType,
+    ScaleType,
+    TransformationMatrixType
+)
 
 
 # -------
@@ -78,13 +87,13 @@ class dynamicProperty(object):
         200
     """
 
-    def __init__(self, name, doc=None):
+    def __init__(self, name: str, doc: Optional[str] = None) -> None:
         self.name = name
         self.__doc__ = doc
         self.getterName = "_get_" + name
         self.setterName = "_set_" + name
 
-    def __get__(self, obj, cls):
+    def __get__(self, obj: Any, cls: Type[Any]) -> Any:
         getter = getattr(obj, self.getterName, None)
         if getter is not None:
             return getter()
@@ -95,7 +104,7 @@ class dynamicProperty(object):
                 return self
             raise FontPartsError("no getter for %r" % self.name)
 
-    def __set__(self, obj, value):
+    def __set__(self, obj: Any, value: Any) -> None:
         setter = getattr(obj, self.setterName, None)
         if setter is not None:
             setter(value)
@@ -103,7 +112,7 @@ class dynamicProperty(object):
             raise FontPartsError("no setter for %r" % self.name)
 
 
-def interpolate(a, b, v):
+def interpolate(a: Number, b: Number, v: FactorType) -> float:
     return a + (b - a) * v
 
 
@@ -111,26 +120,25 @@ def interpolate(a, b, v):
 # Base Objects
 # ------------
 
-class BaseObject(object):
 
+class BaseObject:
     # --------------
     # Initialization
     # --------------
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         self._init(*args, **kwargs)
 
-    def _init(self, *args, **kwargs):
+    def _init(self, *args: Any, **kwargs: Any) -> None:
         """
         Subclasses may override this method.
         """
-        pass
 
     # ----
     # repr
     # ----
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         contents = self._reprContents()
         if contents:
             contents = " ".join(contents)
@@ -145,7 +153,7 @@ class BaseObject(object):
         return s
 
     @classmethod
-    def _reprContents(cls):
+    def _reprContents(cls) -> List[str]:
         """
         Subclasses may override this method to
         provide a list of strings for inclusion
@@ -159,7 +167,7 @@ class BaseObject(object):
     # equality
     # --------
 
-    def __eq__(self, other):
+    def __eq__(self, other: Any) -> bool:
         """
         Subclasses may override this method.
         """
@@ -167,7 +175,7 @@ class BaseObject(object):
             return self.naked() is other.naked()
         return NotImplemented
 
-    def __ne__(self, other):
+    def __ne__(self, other: Any) -> bool:
         """
         Subclasses must not override this method.
         """
@@ -178,10 +186,9 @@ class BaseObject(object):
     # Hash
     # ----
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         """
         Allow subclasses to be used in hashable collections.
-
         Subclasses may override this method.
         """
         return id(self.naked())
@@ -190,10 +197,10 @@ class BaseObject(object):
     # Copy
     # ----
 
-    copyClass = None
-    copyAttributes = ()
+    copyClass: Optional[type] = None
+    copyAttributes: Tuple[str, ...] = ()
 
-    def copy(self):
+    def copy(self) -> 'BaseObject':
         """
         Copy this object into a new object of the same type.
         The returned object will not have a parent object.
@@ -205,7 +212,7 @@ class BaseObject(object):
         copied.copyData(self)
         return copied
 
-    def copyData(self, source):
+    def copyData(self, source: BaseObject) -> None:
         """
         Subclasses may override this method.
         If so, they should call the super.
@@ -222,7 +229,7 @@ class BaseObject(object):
     # Exceptions
     # ----------
 
-    def raiseNotImplementedError(self):
+    def raiseNotImplementedError(self) -> None:
         """
         This exception needs to be raised frequently by
         the base classes. So, it's here for convenience.
@@ -236,111 +243,104 @@ class BaseObject(object):
     # Environment Fallbacks
     # ---------------------
 
-    def changed(self, *args, **kwargs):
+    def changed(self, *args: Any, **kwargs: Any) -> None:
         """
         Tell the environment that something has changed in
         the object. The behavior of this method will vary
         from environment to environment.
-
-            >>> obj.changed()
         """
 
-    def naked(self):
+    def naked(self) -> Any:
         """
         Return the environment's native object
         that has been wrapped by this object.
-
-            >>> loweLevelObj = obj.naked()
         """
         self.raiseNotImplementedError()
 
 
 class BaseDict(BaseObject):
+    keyNormalizer: Optional[Any] = None
+    valueNormalizer: Optional[Any] = None
 
-    keyNormalizer = None
-    valueNormalizer = None
-
-    def copyData(self, source):
+    def copyData(self, source: 'BaseDict') -> None:
         super(BaseDict, self).copyData(source)
         self.update(source)
 
-    def __len__(self):
+    def __len__(self) -> int:
         value = self._len()
         return value
 
-    def _len(self):
+    def _len(self) -> int:
         """
         Subclasses may override this method.
         """
         return len(self.keys())
 
-    def keys(self):
+    def keys(self) -> List[Any]:
         keys = self._keys()
         if self.keyNormalizer is not None:
             keys = [self.keyNormalizer.__func__(key) for key in keys]
         return keys
 
-    def _keys(self):
+    def _keys(self) -> List[Any]:
         """
         Subclasses may override this method.
         """
         return [k for k, v in self.items()]
 
-    def items(self):
+    def items(self) -> List[Tuple[Any, Any]]:
         items = self._items()
         if self.keyNormalizer is not None and self.valueNormalizer is not None:
-            values = [
+            items = [
                 (self.keyNormalizer.__func__(key),
                  self.valueNormalizer.__func__(value))
                 for (key, value) in items
             ]
-        return values
+        return items
 
-    def _items(self):
+    def _items(self) -> List[Tuple[Any, Any]]:
         """
         Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
-    def values(self):
+    def values(self) -> List[Any]:
         values = self._values()
         if self.valueNormalizer is not None:
             values = [self.valueNormalizer.__func__(value) for value in values]
         return values
 
-    def _values(self):
+    def _values(self) -> List[Any]:
         """
         Subclasses may override this method.
         """
         return [v for k, v in self.items()]
 
-    def __contains__(self, key):
+    def __contains__(self, key: Any) -> bool:
         if self.keyNormalizer is not None:
             key = self.keyNormalizer.__func__(key)
         return self._contains(key)
 
-    def _contains(self, key):
+    def _contains(self, key: Any) -> bool:
         """
         Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
-    has_key = __contains__
-
-    def __setitem__(self, key, value):
+    def __setitem__(self, key: Any, value: Any) -> None:
         if self.keyNormalizer is not None:
             key = self.keyNormalizer.__func__(key)
         if self.valueNormalizer is not None:
             value = self.valueNormalizer.__func__(value)
         self._setItem(key, value)
 
-    def _setItem(self, key, value):
+    def _setItem(self, key: Any, value: Any) -> None:
         """
         Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: Any) -> Any:
         if self.keyNormalizer is not None:
             key = self.keyNormalizer.__func__(key)
         value = self._getItem(key)
@@ -348,13 +348,13 @@ class BaseDict(BaseObject):
             value = self.valueNormalizer.__func__(value)
         return value
 
-    def _getItem(self, key):
+    def _getItem(self, key: Any) -> Any:
         """
         Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
-    def get(self, key, default=None):
+    def get(self, key: Any, default: Optional[Any] = None) -> Any:
         if self.keyNormalizer is not None:
             key = self.keyNormalizer.__func__(key)
         if default is not None and self.valueNormalizer is not None:
@@ -364,7 +364,7 @@ class BaseDict(BaseObject):
             value = self.valueNormalizer.__func__(value)
         return value
 
-    def _get(self, key, default=None):
+    def _get(self, key: Any, default: Optional[Any] = None) -> Any:
         """
         Subclasses may override this method.
         """
@@ -372,18 +372,18 @@ class BaseDict(BaseObject):
             return self[key]
         return default
 
-    def __delitem__(self, key):
+    def __delitem__(self, key: Any) -> None:
         if self.keyNormalizer is not None:
             key = self.keyNormalizer.__func__(key)
         self._delItem(key)
 
-    def _delItem(self, key):
+    def _delItem(self, key: Any) -> None:
         """
         Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
-    def pop(self, key, default=None):
+    def pop(self, key: Any, default: Optional[Any] = None) -> Any:
         if self.keyNormalizer is not None:
             key = self.keyNormalizer.__func__(key)
         if default is not None and self.valueNormalizer is not None:
@@ -393,7 +393,7 @@ class BaseDict(BaseObject):
             value = self.valueNormalizer.__func__(value)
         return value
 
-    def _pop(self, key, default=None):
+    def _pop(self, key: Any, default: Optional[Any] = None) -> Any:
         """
         Subclasses may override this method.
         """
@@ -403,10 +403,10 @@ class BaseDict(BaseObject):
             del self[key]
         return value
 
-    def __iter__(self):
+    def __iter__(self) -> Any:
         return self._iter()
 
-    def _iter(self):
+    def _iter(self) -> Any:
         """
         Subclasses may override this method.
         """
@@ -416,7 +416,8 @@ class BaseDict(BaseObject):
             yield key
             keys = keys[1:]
 
-    def update(self, other):
+    def update(self, other: Dict[Any, Any]) -> None:
+        from copy import deepcopy
         other = deepcopy(other)
         if self.keyNormalizer is not None and self.valueNormalizer is not None:
             d = {}
@@ -424,20 +425,20 @@ class BaseDict(BaseObject):
                 key = self.keyNormalizer.__func__(key)
                 value = self.valueNormalizer.__func__(value)
                 d[key] = value
-            value = d
+            other = d
         self._update(other)
 
-    def _update(self, other):
+    def _update(self, other: Dict[Any, Any]) -> None:
         """
         Subclasses may override this method.
         """
         for key, value in other.items():
             self[key] = value
 
-    def clear(self):
+    def clear(self) -> None:
         self._clear()
 
-    def _clear(self):
+    def _clear(self) -> None:
         """
         Subclasses may override this method.
         """
@@ -451,7 +452,9 @@ class TransformationMixin(object):
     # Transformations
     # ---------------
 
-    def transformBy(self, matrix, origin=None):
+    def transformBy(self,
+                    matrix: TransformationMatrixType,
+                    origin: Optional[CoordinateType] = None):
         """
         Transform the object.
 
@@ -476,7 +479,9 @@ class TransformationMixin(object):
             matrix = tuple(t)
         self._transformBy(matrix)
 
-    def _transformBy(self, matrix, **kwargs):
+    def _transformBy(self,
+                     matrix: TransformationMatrixType,
+                     **kwargs: Any) -> None:
         """
         This is the environment implementation of
         :meth:`BaseObject.transformBy`.
@@ -489,7 +494,7 @@ class TransformationMixin(object):
         """
         self.raiseNotImplementedError()
 
-    def moveBy(self, value):
+    def moveBy(self, value: CoordinateType) -> None:
         """
         Move the object.
 
@@ -502,7 +507,7 @@ class TransformationMixin(object):
         value = normalizers.normalizeTransformationOffset(value)
         self._moveBy(value)
 
-    def _moveBy(self, value, **kwargs):
+    def _moveBy(self, value: CoordinateType, **kwargs: Any) -> None:
         """
         This is the environment implementation of
         :meth:`BaseObject.moveBy`.
@@ -518,7 +523,9 @@ class TransformationMixin(object):
         t = transform.Offset(x, y)
         self.transformBy(tuple(t), **kwargs)
 
-    def scaleBy(self, value, origin=None):
+    def scaleBy(self,
+                value: ScaleType,
+                origin: Optional[IntFloatType] = None) -> None:
         """
         Scale the object.
 
@@ -538,7 +545,10 @@ class TransformationMixin(object):
         origin = normalizers.normalizeCoordinateTuple(origin)
         self._scaleBy(value, origin=origin)
 
-    def _scaleBy(self, value, origin=None, **kwargs):
+    def _scaleBy(self,
+                 value: ScaleType,
+                 origin: Optional[CoordinateType] = None,
+                 **kwargs: Any) -> None:
         """
         This is the environment implementation of
         :meth:`BaseObject.scaleBy`.
@@ -556,7 +566,9 @@ class TransformationMixin(object):
         t = transform.Identity.scale(x=x, y=y)
         self.transformBy(tuple(t), origin=origin, **kwargs)
 
-    def rotateBy(self, value, origin=None):
+    def rotateBy(self,
+                 value: IntFloatType,
+                 origin: Optional[CoordinateType] = None) -> None:
         """
         Rotate the object.
 
@@ -575,7 +587,10 @@ class TransformationMixin(object):
         origin = normalizers.normalizeCoordinateTuple(origin)
         self._rotateBy(value, origin=origin)
 
-    def _rotateBy(self, value, origin=None, **kwargs):
+    def _rotateBy(self,
+                  value: IntFloatType,
+                  origin: Optional[CoordinateType] = None,
+                  **kwargs: Any) -> None:
         """
         This is the environment implementation of
         :meth:`BaseObject.rotateBy`.
@@ -593,7 +608,9 @@ class TransformationMixin(object):
         t = transform.Identity.rotate(a)
         self.transformBy(tuple(t), origin=origin, **kwargs)
 
-    def skewBy(self, value, origin=None):
+    def skewBy(self,
+               value: FactorType,
+               origin: Optional[CoordinateType] = None) -> None:
         """
         Skew the object.
 
@@ -617,7 +634,10 @@ class TransformationMixin(object):
         origin = normalizers.normalizeCoordinateTuple(origin)
         self._skewBy(value, origin=origin)
 
-    def _skewBy(self, value, origin=None, **kwargs):
+    def _skewBy(self,
+                value: FactorType,
+                origin: Optional[CoordinateType] = None,
+                **kwargs: Any) -> None:
         """
         This is the environment implementation of
         :meth:`BaseObject.skewBy`.
@@ -644,9 +664,9 @@ class InterpolationMixin(object):
     # Compatibility
     # -------------
 
-    compatibilityReporterClass = None
+    compatibilityReporterClass: Optional[Type[Any]] = None
 
-    def isCompatible(self, other, cls):
+    def isCompatible(self, other: Any, cls: Type[Any]) -> Tuple[bool, Any]:
         """
         Evaluate interpolation compatibility with other.
         """
@@ -659,7 +679,7 @@ class InterpolationMixin(object):
         self._isCompatible(other, reporter)
         return not reporter.fatal, reporter
 
-    def _isCompatible(self, other, reporter):
+    def _isCompatible(self, other: Any, reporter: Any) -> None:
         """
         Subclasses must override this method.
         """
@@ -672,7 +692,7 @@ class SelectionMixin(object):
     # Selected Flag
     # -------------
 
-    selected = dynamicProperty(
+    selected: dynamicProperty = dynamicProperty(
         "base_selected",
         """
         The object's selection state.
@@ -683,16 +703,16 @@ class SelectionMixin(object):
         """
     )
 
-    def _get_base_selected(self):
+    def _get_base_selected(self) -> bool:
         value = self._get_selected()
         value = normalizers.normalizeBoolean(value)
         return value
 
-    def _set_base_selected(self, value):
+    def _set_base_selected(self, value: bool) -> None:
         value = normalizers.normalizeBoolean(value)
         self._set_selected(value)
 
-    def _get_selected(self):
+    def _get_selected(self) -> bool:
         """
         This is the environment implementation of
         :attr:`BaseObject.selected`. This must return a
@@ -705,7 +725,7 @@ class SelectionMixin(object):
         """
         self.raiseNotImplementedError()
 
-    def _set_selected(self, value):
+    def _set_selected(self, value: bool) -> None:
         """
         This is the environment implementation of
         :attr:`BaseObject.selected`. **value** will
@@ -722,12 +742,14 @@ class SelectionMixin(object):
     # Sub-Objects
     # -----------
     @classmethod
-    def _getSelectedSubObjects(cls, subObjects):
+    def _getSelectedSubObjects(cls, subObjects: List[Any]) -> List[Any]:
         selected = [obj for obj in subObjects if obj.selected]
         return selected
 
     @classmethod
-    def _setSelectedSubObjects(cls, subObjects, selected):
+    def _setSelectedSubObjects(cls,
+                               subObjects: List[Any],
+                               selected: List[Any]) -> None:
         for obj in subObjects:
             obj.selected = obj in selected
 
@@ -740,24 +762,26 @@ class PointPositionMixin(object):
     attributes.
     """
 
-    position = dynamicProperty("base_position", "The point position.")
+    position: dynamicProperty = dynamicProperty(
+        "base_position", "The point position."
+    )
 
-    def _get_base_position(self):
+    def _get_base_position(self) -> CoordinateType:
         value = self._get_position()
         value = normalizers.normalizeCoordinateTuple(value)
         return value
 
-    def _set_base_position(self, value):
+    def _set_base_position(self, value: CoordinateType) -> None:
         value = normalizers.normalizeCoordinateTuple(value)
         self._set_position(value)
 
-    def _get_position(self):
+    def _get_position(self) -> CoordinateType:
         """
         Subclasses may override this method.
         """
         return (self.x, self.y)
 
-    def _set_position(self, value):
+    def _set_position(self, value: CoordinateType) -> None:
         """
         Subclasses may override this method.
         """
@@ -772,7 +796,7 @@ class IdentifierMixin(object):
 
     # identifier
 
-    identifier = dynamicProperty(
+    identifier: dynamicProperty = dynamicProperty(
         "base_identifier",
         """
         The unique identifier for the object.
@@ -787,13 +811,13 @@ class IdentifierMixin(object):
         """
     )
 
-    def _get_base_identifier(self):
+    def _get_base_identifier(self) -> Optional[str]:
         value = self._get_identifier()
         if value is not None:
             value = normalizers.normalizeIdentifier(value)
         return value
 
-    def _get_identifier(self):
+    def _get_identifier(self) -> Optional[str]:
         """
         This is the environment implementation of
         :attr:`BaseObject.identifier`. This must
@@ -805,7 +829,7 @@ class IdentifierMixin(object):
         """
         self.raiseNotImplementedError()
 
-    def getIdentifier(self):
+    def getIdentifier(self) -> str:
         """
         Create a new, unique identifier for and assign it to the object.
         If the object already has an identifier, the existing one should
@@ -813,26 +837,25 @@ class IdentifierMixin(object):
         """
         return self._getIdentifier()
 
-    def _getIdentifier(self):
+    def _getIdentifier(self) -> str:
         """
         Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
-    def _setIdentifier(self, value):
+    def _setIdentifier(self, value: str) -> None:
         """
         This method is used internally to force a specific
         identifier onto an object in certain situations.
         Subclasses that allow setting an identifier to a
         specific value may override this method.
         """
-        pass
 
 
-def reference(obj):
+def reference(obj: Any) -> Callable[[], Any]:
     # import weakref
     # return weakref.ref(obj)
-    def wrapper():
+    def wrapper() -> Any:
         return obj
     return wrapper
 
@@ -843,14 +866,14 @@ class FuzzyNumber(object):
     Use it to compare numbers where a threshold is needed.
     """
 
-    def __init__(self, value, threshold):
+    def __init__(self, value: IntFloatType, threshold: IntFloatType) -> None:
         self.value = value
         self.threshold = threshold
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "[%f %f]" % (self.value, self.threshold)
 
-    def __lt__(self, other):
+    def __lt__(self, other: Union[FuzzyNumber, IntFloatType]) -> bool:
         if hasattr(other, "value"):
             if abs(self.value - other.value) < self.threshold:
                 return False
@@ -858,10 +881,10 @@ class FuzzyNumber(object):
                 return self.value < other.value
         return self.value < other
 
-    def __eq__(self, other):
+    def __eq__(self, other: Union[FuzzyNumber, IntFloatType]) -> bool:
         if hasattr(other, "value"):
             return abs(self.value - other.value) < self.threshold
         return self.value == other
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return hash((self.value, self.threshold))
