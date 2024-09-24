@@ -5,7 +5,7 @@ from fontParts.base.base import dynamicProperty
 # ----
 
 
-class BaseCompatibilityReporter(object):
+class BaseCompatibilityReporter:
 
     objectName = "Base"
 
