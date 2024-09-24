@@ -1,9 +1,10 @@
 import math
 from copy import deepcopy
-from fontTools.misc import transform
-from fontParts.base.errors import FontPartsError
-from fontParts.base import normalizers
+from typing import List
 
+from fontParts.base import normalizers
+from fontParts.base.errors import FontPartsError
+from fontTools.misc import transform
 
 # -------
 # Helpers
@@ -145,7 +146,7 @@ class BaseObject:
         return s
 
     @classmethod
-    def _reprContents(cls):
+    def _reprContents(cls) -> List[str]:
         """
         Subclasses may override this method to
         provide a list of strings for inclusion
@@ -191,7 +192,7 @@ class BaseObject:
     # ----
 
     copyClass = None
-    copyAttributes = ()
+    copyAttributes: tuple[str, ...] = ()
 
     def copy(self):
         """
