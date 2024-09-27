@@ -1,5 +1,6 @@
-from numbers import Number
-from typing import List, Optional
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any, List, Optional, Tuple
 
 from fontParts.base import normalizers
 from fontParts.base.annotations import TransformationMatrixType
@@ -7,12 +8,15 @@ from fontParts.base.base import (BaseObject, IdentifierMixin,
                                  PointPositionMixin, SelectionMixin,
                                  TransformationMixin, dynamicProperty,
                                  reference)
-from fontParts.base.contour import BaseContour
-from fontParts.base.deprecated import DeprecatedPoint, RemovedPoint
-from fontParts.base.font import BaseFont
-from fontParts.base.glyph import BaseGlyph
-from fontParts.base.layer import BaseLayer
 from fontTools.misc import transform
+
+if TYPE_CHECKING:
+    from fontParts.base.annotations import IntFloatType
+    from fontParts.base.contour import BaseContour
+    from fontParts.base.deprecated import DeprecatedPoint, RemovedPoint
+    from fontParts.base.font import BaseFont
+    from fontParts.base.glyph import BaseGlyph
+    from fontParts.base.layer import BaseLayer
 
 
 class BasePoint(
@@ -70,7 +74,7 @@ class BasePoint(
             return None
         return self._contour()
 
-    def _set_contour(self, contour: BaseContour):
+    def _set_contour(self, contour: BaseContour) -> None:
         if self._contour is not None:
             raise AssertionError("contour for point already set")
         if contour is not None:
@@ -134,7 +138,7 @@ class BasePoint(
         value = normalizers.normalizePointType(value)
         return value
 
-    def _set_base_type(self, value: str):
+    def _set_base_type(self, value: str) -> None:
         value = normalizers.normalizePointType(value)
         self._set_type(value)
 
@@ -163,7 +167,7 @@ class BasePoint(
 
     # smooth
 
-    smooth: dynamicProperty = dynamicProperty( # type: ignore
+    smooth: dynamicProperty = dynamicProperty(
         "base_smooth",
         """
         A ``bool`` indicating if the point is smooth or not. ::
@@ -180,7 +184,7 @@ class BasePoint(
         value = normalizers.normalizeBoolean(value)
         return value
 
-    def _set_base_smooth(self, value: bool):
+    def _set_base_smooth(self, value: bool) -> None:
         value = normalizers.normalizeBoolean(value)
         self._set_smooth(value)
 
@@ -220,12 +224,12 @@ class BasePoint(
         """
     )
 
-    def _get_base_x(self) -> Number:
+    def _get_base_x(self) -> IntFloatType:
         value = self._get_x()
         value = normalizers.normalizeX(value)
         return value
 
-    def _set_base_x(self, value: Number):
+    def _set_base_x(self, value: IntFloatType) -> None:
         value = normalizers.normalizeX(value)
         self._set_x(value)
 
@@ -263,12 +267,12 @@ class BasePoint(
         """
     )
 
-    def _get_base_y(self) -> Number:
+    def _get_base_y(self) -> IntFloatType:
         value = self._get_y()
         value = normalizers.normalizeY(value)
         return value
 
-    def _set_base_y(self, value: Number):
+    def _set_base_y(self, value: IntFloatType) -> None:
         value = normalizers.normalizeY(value)
         self._set_y(value)
 
@@ -347,7 +351,7 @@ class BasePoint(
             value = normalizers.normalizePointName(value)
         return value
 
-    def _set_base_name(self, value: str):
+    def _set_base_name(self, value: str) -> None:
         if value is not None:
             value = normalizers.normalizePointName(value)
         self._set_name(value)
@@ -380,7 +384,7 @@ class BasePoint(
     # Transformation
     # --------------
 
-    def _transformBy(self, matrix: TransformationMatrixType, **kwargs):
+    def _transformBy(self, matrix: TransformationMatrixType, **kwargs: Any) -> None:
         """
         This is the environment implementation of
         :meth:`BasePoint.transformBy`.
@@ -400,7 +404,7 @@ class BasePoint(
     # Normalization
     # -------------
 
-    def round(self):
+    def round(self) -> None:
         """
         Round the point's coordinate.
 
@@ -413,7 +417,7 @@ class BasePoint(
         """
         self._round()
 
-    def _round(self, **kwargs):
+    def _round(self, **kwargs: Any):
         """
         This is the environment implementation of
         :meth:`BasePoint.round`.
