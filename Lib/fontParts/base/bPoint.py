@@ -1,16 +1,24 @@
-from fontTools.misc import transform
-from fontParts.base.base import (
-    BaseObject,
-    TransformationMixin,
-    SelectionMixin,
-    IdentifierMixin,
-    dynamicProperty,
-    reference
-)
-from fontParts.base.errors import FontPartsError
-from fontParts.base import normalizers
-from fontParts.base.deprecated import DeprecatedBPoint, RemovedBPoint
+from __future__ import annotations
 
+from typing import TYPE_CHECKING, Any, List, Optional, Tuple
+
+from fontParts.base import normalizers
+from fontParts.base.base import (BaseObject, IdentifierMixin, SelectionMixin,
+                                 TransformationMixin, dynamicProperty,
+                                 reference)
+from fontParts.base.deprecated import DeprecatedBPoint, RemovedBPoint
+from fontParts.base.errors import FontPartsError
+from fontTools.misc import transform
+
+if TYPE_CHECKING:
+    from fontParts.base.annotations import (CoordinateType, IntFloatType,
+                                            TransformationMatrixType)
+    from fontParts.base.contour import BaseContour
+    from fontParts.base.font import BaseFont
+    from fontParts.base.glyph import BaseGlyph
+    from fontParts.base.layer import BaseLayer
+    from fontParts.base.point import BasePoint
+    from fontParts.base.segment import BaseSegment
 
 class BaseBPoint(
                  BaseObject,
@@ -21,14 +29,14 @@ class BaseBPoint(
                  RemovedBPoint
                  ):
 
-    def _reprContents(self):
+    def _reprContents(self) -> List[str]:
         contents = [
             "%s" % self.type,
             "anchor='({x}, {y})'".format(x=self.anchor[0], y=self.anchor[1]),
         ]
         return contents
 
-    def _setPoint(self, point):
+    def _setPoint(self, point: BasePoint) -> None:
         if hasattr(self, "_point"):
             raise AssertionError("point for bPoint already set")
         self._point = point
@@ -63,17 +71,18 @@ class BaseBPoint(
 
     # Segment
 
-    _segment = dynamicProperty("base_segment")
+    _segment: dynamicProperty = dynamicProperty("base_segment")
 
-    def _get_base_segment(self):
+    def _get_base_segment(self) -> Optional[BaseSegment]:
         point = self._point
         for segment in self.contour.segments:
             if segment.onCurve == point:
                 return segment
+        return None
 
-    _nextSegment = dynamicProperty("base_nextSegment")
+    _nextSegment: dynamicProperty = dynamicProperty("base_nextSegment")
 
-    def _get_base_nextSegment(self):
+    def _get_base_nextSegment(self) -> Optional[BaseSegment]:
         contour = self.contour
         if contour is None:
             return None
@@ -87,16 +96,16 @@ class BaseBPoint(
 
     # Contour
 
-    _contour = None
+    _contour: Optional[BaseContour] = None
 
     contour = dynamicProperty("contour", "The bPoint's parent contour.")
 
-    def _get_contour(self):
+    def _get_contour(self) -> Optional[BaseContour]:
         if self._contour is None:
             return None
         return self._contour()
 
-    def _set_contour(self, contour):
+    def _set_contour(self, contour: BaseContour) -> None:
         if self._contour is not None:
             raise AssertionError("contour for bPoint already set")
         if contour is not None:
@@ -105,27 +114,27 @@ class BaseBPoint(
 
     # Glyph
 
-    glyph = dynamicProperty("glyph", "The bPoint's parent glyph.")
+    glyph: dynamicProperty = dynamicProperty("glyph", "The bPoint's parent glyph.")
 
-    def _get_glyph(self):
+    def _get_glyph(self) -> Optional[BaseGlyph]:
         if self._contour is None:
             return None
         return self.contour.glyph
 
     # Layer
 
-    layer = dynamicProperty("layer", "The bPoint's parent layer.")
+    layer: dynamicProperty = dynamicProperty("layer", "The bPoint's parent layer.")
 
-    def _get_layer(self):
+    def _get_layer(self) -> Optional[BaseLayer]:
         if self._contour is None:
             return None
         return self.glyph.layer
 
     # Font
 
-    font = dynamicProperty("font", "The bPoint's parent font.")
+    font: dynamicProperty = dynamicProperty("font", "The bPoint's parent font.")
 
-    def _get_font(self):
+    def _get_font(self) -> Optional[BaseFont]:
         if self._contour is None:
             return None
         return self.glyph.font
@@ -136,7 +145,7 @@ class BaseBPoint(
 
     # anchor
 
-    anchor = dynamicProperty("base_anchor", "The anchor point.")
+    anchor: dynamicProperty = dynamicProperty("base_anchor", "The anchor point.")
 
     def _get_base_anchor(self):
         value = self._get_anchor()
@@ -166,18 +175,18 @@ class BaseBPoint(
 
     # bcp in
 
-    bcpIn = dynamicProperty("base_bcpIn", "The incoming off curve.")
+    bcpIn: dynamicProperty = dynamicProperty("base_bcpIn", "The incoming off curve.")
 
-    def _get_base_bcpIn(self):
+    def _get_base_bcpIn(self) -> CoordinateType:
         value = self._get_bcpIn()
         value = normalizers.normalizeCoordinateTuple(value)
         return value
 
-    def _set_base_bcpIn(self, value):
+    def _set_base_bcpIn(self, value: CoordinateType) -> None:
         value = normalizers.normalizeCoordinateTuple(value)
         self._set_bcpIn(value)
 
-    def _get_bcpIn(self):
+    def _get_bcpIn(self) -> CoordinateType:
         """
         Subclasses may override this method.
         """
@@ -190,7 +199,7 @@ class BaseBPoint(
             x = y = 0
         return (x, y)
 
-    def _set_bcpIn(self, value):
+    def _set_bcpIn(self, value: CoordinateType) -> None:
         """
         Subclasses may override this method.
         """
@@ -219,18 +228,18 @@ class BaseBPoint(
 
     # bcp out
 
-    bcpOut = dynamicProperty("base_bcpOut", "The outgoing off curve.")
+    bcpOut: dynamicProperty = dynamicProperty("base_bcpOut", "The outgoing off curve.")
 
-    def _get_base_bcpOut(self):
+    def _get_base_bcpOut(self) -> CoordinateType:
         value = self._get_bcpOut()
         value = normalizers.normalizeCoordinateTuple(value)
         return value
 
-    def _set_base_bcpOut(self, value):
+    def _set_base_bcpOut(self, value: CoordinateType) -> None:
         value = normalizers.normalizeCoordinateTuple(value)
         self._set_bcpOut(value)
 
-    def _get_bcpOut(self):
+    def _get_bcpOut(self) -> CoordinateType:
         """
         Subclasses may override this method.
         """
@@ -243,7 +252,7 @@ class BaseBPoint(
             x = y = 0
         return (x, y)
 
-    def _set_bcpOut(self, value):
+    def _set_bcpOut(self, value: CoordinateType) -> None:
         """
         Subclasses may override this method.
         """
@@ -273,18 +282,18 @@ class BaseBPoint(
 
     # type
 
-    type = dynamicProperty("base_type", "The bPoint type.")
+    type: dynamicProperty = dynamicProperty("base_type", "The bPoint type.")
 
-    def _get_base_type(self):
+    def _get_base_type(self) -> Optional[str]:
         value = self._get_type()
         value = normalizers.normalizeBPointType(value)
         return value
 
-    def _set_base_type(self, value):
+    def _set_base_type(self, value: str) -> None:
         value = normalizers.normalizeBPointType(value)
         self._set_type(value)
 
-    def _get_type(self):
+    def _get_type(self) -> Optional[str]:
         """
         Subclasses may override this method.
         """
@@ -308,7 +317,7 @@ class BaseBPoint(
                                          % typ)
         return bType
 
-    def _set_type(self, value):
+    def _set_type(self, value: str) -> None:
         """
         Subclasses may override this method.
         """
@@ -331,20 +340,20 @@ class BaseBPoint(
     # Identification
     # --------------
 
-    index = dynamicProperty("index",
+    index: dynamicProperty = dynamicProperty("index",
                             ("The index of the bPoint within the ordered "
                              "list of the parent contour's bPoints. None "
                              "if the bPoint does not belong to a contour.")
                             )
 
-    def _get_base_index(self):
+    def _get_base_index(self) -> Optional[int]:
         if self.contour is None:
             return None
         value = self._get_index()
         value = normalizers.normalizeIndex(value)
         return value
 
-    def _get_index(self):
+    def _get_index(self) -> Optional[int]:
         """
         Subclasses may override this method.
         """
@@ -355,8 +364,7 @@ class BaseBPoint(
     # --------------
     # Transformation
     # --------------
-
-    def _transformBy(self, matrix, **kwargs):
+    def _transformBy(self, matrix: TransformationMatrixType, **kwargs: Any) -> None:
         """
         Subclasses may override this method.
         """
@@ -376,7 +384,7 @@ class BaseBPoint(
     # Misc
     # ----
 
-    def round(self):
+    def round(self) -> None:
         """
         Round coordinates.
         """
@@ -391,21 +399,21 @@ class BaseBPoint(
                        normalizers.normalizeVisualRounding(y))
 
 
-def relativeBCPIn(anchor, BCPIn):
+def relativeBCPIn(anchor: CoordinateType, BCPIn: CoordinateType) -> CoordinateType:
     """convert absolute incoming bcp value to a relative value"""
     return (BCPIn[0] - anchor[0], BCPIn[1] - anchor[1])
 
 
-def absoluteBCPIn(anchor, BCPIn):
+def absoluteBCPIn(anchor: CoordinateType, BCPIn: CoordinateType) -> CoordinateType:
     """convert relative incoming bcp value to an absolute value"""
     return (BCPIn[0] + anchor[0], BCPIn[1] + anchor[1])
 
 
-def relativeBCPOut(anchor, BCPOut):
+def relativeBCPOut(anchor: CoordinateType, BCPOut: CoordinateType) -> CoordinateType:
     """convert absolute outgoing bcp value to a relative value"""
     return (BCPOut[0] - anchor[0], BCPOut[1] - anchor[1])
 
 
-def absoluteBCPOut(anchor, BCPOut):
+def absoluteBCPOut(anchor: CoordinateType, BCPOut: CoordinateType) -> CoordinateType:
     """convert relative outgoing bcp value to an absolute value"""
     return (BCPOut[0] + anchor[0], BCPOut[1] + anchor[1])
