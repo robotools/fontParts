@@ -35,7 +35,7 @@ class BasePoint(
         >>> point = RPoint()
     """
 
-    copyAttributes = (
+    copyAttributes: Tuple[str, str, str, str, str] = (
         "type",
         "smooth",
         "x",
