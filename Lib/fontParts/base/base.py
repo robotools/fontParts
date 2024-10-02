@@ -1,66 +1,51 @@
+# pylint: disable=C0103, C0114
 from __future__ import annotations
-from typing import Any, List, Tuple, Optional, Callable, Dict, Type, Union
+from typing import (
+    Any, Callable, Dict, List, NoReturn, Optional, Tuple, Type, TypeVar, Union
+)
 from numbers import Number
 import math
+from weakref import ReferenceType
+
 from fontTools.misc import transform
 from fontParts.base.errors import FontPartsError
 from fontParts.base import normalizers
 from fontParts.base.annotations import (
+    CollectionType,
     CoordinateType,
     FactorType,
     IntFloatType,
+    InterpolatableType,
     ScaleType,
     TransformationMatrixType
 )
 
+BaseObjectType = TypeVar('BaseObjectType', bound='BaseObject')
 
 # -------
 # Helpers
 # -------
 
-class dynamicProperty(object):
 
-    """
-    This implements functionality that is very similar
-    to Python's built in property function, but makes
-    it much easier for subclassing. Here is an example
-    of why this is needed:
+class dynamicProperty:
+    """Represent a property for simplified subclassing.
 
-        class BaseObject(object):
+    This class implements functionality that is very similar to Python's built
+    in :class:`property`, but allows the getter and setter methods to be
+    automatically resolved by name, making it possible to partially override
+    the property in a subclass without having to re-register both the getter
+    and setter methods.
 
-            _foo = 1
+    :param name: The base name of the property, used to resolve the getter and
+        setter method names.
+    :param doc: Optional documentation string for the property.
+    :raises: FontPartsError: If the getter or setter method is not defined.
 
-            def _get_foo(self):
-                return self._foo
+    Example:
 
-            def _set_foo(self, value):
-                self._foo = value
+    .. code-block:: python
 
-            foo = property(_get_foo, _set_foo)
-
-
-        class MyObject(BaseObject):
-
-            def _set_foo(self, value):
-                self._foo = value * 100
-
-
-        >>> m = MyObject()
-        >>> m.foo
-        1
-        >>> m.foo = 2
-        >>> m.foo
-        2
-
-    The expected value is 200. The _set_foo method
-    needs to be reregistered. Doing that also requires
-    reregistering the _get_foo method. It's possible
-    to do this, but it's messy and will make subclassing
-    less than ideal.
-
-    Using dynamicProperty solves this.
-
-        class BaseObject(object):
+        class BaseObject:
 
             _foo = 1
 
@@ -78,13 +63,13 @@ class dynamicProperty(object):
             def _set_foo(self, value):
                 self._foo = value * 100
 
-
         >>> m = MyObject()
         >>> m.foo
         1
         >>> m.foo = 2
         >>> m.foo
         200
+
     """
 
     def __init__(self, name: str, doc: Optional[str] = None) -> None:
@@ -112,9 +97,32 @@ class dynamicProperty(object):
             raise FontPartsError("no setter for %r" % self.name)
 
 
-def interpolate(a: Number, b: Number, v: FactorType) -> float:
-    return a + (b - a) * v
+def interpolate(a: InterpolatableType,
+                b: InterpolatableType,
+                v: FactorType) -> InterpolatableType:
+    """Interpolate between two number-like objects.
 
+    This method performs linear interpolation, calculating a value that is
+    proportionally between `a` and `b`, determined by the factor `v`.
+
+    :param a: The value corresponding to the 0.0 position in the interpolation
+        as any object :ref:`emulating numeric types <numeric-types>`.
+    :param b: The value corresponding to the 1.0 position in the interpolation
+        as any object :ref:`emulating numeric types <numeric-types>`.
+    :param v: The factor value determining the interpolation between `a` and `b`
+        as a single :class:`int` or :class:`float` or a :class:`tuple` of
+        two :class:`int` or :class:`float` values representing the factors
+        ``(x, y)``.
+    :return: The interpolated value as any object :ref:`emulating numeric types
+        <numeric-types>`.
+
+    """
+    try:
+        return a + (b - a) * v
+    except TypeError as exc:
+        raise TypeError(
+            f"Factor must be an int or a float, not {type(v).__name__}."
+        ) from exc
 
 # ------------
 # Base Objects
@@ -122,6 +130,22 @@ def interpolate(a: Number, b: Number, v: FactorType) -> float:
 
 
 class BaseObject:
+    r"""Provide common base functionality to objects.
+
+    This class is intended to serve as a foundation for other classes, supplying
+    essential behaviors like initialization, string representation, comparison,
+    and copying, while leaving more specific implementations to be provided by
+    subclasses.
+
+    Subclasses are expected to override or extend methods to suit their own
+    behavior.
+
+    :cvar copyClass: The class used for copying, defaults to the subclass being copied.
+    :cvar copyAttributes: A tuple of attribute names to be copied when calling `copyData`.
+    :param \*args: Any positional arguments.
+    :param \**kwargs: Any keyword arguments.
+
+    """
     # --------------
     # Initialization
     # --------------
@@ -130,8 +154,17 @@ class BaseObject:
         self._init(*args, **kwargs)
 
     def _init(self, *args: Any, **kwargs: Any) -> None:
-        """
-        Subclasses may override this method.
+        r"""Initialize the native object.
+
+        This is the environment implementation of :meth:`BaseObject.__init__`.
+
+        :param \*args: Any positional arguments.
+        :param \**kwargs: Any keyword arguments.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
 
     # ----
@@ -141,25 +174,23 @@ class BaseObject:
     def __repr__(self) -> str:
         contents = self._reprContents()
         if contents:
-            contents = " ".join(contents)
-            contents = " " + contents
+            contentString = " ".join(contents)
+            contentString = " " + contentString
         else:
-            contents = ""
-        s = "<{className}{contents} at {address}>".format(
-            className=self.__class__.__name__,
-            contents=contents,
-            address=id(self)
-        )
-        return s
+            contentString = ""
+        return f"<{self.__class__.__name__}{contentString} at {id(self)}>"
 
     @classmethod
     def _reprContents(cls) -> List[str]:
-        """
-        Subclasses may override this method to
-        provide a list of strings for inclusion
-        in ``__repr__``. If so, they should call
-        ``super`` and append their additions
-        to the returned ``list``.
+        """Provide a list of strings for inclusion in :meth:`BaseObject.__repr__.
+
+        :return: A :class:`list` of :class:`str` items.
+
+        .. note::
+
+            Subclasses may override this method.
+            If so, they should call :class:`super` and append their additions.
+
         """
         return []
 
@@ -168,28 +199,50 @@ class BaseObject:
     # --------
 
     def __eq__(self, other: Any) -> bool:
-        """
-        Subclasses may override this method.
+        """Check for equality with another object.
+
+        :param other: The object to compare with.
+        :return: :obj:`True` if the objects are equal, :obj:`False` otherwise.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         if isinstance(other, self.__class__):
             return self.naked() is other.naked()
         return NotImplemented
 
     def __ne__(self, other: Any) -> bool:
-        """
-        Subclasses must not override this method.
+        """Check for inequality with another object.
+
+        :param other: The object to compare with.
+        :return: :obj:`True` if the objects are unequal, :obj:`False` otherwise.
+
+        .. note::
+
+            Subclasses must not override this method.
+
         """
         equal = self.__eq__(other)
-        return NotImplemented if equal is NotImplemented else not equal
+        return False if equal is NotImplemented else not equal
 
     # ----
     # Hash
     # ----
 
     def __hash__(self) -> int:
-        """
-        Allow subclasses to be used in hashable collections.
-        Subclasses may override this method.
+        """Return the hash value for the object.
+
+        This allows subclasses to be used in hashable collections such as sets
+        and dictionaries.
+
+        :return: The hash value for the object as an :class:`int`.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         return id(self.naked())
 
@@ -197,13 +250,16 @@ class BaseObject:
     # Copy
     # ----
 
-    copyClass: Optional[type] = None
+    copyClass: Optional[Type[Any]] = None
     copyAttributes: Tuple[str, ...] = ()
 
-    def copy(self) -> 'BaseObject':
-        """
-        Copy this object into a new object of the same type.
+    def copy(self: BaseObjectType) -> BaseObjectType:
+        """Copy the current object into a new object of the same type.
+
         The returned object will not have a parent object.
+
+        :return: A new :class:`BaseObject` subclass instance with the same attributes.
+
         """
         copyClass = self.copyClass
         if copyClass is None:
@@ -212,10 +268,14 @@ class BaseObject:
         copied.copyData(self)
         return copied
 
-    def copyData(self, source: BaseObject) -> None:
-        """
-        Subclasses may override this method.
-        If so, they should call the super.
+    def copyData(self: BaseObjectType, source: BaseObjectType) -> None:
+        """Copy data from `source` into the current object.
+
+        .. note::
+
+            Subclasses may override this method.
+            If so, they should call the :class:`super`.
+
         """
         for attr in self.copyAttributes:
             selfValue = getattr(self, attr)
@@ -229,10 +289,14 @@ class BaseObject:
     # Exceptions
     # ----------
 
-    def raiseNotImplementedError(self) -> None:
-        """
-        This exception needs to be raised frequently by
-        the base classes. So, it's here for convenience.
+    def raiseNotImplementedError(self) -> NoReturn:
+        """Raise a :class:`NotImplementedError`.
+
+        This exception needs to be raised frequently by the :mod:`fontParts.base`
+        classes, so, it's here for convenience.
+
+        :raises NotImplementedError: Whenever this method is called.
+
         """
         raise NotImplementedError(
             "The {className} subclass does not implement this method."
@@ -244,51 +308,104 @@ class BaseObject:
     # ---------------------
 
     def changed(self, *args: Any, **kwargs: Any) -> None:
-        """
-        Tell the environment that something has changed in
-        the object. The behavior of this method will vary
-        from environment to environment.
+        r"""Tell the environment that something has changed in the object.
+
+        The behavior of this method will vary from environment to environment.
+
+        :param \*args: Any positional arguments.
+        :param \**kwargs: Any keyword arguments.
+
         """
 
     def naked(self) -> Any:
-        """
-        Return the environment's native object
-        that has been wrapped by this object.
+        """Return the environment's native object wrapped by the current object.
+
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
         """
         self.raiseNotImplementedError()
 
 
 class BaseDict(BaseObject):
+    """Provide objects with basic dictionary-like functionality.
+
+    :cvar keyNormalizer: An optional normalizer function for keys.
+    :cvar valueNormalizer: An optional normalizer function for values.
+
+    """
     keyNormalizer: Optional[Any] = None
     valueNormalizer: Optional[Any] = None
 
-    def copyData(self, source: 'BaseDict') -> None:
+    def copyData(self, source: BaseDict) -> None:
+        """Copy data from another object instance.
+
+        This method calls the superclass's `copyData` method and updates
+        the current dictionary with the contents of the `source`.
+
+        param source: The source :class:`BaseDict` instance from which
+            to copy data.
+
+        """
         super(BaseDict, self).copyData(source)
         self.update(source)
 
     def __len__(self) -> int:
+        """Return the number of items in the object.
+
+        :return: An :class:`int` representing the number of dictionary items.
+
+        """
         value = self._len()
         return value
 
     def _len(self) -> int:
-        """
-        Subclasses may override this method.
+        """Return the number of items in the native object.
+
+        This is the environment implementation of :attr:`BaseDict.__len__`.
+
+        :return: An :class:`int` representing the number of dictionary items.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         return len(self.keys())
 
     def keys(self) -> List[Any]:
+        """Return a list of keys in the object.
+
+        :return: A :class:`list` of dictionary keys.
+
+        """
         keys = self._keys()
         if self.keyNormalizer is not None:
             keys = [self.keyNormalizer.__func__(key) for key in keys]
         return keys
 
     def _keys(self) -> List[Any]:
-        """
-        Subclasses may override this method.
+        """Return a list of keys in the native object.
+
+        This is the environment implementation of :meth:`BaseDict.keys`.
+
+        :return: A :class:`list` of dictionary keys. If
+            a :cvar:`BaseDict.keyNormalizer` is set, it will have been applied
+            to each key.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         return [k for k, v in self.items()]
 
     def items(self) -> List[Tuple[Any, Any]]:
+        """Return a list of key-value pairs in the object.
+
+        :return: A :class:`list` of :class:`tuple` items containing key-value pairs.
+
+        """
         items = self._items()
         if self.keyNormalizer is not None and self.valueNormalizer is not None:
             items = [
@@ -299,35 +416,85 @@ class BaseDict(BaseObject):
         return items
 
     def _items(self) -> List[Tuple[Any, Any]]:
-        """
-        Subclasses must override this method.
+        """Return a list of key-value pairs in the native object.
+
+        This is the environment implementation of :meth:`BaseDict.items`.
+
+        :return: A :class:`list` of :class:`tuple` items containing key-value pairs.
+            If both :cvar:`BaseDict.keyNormalizer` and :cvar:`BaseDict.valueNormalizer`
+            are set, they will have been applied to the keys and values, respectively.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
     def values(self) -> List[Any]:
+        """Return a list of values in the object.
+
+        :return: A :class:`list` of dictionary values.
+
+        """
         values = self._values()
         if self.valueNormalizer is not None:
             values = [self.valueNormalizer.__func__(value) for value in values]
         return values
 
     def _values(self) -> List[Any]:
-        """
-        Subclasses may override this method.
+        """Return a list of values in the native object.
+
+        This is the environment implementation of :meth:`BaseDict.values`.
+
+        :return: A :class:`list` of dictionary values. If
+            a :cvar:`BaseDict.valueNormalizer` is set, it will have been applied
+            to each value.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         return [v for k, v in self.items()]
 
     def __contains__(self, key: Any) -> bool:
+        """Check if a key is in the object.
+
+        :param key: The key to check for.
+        :return: :obj:`True` if the key is present, :obj:`False` otherwise.
+
+        """
         if self.keyNormalizer is not None:
             key = self.keyNormalizer.__func__(key)
         return self._contains(key)
 
     def _contains(self, key: Any) -> bool:
-        """
-        Subclasses must override this method.
+        """Check if a key is in the native object.
+
+        This is the environment implementation of :meth:`BaseDict.__contains__`.
+
+        :param key: The key to check for. If a :cvar:`BaseDict.keyNormalizer`
+            is set, it will have been applied to the key before checking.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
     def __setitem__(self, key: Any, value: Any) -> None:
+        """Set the value for a given key in the object.
+
+        :param key: The key to set.
+        :param value: The value to set for the given key.
+
+        """
         if self.keyNormalizer is not None:
             key = self.keyNormalizer.__func__(key)
         if self.valueNormalizer is not None:
@@ -335,12 +502,32 @@ class BaseDict(BaseObject):
         self._setItem(key, value)
 
     def _setItem(self, key: Any, value: Any) -> None:
-        """
-        Subclasses must override this method.
+        """Set the value for a given key in the native object.
+
+        This is the environment implementation of :meth:`BaseDict.__setitem__`.
+
+        :param key: The key to set. If a :cvar:`BaseDict.keyNormalizer`
+            is set, it will have been applied to the given key.
+        :param value: The value to set for the given key. If
+            a :cvar:`BaseDict.valueNormalizer` is set, it will have been applied
+            to the given value.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
     def __getitem__(self, key: Any) -> Any:
+        """Get the value for a given key from the object.
+
+        :param key: The key to retrieve the value for.
+        :return: The value for the given key.
+
+        """
         if self.keyNormalizer is not None:
             key = self.keyNormalizer.__func__(key)
         value = self._getItem(key)
@@ -349,12 +536,38 @@ class BaseDict(BaseObject):
         return value
 
     def _getItem(self, key: Any) -> Any:
-        """
-        Subclasses must override this method.
+        """Get the value for a given key from the native object.
+
+        This is the environment implementation of :meth:`BaseDict.__getitem__`.
+
+        :param key: The key to retrieve the value for. If
+            a :cvar:`BaseDict.keyNormalizer` is set, it will have been applied
+            to the key.
+        :return: The value for the given key. If
+            a :cvar:`BaseDict.valueNormalizer` is set, it will have been applied
+            to the returned value.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
     def get(self, key: Any, default: Optional[Any] = None) -> Any:
+        """Get the value for a given key in the object.
+
+        If the given key is not found, The specified `default` will be returned.
+
+        :param key: The key to look up.
+        :param default: The default value to return if the key is not found.
+            Defaults to :obj:`None`.
+        :return: The value for the given key, or the default value if the key is
+            not found.
+
+        """
         if self.keyNormalizer is not None:
             key = self.keyNormalizer.__func__(key)
         if default is not None and self.valueNormalizer is not None:
@@ -364,26 +577,66 @@ class BaseDict(BaseObject):
             value = self.valueNormalizer.__func__(value)
         return value
 
-    def _get(self, key: Any, default: Optional[Any] = None) -> Any:
-        """
-        Subclasses may override this method.
+    def _get(self, key: Any, default: Optional[Any]) -> Any:
+        """Get the value for a given key in the native object.
+
+        This is the environment implementation of :meth:`BaseDict.get`.
+
+        :param key: The key to look up. If a :cvar:`BaseDict.keyNormalizer` is
+            set, it will have been applied to the given key.
+        :param default: The default value to return if the key is not found.
+        :return: The value associated with the given key, or the default value
+            if the key is not found. If a :cvar:`BaseDict.valueNormalizer` is set,
+            it will have been applied to the returned value.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         if key in self:
             return self[key]
         return default
 
     def __delitem__(self, key: Any) -> None:
+        """Delete a key-value pair from the object.
+
+        :param key: The key to delete.
+
+        """
         if self.keyNormalizer is not None:
             key = self.keyNormalizer.__func__(key)
         self._delItem(key)
 
     def _delItem(self, key: Any) -> None:
-        """
-        Subclasses must override this method.
+        """Delete a key-value pair from the native object.
+
+        This is the environment implementation of :meth:`BaseDict.__delitem__`.
+
+        :param key: The key to delete. If a :cvar:`BaseDict.keyNormalizer` is
+            set, it will have been applied to the given key.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
     def pop(self, key: Any, default: Optional[Any] = None) -> Any:
+        """Remove a key from the object and return it's value.
+
+        If the given key is not found, The specified `default` will be returned.
+
+        :param key: The key to remove.
+        :param default: The optional default value to return if the key is not found.
+            Defaults to :obj:`None`.
+        :return: The value associated with the given key, or the default value
+            if the key is not found.
+
+        """
         if self.keyNormalizer is not None:
             key = self.keyNormalizer.__func__(key)
         if default is not None and self.valueNormalizer is not None:
@@ -393,9 +646,22 @@ class BaseDict(BaseObject):
             value = self.valueNormalizer.__func__(value)
         return value
 
-    def _pop(self, key: Any, default: Optional[Any] = None) -> Any:
-        """
-        Subclasses may override this method.
+    def _pop(self, key: Any, default: Optional[Any]) -> Any:
+        """Remove a key from the native object and return it's value.
+
+        This is the environment implementation of :meth:`BaseDict.pop`.
+
+        :param key: The key to remove. If a :cvar:`BaseDict.keyNormalizer` is
+            set, it will have been applied to the given key.
+        :param default: The default value to return if the key is not found.
+        :return: The value associated with the given key, or the default value
+            if the key is not found. If a :cvar:`BaseDict.valueNormalizer` is set,
+            it will have been applied to the returned value.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         value = default
         if key in self:
@@ -404,11 +670,27 @@ class BaseDict(BaseObject):
         return value
 
     def __iter__(self) -> Any:
+        """Return an iterator over the keys of the object.
+
+        This method yields each key one by one, removing it from the list of
+        keys after it is yielded.
+
+        :returns: An iterator over the object's keys.
+
+        """
         return self._iter()
 
     def _iter(self) -> Any:
-        """
-        Subclasses may override this method.
+        """Return an iterator over the keys of the native object.
+
+        This is the environment implementation of :meth:`BaseDict.__iter__`.
+
+        :returns: An iterator over the object's keys.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         keys = self.keys()
         while keys:
@@ -416,37 +698,60 @@ class BaseDict(BaseObject):
             yield key
             keys = keys[1:]
 
-    def update(self, other: Dict[Any, Any]) -> None:
+    def update(self, other: BaseDict) -> None:
+        """Update the current object instance with key-value pairs from another.
+
+        :param other: An object of key-value pairs to update this dictionary with.
+
+        """
         from copy import deepcopy
-        other = deepcopy(other)
+        otherCopy = deepcopy(other)
         if self.keyNormalizer is not None and self.valueNormalizer is not None:
             d = {}
-            for key, value in other.items():
+            for key, value in otherCopy.items():
                 key = self.keyNormalizer.__func__(key)
                 value = self.valueNormalizer.__func__(value)
                 d[key] = value
             other = d
         self._update(other)
 
-    def _update(self, other: Dict[Any, Any]) -> None:
-        """
-        Subclasses may override this method.
+    def _update(self, other: BaseDict) -> None:
+        """Update the current native object instance with key-value pairs from another.
+
+        This is the environment implementation of :meth:`BaseDict.update`.
+
+        :param other: An object of key-value pairs to update this dictionary with.
+            If both :cvar:`BaseDict.keyNormalizer` and :cvar:`BaseDict.valueNormalizer`
+            are set, they will have been applied to the keys and values, respectively.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         for key, value in other.items():
             self[key] = value
 
     def clear(self) -> None:
+        """Remove all items from the object."""
         self._clear()
 
     def _clear(self) -> None:
-        """
-        Subclasses may override this method.
+        """Remove all items from the native object.
+
+        This is the environment implementation of :meth:`BaseDict.clear`.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         for key in self.keys():
             del self[key]
 
 
-class TransformationMixin(object):
+class TransformationMixin:
+    """Provide objects transformation-related functionality."""
 
     # ---------------
     # Transformations
@@ -454,17 +759,19 @@ class TransformationMixin(object):
 
     def transformBy(self,
                     matrix: TransformationMatrixType,
-                    origin: Optional[CoordinateType] = None):
-        """
-        Transform the object.
+                    origin: Optional[CoordinateType] = None) -> None:
+        """Transform the object according to the given matrix.
+
+        :param matrix: The :ref:`type-transformation` to apply.
+        :param origin: The optional point at which the transformation
+            should originate as a:ref:`type-coordinate`. Defaults to :obj:`None`,
+            representing an origin of ``(0, 0)``.
+
+        Example::
 
             >>> obj.transformBy((0.5, 0, 0, 2.0, 10, 0))
             >>> obj.transformBy((0.5, 0, 0, 2.0, 10, 0), origin=(500, 500))
 
-        **matrix** must be a :ref:`type-transformation`.
-        **origin** defines the point at with the transformation
-        should originate. It must be a :ref:`type-coordinate`
-        or ``None``. The default is ``(0, 0)``.
         """
         matrix = normalizers.normalizeTransformationMatrix(matrix)
         if origin is None:
@@ -482,42 +789,52 @@ class TransformationMixin(object):
     def _transformBy(self,
                      matrix: TransformationMatrixType,
                      **kwargs: Any) -> None:
-        """
-        This is the environment implementation of
-        :meth:`BaseObject.transformBy`.
+        r"""Transform the native object according to the given matrix.
 
-        **matrix** will be a :ref:`type-transformation`.
-        that has been normalized with
-        :func:`normalizers.normalizeTransformationMatrix`.
+        This is the environment implementation of :meth:`TransformationMixin.transformBy`.
 
-        Subclasses must override this method.
+        :param matrix: The :ref:`type-transformation` to apply. The value will
+            have been normalized with
+            :func:`normalizers.normalizeTransformationMatrix`.
+        :param \**kwargs: Additional keyword arguments.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
     def moveBy(self, value: CoordinateType) -> None:
-        """
-        Move the object.
+        """Move the object according to the given coordinates.
+
+        :param value: The x and y values to move the object by as
+            a :ref:`type-coordinate`.
+
+        Example::
 
             >>> obj.moveBy((10, 0))
 
-        **value** must be an iterable containing two
-        :ref:`type-int-float` values defining the x and y
-        values to move the object by.
         """
         value = normalizers.normalizeTransformationOffset(value)
         self._moveBy(value)
 
     def _moveBy(self, value: CoordinateType, **kwargs: Any) -> None:
-        """
-        This is the environment implementation of
-        :meth:`BaseObject.moveBy`.
+        r"""Move the native object according to the given coordinates.
 
-        **value** will be an iterable containing two
-        :ref:`type-int-float` values defining the x and y
-        values to move the object by. It will have been
-        normalized with :func:`normalizers.normalizeTransformationOffset`.
+        This is the environment implementation of :meth:`BaseObject.moveBy`.
 
-        Subclasses may override this method.
+        :param value: The x and y values to move the object by as
+            a :ref:`type-coordinate`. The value will have been normalized with
+            :func:`normalizers.normalizeTransformationOffset`.
+        :param \**kwargs: Additional keyword arguments.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         x, y = value
         t = transform.Offset(x, y)
@@ -525,19 +842,20 @@ class TransformationMixin(object):
 
     def scaleBy(self,
                 value: ScaleType,
-                origin: Optional[IntFloatType] = None) -> None:
-        """
-        Scale the object.
+                origin: Optional[CoordinateType] = None) -> None:
+        """Scale the object according to the given values.
+
+        :param value: The x and y values to scale the glyph by as
+            a :class:`tuple` of two :class:`int` or :class:`float` values.
+        :param origin: The optional point at which the scale should originate as
+            a :ref:`type-coordinate`. Defaults to :obj:`None`, representing an
+            origin of ``(0, 0)``.
+
+        Example::
 
             >>> obj.scaleBy(2.0)
             >>> obj.scaleBy((0.5, 2.0), origin=(500, 500))
 
-        **value** must be an iterable containing two
-        :ref:`type-int-float` values defining the x and y
-        values to scale the object by. **origin** defines the
-        point at with the scale should originate. It must be
-        a :ref:`type-coordinate` or ``None``. The default is
-        ``(0, 0)``.
         """
         value = normalizers.normalizeTransformationScale(value)
         if origin is None:
@@ -547,20 +865,22 @@ class TransformationMixin(object):
 
     def _scaleBy(self,
                  value: ScaleType,
-                 origin: Optional[CoordinateType] = None,
+                 origin: Optional[CoordinateType],
                  **kwargs: Any) -> None:
-        """
-        This is the environment implementation of
-        :meth:`BaseObject.scaleBy`.
+        r"""Scale the native object according to the given values.
 
-        **value** will be an iterable containing two
-        :ref:`type-int-float` values defining the x and y
-        values to scale the object by. It will have been
-        normalized with :func:`normalizers.normalizeTransformationScale`.
-        **origin** will be a :ref:`type-coordinate` defining
-        the point at which the scale should orginate.
+        This is the environment implementation of :meth:`BaseObject.scaleBy`.
 
-        Subclasses may override this method.
+        :param value: The x and y values to scale the glyph by as
+            a :class:`tuple` of two :class:`int` or :class:`float` values.
+        :param origin: The point at which the scale should originate as
+            a :ref:`type-coordinate` or :obj:`None`.
+        :param \**kwargs: Additional keyword arguments.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         x, y = value
         t = transform.Identity.scale(x=x, y=y)
@@ -569,17 +889,19 @@ class TransformationMixin(object):
     def rotateBy(self,
                  value: IntFloatType,
                  origin: Optional[CoordinateType] = None) -> None:
-        """
-        Rotate the object.
+        """Rotate the object by the specified value.
+
+        :param value: The angle at which to rotate the object as an :class:`int`
+            or a :class:`float`.
+        :param origin: The optional point at which the rotation should originate
+            as a :ref:`type-coordinate`. Defaults to :obj:`None`, representing an
+            origin of ``(0, 0)``.
+
+        Example::
 
             >>> obj.rotateBy(45)
             >>> obj.rotateBy(45, origin=(500, 500))
 
-        **value** must be a :ref:`type-int-float` values
-        defining the angle to rotate the object by. **origin**
-        defines the point at with the rotation should originate.
-        It must be a :ref:`type-coordinate` or ``None``.
-        The default is ``(0, 0)``.
         """
         value = normalizers.normalizeRotationAngle(value)
         if origin is None:
@@ -589,20 +911,24 @@ class TransformationMixin(object):
 
     def _rotateBy(self,
                   value: IntFloatType,
-                  origin: Optional[CoordinateType] = None,
+                  origin: Optional[CoordinateType],
                   **kwargs: Any) -> None:
-        """
-        This is the environment implementation of
-        :meth:`BaseObject.rotateBy`.
+        r"""Rotate the native object by the specified value.
 
-        **value** will be a :ref:`type-int-float` value
-        defining the value to rotate the object by.
-        It will have been normalized with
-        :func:`normalizers.normalizeRotationAngle`.
-        **origin** will be a :ref:`type-coordinate` defining
-        the point at which the rotation should orginate.
+        This is the environment implementation of :meth:`TransformationMixin.rotateBy`.
 
-        Subclasses may override this method.
+        :param value: The angle at which to rotate the object as an :class:`int`
+            or a :class:`float`. The value will have been normalized with
+            :func:`normalizers.normalizeRotationAngle`.
+        :param origin: The point at which the rotation should originate as
+            a :ref:`type-coordinate` or :obj:`None`. The value will have been
+            normalized with :func:`normalizers.normalizeCoordinateTuple`.
+        :param \**kwargs: Additional keyword arguments.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         a = math.radians(value)
         t = transform.Identity.rotate(a)
@@ -611,22 +937,21 @@ class TransformationMixin(object):
     def skewBy(self,
                value: FactorType,
                origin: Optional[CoordinateType] = None) -> None:
-        """
-        Skew the object.
+        """Skew the object by the given value.
+
+        :param value: The value by which to skew the object as either a
+            single :class:`int` or :class:`float` corresponding to the x
+            direction, or a :class:`tuple` of two :class:`int` or :class:`float`
+            values corresponding to the x and y directions.
+        :param origin: The optional point at which the rotation should originate
+            as a :ref:`type-coordinate`. Defaults to :obj:`None`, representing an
+            origin of ``(0, 0)``.
+
+        Example::
 
             >>> obj.skewBy(11)
             >>> obj.skewBy((25, 10), origin=(500, 500))
 
-        **value** must be rone of the following:
-
-        * single :ref:`type-int-float` indicating the
-          value to skew the x direction by.
-        * iterable cointaining type :ref:`type-int-float`
-          defining the values to skew the x and y directions by.
-
-        **origin** defines the point at with the skew should
-        originate. It must be a :ref:`type-coordinate` or
-        ``None``. The default is ``(0, 0)``.
         """
         value = normalizers.normalizeTransformationSkewAngle(value)
         if origin is None:
@@ -636,20 +961,26 @@ class TransformationMixin(object):
 
     def _skewBy(self,
                 value: FactorType,
-                origin: Optional[CoordinateType] = None,
+                origin: Optional[CoordinateType],
                 **kwargs: Any) -> None:
-        """
-        This is the environment implementation of
-        :meth:`BaseObject.skewBy`.
+        r"""Skew the native object by the given value.
 
-        **value** will be an iterable containing two
-        :ref:`type-int-float` values defining the x and y
-        values to skew the object by. It will have been
-        normalized with :func:`normalizers.normalizeTransformationSkewAngle`.
-        **origin** will be a :ref:`type-coordinate` defining
-        the point at which the skew should orginate.
+        This is the environment implementation of :meth:`TransformationMixin.skewBy`.
 
-        Subclasses may override this method.
+        :param value: The value by which to skew the object as either a
+            single :class:`int` or :class:`float` corresponding to the x
+            direction, or a :class:`tuple` of two :class:`int` or :class:`float`
+            values corresponding to the x and y directions. The value will have
+            been normalized with :func:`normalizers.normalizeTransformationSkewAngle`.
+        :param origin: The point at which the rotation should originate
+            as a :ref:`type-coordinate` or :obj:`None`. The value will have been
+            normalized with :func:`normalizers.normalizeCoordinateTuple`.
+        :param \**kwargs: Additional keyword arguments.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         x, y = value
         x = math.radians(x)
@@ -658,7 +989,14 @@ class TransformationMixin(object):
         self.transformBy(tuple(t), origin=origin, **kwargs)
 
 
-class InterpolationMixin(object):
+class InterpolationMixin:
+    """Provide objects with interpolation-related functionality.
+
+    :cvar compatibilityReporterClass:  A class used for reporting interpolation
+        compatibility between two objects. If :obj:`None`, compatibility
+        reporting is not enabled.
+
+    """
 
     # -------------
     # Compatibility
@@ -667,8 +1005,15 @@ class InterpolationMixin(object):
     compatibilityReporterClass: Optional[Type[Any]] = None
 
     def isCompatible(self, other: Any, cls: Type[Any]) -> Tuple[bool, Any]:
-        """
-        Evaluate interpolation compatibility with other.
+        """Evaluate interpolation compatibility with another object.
+
+        :param other: The other object instance to check compatibility with.
+        :param cls: The class type to check the `other` object against.
+        :return: A :class:`tuple` where the first element is a :class:`bool`
+            indicating whether the objects are compatible, and the second
+            element is the compatibility reporter instance.
+        :raises TypeError: If `other` is not an instance of `cls`.
+
         """
         if not isinstance(other, cls):
             raise TypeError(
@@ -680,13 +1025,25 @@ class InterpolationMixin(object):
         return not reporter.fatal, reporter
 
     def _isCompatible(self, other: Any, reporter: Any) -> None:
-        """
-        Subclasses must override this method.
+        """Evaluate interpolation compatibility with another native object.
+
+        This is the environment implementation of :meth:`InterpolationMixin.isCompatible`.
+
+        :param other: The other object instance to check compatibility with.
+        :param reporter: An object used to report compatibility issues.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
 
-class SelectionMixin(object):
+class SelectionMixin:
+    """Provide objects with selection-related functionality."""
 
     # -------------
     # Selected Flag
@@ -694,12 +1051,19 @@ class SelectionMixin(object):
 
     selected: dynamicProperty = dynamicProperty(
         "base_selected",
-        """
-        The object's selection state.
+        """Get or set the object's selection state.
+
+        The value must be a :class:`bool` indicating whether the object is
+        selected or not.
+
+        :return: :obj:`True` if the object is selected, :obj:`False` otherwise.
+
+        Example::
 
             >>> obj.selected
             False
             >>> obj.selected = True
+
         """
     )
 
@@ -713,28 +1077,39 @@ class SelectionMixin(object):
         self._set_selected(value)
 
     def _get_selected(self) -> bool:
-        """
-        This is the environment implementation of
-        :attr:`BaseObject.selected`. This must return a
-        **boolean** representing the selection state
-        of the object. The value will be normalized
-        with :func:`normalizers.normalizeBoolean`.
+        """Get or the object's selection state.
 
-        Subclasses must override this method if they
-        implement object selection.
+        This is the environment implementation
+        of :attr:`BaseObject.selected` property getter.
+
+        :return: :obj:`True` if the object is selected, :obj:`False` otherwise.
+            The value will have been normalized
+            with :func:`normalizers.normalizeBoolean`.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method if they implement object selection.
+
         """
         self.raiseNotImplementedError()
 
     def _set_selected(self, value: bool) -> None:
-        """
-        This is the environment implementation of
-        :attr:`BaseObject.selected`. **value** will
-        be a **boolean** representing the object's
-        selection state. The value will have been
-        normalized with :func:`normalizers.normalizeBoolean`.
+        """Set the object's selection state.
 
-        Subclasses must override this method if they
-        implement object selection.
+        This is the environment implementation of the
+        :attr:`SelectionMixin.selected` property setter.
+
+        :param value: Whether the object is selected. The value will have been
+            normalized with :func:`normalizers.normalizeBoolean`.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
@@ -742,28 +1117,36 @@ class SelectionMixin(object):
     # Sub-Objects
     # -----------
     @classmethod
-    def _getSelectedSubObjects(cls, subObjects: List[Any]) -> List[Any]:
-        selected = [obj for obj in subObjects if obj.selected]
+    def _getSelectedSubObjects(cls,
+                               subObjects: CollectionType[Any]) -> Tuple[Any]:
+        selected = tuple(obj for obj in subObjects if obj.selected)
         return selected
 
     @classmethod
     def _setSelectedSubObjects(cls,
-                               subObjects: List[Any],
-                               selected: List[Any]) -> None:
+                               subObjects: CollectionType[Any],
+                               selected: CollectionType[Any]) -> None:
         for obj in subObjects:
             obj.selected = obj in selected
 
 
-class PointPositionMixin(object):
+class PointPositionMixin:
+    """Provide objects with the ability to determine point position.
 
-    """
-    This adds a ``position`` attribute as a dyanmicProperty,
-    for use as a mixin with objects that have ``x`` and ``y``
-    attributes.
+    This class adds a `position` attribute as a :class:`dyanmicProperty`, for
+    use as a mixin with objects that have `x` and `y` attributes.
+
     """
 
     position: dynamicProperty = dynamicProperty(
-        "base_position", "The point position."
+        "base_position",
+        """Get or set the point position of the object.
+
+        The value must be a :ref:`type-coordinate`.
+
+        :return: The current point position as a :ref:`type-coordinate`.
+
+        """
     )
 
     def _get_base_position(self) -> CoordinateType:
@@ -776,14 +1159,36 @@ class PointPositionMixin(object):
         self._set_position(value)
 
     def _get_position(self) -> CoordinateType:
-        """
-        Subclasses may override this method.
+        """Get the point position of the object.
+
+        This is the environment implementation of
+        the :attr:`PointPositionMixin.position` property getter.
+
+        :return: The current point position as a :ref:`type-coordinate`.
+            The value will have been normalized
+            with :func:`normalizers.normalizeCoordinateTuple`.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         return (self.x, self.y)
 
     def _set_position(self, value: CoordinateType) -> None:
-        """
-        Subclasses may override this method.
+        """Set the point position of the object.
+
+        This is the environment implementation of
+        the :attr:`PointPositionMixin.position` property setter.
+
+        :param value: The point position to set as a :ref:`type-coordinate`.
+            The value will have been normalized
+            with :func:`normalizers.normalizeCoordinateTuple`.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         pX, pY = self.position
         x, y = value
@@ -792,22 +1197,26 @@ class PointPositionMixin(object):
         self.moveBy((dX, dY))
 
 
-class IdentifierMixin(object):
+class IdentifierMixin:
+    """Provide objects with a unique identifier."""
 
     # identifier
 
     identifier: dynamicProperty = dynamicProperty(
         "base_identifier",
-        """
-        The unique identifier for the object.
-        This value will be an :ref:`type-identifier` or a ``None``.
-        This attribute is read only. ::
+        """Get the object's unique identifier.
+
+        This attribute is read-only. Use :meth:`IdentifierMixin.getIdentifier`
+        to request an identifier if it does not exist.
+
+        :return: The unique identifier assigned to the object as a :class:`str`,
+            or :obj:`None` indicating the object has no identifier.
+
+        Example ::
 
             >>> object.identifier
             'ILHGJlygfds'
 
-        To request an identifier if it does not exist use
-        `object.getIdentifier()`
         """
     )
 
@@ -818,41 +1227,71 @@ class IdentifierMixin(object):
         return value
 
     def _get_identifier(self) -> Optional[str]:
-        """
-        This is the environment implementation of
-        :attr:`BaseObject.identifier`. This must
-        return an :ref:`type-identifier`. If
-        the native object does not have an identifier
-        assigned one should be assigned and returned.
+        """Get the native object's unique identifier.
 
-        Subclasses must override this method.
+        This is the environment implementation of :attr:`IdentifierMixin.identifier`.
+
+        If the native object does not have an identifier assigned, one may be
+        assigned with :meth:`IdentifierMixin.getIdentifier`
+
+        :return: The unique identifier assigned to the object as a :class:`str`,
+            or :obj:`None` indicating the object has no identifier.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
     def getIdentifier(self) -> str:
-        """
-        Create a new, unique identifier for and assign it to the object.
+        """Generate and assign a unique identifier to the object.
+
         If the object already has an identifier, the existing one should
         be returned.
+
+        :return: A unique object identifier as a :class:`str`.
+
         """
         return self._getIdentifier()
 
     def _getIdentifier(self) -> str:
-        """
-        Subclasses must override this method.
+        """Generate and assign a unique identifier to the native object.
+
+        This is the environment implementation of :meth:`IdentifierMixin.getIdentifier`.
+
+        :return: A unique object identifier as a :class:`str`.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
     def _setIdentifier(self, value: str) -> None:
+        """Force a specific identifier onto an object.
+
+        THis method is intended for subclasses that allow setting an
+        identifier to a specific value.
+
+        :param value: The identifier to set as a :class:`str` or :obj:`None`.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
-        This method is used internally to force a specific
-        identifier onto an object in certain situations.
-        Subclasses that allow setting an identifier to a
-        specific value may override this method.
-        """
+        self.raiseNotImplementedError()
 
 
-def reference(obj: Any) -> Callable[[], Any]:
+def reference(obj: Callable[[], Any]) -> Callable[[], Any]:
     # import weakref
     # return weakref.ref(obj)
     def wrapper() -> Any:
@@ -860,10 +1299,11 @@ def reference(obj: Any) -> Callable[[], Any]:
     return wrapper
 
 
-class FuzzyNumber(object):
-    """
-    A number like object with a threshold.
-    Use it to compare numbers where a threshold is needed.
+class FuzzyNumber:
+    """Represent a number like object with a threshold.
+
+    This class should be used to compare numbers where a threshold is needed.
+
     """
 
     def __init__(self, value: IntFloatType, threshold: IntFloatType) -> None:
@@ -881,7 +1321,7 @@ class FuzzyNumber(object):
                 return self.value < other.value
         return self.value < other
 
-    def __eq__(self, other: Union[FuzzyNumber, IntFloatType]) -> bool:
+    def __eq__(self, other: object) -> bool:
         if hasattr(other, "value"):
             return abs(self.value - other.value) < self.threshold
         return self.value == other
