@@ -64,7 +64,7 @@ class BaseBPoint(
 
     # identifier
 
-    def _get_identifier(self) -> Optional[str]:
+    def _get_identifier(self) -> str:
         """
         Subclasses may override this method.
         """
