@@ -1292,8 +1292,13 @@ class IdentifierMixin:
 
 
 def reference(obj: Callable[[], Any]) -> Callable[[], Any]:
-    # import weakref
-    # return weakref.ref(obj)
+    """
+    This code returns a simple function that returns the given object. This is a
+    backwards compatibility function that is under review (see issue #749). We
+    used to use weak references, but they proved problematic (see issue #71),
+    so this function was put in place to make sure existing code continued to
+    function. The need for it is questionable, so it may be deleted soon.
+    """
     def wrapper() -> Any:
         return obj
     return wrapper
