@@ -4,10 +4,15 @@ from typing import TYPE_CHECKING, Any, List, Optional, Tuple
 
 from fontParts.base import normalizers
 from fontParts.base.annotations import TransformationMatrixType
-from fontParts.base.base import (BaseObject, IdentifierMixin,
-                                 PointPositionMixin, SelectionMixin,
-                                 TransformationMixin, dynamicProperty,
-                                 reference)
+from fontParts.base.base import (
+    BaseObject,
+    IdentifierMixin,
+    PointPositionMixin,
+    SelectionMixin,
+    TransformationMixin,
+    dynamicProperty,
+    reference
+)
 from fontTools.misc import transform
 
 if TYPE_CHECKING:
