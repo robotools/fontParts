@@ -1,18 +1,25 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, List, Optional, Tuple
-
-from fontParts.base import normalizers
-from fontParts.base.base import (BaseObject, IdentifierMixin, SelectionMixin,
-                                 TransformationMixin, dynamicProperty,
-                                 reference)
-from fontParts.base.deprecated import DeprecatedBPoint, RemovedBPoint
-from fontParts.base.errors import FontPartsError
 from fontTools.misc import transform
+from fontParts.base.base import (
+    BaseObject,
+    TransformationMixin,
+    SelectionMixin,
+    IdentifierMixin,
+    dynamicProperty,
+    reference
+)
+from fontParts.base.errors import FontPartsError
+from fontParts.base import normalizers
+from fontParts.base.deprecated import DeprecatedBPoint, RemovedBPoint
 
 if TYPE_CHECKING:
-    from fontParts.base.annotations import (CoordinateType, IntFloatType,
-                                            TransformationMatrixType)
+    from fontParts.base.annotations import (
+        CoordinateType,
+        IntFloatType,
+        TransformationMatrixType
+    )
     from fontParts.base.contour import BaseContour
     from fontParts.base.font import BaseFont
     from fontParts.base.glyph import BaseGlyph
