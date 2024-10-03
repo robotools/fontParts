@@ -1,15 +1,16 @@
 import math
 from copy import deepcopy
-from fontTools.misc import transform
-from fontParts.base.errors import FontPartsError
-from fontParts.base import normalizers
+from typing import List
 
+from fontParts.base import normalizers
+from fontParts.base.errors import FontPartsError
+from fontTools.misc import transform
 
 # -------
 # Helpers
 # -------
 
-class dynamicProperty(object):
+class dynamicProperty:
 
     """
     This implements functionality that is very similar
@@ -17,7 +18,7 @@ class dynamicProperty(object):
     it much easier for subclassing. Here is an example
     of why this is needed:
 
-        class BaseObject(object):
+        class BaseObject:
 
             _foo = 1
 
@@ -51,7 +52,7 @@ class dynamicProperty(object):
 
     Using dynamicProperty solves this.
 
-        class BaseObject(object):
+        class BaseObject:
 
             _foo = 1
 
@@ -111,7 +112,7 @@ def interpolate(a, b, v):
 # Base Objects
 # ------------
 
-class BaseObject(object):
+class BaseObject:
 
     # --------------
     # Initialization
@@ -145,7 +146,7 @@ class BaseObject(object):
         return s
 
     @classmethod
-    def _reprContents(cls):
+    def _reprContents(cls) -> List[str]:
         """
         Subclasses may override this method to
         provide a list of strings for inclusion
@@ -191,7 +192,7 @@ class BaseObject(object):
     # ----
 
     copyClass = None
-    copyAttributes = ()
+    copyAttributes: tuple[str, ...] = ()
 
     def copy(self):
         """
@@ -445,7 +446,7 @@ class BaseDict(BaseObject):
             del self[key]
 
 
-class TransformationMixin(object):
+class TransformationMixin:
 
     # ---------------
     # Transformations
@@ -638,7 +639,7 @@ class TransformationMixin(object):
         self.transformBy(tuple(t), origin=origin, **kwargs)
 
 
-class InterpolationMixin(object):
+class InterpolationMixin:
 
     # -------------
     # Compatibility
@@ -666,7 +667,7 @@ class InterpolationMixin(object):
         self.raiseNotImplementedError()
 
 
-class SelectionMixin(object):
+class SelectionMixin:
 
     # -------------
     # Selected Flag
@@ -732,7 +733,7 @@ class SelectionMixin(object):
             obj.selected = obj in selected
 
 
-class PointPositionMixin(object):
+class PointPositionMixin:
 
     """
     This adds a ``position`` attribute as a dyanmicProperty,
@@ -768,7 +769,7 @@ class PointPositionMixin(object):
         self.moveBy((dX, dY))
 
 
-class IdentifierMixin(object):
+class IdentifierMixin:
 
     # identifier
 
@@ -837,7 +838,7 @@ def reference(obj):
     return wrapper
 
 
-class FuzzyNumber(object):
+class FuzzyNumber:
     """
     A number like object with a threshold.
     Use it to compare numbers where a threshold is needed.

@@ -1,15 +1,27 @@
-from fontTools.misc import transform
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any, List, Optional, Tuple
+
+from fontParts.base import normalizers
+from fontParts.base.annotations import TransformationMatrixType
 from fontParts.base.base import (
     BaseObject,
-    TransformationMixin,
+    IdentifierMixin,
     PointPositionMixin,
     SelectionMixin,
-    IdentifierMixin,
+    TransformationMixin,
     dynamicProperty,
     reference
 )
-from fontParts.base import normalizers
-from fontParts.base.deprecated import DeprecatedPoint, RemovedPoint
+from fontTools.misc import transform
+
+if TYPE_CHECKING:
+    from fontParts.base.annotations import IntFloatType
+    from fontParts.base.contour import BaseContour
+    from fontParts.base.deprecated import DeprecatedPoint, RemovedPoint
+    from fontParts.base.font import BaseFont
+    from fontParts.base.glyph import BaseGlyph
+    from fontParts.base.layer import BaseLayer
 
 
 class BasePoint(
@@ -32,7 +44,7 @@ class BasePoint(
         >>> point = RPoint()
     """
 
-    copyAttributes = (
+    copyAttributes: Tuple[str, str, str, str, str] = (
         "type",
         "smooth",
         "x",
@@ -40,7 +52,7 @@ class BasePoint(
         "name"
     )
 
-    def _reprContents(self):
+    def _reprContents(self) -> List[str]:
         contents = [
             "%s" % self.type,
             ("({x}, {y})".format(x=self.x, y=self.y)),
@@ -57,17 +69,17 @@ class BasePoint(
 
     # Contour
 
-    _contour = None
+    _contour: Optional[BaseContour] = None
 
-    contour = dynamicProperty("contour",
+    contour: dynamicProperty = dynamicProperty("contour",
                               "The point's parent :class:`BaseContour`.")
 
-    def _get_contour(self):
+    def _get_contour(self) -> Optional[BaseContour]:
         if self._contour is None:
             return None
         return self._contour()
 
-    def _set_contour(self, contour):
+    def _set_contour(self, contour: BaseContour) -> None:
         if self._contour is not None:
             raise AssertionError("contour for point already set")
         if contour is not None:
@@ -76,27 +88,27 @@ class BasePoint(
 
     # Glyph
 
-    glyph = dynamicProperty("glyph", "The point's parent :class:`BaseGlyph`.")
+    glyph: dynamicProperty = dynamicProperty("glyph", "The point's parent :class:`BaseGlyph`.")
 
-    def _get_glyph(self):
+    def _get_glyph(self) -> Optional[BaseGlyph]:
         if self._contour is None:
             return None
         return self.contour.glyph
 
     # Layer
 
-    layer = dynamicProperty("layer", "The point's parent :class:`BaseLayer`.")
+    layer: dynamicProperty = dynamicProperty("layer", "The point's parent :class:`BaseLayer`.")
 
-    def _get_layer(self):
+    def _get_layer(self) -> Optional[BaseLayer]:
         if self._contour is None:
             return None
         return self.glyph.layer
 
     # Font
 
-    font = dynamicProperty("font", "The point's parent :class:`BaseFont`.")
+    font: dynamicProperty = dynamicProperty("font", "The point's parent :class:`BaseFont`.")
 
-    def _get_font(self):
+    def _get_font(self) -> Optional[BaseFont]:
         if self._contour is None:
             return None
         return self.glyph.font
@@ -107,7 +119,7 @@ class BasePoint(
 
     # type
 
-    type = dynamicProperty(
+    type: dynamicProperty = dynamicProperty(
         "base_type",
         """
         The point type defined with a :ref:`type-string`.
@@ -126,12 +138,12 @@ class BasePoint(
         +----------+---------------------------------+
         """)
 
-    def _get_base_type(self):
+    def _get_base_type(self) -> str:
         value = self._get_type()
         value = normalizers.normalizePointType(value)
         return value
 
-    def _set_base_type(self, value):
+    def _set_base_type(self, value: str) -> None:
         value = normalizers.normalizePointType(value)
         self._set_type(value)
 
@@ -146,7 +158,7 @@ class BasePoint(
         """
         self.raiseNotImplementedError()
 
-    def _set_type(self, value):
+    def _set_type(self, value: str):
         """
         This is the environment implementation
         of :attr:`BasePoint.type`. **value**
@@ -160,7 +172,7 @@ class BasePoint(
 
     # smooth
 
-    smooth = dynamicProperty(
+    smooth: dynamicProperty = dynamicProperty(
         "base_smooth",
         """
         A ``bool`` indicating if the point is smooth or not. ::
@@ -172,12 +184,12 @@ class BasePoint(
         """
     )
 
-    def _get_base_smooth(self):
+    def _get_base_smooth(self) -> bool:
         value = self._get_smooth()
         value = normalizers.normalizeBoolean(value)
         return value
 
-    def _set_base_smooth(self, value):
+    def _set_base_smooth(self, value: bool) -> None:
         value = normalizers.normalizeBoolean(value)
         self._set_smooth(value)
 
@@ -205,7 +217,7 @@ class BasePoint(
 
     # x
 
-    x = dynamicProperty(
+    x: dynamicProperty = dynamicProperty(
         "base_x",
         """
         The x coordinate of the point.
@@ -217,12 +229,12 @@ class BasePoint(
         """
     )
 
-    def _get_base_x(self):
+    def _get_base_x(self) -> IntFloatType:
         value = self._get_x()
         value = normalizers.normalizeX(value)
         return value
 
-    def _set_base_x(self, value):
+    def _set_base_x(self, value: IntFloatType) -> None:
         value = normalizers.normalizeX(value)
         self._set_x(value)
 
@@ -248,7 +260,7 @@ class BasePoint(
 
     # y
 
-    y = dynamicProperty(
+    y: dynamicProperty = dynamicProperty(
         "base_y",
         """
         The y coordinate of the point.
@@ -260,12 +272,12 @@ class BasePoint(
         """
     )
 
-    def _get_base_y(self):
+    def _get_base_y(self) -> IntFloatType:
         value = self._get_y()
         value = normalizers.normalizeY(value)
         return value
 
-    def _set_base_y(self, value):
+    def _set_base_y(self, value: IntFloatType) -> None:
         value = normalizers.normalizeY(value)
         self._set_y(value)
 
@@ -295,7 +307,7 @@ class BasePoint(
 
     # index
 
-    index = dynamicProperty(
+    index: dynamicProperty = dynamicProperty(
         "base_index",
         """
         The index of the point within the ordered
@@ -307,12 +319,12 @@ class BasePoint(
         """
     )
 
-    def _get_base_index(self):
+    def _get_base_index(self) -> Optional[int]:
         value = self._get_index()
         value = normalizers.normalizeIndex(value)
         return value
 
-    def _get_index(self):
+    def _get_index(self) -> Optional[int]:
         """
         Get the point's index.
         This must return an ``int``.
@@ -326,7 +338,7 @@ class BasePoint(
 
     # name
 
-    name = dynamicProperty(
+    name: dynamicProperty = dynamicProperty(
         "base_name",
         """
         The name of the point. This will be a
@@ -338,13 +350,13 @@ class BasePoint(
         """
     )
 
-    def _get_base_name(self):
+    def _get_base_name(self) -> Optional[str]:
         value = self._get_name()
         if value is not None:
             value = normalizers.normalizePointName(value)
         return value
 
-    def _set_base_name(self, value):
+    def _set_base_name(self, value: str) -> None:
         if value is not None:
             value = normalizers.normalizePointName(value)
         self._set_name(value)
@@ -377,7 +389,7 @@ class BasePoint(
     # Transformation
     # --------------
 
-    def _transformBy(self, matrix, **kwargs):
+    def _transformBy(self, matrix: TransformationMatrixType, **kwargs: Any) -> None:
         """
         This is the environment implementation of
         :meth:`BasePoint.transformBy`.
@@ -397,7 +409,7 @@ class BasePoint(
     # Normalization
     # -------------
 
-    def round(self):
+    def round(self) -> None:
         """
         Round the point's coordinate.
 
@@ -410,7 +422,7 @@ class BasePoint(
         """
         self._round()
 
-    def _round(self, **kwargs):
+    def _round(self, **kwargs: Any):
         """
         This is the environment implementation of
         :meth:`BasePoint.round`.

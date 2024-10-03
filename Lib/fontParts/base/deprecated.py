@@ -12,14 +12,14 @@ class RemovedError(Exception):
 # = base =
 # ========
 
-class RemovedBase(object):
+class RemovedBase:
 
     def setParent(self, parent):
         objName = self.__class__.__name__.replace("Removed", "")
         raise RemovedError("'%s.setParent()'" % objName)
 
 
-class DeprecatedBase(object):
+class DeprecatedBase:
 
     def update(self):
         objName = self.__class__.__name__.replace("Deprecated", "")
@@ -38,7 +38,7 @@ class DeprecatedBase(object):
 # = transformation =
 # ==================
 
-class DeprecatedTransformation(object):
+class DeprecatedTransformation:
 
     def move(self, *args, **kwargs):
         objName = self.__class__.__name__.replace("Deprecated", "")
@@ -421,7 +421,7 @@ class RemovedLib(RemovedBase):
     pass
 
 
-class DeprecatedLib(object):
+class DeprecatedLib:
 
     def getParent(self):
         warnings.warn("'Lib.getParent()': use 'Lib.glyph' or 'Lib.font'",
@@ -446,7 +446,7 @@ class RemovedGroups(RemovedBase):
     pass
 
 
-class DeprecatedGroups(object):
+class DeprecatedGroups:
 
     def getParent(self):
         warnings.warn("'Groups.getParent()': use 'Groups.font'",
@@ -463,7 +463,7 @@ class DeprecatedGroups(object):
 # = Kerning =
 # ===========
 
-class RemovedKerning(object):
+class RemovedKerning:
 
     @staticmethod
     def setParent(parent):
@@ -525,7 +525,7 @@ class RemovedKerning(object):
         raise RemovedError("Kerning.explodeClasses()")
 
 
-class DeprecatedKerning(object):
+class DeprecatedKerning:
 
     def setChanged(self):
         warnings.warn("'Kerning.setChanged': use Kerning.changed()",

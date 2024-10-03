@@ -1,4 +1,4 @@
-class RBaseObject(object):
+class RBaseObject:
 
     wrapClass = None
 
