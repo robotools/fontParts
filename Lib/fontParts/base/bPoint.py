@@ -467,11 +467,12 @@ class BaseBPoint(BaseObject,
         The value must be a :class:`str` containing one of the following
         alternatives:
 
-        +----------+---------------------------------+
-        | corner   | Description                     |
-        +----------+---------------------------------+
-        | curve    | Description                     |
-        +----------+---------------------------------+
+        +--------+---------------------------------------------------------+
+        | type   | Description                                             |
+        +--------+---------------------------------------------------------+
+        | curve  | A point where bcpIn and bcpOut are smooth (linked).     |
+        | corner | A point where bcpIn and bcpOut are not smooth (linked). |
+        +--------+---------------------------------------------------------+
 
         :return: A :class:`str` representing the type of the bPoint.
 
@@ -658,20 +659,52 @@ class BaseBPoint(BaseObject,
 
 
 def relativeBCPIn(anchor: CoordinateType, BCPIn: CoordinateType) -> CoordinateType:
-    """convert absolute incoming bcp value to a relative value."""
+    """convert absolute incoming bcp value to a relative value.
+
+    :param anchor: The anchor reference point from which to measure the relative
+        BCP value as a :ref:`type-coordinate.
+    :param BCPIn: The absolute incoming BCP value to be converted as
+        a :ref:`type-coordinate.
+    :return: The relative position of the incoming BCP as a :ref:`type-coordinate.
+
+    """
     return (BCPIn[0] - anchor[0], BCPIn[1] - anchor[1])
 
 
 def absoluteBCPIn(anchor: CoordinateType, BCPIn: CoordinateType) -> CoordinateType:
-    """convert relative incoming bcp value to an absolute value."""
+    """convert relative incoming bcp value to an absolute value.
+
+    :param anchor: The anchor reference point from which the relative BCP value
+        is measured as a :ref:`type-coordinate.
+    :param BCPIn: The relative incoming BCP value to be converted as
+        a :ref:`type-coordinate.
+    :return: The absolute position of the incoming BCP as a :ref:`type-coordinate.
+
+    """
     return (BCPIn[0] + anchor[0], BCPIn[1] + anchor[1])
 
 
 def relativeBCPOut(anchor: CoordinateType, BCPOut: CoordinateType) -> CoordinateType:
-    """convert absolute outgoing bcp value to a relative value."""
+    """convert absolute outgoing bcp value to a relative value.
+
+    :param anchor: The anchor reference point from which to measure the relative
+        BCP value as a :ref:`type-coordinate.
+    :param BCPOut: The absolute outgoing BCP value to be converted as
+        a :ref:`type-coordinate.
+    :return: The relative position of the outgoing BCP as a :ref:`type-coordinate.
+
+    """
     return (BCPOut[0] - anchor[0], BCPOut[1] - anchor[1])
 
 
 def absoluteBCPOut(anchor: CoordinateType, BCPOut: CoordinateType) -> CoordinateType:
-    """convert relative outgoing bcp value to an absolute value."""
+    """convert relative outgoing bcp value to an absolute value.
+
+    :param anchor: The anchor reference point from which the relative BCP value
+        is measured as a :ref:`type-coordinate.
+    :param BCPOut: The relative outgoing BCP value to be converted as
+        a :ref:`type-coordinate.
+    :return: The absolute position of the outgoing BCP as a :ref:`type-coordinate.
+
+    """
     return (BCPOut[0] + anchor[0], BCPOut[1] + anchor[1])
