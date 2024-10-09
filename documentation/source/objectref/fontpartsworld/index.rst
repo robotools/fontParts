@@ -1,4 +1,5 @@
 .. highlight:: python
+.. _fontParts.world:
 
 ################
 fontParts.world
