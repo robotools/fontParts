@@ -54,8 +54,7 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
         from fontTools.ufoLib import validateFontInfoVersion3ValueForAttribute
         valid = validateFontInfoVersion3ValueForAttribute(attr, value)
         if not valid:
-            raise ValueError("Invalid value %s for attribute '%s'."
-                             % (value, attr))
+            raise ValueError(f"Invalid value {value} for attribute '{attr}'.")
         return value
 
     # ----------
@@ -89,9 +88,9 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
         it must implement '_get_attributeName' methods
         for all Info methods.
         """
-        meth = "_get_%s" % attr
+        meth = f"_get_{attr}"
         if not hasattr(self, meth):
-            raise AttributeError("No getter for attribute '%s'." % attr)
+            raise AttributeError(f"No getter for attribute '{attr}'.")
         meth = getattr(self, meth)
         value = meth()
         return value
@@ -114,9 +113,9 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
         it must implement '_set_attributeName' methods
         for all Info methods.
         """
-        meth = "_set_%s" % attr
+        meth = f"_set_{attr}"
         if not hasattr(self, meth):
-            raise AttributeError("No setter for attribute '%s'." % attr)
+            raise AttributeError(f"No setter for attribute '{attr}'.")
         meth = getattr(self, meth)
         meth(value)
 
@@ -297,13 +296,9 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
         """
         factor = normalizers.normalizeInterpolationFactor(factor)
         if not isinstance(minInfo, BaseInfo):
-            raise TypeError(("Interpolation to an instance of %r can not be "
-                             "performed from an instance of %r.") %
-                            (self.__class__.__name__, minInfo.__class__.__name__))
+            raise TypeError(f"Interpolation to an instance of {self.__class__.__name__!r} can not be performed from an instance of {minInfo.__class__.__name__!r}.")
         if not isinstance(maxInfo, BaseInfo):
-            raise TypeError(("Interpolation to an instance of %r can not be "
-                             "performed from an instance of %r.") %
-                            (self.__class__.__name__, maxInfo.__class__.__name__))
+            raise TypeError(f"Interpolation to an instance of {self.__class__.__name__!r} can not be performed from an instance of {maxInfo.__class__.__name__!r}.")
         round = normalizers.normalizeBoolean(round)
         suppressError = normalizers.normalizeBoolean(suppressError)
         self._interpolate(factor, minInfo, maxInfo,
@@ -321,9 +316,7 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
         maxInfo = maxInfo._toMathInfo()
         result = interpolate(minInfo, maxInfo, factor)
         if result is None and not suppressError:
-            raise FontPartsError(("Info from font '%s' and font '%s' could not be "
-                                  "interpolated.")
-                                 % (minInfo.font.name, maxInfo.font.name))
+            raise FontPartsError(f"Info from font '{minInfo.font.name}' and font '{maxInfo.font.name}' could not be interpolated.")
         if round:
             result = result.round()
         self._fromMathInfo(result)

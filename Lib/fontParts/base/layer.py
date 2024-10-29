@@ -586,10 +586,10 @@ class BaseLayer(_BaseGlyphVendor,
 
     def _reprContents(self) -> List[str]:
         contents: List[str] = [
-            "'%s'" % self.name,
+            f"'{self.name}'",
         ]
         if self.color:
-            contents.append("color=%r" % str(self.color))
+            contents.append(f"color={str(self.color)!r}")
         return contents
 
     # ----
@@ -720,7 +720,7 @@ class BaseLayer(_BaseGlyphVendor,
             existing = self.font.layerOrder
             if value in existing:
                 raise ValueError(
-                    "A layer with the name '%s' already exists." % value
+                    f"A layer with the name '{value}' already exists."
                 )
         self._set_name(value)
 
@@ -1020,15 +1020,11 @@ class BaseLayer(_BaseGlyphVendor,
         factor = normalizers.normalizeInterpolationFactor(factor)
         if not isinstance(minLayer, BaseLayer):
             raise TypeError(
-                ("Interpolation to an instance of %r can not be "
-                 "performed from an instance of %r.")
-                % (self.__class__.__name__, minLayer.__class__.__name__)
+                f"Interpolation to an instance of {self.__class__.__name__!r} can not be performed from an instance of {minLayer.__class__.__name__!r}."
             )
         if not isinstance(maxLayer, BaseLayer):
             raise TypeError(
-                ("Interpolation to an instance of %r can not be "
-                 "performed from an instance of %r.")
-                % (self.__class__.__name__, maxLayer.__class__.__name__)
+                f"Interpolation to an instance of {self.__class__.__name__!r} can not be performed from an instance of {maxLayer.__class__.__name__!r}."
             )
         round = normalizers.normalizeBoolean(round)
         suppressError = normalizers.normalizeBoolean(suppressError)

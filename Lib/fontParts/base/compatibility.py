@@ -19,10 +19,7 @@ class BaseCompatibilityReporter(object):
     warning = False
 
     def _get_title(self):
-        title = "{object1Name} + {object2Name}".format(
-            object1Name=self.object1Name,
-            object2Name=self.object2Name
-        )
+        title = f"{self.object1Name} + {self.object2Name}"
         if self.fatal:
             return self.formatFatalString(title)
         elif self.warning:
@@ -55,13 +52,13 @@ class BaseCompatibilityReporter(object):
     @staticmethod
     def _getObjectName(obj):
         if hasattr(obj, "name") and obj.name is not None:
-            return "\"%s\"" % obj.name
+            return f"\"{obj.name}\""
         elif hasattr(obj, "identifier") and obj.identifier is not None:
-            return "\"%s\"" % obj.identifier
+            return f"\"{obj.identifier}\""
         elif hasattr(obj, "index"):
-            return "[%s]" % obj.index
+            return f"[{obj.index}]"
         else:
-            return "<%s>" % id(obj)
+            return f"<{id(obj)}>"
 
     # Report
 
@@ -72,13 +69,13 @@ class BaseCompatibilityReporter(object):
         raise NotImplementedError
 
     def formatFatalString(self, text):
-        return "[Fatal] {objectName}: ".format(objectName=self.objectName) + text
+        return f"[Fatal] {self.objectName}: " + text
 
     def formatWarningString(self, text):
-        return "[Warning] {objectName}: ".format(objectName=self.objectName) + text
+        return f"[Warning] {self.objectName}: " + text
 
     def formatOKString(self, text):
-        return "[OK] {objectName}: ".format(objectName=self.objectName) + text
+        return f"[OK] {self.objectName}: " + text
 
     @staticmethod
     def reportSubObjects(reporters, showOK=True, showWarnings=True):
@@ -92,40 +89,20 @@ class BaseCompatibilityReporter(object):
     def reportCountDifference(subObjectName,
                               object1Name, object1Count,
                               object2Name, object2Count):
-        text = ("{object1Name} contains {object1Count} {subObjectName} | "
-                "{object2Name} contains {object2Count} {subObjectName}").format(
-            subObjectName=subObjectName,
-            object1Name=object1Name,
-            object1Count=object1Count,
-            object2Name=object2Name,
-            object2Count=object2Count
-        )
+        text = f"{object1Name} contains {object1Count} {subObjectName} | {object2Name} contains {object2Count} {subObjectName}"
         return text
 
     @staticmethod
     def reportOrderDifference(subObjectName,
                               object1Name, object1Order,
                               object2Name, object2Order):
-        text = ("{object1Name} has {subObjectName} ordered {object1Order} | "
-                "{object2Name} has {object2Order}").format(
-            subObjectName=subObjectName,
-            object1Name=object1Name,
-            object1Order=object1Order,
-            object2Name=object2Name,
-            object2Order=object2Order
-        )
+        text = f"{object1Name} has {subObjectName} ordered {object1Order} | {object2Name} has {object2Order}"
         return text
 
     @staticmethod
     def reportDifferences(object1Name, subObjectName,
                           subObjectID, object2Name):
-        text = ("{object1Name} contains {subObjectName} {subObjectID} "
-                "not in {object2Name}").format(
-                object1Name=object1Name,
-                subObjectName=subObjectName,
-                subObjectID=subObjectID,
-                object2Name=object2Name,
-        )
+        text = f"{object1Name} contains {subObjectName} {subObjectID} not in {object2Name}"
         return text
 
 
@@ -465,12 +442,7 @@ class ContourCompatibilityReporter(BaseCompatibilityReporter):
                 state1 = "open"
             if contour2.open:
                 state2 = "open"
-            text = "{contour1Name} is {state1} | {contour2Name} is {state2}".format(
-                contour1Name=self.contour1Name,
-                state1=state1,
-                contour2Name=self.contour2Name,
-                state2=state2
-            )
+            text = f"{self.contour1Name} is {state1} | {self.contour2Name} is {state2}"
             report.append(self.formatFatalString(text))
         if self.directionDifference:
             state1 = state2 = "counter-clockwise"
@@ -478,12 +450,7 @@ class ContourCompatibilityReporter(BaseCompatibilityReporter):
                 state1 = "clockwise"
             if contour2.clockwise:
                 state2 = "clockwise"
-            text = "{contour1Name} is {state1} | {contour2Name} is {state2}".format(
-                contour1Name=self.contour1Name,
-                state1=state1,
-                contour2Name=self.contour2Name,
-                state2=state2
-            )
+            text = f"{self.contour1Name} is {state1} | {self.contour2Name} is {state2}"
             report.append(self.formatFatalString(text))
         report += self.reportSubObjects(self.segments,
                                         showOK=showOK,
@@ -517,12 +484,7 @@ class SegmentCompatibilityReporter(BaseCompatibilityReporter):
         if self.typeDifference:
             type1 = segment1.type
             type2 = segment2.type
-            text = "{segment1Name} is {type1} | {segment2Name} is {type2}".format(
-                segment1Name=self.segment1Name,
-                type1=type1,
-                segment2Name=self.segment2Name,
-                type2=type2
-            )
+            text = f"{self.segment1Name} is {type1} | {self.segment2Name} is {type2}"
             report.append(self.formatFatalString(text))
         if report or showOK:
             report.insert(0, self.title)
@@ -554,13 +516,7 @@ class ComponentCompatibilityReporter(BaseCompatibilityReporter):
         if self.baseDifference:
             name1 = component1.baseName
             name2 = component2.baseName
-            text = ("{component1Name} has base glyph {name1} | "
-                    "{component2Name} has base glyph {name2}").format(
-                component1Name=self.component1Name,
-                name1=name1,
-                component2Name=self.component2Name,
-                name2=name2
-            )
+            text = f"{self.component1Name} has base glyph {name1} | {self.component2Name} has base glyph {name2}"
             report.append(self.formatWarningString(text))
         if report or showOK:
             report.insert(0, self.title)
@@ -591,13 +547,7 @@ class AnchorCompatibilityReporter(BaseCompatibilityReporter):
         if self.nameDifference:
             name1 = anchor1.name
             name2 = anchor2.name
-            text = ("{anchor1Name} has name {name1} | "
-                    "{anchor2Name} has name {name2}").format(
-                anchor1Name=self.anchor1Name,
-                name1=name1,
-                anchor2Name=self.anchor2Name,
-                name2=name2
-            )
+            text = f"{self.anchor1Name} has name {name1} | {self.anchor2Name} has name {name2}"
             report.append(self.formatWarningString(text))
         if report or showOK:
             report.insert(0, self.title)
@@ -629,13 +579,7 @@ class GuidelineCompatibilityReporter(BaseCompatibilityReporter):
         if self.nameDifference:
             name1 = guideline1.name
             name2 = guideline2.name
-            text = ("{guideline1Name} has name {name1} | "
-                    "{guideline2Name} has name {name2}").format(
-                guideline1Name=self.guideline1Name,
-                name1=name1,
-                guideline2Name=self.guideline2Name,
-                name2=name2
-            )
+            text = f"{self.guideline1Name} has name {name1} | {self.guideline2Name} has name {name2}"
             report.append(self.formatWarningString(text))
         if report or showOK:
             report.insert(0, self.title)

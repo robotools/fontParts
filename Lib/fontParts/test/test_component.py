@@ -15,7 +15,7 @@ class TestComponent(unittest.TestCase):
         pen.lineTo((100, 0))
         pen.closePath()
         for i, point in enumerate(glyph[0].points):
-            point.name = "point %d" % i
+            point.name = f"point {i}"
         glyph = layer.newGlyph("B")
         component = glyph.appendComponent("A")
         component.transformation = (1, 0, 0, 1, 0, 0)

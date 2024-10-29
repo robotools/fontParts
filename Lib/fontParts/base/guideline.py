@@ -46,9 +46,9 @@ class BaseGuideline(
     def _reprContents(self):
         contents = []
         if self.name is not None:
-            contents.append("'%s'" % self.name)
+            contents.append(f"'{self.name}'")
         if self.layer is not None:
-            contents.append("('%s')" % self.layer.name)
+            contents.append(f"('{self.layer.name}')")
         return contents
 
     # -------

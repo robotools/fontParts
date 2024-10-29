@@ -1394,6 +1394,6 @@ metrics = {
 
 for i, t_name_suffix in enumerate(t_names):
     for metric_name, values in metrics.items():
-        test_name = 'test_{}{}'.format(metric_name, t_name_suffix)
+        test_name = f'test_{metric_name}{t_name_suffix}'
         test = test_generator(test_name, metric_name, values[i])
         setattr(TestGlyph, test_name, test)

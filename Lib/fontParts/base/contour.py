@@ -30,7 +30,7 @@ class BaseContour(
     def _reprContents(self):
         contents = []
         if self.identifier is not None:
-            contents.append("identifier='%r'" % self.identifier)
+            contents.append(f"identifier='{self.identifier!r}'")
         if self.glyph is not None:
             contents.append("in glyph")
             contents += self.glyph._reprContents()
@@ -608,7 +608,7 @@ class BaseContour(
             segment = self.segments.index(segment)
         segment = normalizers.normalizeIndex(segment)
         if segment >= self._len__segments():
-            raise ValueError("No segment located at index %d." % segment)
+            raise ValueError(f"No segment located at index {segment}.")
         preserveCurve = normalizers.normalizeBoolean(preserveCurve)
         self._removeSegment(segment, preserveCurve)
 
@@ -640,7 +640,7 @@ class BaseContour(
         if segmentIndex == 0:
             return
         if segmentIndex >= len(segments):
-            raise ValueError(("The contour does not contain a segment at index %d" % segmentIndex))
+            raise ValueError((f"The contour does not contain a segment at index {segmentIndex}"))
         self._setStartSegment(segmentIndex)
 
     def _setStartSegment(self, segmentIndex, **kwargs):
@@ -762,7 +762,7 @@ class BaseContour(
             bPoint = bPoint.index
         bPoint = normalizers.normalizeIndex(bPoint)
         if bPoint >= self._len__points():
-            raise ValueError("No bPoint located at index %d." % bPoint)
+            raise ValueError(f"No bPoint located at index {bPoint}.")
         self._removeBPoint(bPoint)
 
     def _removeBPoint(self, index, **kwargs):
@@ -819,7 +819,7 @@ class BaseContour(
     def _getitem__points(self, index):
         index = normalizers.normalizeIndex(index)
         if index >= self._len__points():
-            raise ValueError("No point located at index %d." % index)
+            raise ValueError(f"No point located at index {index}.")
         point = self._getPoint(index)
         self._setContourInPoint(point)
         return point
@@ -918,7 +918,7 @@ class BaseContour(
             point = self.points.index(point)
         point = normalizers.normalizeIndex(point)
         if point >= self._len__points():
-            raise ValueError("No point located at index %d." % point)
+            raise ValueError(f"No point located at index {point}.")
         preserveCurve = normalizers.normalizeBoolean(preserveCurve)
         self._removePoint(point, preserveCurve)
 
@@ -945,7 +945,7 @@ class BaseContour(
         if pointIndex == 0:
             return
         if pointIndex >= len(points):
-            raise ValueError(("The contour does not contain a point at index %d" % pointIndex))
+            raise ValueError((f"The contour does not contain a point at index {pointIndex}"))
         self._setStartPoint(pointIndex)
 
     def _setStartPoint(self, pointIndex, **kwargs):

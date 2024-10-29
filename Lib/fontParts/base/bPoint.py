@@ -36,8 +36,8 @@ class BaseBPoint(BaseObject,
 
     def _reprContents(self) -> List[str]:
         contents = [
-            "%s" % self.type,
-            "anchor='({x}, {y})'".format(x=self.anchor[0], y=self.anchor[1]),
+            f"{self.type}",
+            f"anchor='({self.anchor[0]}, {self.anchor[1]})'",
         ]
         return contents
 
@@ -526,8 +526,7 @@ class BaseBPoint(BaseObject,
             bType = "corner"
 
         if bType is None:
-            raise FontPartsError("A %s point can not be converted to a bPoint."
-                                 % typ)
+            raise FontPartsError(f"A {typ} point can not be converted to a bPoint.")
         return bType
 
     def _set_type(self, value: str) -> None:

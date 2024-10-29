@@ -74,10 +74,10 @@ class BaseGlyph(BaseObject,
 
     def _reprContents(self) -> List[str]:
         contents: List[str] = [
-            "'%s'" % self.name,
+            f"'{self.name}'",
         ]
         if self.layer is not None:
-            contents.append("('%s')" % self.layer.name)
+            contents.append(f"('{self.layer.name}')")
         return contents
 
     def copy(self: BaseGlyph) -> BaseGlyph:
@@ -1913,7 +1913,7 @@ class BaseGlyph(BaseObject,
     def _getitem__guidelines(self, index: int) -> BaseGuideline:
         index = normalizers.normalizeIndex(index)
         if index >= self._len__guidelines():
-            raise ValueError("No guideline located at index %d." % index)
+            raise ValueError(f"No guideline located at index {index}.")
         guideline = self._getGuideline(index)
         self._setGlyphInGuideline(guideline)
         return guideline
@@ -2055,7 +2055,7 @@ class BaseGlyph(BaseObject,
             index = self._getGuidelineIndex(guideline)
         index = normalizers.normalizeIndex(index)
         if index >= self._len__guidelines():
-            raise ValueError("No guideline located at index %d." % index)
+            raise ValueError(f"No guideline located at index {index}.")
         self._removeGuideline(index)
 
     def _removeGuideline(self, index: int, **kwargs: Any) -> None:
@@ -2649,15 +2649,9 @@ class BaseGlyph(BaseObject,
         """
         normalizedFactor = normalizers.normalizeInterpolationFactor(factor)
         if not isinstance(minGlyph, BaseGlyph):
-            raise TypeError(("Interpolation to an instance of %r can not be "
-                             "performed from an instance of %r.")
-                            % (self.__class__.__name__,
-                               minGlyph.__class__.__name__))
+            raise TypeError(f"Interpolation to an instance of {self.__class__.__name__!r} can not be performed from an instance of {minGlyph.__class__.__name__!r}.")
         if not isinstance(maxGlyph, BaseGlyph):
-            raise TypeError(("Interpolation to an instance of %r can not be "
-                             "performed from an instance of %r.")
-                            % (self.__class__.__name__,
-                               maxGlyph.__class__.__name__))
+            raise TypeError(f"Interpolation to an instance of {self.__class__.__name__!r} can not be performed from an instance of {maxGlyph.__class__.__name__!r}.")
         round = normalizers.normalizeBoolean(round)
         suppressError = normalizers.normalizeBoolean(suppressError)
         self._interpolate(normalizedFactor, minGlyph, maxGlyph,
@@ -2702,9 +2696,7 @@ class BaseGlyph(BaseObject,
         except IndexError:
             result = None
         if result is None and not suppressError:
-            raise FontPartsError(("Glyphs '%s' and '%s' could not be "
-                                  "interpolated.")
-                                 % (minGlyph.name, maxGlyph.name))
+            raise FontPartsError(f"Glyphs '{minGlyph.name}' and '{maxGlyph.name}' could not be interpolated.")
         if result is not None:
             if round:
                 result = result.round()
@@ -3062,8 +3054,7 @@ class BaseGlyph(BaseObject,
         for glyph in self.layers:
             if glyph.layer.name == name:
                 return glyph
-        raise ValueError("No layer named '%s' in glyph '%s'."
-                         % (name, self.name))
+        raise ValueError(f"No layer named '{name}' in glyph '{self.name}'.")
 
     # new
 
@@ -3249,7 +3240,7 @@ class BaseGlyph(BaseObject,
         transformation = (sx, 0, 0, sy, ox, oy)
         if path is not None:
             if not os.path.exists(path):
-                raise IOError("No image located at '%s'." % path)
+                raise IOError(f"No image located at '{path}'.")
             with open(path, "rb") as f:
                 data = f.read()
         if data is not None:
