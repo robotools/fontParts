@@ -355,7 +355,7 @@ class BaseObject:
         :param \*args: Any positional arguments.
         :param \**kwargs: Any keyword arguments.
 
-        Exaple::
+        Example::
 
             >>> obj.changed()
 
