@@ -76,7 +76,6 @@ dynamicProperty.__get__ = lambda self, *args, **kwargs: self
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    'sphinx.ext.intersphinx',
     'sphinx.ext.autodoc',
     'sphinx.ext.todo',
     'sphinx.ext.coverage',
@@ -84,11 +83,6 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.autosummary',
 ]
-
-intersphinx_mapping = {
-    'python': ('https://docs.python.org/3/', None)
-}
-
 
 autodoc_member_order = 'bysource'
 autoclass_content = 'both'

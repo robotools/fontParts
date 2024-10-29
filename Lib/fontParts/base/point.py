@@ -1,6 +1,3 @@
-from __future__ import annotations
-from typing import TYPE_CHECKING, Any, Optional, Union, Tuple
-
 from fontTools.misc import transform
 from fontParts.base.base import (
     BaseObject,
@@ -13,39 +10,29 @@ from fontParts.base.base import (
 )
 from fontParts.base import normalizers
 from fontParts.base.deprecated import DeprecatedPoint, RemovedPoint
-from fontParts.base.annotations import(
-    IntFloatType,
-    TransformationMatrixType
-)
-
-if TYPE_CHECKING:
-    from fontParts.base.font import BaseFont
-    from fontParts.base.glyph import BaseGlyph
-    from fontParts.base.lib import BaseLib
-    from fontParts.base.contour import BaseContour
 
 
-class BasePoint(BaseObject,
+class BasePoint(
+                BaseObject,
                 TransformationMixin,
                 PointPositionMixin,
                 SelectionMixin,
                 IdentifierMixin,
                 DeprecatedPoint,
-                RemovedPoint):
+                RemovedPoint
+                ):
 
-    """Represent the basis for a point object.
-
-    This object is almost always created with :meth:`BaseContour.appendPoint`,
-    the pen returned by :meth:`BaseGlyph.getPen` or the point pen returned
-    by :meth:`BaseGlyph.getPointPen`.
-
+    """
+    A point object. This object is almost always
+    created with :meth:`BaseContour.appendPoint`,
+    the pen returned by :meth:`BaseGlyph.getPen`
+    or the point pen returned by :meth:`BaseGLyph.getPointPen`.
     An orphan point can be created like this::
 
         >>> point = RPoint()
-
     """
 
-    copyAttributes: Tuple[str, str, str, str, str] = (
+    copyAttributes = (
         "type",
         "smooth",
         "x",
@@ -53,7 +40,7 @@ class BasePoint(BaseObject,
         "name"
     )
 
-    def _reprContents(self) -> list[str]:
+    def _reprContents(self):
         contents = [
             "%s" % self.type,
             ("({x}, {y})".format(x=self.x, y=self.y)),
@@ -70,32 +57,17 @@ class BasePoint(BaseObject,
 
     # Contour
 
-    _contour: Optional[BaseContour] = None
+    _contour = None
 
-    contour: dynamicProperty = dynamicProperty(
-        "contour",
-        """Get or set the point's parent contour object.
+    contour = dynamicProperty("contour",
+                              "The point's parent :class:`BaseContour`.")
 
-        The value must be a :class:`BaseContour` instance or :obj:`None`.
-
-        :return: The :class:`BaseContour` instance containing the point
-            or :obj:`None`.
-        :raises AssertionError: If attempting to set the contour when it
-            has already been set.
-
-        Example::
-
-            >>> contour = point.contour
-
-        """
-    )
-
-    def _get_contour(self) -> Optional[BaseContour]:
+    def _get_contour(self):
         if self._contour is None:
             return None
         return self._contour()
 
-    def _set_contour(self, contour: Optional[BaseContour]) -> None:
+    def _set_contour(self, contour):
         if self._contour is not None:
             raise AssertionError("contour for point already set")
         if contour is not None:
@@ -104,6 +76,7 @@ class BasePoint(BaseObject,
 
     # Glyph
 
+<<<<<<< HEAD
     glyph: dynamicProperty = dynamicProperty(
         "glyph",
         """Get the point's parent glyph object.
@@ -114,19 +87,18 @@ class BasePoint(BaseObject,
             or :obj:`None`.
 
         Example::
+=======
+    glyph = dynamicProperty("glyph", "The point's parent :class:`BaseGlyph`.")
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
-            >>> glyph = point.glyph
-
-        """
-    )
-
-    def _get_glyph(self) -> Optional[BaseObject]:
+    def _get_glyph(self):
         if self._contour is None:
             return None
         return self.contour.glyph
 
     # Layer
 
+<<<<<<< HEAD
     layer: dynamicProperty = dynamicProperty(
         "layer",
         """Get the point's parent layer object.
@@ -142,12 +114,18 @@ class BasePoint(BaseObject,
     )
 
     def _get_layer(self) -> Optional[BaseObject]:
+=======
+    layer = dynamicProperty("layer", "The point's parent :class:`BaseLayer`.")
+
+    def _get_layer(self):
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
         if self._contour is None:
             return None
         return self.glyph.layer
 
     # Font
 
+<<<<<<< HEAD
     font: dynamicProperty = dynamicProperty(
         "font",
 
@@ -164,6 +142,11 @@ class BasePoint(BaseObject,
     )
 
     def _get_font(self) -> Optional[BaseObject]:
+=======
+    font = dynamicProperty("font", "The point's parent :class:`BaseFont`.")
+
+    def _get_font(self):
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
         if self._contour is None:
             return None
         return self.glyph.font
@@ -174,12 +157,18 @@ class BasePoint(BaseObject,
 
     # type
 
-    type: dynamicProperty = dynamicProperty(
+    type = dynamicProperty(
         "base_type",
+<<<<<<< HEAD
         """Get or set the point's type.
 
         The value must be a :class:`str` containing one of the following
         alternatives:
+=======
+        """
+        The point type defined with a :ref:`type-string`.
+        The possible types are:
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
         +----------+---------------------------------+
         | move     | An on-curve move to.            |
@@ -192,20 +181,24 @@ class BasePoint(BaseObject,
         +----------+---------------------------------+
         | offcurve | An off-curve.                   |
         +----------+---------------------------------+
+<<<<<<< HEAD
 
         :return: A :class:`str` representing the type of the point.
 
+=======
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
         """)
 
-    def _get_base_type(self) -> str:
+    def _get_base_type(self):
         value = self._get_type()
         value = normalizers.normalizePointType(value)
         return value
 
-    def _set_base_type(self, value: str) -> None:
+    def _set_base_type(self, value):
         value = normalizers.normalizePointType(value)
         self._set_type(value)
 
+<<<<<<< HEAD
     def _get_type(self) -> str:  # type: ignore[return]
         """Get the native point's type.
 
@@ -220,41 +213,37 @@ class BasePoint(BaseObject,
         .. important::
 
             Subclasses must override this method.
+=======
+    def _get_type(self):
+        """
+        This is the environment implementation
+        of :attr:`BasePoint.type`. This must
+        return a :ref:`type-string` defining
+        the point type.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
+        Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
-    def _set_type(self, value: str) -> None:
-        """Set the native point's type.
+    def _set_type(self, value):
+        """
+        This is the environment implementation
+        of :attr:`BasePoint.type`. **value**
+        will be a :ref:`type-string` defining
+        the point type. It will have been normalized
+        with :func:`normalizers.normalizePointType`.
 
-        Description
-
-        This is the environment implementation of the :attr:`BasePoint.type`
-        property setter.
-
-        :param value: The point type definition as a :class:`str`. The value
-            will have been normalized with :func:`normalizers.normalizePointType`.
-        :raises NotImplementedError: If the method has not been overridden by
-            a subclass.
-
-        .. important::
-
-            Subclasses must override this method.
-
+        Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
     # smooth
 
-    smooth: dynamicProperty = dynamicProperty(
+    smooth = dynamicProperty(
         "base_smooth",
-        """Get or set the point's smooth state.
-
-        The value must be a :class:`bool` indicating the point's smooth state.
-
-        :return: :obj:`True` if the point is smooth, :obj:`False` if it is sharp.
-
-        Example::
+        """
+        A ``bool`` indicating if the point is smooth or not. ::
 
             >>> point.smooth
             False
@@ -263,15 +252,16 @@ class BasePoint(BaseObject,
         """
     )
 
-    def _get_base_smooth(self) -> bool:
+    def _get_base_smooth(self):
         value = self._get_smooth()
         value = normalizers.normalizeBoolean(value)
         return value
 
-    def _set_base_smooth(self, value: bool) -> None:
+    def _set_base_smooth(self, value):
         value = normalizers.normalizeBoolean(value)
         self._set_smooth(value)
 
+<<<<<<< HEAD
     def _get_smooth(self) -> bool:  # type: ignore[return]
         """Get the native point's smooth state.
 
@@ -286,57 +276,54 @@ class BasePoint(BaseObject,
         .. important::
 
             Subclasses must override this method.
+=======
+    def _get_smooth(self):
+        """
+        This is the environment implementation of
+        :attr:`BasePoint.smooth`. This must return
+        a ``bool`` indicating the smooth state.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
+        Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
-    def _set_smooth(self, value: bool) -> None:
-        """Set the native point's smooth state.
+    def _set_smooth(self, value):
+        """
+        This is the environment implementation of
+        :attr:`BasePoint.smooth`. **value** will
+        be a ``bool`` indicating the smooth state.
+        It will have been normalized with
+        :func:`normalizers.normalizeBoolean`.
 
-        This is the environment implementation of the :attr:`BasePoint.smooth`
-        property setter.
-
-        :param value: The point's smooth state as a :class:`bool`. The value
-            will have been normalized with :func:`normalizers.normalizeBoolean`.
-        :raises NotImplementedError: If the method has not been overridden by a
-            subclass.
-
-        .. important::
-
-            Subclasses must override this method.
-
+        Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
     # x
 
-    x: dynamicProperty = dynamicProperty(
+    x = dynamicProperty(
         "base_x",
-        """Get or set the x coordinate of the point.
-
-        The value must be an :class:`int` or a :class:`float`.
-
-        :return: An :class:`int` or a :class:`float` representing the point's
-            x coordinate.
-
-        Example::
+        """
+        The x coordinate of the point.
+        It must be an :ref:`type-int-float`. ::
 
             >>> point.x
             100
             >>> point.x = 101
-
         """
     )
 
-    def _get_base_x(self) -> IntFloatType:
+    def _get_base_x(self):
         value = self._get_x()
         value = normalizers.normalizeX(value)
         return value
 
-    def _set_base_x(self, value: IntFloatType) -> None:
+    def _set_base_x(self, value):
         value = normalizers.normalizeX(value)
         self._set_x(value)
 
+<<<<<<< HEAD
     def _get_x(self) -> IntFloatType:  # type: ignore[return]
         """Get the x coordinate of the native point.
 
@@ -354,58 +341,52 @@ class BasePoint(BaseObject,
         .. important::
 
             Subclasses must override this method.
+=======
+    def _get_x(self):
+        """
+        This is the environment implementation of
+        :attr:`BasePoint.x`. This must return an
+        :ref:`type-int-float`.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
+        Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
-    def _set_x(self, value: IntFloatType) -> None:
-        """Set the x coordinate of the native point.
+    def _set_x(self, value):
+        """
+        This is the environment implementation of
+        :attr:`BasePoint.x`. **value** will be
+        an :ref:`type-int-float`.
 
-        This is the environment implementation of the :attr:`BasePoint.x`
-        property setter.
-
-        :param value: The point's x coodinate to set as an :class:`int`
-            or :class:`float`. The value will have been normalized
-            with :func:`normalizers.normalizeX`.
-        :raises NotImplementedError: If the method has not been overridden by a
-            subclass.
-
-        .. important::
-
-            Subclasses must override this method.
-
+        Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
     # y
 
-    y: dynamicProperty = dynamicProperty(
+    y = dynamicProperty(
         "base_y",
-        """Get or set the y coordinate of the point.
-
-        The value must be an :class:`int` or a :class:`float`.
-
-        :return: An :class:`int` or a :class:`float` representing the point's
-            y coordinate.
-
-        Example::
+        """
+        The y coordinate of the point.
+        It must be an :ref:`type-int-float`. ::
 
             >>> point.y
             100
             >>> point.y = 101
-
         """
     )
 
-    def _get_base_y(self) -> IntFloatType:
+    def _get_base_y(self):
         value = self._get_y()
         value = normalizers.normalizeY(value)
         return value
 
-    def _set_base_y(self, value: IntFloatType) -> None:
+    def _set_base_y(self, value):
         value = normalizers.normalizeY(value)
         self._set_y(value)
 
+<<<<<<< HEAD
     def _get_y(self) -> IntFloatType:  # type: ignore[return]
         """Get the y coordinate of the native point.
 
@@ -421,26 +402,25 @@ class BasePoint(BaseObject,
         .. important::
 
             Subclasses must override this method.
+=======
+    def _get_y(self):
+        """
+        This is the environment implementation of
+        :attr:`BasePoint.y`. This must return an
+        :ref:`type-int-float`.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
+        Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
-    def _set_y(self, value: IntFloatType) -> None:
-        """Set the y coordinate of the native point.
+    def _set_y(self, value):
+        """
+        This is the environment implementation of
+        :attr:`BasePoint.y`. **value** will be
+        an :ref:`type-int-float`.
 
-        This is the environment implementation of the :attr:`BasePoint.y`
-        property setter.
-
-        :param value: The point's y coordinate as an :class:`int`
-            or :class:`float`. The value will have been normalized
-            with :func:`normalizers.normalizeY`.
-        :raises NotImplementedError: If the method has not been overridden by a
-            subclass.
-
-        .. important::
-
-            Subclasses must override this method.
-
+        Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
@@ -450,26 +430,33 @@ class BasePoint(BaseObject,
 
     # index
 
-    index: dynamicProperty = dynamicProperty(
+    index = dynamicProperty(
         "base_index",
+<<<<<<< HEAD
         """Get the index of the point.
 
         :return: An :class:`int` representing the point's index within an
             ordered list of the parent glyph's points.
 
         Example::
+=======
+        """
+        The index of the point within the ordered
+        list of the parent glyph's point. This
+        attribute is read only. ::
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
             >>> point.index
             0
-
         """
     )
 
-    def _get_base_index(self) -> Optional[int]:
+    def _get_base_index(self):
         value = self._get_index()
         value = normalizers.normalizeIndex(value)
         return value
 
+<<<<<<< HEAD
     def _get_index(self) -> Optional[int]:
         """Get the index of the native point.
 
@@ -483,7 +470,14 @@ class BasePoint(BaseObject,
         .. note::
 
             Subclasses may override this method.
+=======
+    def _get_index(self):
+        """
+        Get the point's index.
+        This must return an ``int``.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
+        Subclasses may override this method.
         """
         contour = self.contour
         if contour is None:
@@ -492,34 +486,30 @@ class BasePoint(BaseObject,
 
     # name
 
-    name: dynamicProperty = dynamicProperty(
+    name = dynamicProperty(
         "base_name",
-        """Get or set the name of the point.
-
-        The value must be a :class:`str` or :obj:`None`.
-
-        :return: A :class:`str` representing the point's name or :obj:`None`.
-
-        Example::
+        """
+        The name of the point. This will be a
+        :ref:`type-string` or ``None``.
 
             >>> point.name
             'my point'
             >>> point.name = None
-
         """
     )
 
-    def _get_base_name(self) -> Optional[str]:
+    def _get_base_name(self):
         value = self._get_name()
         if value is not None:
             value = normalizers.normalizePointName(value)
         return value
 
-    def _set_base_name(self, value: str) -> None:
+    def _set_base_name(self, value):
         if value is not None:
             value = normalizers.normalizePointName(value)
         self._set_name(value)
 
+<<<<<<< HEAD
     def _get_name(self) -> Optional[str]:  # type: ignore[return]
         """Get the name of the native point.
 
@@ -535,25 +525,29 @@ class BasePoint(BaseObject,
         .. important::
 
             Subclasses must override this method.
+=======
+    def _get_name(self):
+        """
+        This is the environment implementation of
+        :attr:`BasePoint.name`. This must return a
+        :ref:`type-string` or ``None``. The returned
+        value will be normalized with
+        :func:`normalizers.normalizePointName`.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
+        Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
-    def _set_name(self, value: str) -> None:
-        """Set the name of the native point.
+    def _set_name(self, value):
+        """
+        This is the environment implementation of
+        :attr:`BasePoint.name`. **value** will be
+        a :ref:`type-string` or ``None``. It will
+        have been normalized with
+        :func:`normalizers.normalizePointName`.
 
-        This is the environment implementation of the :attr:`BasePoint.name`
-        property setter.
-
-        :param value: The point name as a :class:`str`. The value
-            will have been normalized with :func:`normalizers.normalizePointName`.
-        :raises NotImplementedError: If the method has not been overridden by a
-            subclass.
-
-        .. important::
-
-            Subclasses must override this method.
-
+        Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
@@ -561,18 +555,16 @@ class BasePoint(BaseObject,
     # Transformation
     # --------------
 
-    def _transformBy(self, matrix: TransformationMatrixType, **kwargs: Any) -> None:
-        r"""Transform the native point.
+    def _transformBy(self, matrix, **kwargs):
+        """
+        This is the environment implementation of
+        :meth:`BasePoint.transformBy`.
 
-        This is the environment implementation of :meth:`BasePoint.transformBy`.
+        **matrix** will be a :ref:`type-transformation`.
+        that has been normalized with
+        :func:`normalizers.normalizeTransformationMatrix`.
 
-        :param matrix: The transformation to apply as a :ref:`type-transformation`.
-        :param \**kwargs: Additional keyword arguments.
-
-        .. note::
-
-            Subclasses may override this method.
-
+        Subclasses may override this method.
         """
         t = transform.Transform(*matrix)
         x, y = t.transformPoint((self.x, self.y))
@@ -583,32 +575,25 @@ class BasePoint(BaseObject,
     # Normalization
     # -------------
 
-    def round(self) -> None:
-        """Round the point's coordinates.
-
-        This applies to:
-
-        - :attr:`x`
-        - :attr:`y`
-
-        Example::
+    def round(self):
+        """
+        Round the point's coordinate.
 
             >>> point.round()
 
+        This applies to the following:
+
+        * x
+        * y
         """
         self._round()
 
-    def _round(self, **kwargs: Any) -> None:
-        r"""Round the native point's coordinates.
+    def _round(self, **kwargs):
+        """
+        This is the environment implementation of
+        :meth:`BasePoint.round`.
 
-        This is the environment implementation of :meth:`BasePoint.round`.
-
-        :param \**kwargs: Additional keyword arguments.
-
-        .. note::
-
-            Subclasses may override this method.
-
+        Subclasses may override this method.
         """
         self.x = normalizers.normalizeVisualRounding(self.x)
         self.y = normalizers.normalizeVisualRounding(self.y)

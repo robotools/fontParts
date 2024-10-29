@@ -1,17 +1,18 @@
+<<<<<<< HEAD
 # pylint: disable=C0103, C0302, C0114, W0613
 from __future__ import annotations
 from typing import TYPE_CHECKING, Any, Iterator, Optional, Union, List, Tuple
 from itertools import zip_longest
 from collections import Counter
+=======
+try:
+    from itertools import zip_longest as zip_longest
+except ImportError:
+    from itertools import izip_longest as zip_longest
+import collections
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 import os
 from copy import deepcopy
-
-from fontMath import MathGlyph
-from fontMath.mathFunctions import setRoundIntegerFunction
-from fontTools.pens.pointInsidePen import PointInsidePen
-from fontTools.pens.areaPen import AreaPen
-from fontTools.pens.boundsPen import BoundsPen
-
 from fontParts.base.errors import FontPartsError
 from fontParts.base.base import (
     BaseObject,
@@ -26,27 +27,6 @@ from fontParts.base import normalizers
 from fontParts.base.compatibility import GlyphCompatibilityReporter
 from fontParts.base.color import Color
 from fontParts.base.deprecated import DeprecatedGlyph, RemovedGlyph
-from fontParts.base.annotations import (
-    BoundsType,
-    CollectionType,
-    CoordinateType,
-    ColorType,
-    FactorType,
-    IntFloatType,
-    PenType,
-    PointPenType,
-    TransformationMatrixType,
-    ScaleType
-)
-if TYPE_CHECKING:
-    from fontParts.base.font import BaseFont
-    from fontParts.base.lib import BaseLib
-    from fontParts.base.layer import BaseLayer
-    from fontParts.base.guideline import BaseGuideline
-    from fontParts.base.contour import BaseContour
-    from fontParts.base.component import BaseComponent
-    from fontParts.base.anchor import BaseAnchor
-    from fontParts.base.image import BaseImage
 
 
 class BaseGlyph(BaseObject,
@@ -54,15 +34,15 @@ class BaseGlyph(BaseObject,
                 InterpolationMixin,
                 SelectionMixin,
                 DeprecatedGlyph,
-                RemovedGlyph):
-    """Represent the basis for a glyph object.
-
-    This object will almost always be created by retrieving it from a
-    font object.
+                RemovedGlyph
+                ):
 
     """
+    A glyph object. This object will almost always
+    be created by retrieving it from a font object.
+    """
 
-    copyAttributes: Tuple[str, ...] = (
+    copyAttributes = (
         "name",
         "unicodes",
         "width",
@@ -72,43 +52,45 @@ class BaseGlyph(BaseObject,
         "lib"
     )
 
-    def _reprContents(self) -> List[str]:
-        contents: List[str] = [
+    def _reprContents(self):
+        contents = [
             "'%s'" % self.name,
         ]
         if self.layer is not None:
             contents.append("('%s')" % self.layer.name)
         return contents
 
+<<<<<<< HEAD
     def copy(self) -> BaseGlyph:
         """Copy data from the current glyph into a new glyph.
 
+=======
+    def copy(self):
+        """
+        Copy this glyph's data into a new glyph object.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
         This new glyph object will not belong to a font.
-
-        This will copy:
-
-        - :attr:`name`
-        - :attr:`unicodes`
-        - :attr:`width`
-        - :attr:`height`
-        - :attr:`note`
-        - :attr:`markColor`
-        - :attr:`lib`
-        - :attr:`contours`
-        - :attr:`components`
-        - :attr:`anchors`
-        - :attr:`guidelines`
-        - :attr:`image`
-
-        :return: A new :class:`BaseGlyph` instance with the same attributes.
-
-        Example::
 
             >>> copiedGlyph = glyph.copy()
 
+        This will copy:
+
+        - name
+        - unicodes
+        - width
+        - height
+        - note
+        - markColor
+        - lib
+        - contours
+        - components
+        - anchors
+        - guidelines
+        - image
         """
         return super(BaseGlyph, self).copy()
 
+<<<<<<< HEAD
     def copyData(self, source: BaseGlyph) -> None:
         """Copy data from `source` into the current glyph.
 
@@ -123,6 +105,9 @@ class BaseGlyph(BaseObject,
             >>> glyph.copyData(sourceGlyph)
 
         """
+=======
+    def copyData(self, source):
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
         super(BaseGlyph, self).copyData(source)
         for contour in source.contours:
             self.appendContour(contour)
@@ -144,45 +129,57 @@ class BaseGlyph(BaseObject,
 
     # Layer
 
-    _layer: Optional[BaseLayer] = None
+    _layer = None
 
-    layer: dynamicProperty = dynamicProperty(
+    layer = dynamicProperty(
         "layer",
+<<<<<<< HEAD
         """Get the glyph's parent layer object.
 
         :return: An instance of the :class:`BaseLayer` class.
 
         Example::
+=======
+        """
+        The glyph's parent layer.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
             >>> layer = glyph.layer
-
         """
     )
 
-    def _get_layer(self) -> Optional[BaseLayer]:
+    def _get_layer(self):
         if self._layer is None:
             return None
         return self._layer
 
+<<<<<<< HEAD
     def _set_layer(self, layer: BaseLayer) -> None:
+=======
+    def _set_layer(self, layer):
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
         self._layer = layer
 
     # Font
 
-    font: dynamicProperty = dynamicProperty(
+    font = dynamicProperty(
         "font",
+<<<<<<< HEAD
         """Get the glyph's parent font object.
 
         :return: An instance of the :class:`BaseFont` class.
 
         Example::
+=======
+        """
+        The glyph's parent font.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
             >>> font = glyph.font
-
         """
     )
 
-    def _get_font(self) -> Optional[BaseFont]:
+    def _get_font(self):
         if self._layer is None:
             return None
         return self.layer.font
@@ -193,40 +190,42 @@ class BaseGlyph(BaseObject,
 
     # Name
 
-    name: dynamicProperty = dynamicProperty(
+    name = dynamicProperty(
         "base_name",
-        """Get or set the name of the glyph.
-
-        The value must be a :class:`str`.
-
-        :return: A :class:`str` defining the name of the glyph.
-        :raises ValueError: If attempting to set the name to one that
-            already exists in the layer.
-
-        Example::
+        """
+        The glyph's name. This will be a :ref:`type-string`.
 
             >>> glyph.name
             "A"
             >>> glyph.name = "A.alt"
-
         """
     )
 
+<<<<<<< HEAD
     def _get_base_name(self) -> Optional[str]:
+=======
+    def _get_base_name(self):
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
         value = self._get_name()
         if value is not None:
             value = normalizers.normalizeGlyphName(value)
         return value
 
+<<<<<<< HEAD
     def _set_base_name(self, value: Optional[str]) -> None:
+=======
+    def _set_base_name(self, value):
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
         if value == self.name:
             return
         value = normalizers.normalizeGlyphName(value)
         layer = self.layer
         if layer is not None and value in layer:
-            raise ValueError(f"A glyph with the name '{value}' already exists.")
+            raise ValueError("A glyph with the name '%s' already exists."
+                             % value)
         self._set_name(value)
 
+<<<<<<< HEAD
     def _get_name(self) -> str:
         """Get the name of the native glyph.
 
@@ -239,10 +238,18 @@ class BaseGlyph(BaseObject,
         .. important::
 
             Subclasses must override this method.
+=======
+    def _get_name(self):
+        """
+        Get the name of the glyph.
+        This must return a unicode string.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
+        Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
+<<<<<<< HEAD
     def _set_name(self, value: str) -> None:
         """Set the name of the native glyph.
 
@@ -258,14 +265,22 @@ class BaseGlyph(BaseObject,
         .. important::
 
             Subclasses must override this method.
+=======
+    def _set_name(self, value):
+        """
+        Set the name of the glyph.
+        This will be a unicode string.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
+        Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
     # Unicodes
 
-    unicodes: dynamicProperty = dynamicProperty(
+    unicodes = dynamicProperty(
         "base_unicodes",
+<<<<<<< HEAD
         """Get or set the glyph's Unicode values.
 
         The value must be a :class:`list` or :class:`tuple` of :class:`int`
@@ -275,25 +290,33 @@ class BaseGlyph(BaseObject,
             glyphs Unicode values in order from most to least important.
 
         Example::
+=======
+        """
+        The glyph's unicode values in order from most to least important.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
             >>> glyph.unicodes
             (65,)
             >>> glyph.unicodes = [65, 66]
             >>> glyph.unicodes = []
 
+        The values in the returned tuple will be :ref:`type-int`.
+        When setting you may use a list of :ref:`type-int` or
+        :ref:`type-hex` values.
         """
     )
 
-    def _get_base_unicodes(self) -> Tuple[int, ...]:
+    def _get_base_unicodes(self):
         value = self._get_unicodes()
         value = normalizers.normalizeGlyphUnicodes(value)
         return value
 
-    def _set_base_unicodes(self, value: CollectionType[int]) -> None:
-        value = tuple(value)
+    def _set_base_unicodes(self, value):
+        value = list(value)
         value = normalizers.normalizeGlyphUnicodes(value)
         self._set_unicodes(value)
 
+<<<<<<< HEAD
     def _get_unicodes(self) -> Tuple[int, ...]:
         """Get the Unicode values assigned to the glyph.
 
@@ -310,10 +333,18 @@ class BaseGlyph(BaseObject,
         .. important::
 
             Subclasses must override this method.
+=======
+    def _get_unicodes(self):
+        """
+        Get the unicodes assigned to the glyph.
+        This must return a tuple of zero or more integers.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
+        Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
+<<<<<<< HEAD
     def _set_unicodes(self, value: CollectionType[int]) -> None:
         """Assign Unicode values to the glyph.
 
@@ -329,12 +360,20 @@ class BaseGlyph(BaseObject,
         .. important::
 
             Subclasses must override this method.
+=======
+    def _set_unicodes(self, value):
+        """
+        Assign the unicodes to the glyph.
+        This will be a list of zero or more integers.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
+        Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
-    unicode: dynamicProperty = dynamicProperty(
+    unicode = dynamicProperty(
         "base_unicode",
+<<<<<<< HEAD
         """Get or set the glyph's primary Unicode value.
 
         This property is equivalent to ``glyph.unicodes[0]`` and will reset
@@ -347,13 +386,18 @@ class BaseGlyph(BaseObject,
             value or :obj:`None`.
 
         Example::
+=======
+        """
+        The glyph's primary unicode value.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
             >>> glyph.unicode
             65
             >>> glyph.unicode = None
-            None
 
-        Interaction with the :attr:`BaseGlyph.unicodes` property::
+        This is equivalent to ``glyph.unicodes[0]``. Setting a
+        ``glyph.unicode`` value will reset ``glyph.unicodes`` to a tuple
+        containing that value or an empty tuple if ``value`` is ``None``.
 
             >>> glyph.unicodes
             (65, 67)
@@ -364,86 +408,63 @@ class BaseGlyph(BaseObject,
             >>> glyph.unicodes
             ()
 
+        The returned value will be an :ref:`type-int` or ``None``.
+        When setting you may send :ref:`type-int` or :ref:`type-hex`
+        values or ``None``.
         """
     )
 
-    def _get_base_unicode(self) -> Optional[int]:
+    def _get_base_unicode(self):
         value = self._get_unicode()
         if value is not None:
             value = normalizers.normalizeGlyphUnicode(value)
         return value
 
-    def _set_base_unicode(self, value: Optional[int]) -> None:
+    def _set_base_unicode(self, value):
         if value is not None:
             value = normalizers.normalizeGlyphUnicode(value)
             self._set_unicode(value)
         else:
             self._set_unicodes(())
 
-    def _get_unicode(self) -> Optional[int]:
-        """Get the primary Unicode value assigned to the native glyph.
+    def _get_unicode(self):
+        """
+        Get the primary unicode assigned to the glyph.
+        This must return an integer or None.
 
-        This is the environment implementation of
-        the :attr:`BaseGlyph.unicode` property getter.
-
-        :return: An :class:`int` representing the glyphs primary Unicode
-            value or :obj:`None`.
-
-        .. note::
-
-            Subclasses may override this method.
-
+        Subclasses may override this method.
         """
         values = self.unicodes
         if values:
             return values[0]
         return None
 
-    def _set_unicode(self, value: Optional[int]) -> None:
-        """Assign the primary Unicode value to the native glyph.
+    def _set_unicode(self, value):
+        """
+        Assign the primary unicode to the glyph.
+        This will be an integer or None.
 
-        This is the environment implementation of
-        the :attr:`BaseGlyph.unicode` property setter.
-
-        :param value: The primary Unicode value to assign as an :class:`int`
-            or :obj:`None`.
-
-        .. note::
-
-            Subclasses may override this method.
-
+        Subclasses may override this method.
         """
         if value is None:
             self.unicodes = []
         else:
             self.unicodes = [value]
 
-    def autoUnicodes(self) -> None:
-        """Use heuristics to set the Unicode values in the glyph.
-
-        Environments will define their own heuristics for
-        automatically determining values.
-
-        Example::
+    def autoUnicodes(self):
+        """
+        Use heuristics to set the Unicode values in the glyph.
 
             >>> glyph.autoUnicodes()
 
+        Environments will define their own heuristics for
+        automatically determining values.
         """
         self._autoUnicodes()
 
-    def _autoUnicodes(self) -> None:
-        """Use heuristics to set the Unicode values in the native glyph.
-
-        This is the environment implementation of :meth:`BaseGlyph.autoUnicodes`.
-
-        :return: Description of :obj:`None`.
-        :raises NotImplementedError: If the method has not been
-            overridden by a subclass.
-
-        .. important::
-
-            Subclasses must override this method.
-
+    def _autoUnicodes(self):
+        """
+        Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
@@ -453,33 +474,29 @@ class BaseGlyph(BaseObject,
 
     # horizontal
 
-    width: dynamicProperty = dynamicProperty(
+    width = dynamicProperty(
         "base_width",
-        """Get or set the width of the glyph.
-
-        The value must be an :class:`int` or a :class:`float`.
-
-        :return: An :class:`int` or a :class:`float` representing
-            the width of the glyph.
-
-        Example::
+        """
+        The glyph's width.
 
             >>> glyph.width
             500
             >>> glyph.width = 200
 
+        The value will be a :ref:`type-int-float`.
         """
     )
 
-    def _get_base_width(self) -> IntFloatType:
+    def _get_base_width(self):
         value = self._get_width()
         value = normalizers.normalizeGlyphWidth(value)
         return value
 
-    def _set_base_width(self, value: IntFloatType) -> None:
+    def _set_base_width(self, value):
         value = normalizers.normalizeGlyphWidth(value)
         self._set_width(value)
 
+<<<<<<< HEAD
     def _get_width(self) -> IntFloatType:
         """Get the width of the native glyph.
 
@@ -495,31 +512,27 @@ class BaseGlyph(BaseObject,
         .. important::
 
             Subclasses must override this method.
+=======
+    def _get_width(self):
+        """
+        This must return an int or float.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
+        Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
-    def _set_width(self, value: IntFloatType) -> None:
-        """Set the width of the native glyph.
+    def _set_width(self, value):
+        """
+        value will be an int or float.
 
-        This is the environment implementation of
-        the :attr:`BaseGlyph.width` property setter.
-
-        :param value: The glyph width as an :class:`int` or
-            a :class:`float`.
-        :raises NotImplementedError: If the method has not been
-            overridden by a subclass.
-
-
-        .. important::
-
-            Subclasses must override this method.
-
+        Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
-    leftMargin: dynamicProperty = dynamicProperty(
+    leftMargin = dynamicProperty(
         "base_leftMargin",
+<<<<<<< HEAD
         """Get or set the glyph's left margin.
 
         The value must be either an :class:`int` or a :class:`float`,
@@ -529,19 +542,26 @@ class BaseGlyph(BaseObject,
             or :obj:`None` if the glyph has no outlines.
 
         Example::
+=======
+        """
+        The glyph's left margin.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
             >>> glyph.leftMargin
             35
             >>> glyph.leftMargin = 45
 
+        The value will be a :ref:`type-int-float`
+        or `None` if the glyph has no outlines.
         """
     )
 
-    def _get_base_leftMargin(self) -> Optional[IntFloatType]:
+    def _get_base_leftMargin(self):
         value = self._get_leftMargin()
         value = normalizers.normalizeGlyphLeftMargin(value)
         return value
 
+<<<<<<< HEAD
     def _set_base_leftMargin(self, value: Optional[IntFloatType]) -> None:
         value = normalizers.normalizeGlyphLeftMargin(value)
         self._set_leftMargin(value)
@@ -558,7 +578,18 @@ class BaseGlyph(BaseObject,
         .. note::
 
             Subclasses may override this method.
+=======
+    def _set_base_leftMargin(self, value):
+        value = normalizers.normalizeGlyphLeftMargin(value)
+        self._set_leftMargin(value)
 
+    def _get_leftMargin(self):
+        """
+        This must return an int or float.
+        If the glyph has no outlines, this must return `None`.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
+
+        Subclasses may override this method.
         """
         bounds = self.bounds
         if bounds is None:
@@ -566,6 +597,7 @@ class BaseGlyph(BaseObject,
         xMin, yMin, xMax, yMax = bounds
         return xMin
 
+<<<<<<< HEAD
     def _set_leftMargin(self, value: IntFloatType) -> None:
         """Set the native glyph's left margin.
 
@@ -579,14 +611,21 @@ class BaseGlyph(BaseObject,
         .. note::
 
             Subclasses may override this method.
+=======
+    def _set_leftMargin(self, value):
+        """
+        value will be an int or float.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
+        Subclasses may override this method.
         """
         diff = value - self.leftMargin
         self.moveBy((diff, 0))
         self.width += diff
 
-    rightMargin: dynamicProperty = dynamicProperty(
+    rightMargin = dynamicProperty(
         "base_rightMargin",
+<<<<<<< HEAD
         """Get or set the glyph's right margin.
 
         The value must be either an :class:`int` or a :class:`float`,
@@ -596,36 +635,39 @@ class BaseGlyph(BaseObject,
             or :obj:`None` if the glyph has no outlines.
 
         Example::
+=======
+        """
+        The glyph's right margin.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
             >>> glyph.rightMargin
             35
             >>> glyph.rightMargin = 45
 
+        The value will be a :ref:`type-int-float`
+        or `None` if the glyph has no outlines.
         """
     )
 
-    def _get_base_rightMargin(self) -> Optional[IntFloatType]:
+    def _get_base_rightMargin(self):
         value = self._get_rightMargin()
         value = normalizers.normalizeGlyphRightMargin(value)
         return value
 
+<<<<<<< HEAD
     def _set_base_rightMargin(self, value: Optional[IntFloatType]) -> None:
+=======
+    def _set_base_rightMargin(self, value):
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
         value = normalizers.normalizeGlyphRightMargin(value)
         self._set_rightMargin(value)
 
-    def _get_rightMargin(self) -> Optional[IntFloatType]:
-        """Get the native glyph's right margin.
+    def _get_rightMargin(self):
+        """
+        This must return an int or float.
+        If the glyph has no outlines, this must return `None`.
 
-        This is the environment implementation of
-        the :attr:`BaseGlyph.rightMargin` property getter.
-
-        :return: The right glyph margin as an :class:`int` or a :class:`float`,
-            or :obj:`None` if the glyph has no outlines.
-
-        .. note::
-
-            Subclasses may override this method.
-
+        Subclasses may override this method.
         """
         bounds = self.bounds
         if bounds is None:
@@ -633,6 +675,7 @@ class BaseGlyph(BaseObject,
         xMin, yMin, xMax, yMax = bounds
         return self.width - xMax
 
+<<<<<<< HEAD
     def _set_rightMargin(self, value: IntFloatType) -> None:
         """Set the native glyph's right margin.
 
@@ -646,7 +689,13 @@ class BaseGlyph(BaseObject,
         .. note::
 
             Subclasses may override this method.
+=======
+    def _set_rightMargin(self, value):
+        """
+        value will be an int or float.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
+        Subclasses may override this method.
         """
         bounds = self.bounds
         if bounds is None:
@@ -657,32 +706,29 @@ class BaseGlyph(BaseObject,
 
     # vertical
 
-    height: dynamicProperty = dynamicProperty(
+    height = dynamicProperty(
         "base_height",
-        """Get or set the glyph's height.
-
-        The value must be :class:`int` or :class:`float`.
-
-        :return: The glyph height as an :class:`int` or a :class:`float`.
-
-        Example::
+        """
+        The glyph's height.
 
             >>> glyph.height
             500
             >>> glyph.height = 200
 
+        The value will be a :ref:`type-int-float`.
         """
     )
 
-    def _get_base_height(self) -> IntFloatType:
+    def _get_base_height(self):
         value = self._get_height()
         value = normalizers.normalizeGlyphHeight(value)
         return value
 
-    def _set_base_height(self, value: IntFloatType) -> None:
+    def _set_base_height(self, value):
         value = normalizers.normalizeGlyphHeight(value)
         self._set_height(value)
 
+<<<<<<< HEAD
     def _get_height(self) -> IntFloatType:
         """Get the native glyph's height.
 
@@ -696,29 +742,27 @@ class BaseGlyph(BaseObject,
         .. important::
 
             Subclasses must override this method.
+=======
+    def _get_height(self):
+        """
+        This must return an int or float.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
+        Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
-    def _set_height(self, value: IntFloatType) -> None:
-        """Set the native glyph's height.
+    def _set_height(self, value):
+        """
+        value will be an int or float.
 
-        This is the environment implementation of the :attr:`BaseGlyph.height`
-        property setter.
-
-        :param value: The glyph height as an :class:`int` or :class:`float`.
-        :raises NotImplementedError: If the method has not been
-            overridden by a subclass.
-
-        .. important::
-
-            Subclasses must override this method.
-
+        Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
-    bottomMargin: dynamicProperty = dynamicProperty(
+    bottomMargin = dynamicProperty(
         "base_bottomMargin",
+<<<<<<< HEAD
         """Get or set the glyph's bottom margin.
 
         The value must be either an :class:`int` or a :class:`float`,
@@ -728,36 +772,39 @@ class BaseGlyph(BaseObject,
             or :obj:`None` to indicate that the glyph has no outlines.
 
         Example::
+=======
+        """
+        The glyph's bottom margin.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
             >>> glyph.bottomMargin
             35
             >>> glyph.bottomMargin = 45
 
+        The value will be a :ref:`type-int-float`
+        or `None` if the glyph has no outlines.
         """
     )
 
-    def _get_base_bottomMargin(self) -> Optional[IntFloatType]:
+    def _get_base_bottomMargin(self):
         value = self._get_bottomMargin()
         value = normalizers.normalizeGlyphBottomMargin(value)
         return value
 
+<<<<<<< HEAD
     def _set_base_bottomMargin(self, value: Optional[IntFloatType]) -> None:
+=======
+    def _set_base_bottomMargin(self, value):
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
         value = normalizers.normalizeGlyphBottomMargin(value)
         self._set_bottomMargin(value)
 
-    def _get_bottomMargin(self) -> Optional[IntFloatType]:
-        """Get the native glyph's bottom margin.
+    def _get_bottomMargin(self):
+        """
+        This must return an int or float.
+        If the glyph has no outlines, this must return `None`.
 
-        This is the environment implementation of
-        the :attr:`BaseGlyph.bottomMargin` property getter.
-
-        :return: The bottom glyph margin as an :class:`int` or a :class:`float`,
-            or :obj:`None` to indicate that the glyph has no outlines.
-
-        .. note::
-
-            Subclasses may override this method.
-
+        Subclasses may override this method.
         """
         bounds = self.bounds
         if bounds is None:
@@ -765,6 +812,7 @@ class BaseGlyph(BaseObject,
         xMin, yMin, xMax, yMax = bounds
         return yMin
 
+<<<<<<< HEAD
     def _set_bottomMargin(self, value: IntFloatType) -> None:
         """Set the native glyph's bottom margin.
 
@@ -778,14 +826,21 @@ class BaseGlyph(BaseObject,
         .. note::
 
             Subclasses may override this method.
+=======
+    def _set_bottomMargin(self, value):
+        """
+        value will be an int or float.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
+        Subclasses may override this method.
         """
         diff = value - self.bottomMargin
         self.moveBy((0, diff))
         self.height += diff
 
-    topMargin: dynamicProperty = dynamicProperty(
+    topMargin = dynamicProperty(
         "base_topMargin",
+<<<<<<< HEAD
         """Get or set the glyph's top margin.
 
         The value must be either an :class:`int` or a :class:`float`,
@@ -795,35 +850,39 @@ class BaseGlyph(BaseObject,
             or :obj:`None` to indicate that the glyph has no outlines.
 
         Example::
+=======
+        """
+        The glyph's top margin.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
             >>> glyph.topMargin
             35
             >>> glyph.topMargin = 45
+
+        The value will be a :ref:`type-int-float`
+        or `None` if the glyph has no outlines.
         """
     )
 
-    def _get_base_topMargin(self) -> Optional[IntFloatType]:
+    def _get_base_topMargin(self):
         value = self._get_topMargin()
         value = normalizers.normalizeGlyphTopMargin(value)
         return value
 
+<<<<<<< HEAD
     def _set_base_topMargin(self, value: Optional[IntFloatType]) -> None:
+=======
+    def _set_base_topMargin(self, value):
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
         value = normalizers.normalizeGlyphTopMargin(value)
         self._set_topMargin(value)
 
-    def _get_topMargin(self) -> Optional[IntFloatType]:
-        """Get the native glyph's top margin.
+    def _get_topMargin(self):
+        """
+        This must return an int or float.
+        If the glyph has no outlines, this must return `None`.
 
-        This is the environment implementation of
-        the :attr:`BaseGlyph.topMargin` property getter.
-
-        :return: The top glyph margin as an :class:`int` or a :class:`float`,
-            or :obj:`None` to indicate that the glyph has no outlines.
-
-        .. note::
-
-            Subclasses may override this method.
-
+        Subclasses may override this method.
         """
         bounds = self.bounds
         if bounds is None:
@@ -831,6 +890,7 @@ class BaseGlyph(BaseObject,
         xMin, yMin, xMax, yMax = bounds
         return self.height - yMax
 
+<<<<<<< HEAD
     def _set_topMargin(self, value: IntFloatType) -> None:
         """Set the native glyph's top margin.
 
@@ -844,7 +904,13 @@ class BaseGlyph(BaseObject,
         .. note::
 
             Subclasses may override this method.
+=======
+    def _set_topMargin(self, value):
+        """
+        value will be an int or float.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
+        Subclasses may override this method.
         """
         bounds = self.bounds
         if bounds is None:
@@ -857,55 +923,40 @@ class BaseGlyph(BaseObject,
     # Pens
     # ----
 
-    def getPen(self) -> PenType:
-        """Return a pen object for adding outline data  to the glyph.
-
-        :return: An instance of an :class:`~fontTools.pens.basePen.AbstractPen`
-            subclass.
-        :raises NotImplementedError: If the method has not been overridden by a
-            subclass.
-
-        Example::
+    def getPen(self):
+        """
+        Return a :ref:`type-pen` object for adding outline data
+        to the glyph.
 
             >>> pen = glyph.getPen()
-
         """
         self.raiseNotImplementedError()
 
-    def getPointPen(self) -> PointPenType:
-        """Return a point pen object for adding outline data to the glyph.
-
-        :return: An instance of
-            an :class:`~fontTools.pens.pointPen.AbstractPointPen` subclass.
-        :raises NotImplementedError: If the method has not been overridden by a
-            subclass.
-
-        Example::
+    def getPointPen(self):
+        """
+        Return a :ref:`type-pointpen` object for adding outline data
+        to the glyph.
 
             >>> pointPen = glyph.getPointPen()
-
         """
         self.raiseNotImplementedError()
 
-    def draw(self,
-             pen: PenType,
-             contours: bool = True,
-             components: bool = True) -> None:
-        """Draw the glyph's outline data to the given pen object.
-
-        :param pen: The :class:`~fontTools.pens.basePen.AbstractPen` subclass
-            instance to which the data should be drawn.
-        :param contours: Whether to draw data from the glyph's contours.
-            Defaults to :obj:`True`
-        :param components: Whether to draw data from the glyph's contours.
-            Defaults to :obj:`True`
-
-        Example::
+    def draw(self, pen, contours=True, components=True):
+        """
+        Draw the glyph's outline data (contours and components) to
+        the given :ref:`type-pen`.
 
             >>> glyph.draw(pen)
-            >>> glyph.draw(pen, contours=False)
-            >>> glyph.draw(pen, components=False)
 
+        If ``contours`` is set to ``False``, the glyph's
+        contours will not be drawn.
+
+            >>> glyph.draw(pen, contours=False)
+
+        If ``components`` is set to ``False``, the glyph's
+        components will not be drawn.
+
+            >>> glyph.draw(pen, components=False)
         """
         if contours:
             for contour in self:
@@ -914,25 +965,22 @@ class BaseGlyph(BaseObject,
             for component in self.components:
                 component.draw(pen)
 
-    def drawPoints(self,
-                   pen: PointPenType,
-                   contours: bool = True,
-                   components: bool = True) -> None:
-        """Draw the glyph's outline data to the given point pen object.
-
-        :param pen: The :class:`~fontTools.pens.pointPen.AbstractPointPen`
-            subclass instance to which the data should be drawn.
-        :param contours: Whether to draw data from the glyph's contours.
-            Defaults to :obj:`True`
-        :param components: Whether to draw data from the glyph's contours.
-            Defaults to :obj:`True`.
-
-        Example::
+    def drawPoints(self, pen, contours=True, components=True):
+        """
+        Draw the glyph's outline data (contours and components) to
+        the given :ref:`type-pointpen`.
 
             >>> glyph.drawPoints(pointPen)
-            >>> glyph.drawPoints(pointPen, contours=False)
-            >>> glyph.drawPoints(pointPen, components=False)
 
+        If ``contours`` is set to ``False``, the glyph's
+        contours will not be drawn.
+
+            >>> glyph.drawPoints(pointPen, contours=False)
+
+        If ``components`` is set to ``False``, the glyph's
+        components will not be drawn.
+
+            >>> glyph.drawPoints(pointPen, components=False)
         """
         if contours:
             for contour in self:
@@ -945,6 +993,7 @@ class BaseGlyph(BaseObject,
     # Contour, Component and Anchor Interaction
     # -----------------------------------------
 
+<<<<<<< HEAD
     def clear(self,
               contours: bool = True,
               components: bool = True,
@@ -977,10 +1026,14 @@ class BaseGlyph(BaseObject,
             >>> glyph.clear()
             >>> glyph.clear(guidelines=False)
 
+=======
+    def clear(self, contours=True, components=True, anchors=True,
+              guidelines=True, image=True):
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
         """
-        self._clear(contours=contours, components=components,
-                    anchors=anchors, guidelines=guidelines, image=image)
+        Clear the glyph.
 
+<<<<<<< HEAD
     def _clear(self,
                contours: bool = True,
                components: bool = True,
@@ -988,9 +1041,13 @@ class BaseGlyph(BaseObject,
                guidelines: bool = True,
                image: bool = True) -> None:
         """Clear the native glyph data.
+=======
+            >>> glyph.clear()
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
-        This is the environment implementation of :meth:`BaseGlyph.clear`.
+        This clears:
 
+<<<<<<< HEAD
         :param contours: Whether to clear the glyph's contour data.
             Defaults to :obj:`True`
         :param components: Whether to clear the glyph's component data.
@@ -1001,11 +1058,26 @@ class BaseGlyph(BaseObject,
             Defaults to :obj:`True`
         :param image: Whether to clear the glyph's image data.
             Defaults to :obj:`True`
+=======
+        - contours
+        - components
+        - anchors
+        - guidelines
+        - image
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
-        .. note::
+        It's possible to turn off the clearing of portions of
+        the glyph with the listed arguments.
 
-            Subclasses may override this method.
+            >>> glyph.clear(guidelines=False)
+        """
+        self._clear(contours=contours, components=components,
+                    anchors=anchors, guidelines=guidelines, image=image)
 
+    def _clear(self, contours=True, components=True, anchors=True,
+               guidelines=True, image=True):
+        """
+        Subclasses may override this method.
         """
         if contours:
             self.clearContours()
@@ -1018,34 +1090,30 @@ class BaseGlyph(BaseObject,
         if image:
             self.clearImage()
 
-    def appendGlyph(self,
-                    other: BaseGlyph,
-                    offset: Optional[CoordinateType] = None) -> None:
-        """Append data from `other` to new objects in the glyph.
+    def appendGlyph(self, other, offset=None):
+        """
+        Append the data from ``other`` to new objects in this glyph.
+
+            >>> glyph.appendGlyph(otherGlyph)
 
         This will append:
 
-        - :attr:`contours`
-        - :attr:`components`
-        - :attr:`anchors`
-        - :attr:`guidelines`
+        - contours
+        - components
+        - anchors
+        - guidelines
 
-        :param other: The :class:`BaseGlyph` instace containing the source
-            data to append.
-        :param offset: The x and y shift values to be applied to the
-            appended data as a :ref:`type-coordinate`, or :obj:`None`
-            representing an offset of ``(0, 0)``.
+        ``offset`` indicates the x and y shift values that should
+        be applied to the appended data. It must be a :ref:`type-coordinate`
+        value or ``None``. If ``None`` is given, the offset will be ``(0, 0)``.
 
-        Example::
-
-            >>> glyph.appendGlyph(otherGlyph)
             >>> glyph.appendGlyph(otherGlyph, (100, 0))
-
         """
         if offset is None:
             offset = (0, 0)
         offset = normalizers.normalizeTransformationOffset(offset)
         self._appendGlyph(other, offset)
+<<<<<<< HEAD
 
     def _appendGlyph(self,
                      other: BaseGlyph,
@@ -1063,7 +1131,12 @@ class BaseGlyph(BaseObject,
         .. note::
 
             Subclasses may override this method.
+=======
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
+    def _appendGlyph(self, other, offset=None):
+        """
+        Subclasses may override this method.
         """
         other = other.copy()
         if offset != (0, 0):
@@ -1077,36 +1150,34 @@ class BaseGlyph(BaseObject,
         for guideline in other.guidelines:
             self.appendGuideline(guideline=guideline)
 
-    def _setGlyphInContour(self, contour: BaseContour) -> None:
+    # Contours
+
+    def _setGlyphInContour(self, contour):
         if contour.glyph is None:
             contour.glyph = self
 
-    contours: dynamicProperty = dynamicProperty(
+    contours = dynamicProperty(
         "contours",
+<<<<<<< HEAD
         """Get all contours in the glyph.
 
         :return: A :class:`tuple` of :class:`BaseContour` objects.
 
         Example::
+=======
+        """
+        An :ref:`type-immutable-list` of all contours in the glyph.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
             >>> contours = glyph.contours
 
+        The list will contain :class:`BaseContour` objects.
         """
     )
 
-    def _get_contours(self) -> Tuple[BaseContour, ...]:
-        """Get all contours in the native glyph.
-
-        This is the environment implementation of the :attr:`BaseGlyph.contours`
-        property getter.
-
-        :return: A :class:`tuple` of :class:`BaseContour` subclass instances.
-
-        .. note::
-
-            Subclasses may override this method.
-
+    def _get_contours(self):
         """
+<<<<<<< HEAD
         return tuple([self[i] for i in range(len(self))])
 
     def __len__(self) -> int:
@@ -1114,15 +1185,22 @@ class BaseGlyph(BaseObject,
 
         :return: An :class:`int` representing the number of contours in the
             glyph.
+=======
+        Subclasses may override this method.
+        """
+        return tuple([self[i] for i in range(len(self))])
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
-        Example::
+    def __len__(self):
+        """
+        The number of contours in the glyph.
 
             >>> len(glyph)
             2
-
         """
         return self._lenContours()
 
+<<<<<<< HEAD
     def _lenContours(self, **kwargs: Any) -> int:
         r"""Get the number of contours in the native glyph.
 
@@ -1135,35 +1213,30 @@ class BaseGlyph(BaseObject,
         .. important::
 
             Subclasses must override this method.
+=======
+    def _lenContours(self, **kwargs):
+        """
+        This must return an integer.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
+        Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
-    def __iter__(self) -> Iterator[BaseContour]:
-        """Iterate through all contours in the glyph.
-
-        :return: An iterator of :class:`BaseContour` instances.
-
-        Example::
+    def __iter__(self):
+        """
+        Iterate through all contours in the glyph.
 
             >>> for contour in glyph:
             ...     contour.reverse()
-
         """
         return self._iterContours()
 
-    def _iterContours(self, **kwargs: Any) -> Iterator[BaseContour]:
-        r"""Iterate through all contours in the native glyph.
+    def _iterContours(self, **kwargs):
+        """
+        This must return an iterator that returns wrapped contours.
 
-        This is the environment implementation of :meth:`BaseGlyph.__iter__`.
-
-        :param \**kwargs: Additional keyword arguments.
-        :return: An iterator of :class:`BaseContour` subclass instances.
-
-        .. note::
-
-            Subclasses may override this method.
-
+        Subclasses may override this method.
         """
         count = len(self)
         index = 0
@@ -1172,65 +1245,70 @@ class BaseGlyph(BaseObject,
             count -= 1
             index += 1
 
-    def __getitem__(self, index: int) -> BaseContour:
-        """Get the contour located at the given index from the glyph.
-
-        :param index: The index of the glyph to return as an :class:`int`.
-        :return: An instance of the :class:`BaseContour` class.
-
-        Example::
+    def __getitem__(self, index):
+        """
+        Get the contour located at ``index`` from the glyph.
 
             >>> contour = glyph[0]
 
+        The returned value will be a :class:`BaseContour` object.
         """
         index = normalizers.normalizeIndex(index)
         if index >= len(self):
-            raise ValueError(f"No contour located at index {index}.")
+            raise ValueError("No contour located at index %d." % index)
         contour = self._getContour(index)
         self._setGlyphInContour(contour)
         return contour
 
+<<<<<<< HEAD
     def _getContour(self, index: int, **kwargs: Any) -> BaseContour:
         r"""Get the contour located at the given index from the native glyph.
+=======
+    def _getContour(self, index, **kwargs):
+        """
+        This must return a wrapped contour.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
-        :param index: The index of the contour to return as an :class:`int`.
-        :param \**kwargs: Additional keyword arguments.
-        :return: An instance of a :class:`BaseContour` subclass.
+        index will be a valid index.
 
         Subclasses must override this method.
-
         """
         self.raiseNotImplementedError()
 
-    def _getContourIndex(self, contour: BaseContour) -> int:
+    def _getContourIndex(self, contour):
         for i, other in enumerate(self.contours):
             if contour == other:
                 return i
         raise FontPartsError("The contour could not be found.")
 
+<<<<<<< HEAD
     def appendContour(self,
                       contour: BaseContour,
                       offset: CoordinateType = None) -> BaseContour:
         """Append the given contour's data to the glyph.
-
-        :param contour: The :class:`BaseContour` instace containing the source
-            data to append.
-        :param offset: The x and y shift values to be applied to the
-            appended data as a :ref:`type-coordinate`,
-            or :obj:`None` representing an offset of ``(0, 0)``.
-        :return: A :class:`BaseContour` instance containing the appended data.
-
-        Example::
+=======
+    def appendContour(self, contour, offset=None):
+        """
+        Append a contour containing the same data as ``contour``
+        to this glyph.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
             >>> contour = glyph.appendContour(contour)
-            >>> contour = glyph.appendContour(contour, (100, 0))
 
+        This will return a :class:`BaseContour` object representing
+        the new contour in the glyph. ``offset`` indicates the x and
+        y shift values that should be applied to the appended data.
+        It must be a :ref:`type-coordinate` value or ``None``. If
+        ``None`` is given, the offset will be ``(0, 0)``.
+
+            >>> contour = glyph.appendContour(contour, (100, 0))
         """
         contour = normalizers.normalizeContour(contour)
         if offset is None:
             offset = (0, 0)
         offset = normalizers.normalizeTransformationOffset(offset)
         return self._appendContour(contour, offset)
+<<<<<<< HEAD
 
     def _appendContour(self,
                        contour: BaseContour,
@@ -1247,11 +1325,18 @@ class BaseGlyph(BaseObject,
             or :obj:`None` representing an offset of ``(0, 0)``.
         :param \**kwargs: Additional keyword arguments.
         :return: A :class:`BaseContour` instance containing the appended data.
+=======
 
-        .. note::
+    def _appendContour(self, contour, offset=None, **kwargs):
+        """
+        contour will be an object with a drawPoints method.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
-            Subclasses may override this method.
+        offset will be a valid offset (x, y).
 
+        This must return the new contour.
+
+        Subclasses may override this method.
         """
         pointPen = self.getPointPen()
         if offset != (0, 0):
@@ -1262,17 +1347,14 @@ class BaseGlyph(BaseObject,
             contour.drawPoints(pointPen)
         return self[-1]
 
-    def removeContour(self, contour: Union[BaseContour, int]) -> None:
-        """Remove the given contour from the glyph.
-
-        :param contour: The contour to remove as a :class:`BaseContour`
-            instance or an :class:`int` representing a contour index.
-        :raises ValueError: If no contour can be found at the given `index`.
-
-        Example::
+    def removeContour(self, contour):
+        """
+        Remove ``contour`` from the glyph.
 
             >>> glyph.removeContour(contour)
 
+        ``contour`` may be a :ref:`BaseContour` or an :ref:`type-int`
+        representing a contour index.
         """
         if isinstance(contour, int):
             index = contour
@@ -1280,119 +1362,84 @@ class BaseGlyph(BaseObject,
             index = self._getContourIndex(contour)
         index = normalizers.normalizeIndex(index)
         if index >= len(self):
-            raise ValueError(f"No contour located at index {index}.")
+            raise ValueError("No contour located at index %d." % index)
         self._removeContour(index)
 
-    def _removeContour(self, index: int, **kwargs: Any) -> None:
-        r"""Remove the given contour from the native glyph.
+    def _removeContour(self, index, **kwargs):
+        """
+        index will be a valid index.
 
-        This is the environment implementation
-        of :meth:`BaseGlyph.removeContour`.
-
-        :param contour: The contour to remove as a :class:`BaseContour`
-            instance or an :class:`int` representing a contour index.
-        :param \**kwargs: Additional keyword arguments.
-
-        :raises NotImplementedError: If the method has not been
-            overridden by a subclass.
-
-        .. important::
-
-            Subclasses must override this method.
-
+        Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
-    def clearContours(self) -> None:
-        """Clear all contours in the glyph.
-
-        Example::
+    def clearContours(self):
+        """
+        Clear all contours in the glyph.
 
             >>> glyph.clearContours()
-
         """
         self._clearContours()
 
-    def _clearContours(self) -> None:
-        """Clear all contours in the native glyph.
-
-        This is the environment implementation
-        of :meth:`BaseGlyph.clearContours`.
-
-        .. note::
-
-            Subclasses may override this method.
-
+    def _clearContours(self):
+        """
+        Subclasses may override this method.
         """
         for _ in range(len(self)):
             self.removeContour(-1)
 
-    def removeOverlap(self) -> None:
-        """Perform a remove overlap operation on the glyph's contours.
-
-        The behavior of this may vary across environments.
-
-        Example::
+    def removeOverlap(self):
+        """
+        Perform a remove overlap operation on the contours.
 
             >>> glyph.removeOverlap()
 
+        The behavior of this may vary across environments.
         """
         self._removeOverlap()
 
-    def _removeOverlap(self) -> None:
-        """Perform a remove overlap operation on the native glyph's contours.
-
-        This is the environment implementation
-        of :meth:`BaseGlyph.removeOverlap`.
-
-        :raises NotImplementedError: If the method has not been
-            overridden by a subclass.
-
-        .. important::
-
-            Subclasses must implement this method.
-
+    def _removeOverlap(self):
+        """
+        Subclasses must implement this method.
         """
         self.raiseNotImplementedError()
 
     # Components
 
-    def _setGlyphInComponent(self, component: BaseComponent) -> None:
+    def _setGlyphInComponent(self, component):
         if component.glyph is None:
             component.glyph = self
 
-    components: dynamicProperty = dynamicProperty(
+    components = dynamicProperty(
         "components",
+<<<<<<< HEAD
         """Get all components in the glyph.
 
         :return: A :class:`tuple` of :class:`BaseComponent` instances.
 
         Example::
+=======
+        """
+        An :ref:`type-immutable-list` of all components in the glyph.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
             >>> components = glyph.components
 
+        The list will contain :class:`BaseComponent` objects.
         """
     )
 
-    def _get_components(self) -> Tuple[BaseComponent, ...]:
-        """Get all components in the native glyph.
-
-        This is the environment implementation of
-        the :attr:`BaseGlyph.components` property getter.
-
-        :return: A :class:`tuple` of :class:`BaseComponent` subclass instances.
-
-        .. note::
-
-            Subclasses may override this method.
-
+    def _get_components(self):
         """
-        return tuple(self._getitem__components(i) for
-                      i in range(self._len__components()))
+        Subclasses may override this method.
+        """
+        return tuple([self._getitem__components(i) for
+                     i in range(self._len__components())])
 
-    def _len__components(self) -> int:
+    def _len__components(self):
         return self._lenComponents()
 
+<<<<<<< HEAD
     def _lenComponents(self, **kwargs: Any) -> int:
         r"""Get the number of components in the ntive glyph.
 
@@ -1405,18 +1452,26 @@ class BaseGlyph(BaseObject,
         .. important::
 
             Subclasses must override this method.
+=======
+    def _lenComponents(self, **kwargs):
+        """
+        This must return an integer indicating
+        the number of components in the glyph.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
+        Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
-    def _getitem__components(self, index: int) -> BaseComponent:
+    def _getitem__components(self, index):
         index = normalizers.normalizeIndex(index)
         if index >= self._len__components():
-            raise ValueError(f"No component located at index {index}.")
+            raise ValueError("No component located at index %d." % index)
         component = self._getComponent(index)
         self._setGlyphInComponent(component)
         return component
 
+<<<<<<< HEAD
     def _getComponent(self, index: int, **kwargs: Any) -> BaseComponent:
         r"""Get the component at the given index from the native glyph.
 
@@ -1427,66 +1482,64 @@ class BaseGlyph(BaseObject,
             overridden by a subclass.
 
         .. important::
+=======
+    def _getComponent(self, index, **kwargs):
+        """
+        This must return a wrapped component.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
-            Subclasses must override this method.
+        index will be a valid index.
 
+        Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
-    def _getComponentIndex(self, component: BaseComponent) -> int:
+    def _getComponentIndex(self, component):
         for i, other in enumerate(self.components):
             if component == other:
                 return i
         raise FontPartsError("The component could not be found.")
 
-    def appendComponent(self,
-                        baseGlyph: Optional[str] = None,
-                        offset: Optional[CoordinateType] = None,
-                        scale: Optional[ScaleType] = None,
-                        component: Optional[BaseComponent] = None
-                        ) -> BaseComponent:
-        """Append a component to the glyph.
-
-        If `baseGlyph`, `offset` or `scale` is specified, those values will be
-        used instead of the values in the given `component`.
-
-        :param baseGlyph: An optional glyph name to append as a component.
-            Defaults to :obj:`None`.
-        :param offset: The x and y shift values to be applied to the
-            appended data as a :ref:`type-coordinate`,
-            or :obj:`None` representing an offset of ``(0, 0)``.
-            Defaults to :obj:`None`
-        :param scale: The x and y scale values that should be applied to
-            the appended component as a :class:`tuple` of :class:`int`
-            or :class:`float` values, or :obj:`None` representing a scale of
-            ``(1.0, 1.0)``. Defaults to :obj:`None`
-        :param component: An optional :class:`BaseComponent` instance from which
-            to copy attribute values. Defaults to :obj:`None`.
-        :return: The newly appended :class:`BaseComponent` instance.
-        :raises FontPartsError: If the `baseGlyph` refers to the current glyph
-            instance, which would result in a component referencing itself. This
-            is not permitted.
-
-        Example::
+    def appendComponent(self, baseGlyph=None, offset=None, scale=None, component=None):
+        """
+        Append a component to this glyph.
 
             >>> component = glyph.appendComponent("A")
+
+        This will return a :class:`BaseComponent` object representing
+        the new component in the glyph. ``offset`` indicates the x and
+        y shift values that should be applied to the appended component.
+        It must be a :ref:`type-coordinate` value or ``None``. If
+        ``None`` is given, the offset will be ``(0, 0)``.
+
             >>> component = glyph.appendComponent("A", offset=(10, 20))
+
+        ``scale`` indicates the x and y scale values that should be
+        applied to the appended component. It must be a
+        :ref:`type-scale` value or ``None``. If ``None`` is given,
+        the scale will be ``(1.0, 1.0)``.
+
             >>> component = glyph.appendComponent("A", scale=(1.0, 2.0))
 
+        ``component`` may be a :class:`BaseComponent` object from which
+        attribute values will be copied. If ``baseGlyph``, ``offset``
+        or ``scale`` are specified as arguments, those values will be used
+        instead of the values in the given component object.
         """
         identifier = None
         sxy = 0
         syx = 0
         if component is not None:
-            normalizedComponent = normalizers.normalizeComponent(component)
+            component = normalizers.normalizeComponent(component)
             if baseGlyph is None:
-                baseGlyph = normalizedComponent.baseGlyph
-            sx, sxy, syx, sy, ox, oy = normalizedComponent.transformation
+                baseGlyph = component.baseGlyph
+            sx, sxy, syx, sy, ox, oy = component.transformation
             if offset is None:
                 offset = (ox, oy)
             if scale is None:
                 scale = (sx, sy)
             if baseGlyph is None:
+<<<<<<< HEAD
                 baseGlyph = normalizedComponent.baseGlyph
             if normalizedComponent.identifier is not None:
                 existing = set([c.identifier for c in self.components
@@ -1498,16 +1551,27 @@ class BaseGlyph(BaseObject,
             raise FontPartsError(
                 "A glyph cannot contain a component referencing itself."
             )
+=======
+                baseGlyph = component.baseGlyph
+            if component.identifier is not None:
+                existing = set([c.identifier for c in self.components if c.identifier is not None])
+                if component.identifier not in existing:
+                    identifier = component.identifier
+        baseGlyph = normalizers.normalizeGlyphName(baseGlyph)
+        if self.name == baseGlyph:
+            raise FontPartsError(("A glyph cannot contain a component referencing itself."))
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
         if offset is None:
             offset = (0, 0)
         if scale is None:
             scale = (1, 1)
-        normalizedOffset = normalizers.normalizeTransformationOffset(offset)
-        normalizedScale = normalizers.normalizeTransformationScale(scale)
-        ox, oy = normalizedOffset
-        sx, sy = normalizedScale
+        offset = normalizers.normalizeTransformationOffset(offset)
+        scale = normalizers.normalizeTransformationScale(scale)
+        ox, oy = offset
+        sx, sy = scale
         transformation = (sx, sxy, syx, sy, ox, oy)
         identifier = normalizers.normalizeIdentifier(identifier)
+<<<<<<< HEAD
         return self._appendComponent(
             baseGlyph, transformation=transformation, identifier=identifier
         )
@@ -1528,30 +1592,35 @@ class BaseGlyph(BaseObject,
             a :clss:`str`. Defaults to :obj:`None`
         :param \**kwargs: Additional keyword arguments.
         :return: The newly appended :class:`BaseComponent` subclass instance.
+=======
+        return self._appendComponent(baseGlyph, transformation=transformation, identifier=identifier)
 
-        .. note::
+    def _appendComponent(self, baseGlyph, transformation=None, identifier=None, **kwargs):
+        """
+        baseGlyph will be a valid glyph name.
+        The baseGlyph may or may not be in the layer.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
-            Subclasses may override this method.
+        offset will be a valid offset (x, y).
+        scale will be a valid scale (x, y).
+        identifier will be a valid, nonconflicting identifier.
 
+        This must return the new component.
+
+        Subclasses may override this method.
         """
         pointPen = self.getPointPen()
-        pointPen.addComponent(
-            baseGlyph, transformation=transformation, identifier=identifier
-        )
+        pointPen.addComponent(baseGlyph, transformation=transformation, identifier=identifier)
         return self.components[-1]
 
-    def removeComponent(self, component: Union[BaseComponent, int]) -> None:
-        """Remove the specified component from the glyph.
-
-        :param component: The component to remove as a :class:`BaseComponent`
-            instance or an :class:`int` representing the component's index.
-
-        :raises ValueError: If no component can be found at the given `index`.
-
-        Example::
+    def removeComponent(self, component):
+        """
+        Remove ``component`` from the glyph.
 
             >>> glyph.removeComponent(component)
 
+        ``component`` may be a :ref:`BaseComponent` or an
+        :ref:`type-int` representing a component index.
         """
         if isinstance(component, int):
             index = component
@@ -1559,106 +1628,87 @@ class BaseGlyph(BaseObject,
             index = self._getComponentIndex(component)
         index = normalizers.normalizeIndex(index)
         if index >= self._len__components():
-            raise ValueError(f"No component located at index {index}.")
+            raise ValueError("No component located at index %d." % index)
         self._removeComponent(index)
 
-    def _removeComponent(self, index: int, **kwargs: Any) -> None:
-        r"""Remove the specified component from the native glyph.
+    def _removeComponent(self, index, **kwargs):
+        """
+        index will be a valid index.
 
-        This is the environment implementation of :meth:`BaseGlyph.removeComponent`.
-
-        :param index: The index of the component to remove as an :class:`int`.
-        :param \**kwargs: Additional keyword arguments.
-        :raises NotImplementedError: If the method has not been overridden by a
-            subclass.
-
-        .. important::
-
-            Subclasses must override this method.
-
+        Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
-    def clearComponents(self) -> None:
-        """Clear all components in the glyph.
-
-        Example::
+    def clearComponents(self):
+        """
+        Clear all components in the glyph.
 
             >>> glyph.clearComponents()
-
         """
         self._clearComponents()
 
-    def _clearComponents(self) -> None:
-        """Clear all components in the native glyph.
-
-        This is the environment implementation
-        of :meth:`BaseGlyph.clearComponents`.
-
-        .. note::
-
-            Subclasses may override this method.
-
+    def _clearComponents(self):
+        """
+        Subclasses may override this method.
         """
         for _ in range(self._len__components()):
             self.removeComponent(-1)
 
-    def decompose(self) -> None:
-        """Decompose all components in the glyph to contours.
-
-        Example::
+    def decompose(self):
+        """
+        Decompose all components in the glyph to contours.
 
             >>> glyph.decompose()
-
         """
         self._decompose()
 
-    def _decompose(self) -> None:
-        """Decompose all components in the native glyph to contours.
-
-        .. note::
-
-            Subclasses may override this method.
-
+    def _decompose(self):
+        """
+        Subclasses may override this method.
         """
         for component in self.components:
             component.decompose()
 
     # Anchors
 
-    def _setGlyphInAnchor(self, anchor: BaseAnchor) -> None:
+    def _setGlyphInAnchor(self, anchor):
         if anchor.glyph is None:
             anchor.glyph = self
 
-    anchors: dynamicProperty = dynamicProperty(
+    anchors = dynamicProperty(
         "anchors",
+<<<<<<< HEAD
         """Get all anchors in the glyph.
 
         :return: A :class:`tuple` of :class:`BaseAnthor` instances.
 
         Example::
+=======
+        """
+        An :ref:`type-immutable-list` of all anchors in the glyph.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
             >>> anchors = glyph.anchors
 
+        The list will contain :class:`BaseAnchor` objects.
         """
     )
 
-    def _get_anchors(self) -> Tuple[BaseAnchor, ...]:
-        """Get all anchors in the native glyph.
-
-        :return: A :class:`tuple` of :class:`BaseAnthor` subclass instances.
-
-        .. note::
-
-            Subclasses may override this method.
-
+    def _get_anchors(self):
+        """
+        Subclasses may override this method.
         """
         return tuple([self._getitem__anchors(i) for
+<<<<<<< HEAD
                       i in range(self._len__anchors())])
+=======
+                     i in range(self._len__anchors())])
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
-    def _len__anchors(self) -> int:
+    def _len__anchors(self):
         return self._lenAnchors()
 
+<<<<<<< HEAD
     def _lenAnchors(self, **kwargs: Any) -> int:
         r"""Get the number of anchors in the ntive glyph.
 
@@ -1670,18 +1720,26 @@ class BaseGlyph(BaseObject,
         .. important::
 
             Subclasses must override this method.
+=======
+    def _lenAnchors(self, **kwargs):
+        """
+        This must return an integer indicating
+        the number of anchors in the glyph.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
+        Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
-    def _getitem__anchors(self, index: int) -> BaseAnchor:
+    def _getitem__anchors(self, index):
         index = normalizers.normalizeIndex(index)
         if index >= self._len__anchors():
-            raise ValueError(f"No anchor located at index {index}.")
+            raise ValueError("No anchor located at index %d." % index)
         anchor = self._getAnchor(index)
         self._setGlyphInAnchor(anchor)
         return anchor
 
+<<<<<<< HEAD
     def _getAnchor(self, index: int, **kwargs: Any) -> BaseAnchor:
         r"""Get the anchor at the given index from the native glyph.
 
@@ -1692,63 +1750,74 @@ class BaseGlyph(BaseObject,
             subclass.
 
         .. important::
+=======
+    def _getAnchor(self, index, **kwargs):
+        """
+        This must return a wrapped anchor.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
-            Subclasses must override this method.
+        index will be a valid index.
 
+        Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
-    def _getAnchorIndex(self, anchor: BaseAnchor) -> int:
+    def _getAnchorIndex(self, anchor):
         for i, other in enumerate(self.anchors):
             if anchor == other:
                 return i
         raise FontPartsError("The anchor could not be found.")
 
-    def appendAnchor(self,
-                     name: Optional[str] = None,
-                     position: Optional[CoordinateType] = None,
-                     color: Optional[ColorType] = None,
-                     anchor: Optional[BaseAnchor] = None) -> BaseAnchor:
-        """Append an anchor to the glyph.
-
-        If `name`, `position` or `color` are specified, those values will be
-        used instead of the values in the given anchor object.
-
-        :param name: An optional name to be assigned to the anchor as
-            a :class:`str`. Defaults to :obj:`None`.
-        :param position: The optional x and y location to be applied to the
-         anchor as a :ref:`type-coordinate`. Defaults to :obj:`None`.
-        :param color: The optional color to be applied to the anchor as
-            a :ref:`type-color`. Defaults to :obj:`None`.
-        :param anchor: An optional :class:`BaseAnchor` instance from which
-            attribute values will be copied. Defualts to :obj:`None`.
-        :return: The newly appended :class:`BaseAnchor` instance.
-
-        Example::
+    def appendAnchor(self, name=None, position=None, color=None, anchor=None):
+        """
+        Append an anchor to this glyph.
 
             >>> anchor = glyph.appendAnchor("top", (10, 20))
+
+        This will return a :class:`BaseAnchor` object representing
+        the new anchor in the glyph. ``name`` indicated the name to
+        be assigned to the anchor. It must be a :ref:`type-string`
+        or ``None``. ``position`` indicates the x and y location
+        to be applied to the anchor. It must be a
+        :ref:`type-coordinate` value. ``color`` indicates the color
+        to be applied to the anchor. It must be a :ref:`type-color`
+        or ``None``.
+
             >>> anchor = glyph.appendAnchor("top", (10, 20), color=(1, 0, 0, 1))
 
+        ``anchor`` may be a :class:`BaseAnchor` object from which
+        attribute values will be copied. If ``name``, ``position``
+        or ``color`` are specified as arguments, those values will
+        be used instead of the values in the given anchor object.
         """
         identifier = None
         if anchor is not None:
-            normalizedAnchor = normalizers.normalizeAnchor(anchor)
+            anchor = normalizers.normalizeAnchor(anchor)
             if name is None:
-                name = normalizedAnchor.name
+                name = anchor.name
             if position is None:
-                position = normalizedAnchor.position
+                position = anchor.position
             if color is None:
+<<<<<<< HEAD
                 color = normalizedAnchor.color
             if normalizedAnchor.identifier is not None:
                 existing = set([a.identifier for a in self.anchors
                                 if a.identifier is not None])
                 if normalizedAnchor.identifier not in existing:
                     identifier = normalizedAnchor.identifier
+=======
+                color = anchor.color
+            if anchor.identifier is not None:
+                existing = set([a.identifier for a in self.anchors if a.identifier is not None])
+                if anchor.identifier not in existing:
+                    identifier = anchor.identifier
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
         name = normalizers.normalizeAnchorName(name)
         position = normalizers.normalizeCoordinateTuple(position)
         if color is not None:
             color = normalizers.normalizeColor(color)
         identifier = normalizers.normalizeIdentifier(identifier)
+<<<<<<< HEAD
         return self._appendAnchor(
             name, position=position, color=color, identifier=identifier
         )
@@ -1777,24 +1846,31 @@ class BaseGlyph(BaseObject,
             subclass.
 
         .. note::
+=======
+        return self._appendAnchor(name, position=position, color=color, identifier=identifier)
 
-            Subclasses may override this method.
+    def _appendAnchor(self, name, position=None, color=None, identifier=None, **kwargs):
+        """
+        name will be a valid anchor name.
+        position will be a valid position (x, y).
+        color will be None or a valid color.
+        identifier will be a valid, nonconflicting identifier.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
+        This must return the new anchor.
+
+        Subclasses may override this method.
         """
         self.raiseNotImplementedError()
 
-    def removeAnchor(self, anchor: Union[BaseAnchor, int]) -> None:
-        """Remove the given anchor from the glyph.
-
-        :param anchor: The anchor to remove as a :class:`BaseAnchor` intance,
-            or an :class:`int` representing the anchor's index.
-
-        :raises ValueError: If no anchor can be found at the given `index`.
-
-        Example::
+    def removeAnchor(self, anchor):
+        """
+        Remove ``anchor`` from the glyph.
 
             >>> glyph.removeAnchor(anchor)
 
+        ``anchor`` may be an :ref:`BaseAnchor` or an
+        :ref:`type-int` representing an anchor index.
         """
         if isinstance(anchor, int):
             index = anchor
@@ -1802,46 +1878,28 @@ class BaseGlyph(BaseObject,
             index = self._getAnchorIndex(anchor)
         index = normalizers.normalizeIndex(index)
         if index >= self._len__anchors():
-            raise ValueError(f"No anchor located at index {index}.")
+            raise ValueError("No anchor located at index %d." % index)
         self._removeAnchor(index)
 
-    def _removeAnchor(self, index: int, **kwargs: Any) -> None:
-        r"""Remove the given anchor from the glyph.
+    def _removeAnchor(self, index, **kwargs):
+        """
+        index will be a valid index.
 
-        This is the environment implementation of :meth:`BaseGlyph.removeAnchor`.
-
-        :param index: The index of the anchor to remove as an :class:`int`.
-        :param \**kwargs: Additional keyword arguments.
-
-        :raises NotImplementedError: If the method has not been overridden by a
-            subclass.
-
-        .. important::
-
-            Subclasses must override this method.
-
+        Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
-    def clearAnchors(self) -> None:
-        """Clear all anchors in the glyph.
-
-        Example::
+    def clearAnchors(self):
+        """
+        Clear all anchors in the glyph.
 
             >>> glyph.clearAnchors()
-
         """
         self._clearAnchors()
 
-    def _clearAnchors(self) -> None:
-        """Clear all anchors in the native glyph.
-
-        This is the environment implementation of :meth:`BaseGlyph.clearAnchors`.
-
-        .. note::
-
-            Subclasses may override this method.
-
+    def _clearAnchors(self):
+        """
+        Subclasses may override this method.
         """
         for _ in range(self._len__anchors()):
             self.removeAnchor(-1)
@@ -1850,12 +1908,13 @@ class BaseGlyph(BaseObject,
     # Guidelines
     # ----------
 
-    def _setGlyphInGuideline(self, guideline: BaseGuideline) -> None:
+    def _setGlyphInGuideline(self, guideline):
         if guideline.glyph is None:
             guideline.glyph = self
 
-    guidelines: dynamicProperty = dynamicProperty(
+    guidelines = dynamicProperty(
         "guidelines",
+<<<<<<< HEAD
         """Get all guidelines in the glyph.
 
         :return: A :class:`tuple` of :class:`BaseGuideline` instances.
@@ -1866,28 +1925,33 @@ class BaseGlyph(BaseObject,
 
         The list will contain  objects.
 
+=======
+        """
+        An :ref:`type-immutable-list` of all guidelines in the glyph.
+
+            >>> guidelines = glyph.guidelines
+
+        The list will contain :class:`BaseGuideline` objects.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
         """
     )
 
-    def _get_guidelines(self) -> Tuple[BaseGuideline, ...]:
-        """Get all guidelines in the glyph.
-
-        This is the environment implementation of
-        the :attr:`BaseGlyph.guidelines` property getter.
-
-        :return: A :class:`tuple` of :class:`BaseGuideline` subclass instances.
-
-        .. note::
-
-            Subclasses may override this method.
-
+    def _get_guidelines(self):
         """
+        Subclasses may override this method.
+        """
+<<<<<<< HEAD
         return tuple([self._getitem__guidelines(i)
                       for i in range(self._len__guidelines())])
+=======
+        return tuple([self._getitem__guidelines(i) for
+                     i in range(self._len__guidelines())])
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
-    def _len__guidelines(self) -> int:
+    def _len__guidelines(self):
         return self._lenGuidelines()
 
+<<<<<<< HEAD
     def _lenGuidelines(self, **kwargs: Any) -> int:
         r"""Get the number of guidelines in the ntive glyph.
 
@@ -1900,11 +1964,18 @@ class BaseGlyph(BaseObject,
         .. important::
 
             Subclasses must override this method.
+=======
+    def _lenGuidelines(self, **kwargs):
+        """
+        This must return an integer indicating
+        the number of guidelines in the glyph.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
+        Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
-    def _getitem__guidelines(self, index: int) -> BaseGuideline:
+    def _getitem__guidelines(self, index):
         index = normalizers.normalizeIndex(index)
         if index >= self._len__guidelines():
             raise ValueError("No guideline located at index %d." % index)
@@ -1912,6 +1983,7 @@ class BaseGlyph(BaseObject,
         self._setGlyphInGuideline(guideline)
         return guideline
 
+<<<<<<< HEAD
     def _getGuideline(self, index: int, **kwargs: Any) -> BaseGuideline:
         r"""Get the anchor at the given index from the native glyph.
 
@@ -1922,64 +1994,75 @@ class BaseGlyph(BaseObject,
             subclass.
 
         .. important::
+=======
+    def _getGuideline(self, index, **kwargs):
+        """
+        This must return a wrapped guideline.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
-            Subclasses must override this method.
+        index will be a valid index.
 
+        Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
-    def _getGuidelineIndex(self, guideline: BaseGuideline) -> int:
+    def _getGuidelineIndex(self, guideline):
         for i, other in enumerate(self.guidelines):
             if guideline == other:
                 return i
         raise FontPartsError("The guideline could not be found.")
 
-    def appendGuideline(self,
-                        position: Optional[CoordinateType] = None,
-                        angle: Optional[IntFloatType] = None,
-                        name: Optional[str] = None,
-                        color: Optional[ColorType] = None,
-                        guideline: Optional[BaseGuideline] = None
-                        ) -> BaseGuideline:
-        """Append a guideline to the glyph.
-
-        If `name`, `position` or `color` are specified, those values will be
-        used instead of the values in the given guideline object.
-
-        :param position: The optional x and y location to be applied to the
-            guideline as a :ref:`type-coordinate`. Defaults to :obj:`None`.
-        :param angle: The optional angle to be applied to the guideline
-            as :class:`int` or :class:`float`. Defaults to :obj:`None`.
-        :param name: An optional name to be assigned to the guideline as
-            a :class:`str`. Defaults to :obj:`None`.
-        :param color: The optional color to be applied to the guideline as
-            a :ref:`type-color`. Defaults to :obj:`None`.
-        :param guideline: An optional :class:`BaseGuideline` instance from which
-            attribute values will be copied. Defualts to :obj:`None`.
-        :return: The newly appended :class:`BaseGuideline` instance.
-
-        Example::
-
-            >>> anchor = glyph.appendGuideline("top", (10, 20))
-            >>> anchor = glyph.appendGuideline("top", (10, 20), color=(1, 0, 0, 1))
-
+    def appendGuideline(self, position=None, angle=None, name=None, color=None, guideline=None):
         """
-        identifier: Optional[str] = None
+        Append a guideline to this glyph.
+
+            >>> guideline = glyph.appendGuideline((100, 0), 90)
+
+        This will return a :class:`BaseGuideline` object representing
+        the new guideline in the glyph. ``position`` indicates the
+        x and y location to be used as the center point of the anchor.
+        It must be a :ref:`type-coordinate` value. ``angle`` indicates
+        the angle of the guideline, in degrees. This must be a
+        :ref:`type-int-float` between 0 and 360. ``name`` indicates
+        an name to be assigned to the guideline. It must be a
+        :ref:`type-string` or ``None``.
+
+            >>> guideline = glyph.appendGuideline((100, 0), 90, name="left")
+
+        ``color`` indicates the color to be applied to the guideline.
+        It must be a :ref:`type-color` or ``None``.
+
+            >>> guideline = glyph.appendGuideline((100, 0), 90, color=(1, 0, 0, 1))
+
+        ``guideline`` may be a :class:`BaseGuideline` object from which
+        attribute values will be copied. If ``position``, ``angle``, ``name``
+        or ``color`` are specified as arguments, those values will be used
+        instead of the values in the given guideline object.
+        """
+        identifier = None
         if guideline is not None:
-            normalizedGuideline = normalizers.normalizeGuideline(guideline)
+            guideline = normalizers.normalizeGuideline(guideline)
             if position is None:
-                position = normalizedGuideline.position
+                position = guideline.position
             if angle is None:
-                angle = normalizedGuideline.angle
+                angle = guideline.angle
             if name is None:
-                name = normalizedGuideline.name
+                name = guideline.name
             if color is None:
+<<<<<<< HEAD
                 color = normalizedGuideline.color
             if normalizedGuideline.identifier is not None:
                 existing = set([g.identifier for g in self.guidelines
                                 if g.identifier is not None])
                 if normalizedGuideline.identifier not in existing:
                     identifier = normalizedGuideline.identifier
+=======
+                color = guideline.color
+            if guideline.identifier is not None:
+                existing = set([g.identifier for g in self.guidelines if g.identifier is not None])
+                if guideline.identifier not in existing:
+                    identifier = guideline.identifier
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
         position = normalizers.normalizeCoordinateTuple(position)
         angle = normalizers.normalizeRotationAngle(angle)
         if name is not None:
@@ -1987,6 +2070,7 @@ class BaseGlyph(BaseObject,
         if color is not None:
             color = normalizers.normalizeColor(color)
         identifier = normalizers.normalizeIdentifier(identifier)
+<<<<<<< HEAD
         newGuideline = self._appendGuideline(
             position, angle, name=name, color=color, identifier=identifier
         )
@@ -2023,22 +2107,34 @@ class BaseGlyph(BaseObject,
         .. note::
 
             Subclasses may override this method.
+=======
+        guideline = self._appendGuideline(position, angle, name=name, color=color, identifier=identifier)
+        guideline.glyph = self
+        return guideline
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
+    def _appendGuideline(self, position, angle, name=None, color=None, identifier=None, **kwargs):
+        """
+        position will be a valid position (x, y).
+        angle will be a valid angle.
+        name will be a valid guideline name or None.
+        color will be a valid color or None .
+        identifier will be a valid, nonconflicting identifier.
+
+        This must return the new guideline.
+
+        Subclasses may override this method.
         """
         self.raiseNotImplementedError()
 
-    def removeGuideline(self, guideline: Union[BaseGuideline, int]) -> None:
-        """Remove the given guideline from the glyph.
-
-        :param guideline: The guideline to remove as a :class:`BaseGuideline`
-            intance, or an :class:`int` representing the guideline's index.
-
-        :raises ValueError: If no guideline can be found at the given `index`.
-
-        Example::
+    def removeGuideline(self, guideline):
+        """
+        Remove ``guideline`` from the glyph.
 
             >>> glyph.removeGuideline(guideline)
 
+        ``guideline`` may be a :ref:`BaseGuideline` or an
+        :ref:`type-int` representing an guideline index.
         """
         if isinstance(guideline, int):
             index = guideline
@@ -2049,43 +2145,25 @@ class BaseGlyph(BaseObject,
             raise ValueError("No guideline located at index %d." % index)
         self._removeGuideline(index)
 
-    def _removeGuideline(self, index: int, **kwargs: Any) -> None:
-        r"""Remove the given guideline from the glyph.
+    def _removeGuideline(self, index, **kwargs):
+        """
+        index will be a valid index.
 
-        This is the environment implementation of :meth:`BaseGlyph.removeGuideline`.
-
-        :param index: The index of the guideline to remove as an :class:`int`.
-        :param \**kwargs: Additional keyword arguments.
-
-        :raises NotImplementedError: If the method has not been overridden by a
-            subclass.
-
-        .. important::
-
-            Subclasses must override this method.
-
+        Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
-    def clearGuidelines(self) -> None:
-        """Clear all guidelines in the glyph.
-
-        Example::
+    def clearGuidelines(self):
+        """
+        Clear all guidelines in the glyph.
 
             >>> glyph.clearGuidelines()
-
         """
         self._clearGuidelines()
 
-    def _clearGuidelines(self) -> None:
-        """Clear all guidelines in the native glyph.
-
-        This is the environment implementation of :meth:`BaseGlyph.clearGuidelines`.
-
-        .. note::
-
-            Subclasses may override this method.
-
+    def _clearGuidelines(self):
+        """
+        Subclasses may override this method.
         """
         for _ in range(self._len__guidelines()):
             self.removeGuideline(-1)
@@ -2094,34 +2172,26 @@ class BaseGlyph(BaseObject,
     # Data Normalization
     # ------------------
 
-    def round(self) -> None:
-        """Round coordinates in the glyph to the nearest integer.
-
-        This applies to:
-
-        - :attr:`width`
-        - :attr:`height`
-        - :attr:`contours`
-        - :attr:`components`
-        - :attr:`anchors`
-        - :attr:`guidelines`
-
-        Example::
+    def round(self):
+        """
+        Round coordinates to the nearest integer.
 
             >>> glyph.round()
 
+        This applies to the following:
+
+        - width
+        - height
+        - contours
+        - components
+        - anchors
+        - guidelines
         """
         self._round()
 
-    def _round(self) -> None:
-        """Round coordinates in the native glyph to the nearest integer.
-
-        This is the environment implementation of :meth:`BaseGlyph.round`.
-
-        .. note::
-
-            Subclasses may override this method.
-
+    def _round(self):
+        """
+        Subclasses may override this method.
         """
         for contour in self.contours:
             contour.round()
@@ -2134,68 +2204,44 @@ class BaseGlyph(BaseObject,
         self.width = normalizers.normalizeVisualRounding(self.width)
         self.height = normalizers.normalizeVisualRounding(self.height)
 
-    def correctDirection(self, trueType: bool = False) -> None:
-        """Correct the winding direction of the glyph's contours.
-
-        By default this method follows the PostScript winding
-        recommendations.
-
-        :param trueType: Whether to follow TrueType rather than PostScript
-            winding recommendations. Defaults to :obj:`False`.
-
-        Example::
+    def correctDirection(self, trueType=False):
+        """
+        Correct the winding direction of the contours following
+        the PostScript recommendations.
 
             >>> glyph.correctDirection()
 
+        If ``trueType`` is ``True`` the TrueType recommendations
+        will be followed.
         """
         self._correctDirection(trueType=trueType)
 
-    def _correctDirection(self,
-                          trueType: bool,
-                          **kwargs: Any) -> None:
-        r"""Correct the winding direction of the native glyph's contours.
-
-        This is the environment implementation
-        of :meth:`BaseGlyph.correctDirection`.
-
-        :param trueType: Whether to follow TrueType rather than PostScript
-            winding recommendations.
-        :param \**kwargs: Additional keyword arguments.
-        :raises NotImplementedError: If the method has not been overridden by a
-            subclass.
-
-        .. note::
-
-            Subclasses may override this method.
-
+    def _correctDirection(self, trueType=False, **kwargs):
+        """
+        Subclasses may override this method.
         """
         self.raiseNotImplementedError()
 
-    def autoContourOrder(self) -> None:
-        """Automatically order the glyph's contours based on heuristics.
-
-        The results of this may vary across environments.
-
-        Example::
+    def autoContourOrder(self):
+        """
+        Automatically order the contours based on heuristics.
 
             >>> glyph.autoContourOrder()
 
+        The results of this may vary across environments.
         """
         self._autoContourOrder()
 
-    def _autoContourOrder(self, **kwargs: Any) -> None:
-        r"""Automatically order the native glyph's contours based on heuristics.
-
-        This is the environment implementation of :meth:`BaseGlyph.autoContourOrder`.
-
+    def _autoContourOrder(self, **kwargs):
+        """
         Sorting is based on (in this order):
-
         - the (negative) point count
         - the (negative) segment count
         - x value of the center of the contour rounded to a threshold
         - y value of the center of the contour rounded to a threshold
           (such threshold is calculated as the smallest contour width
           or height in the glyph divided by two)
+<<<<<<< HEAD
         - the (negative) surface of the bounding box of the contour: ``width * height``
 
         :param \**kwargs: Additional keyword arguments.
@@ -2209,6 +2255,18 @@ class BaseGlyph(BaseObject,
         contourList: ContourListType = []
         xThreshold: Optional[float] = None
         yThreshold: Optional[float] = None
+=======
+        - the (negative) surface of the bounding box of the contour: width * height
+        the latter is a safety net for for instances like a very thin 'O' where the
+        x centers could be close enough to rely on the y for the sort which could
+        very well be the same for both contours. We use the _negative_ of the surface
+        to ensure that larger contours appear first, which seems more natural.
+        """
+        tempContourList = []
+        contourList = []
+        xThreshold = None
+        yThreshold = None
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
         for contour in self:
             bounds = contour.bounds
@@ -2225,6 +2283,7 @@ class BaseGlyph(BaseObject,
                 xThreshold = xTh
             if yThreshold is None or yThreshold > yTh:
                 yThreshold = yTh
+<<<<<<< HEAD
             tempContourList.append((
                 -len(contour.points),
                 -len(contour.segments),
@@ -2233,16 +2292,12 @@ class BaseGlyph(BaseObject,
                 -(width * height),
                 contour
             ))
+=======
+            tempContourList.append((-len(contour.points), -len(contour.segments), xC, yC, -(width * height), contour))
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
         for points, segments, x, y, surface, contour in tempContourList:
-            contourList.append((
-                points,
-                segments,
-                FuzzyNumber(x, xThreshold),
-                FuzzyNumber(y, yThreshold),
-                surface,
-                contour
-            ))
+            contourList.append((points, segments, FuzzyNumber(x, xThreshold), FuzzyNumber(y, yThreshold), surface, contour))
         contourList.sort()
 
         self.clearContours()
@@ -2253,6 +2308,7 @@ class BaseGlyph(BaseObject,
     # Transformation
     # --------------
 
+<<<<<<< HEAD
     def _transformBy(self,
                      matrix: TransformationMatrixType,
                      **kwargs: Any) -> None:
@@ -2265,6 +2321,11 @@ class BaseGlyph(BaseObject,
 
             Subclasses may override this method.
 
+=======
+    def _transformBy(self, matrix, **kwargs):
+        """
+        Subclasses may override this method.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
         """
         for contour in self.contours:
             contour.transformBy(matrix)
@@ -2275,6 +2336,7 @@ class BaseGlyph(BaseObject,
         for guideline in self.guidelines:
             guideline.transformBy(matrix)
 
+<<<<<<< HEAD
     def scaleBy(self,
                 value: ScaleType,
                 origin: CoordinateType = None,
@@ -2298,7 +2360,15 @@ class BaseGlyph(BaseObject,
 
             >>> glyph.scaleBy(2.0)
             >>> glyph.scaleBy((0.5, 2.0), origin=(500, 500))
+=======
+    def scaleBy(self, value, origin=None, width=False, height=False):
+        """
+        %s
+        **width** indicates if the glyph's width should be scaled.
+        **height** indicates if the glyph's height should be scaled.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
+        The origin must not be specified when scaling the width or height.
         """
         value = normalizers.normalizeTransformationScale(value)
         if origin is None:
@@ -2314,29 +2384,17 @@ class BaseGlyph(BaseObject,
         if height:
             self._scaleHeightBy(sY)
 
-    def _scaleWidthBy(self, value: IntFloatType) -> None:
-        """Scale the glyph's width according to the given value.
+    scaleBy.__doc__ %= TransformationMixin.scaleBy.__doc__
 
-        :param value: The value to scale the glyph width by as an :class:`int`
-            or :class:`float`.
-
-        .. note::
-
-            Subclasses may override this method.
-
+    def _scaleWidthBy(self, value):
+        """
+        Subclasses may override this method.
         """
         self.width *= value
 
-    def _scaleHeightBy(self, value: IntFloatType) -> None:
-        """Scale the glyph's height according to the given value.
-
-        :param value: The value to scale the glyph height by as an :class:`int`
-            or :class:`float`.
-
-        .. note::
-
-            Subclasses may override this method.
-
+    def _scaleHeightBy(self, value):
+        """
+        Subclasses may override this method.
         """
         self.height *= value
 
@@ -2344,26 +2402,18 @@ class BaseGlyph(BaseObject,
     # Interpolation & Math
     # --------------------
 
-    def toMathGlyph(self,
-                    scaleComponentTransform: bool = True,
-                    strict: bool = False) -> MathGlyph:
-        """Return the glyph as a `fontMath <https://github.com/typesupply/fontMath>`_ :class:`MathGlyph` object.
-
-        This method returns the glyph as an object following the `MathGlyph
-        protocol <https://github.com/typesupply/fontMath>`_.
-
-        :param scaleComponentTransform: Whether to enable
-            the :attr:`fontMath.MathGlyph.scaleComponentTransform` option.
-        :param strict: Whether to enable the :attr:`fontMath.MathGlyph.strict`
-            option.
-        :return: A :class:`fontMath.MathGlyph` object representing the current
-            glyph.
-
-        Example::
+    def toMathGlyph(self, scaleComponentTransform=True, strict=False):
+        """
+        Returns the glyph as an object that follows the
+        `MathGlyph protocol <https://github.com/typesupply/fontMath>`_.
 
             >>> mg = glyph.toMathGlyph()
 
+        **scaleComponentTransform** Enables the MathGlyph
+          `scaleComponentTransform` option.
+        **strict**  Enables the MathGlyph `strict` option.
         """
+<<<<<<< HEAD
         return self._toMathGlyph(
             scaleComponentTransform=scaleComponentTransform, strict=strict
         )
@@ -2386,9 +2436,16 @@ class BaseGlyph(BaseObject,
         .. note::
 
             Subclasses may override this method.
+=======
+        return self._toMathGlyph(scaleComponentTransform=scaleComponentTransform, strict=strict)
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
+    def _toMathGlyph(self, scaleComponentTransform=True, strict=False):
         """
-        mathGlyph = MathGlyph(
+        Subclasses may override this method.
+        """
+        import fontMath
+        mathGlyph = fontMath.MathGlyph(
             None,
             scaleComponentTransform=scaleComponentTransform,
             strict=strict
@@ -2422,6 +2479,7 @@ class BaseGlyph(BaseObject,
         mathGlyph.note = self.note
         return mathGlyph
 
+<<<<<<< HEAD
     def fromMathGlyph(self,
                       mathGlyph: MathGlyph,
                       filterRedundantPoints: bool = True) -> BaseGlyph:
@@ -2468,8 +2526,23 @@ class BaseGlyph(BaseObject,
             object's :meth:`dreawPoints` method.
 
         :return: :return: The newly updated :class:`BaseGlyph` instance.
-
+=======
+    def fromMathGlyph(self, mathGlyph, filterRedundantPoints=True):
         """
+        Replaces the contents of this glyph with the contents of ``mathGlyph``.
+
+            >>> glyph.fromMathGlyph(mg)
+
+        ``mathGlyph`` must be an object following the
+        `MathGlyph protocol <https://github.com/typesupply/fontMath>`_.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
+
+        **filterRedundantPoints** enables the MathGlyph `drawPoints`
+          `filterRedundantPoints` option.
+        """
+        return self._fromMathGlyph(mathGlyph, toThisGlyph=True, filterRedundantPoints=filterRedundantPoints)
+
+    def _fromMathGlyph(self, mathGlyph, toThisGlyph=False, filterRedundantPoints=True):
         # make the destination
         if toThisGlyph:
             copied = self
@@ -2481,9 +2554,7 @@ class BaseGlyph(BaseObject,
             copied = copyClass()
         # populate
         pen = copied.getPointPen()
-        mathGlyph.drawPoints(
-            pen, filterRedundantPoints=filterRedundantPoints
-        )
+        mathGlyph.drawPoints(pen, filterRedundantPoints=filterRedundantPoints)
         for anchor in mathGlyph.anchors:
             a = copied.appendAnchor(
                 name=anchor.get("name"),
@@ -2511,20 +2582,13 @@ class BaseGlyph(BaseObject,
         copied.note = mathGlyph.note
         return copied
 
-    def __mul__(self, factor: FactorType) -> BaseGlyph:
-        """Multiply the current glyph by a given factor.
-
-        :param factor: The factor by which to multiply the glyph as a
-            single :class:`int` or :class:`float` or a :class:`tuple` of
-            two :class:`int` or :class:`float` values representing the
-            factors ``(x, y)``.
-        :return: The newly multiplied :class:`BaseGlyph` instance.
-
-        .. note::
-
-            Subclasses may override this method.
-
+    def __mul__(self, factor):
         """
+<<<<<<< HEAD
+=======
+        Subclasses may override this method.
+        """
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
         mathGlyph = self._toMathGlyph()
         result = mathGlyph * factor
         copied = self._fromMathGlyph(result)
@@ -2532,19 +2596,9 @@ class BaseGlyph(BaseObject,
 
     __rmul__ = __mul__
 
-    def __truediv__(self, factor: FactorType) -> BaseGlyph:
-        """Divide the current glyph by a given factor.
-
-        :param factor: The factor by which to divide the glyph as a
-            single :class:`int` or :class:`float` or a :class:`tuple` of
-            two :class:`int` or :class:`float` values representing the
-            factors ``(x, y)``.
-        :return: The newly divided :class:`BaseGlyph` instance.
-
-        .. note::
-
-            Subclasses may override this method.
-
+    def __truediv__(self, factor):
+        """
+        Subclasses may override this method.
         """
         mathGlyph = self._toMathGlyph()
         result = mathGlyph / factor
@@ -2554,71 +2608,59 @@ class BaseGlyph(BaseObject,
     # py2 support
     __div__ = __truediv__
 
-    def __add__(self, other: BaseGlyph) -> BaseGlyph:
-        """Add another glyph to the current glyph.
-
-        :param other: The :class:`BaseGLyph` instance to add to the current glyph.
-        :return: A new :class:`BaseGlyph` instance representing the added results.
-
-        .. note::
-
-            Subclasses may override this method.
-
+    def __add__(self, other):
         """
+<<<<<<< HEAD
+=======
+        Subclasses may override this method.
+        """
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
         selfMathGlyph = self._toMathGlyph()
         otherMathGlyph = other._toMathGlyph()
         result = selfMathGlyph + otherMathGlyph
         copied = self._fromMathGlyph(result)
         return copied
 
-    def __sub__(self, other: BaseGlyph) -> BaseGlyph:
-        """Subtract another glyph from the current glyph.
-
-        :param other: The :class:`BaseGLyph` instance to subtract
-            from the current glyph.
-        :return: A new :class:`BaseGlyph` instance representing
-            the subtracted results.
-
-        .. note::
-
-            Subclasses may override this method.
-
+    def __sub__(self, other):
         """
+<<<<<<< HEAD
 
+=======
+        Subclasses may override this method.
+        """
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
         selfMathGlyph = self._toMathGlyph()
         otherMathGlyph = other._toMathGlyph()
         result = selfMathGlyph - otherMathGlyph
         copied = self._fromMathGlyph(result)
         return copied
 
-    def interpolate(self,
-                    factor: FactorType,
-                    minGlyph: BaseGlyph,
-                    maxGlyph: BaseGlyph,
-                    round: bool = True,
-                    suppressError: bool = True) -> None:
-        """Interpolate all possible data in the glyph.
-
-        :param factor: The interpolation value as a single :class:`int`
-            or :class:`float` or a :class:`tuple` of two :class:`int`
-            or :class:`float` values representing the factors ``(x, y)``.
-        :param minGlyph: The :class:`BaseGlyph` instance corresponding to the
-            0.0 position in the interpolation.
-        :param maxGlyph: The :class:`BaseGlyph` instance corresponding to the
-            1.0 position in the interpolation.
-        :param round: A :class:`bool` indicating whether the result should
-            be rounded to integers. Defaults to :obj:`True`.
-        :param suppressError: A :class:`bool` indicating whether to ignore
-            incompatible data or raise an error when such
-            incompatibilities are found. Defaults to :obj:`True`.
-        :raises TypeError: If `minGlyph` or `maxGlyph` are not instances
-            of :class:`BaseGlyph`.
-
-        Example::
+    def interpolate(self, factor, minGlyph, maxGlyph,
+                    round=True, suppressError=True):
+        """
+        Interpolate the contents of this glyph at location ``factor``
+        in a linear interpolation between ``minGlyph`` and ``maxGlyph``.
 
             >>> glyph.interpolate(0.5, otherGlyph1, otherGlyph2)
-            >>> glyph.interpolate((0.5, 2.0), otherGlyph1, otherGlyph2, round=False)
 
+        ``factor`` may be a :ref:`type-int-float` or a tuple containing
+        two :ref:`type-int-float` values representing x and y factors.
+
+            >>> glyph.interpolate((0.5, 1.0), otherGlyph1, otherGlyph2)
+
+        ``minGlyph`` must be a :class:`BaseGlyph` and will be located at 0.0
+        in the interpolation range. ``maxGlyph`` must be a :class:`BaseGlyph`
+        and will be located at 1.0 in the interpolation range. If ``round``
+        is ``True``, the contents of the glyph will be rounded to integers
+        after the interpolation is performed.
+
+            >>> glyph.interpolate(0.5, otherGlyph1, otherGlyph2, round=True)
+
+        This method assumes that ``minGlyph`` and ``maxGlyph`` are completely
+        compatible with each other for interpolation. If not, any errors
+        encountered will raise a :class:`FontPartsError`. If ``suppressError``
+        is ``True``, no exception will be raised and errors will be silently
+        ignored.
         """
         factor = normalizers.normalizeInterpolationFactor(factor)
         if not isinstance(minGlyph, BaseGlyph):
@@ -2636,6 +2678,7 @@ class BaseGlyph(BaseObject,
         self._interpolate(factor, minGlyph, maxGlyph,
                           round=round, suppressError=suppressError)
 
+<<<<<<< HEAD
     def _interpolate(self,
                      factor: FactorType,
                      minGlyph: BaseGlyph,
@@ -2665,7 +2708,15 @@ class BaseGlyph(BaseObject,
 
             Subclasses may override this method.
 
+=======
+    def _interpolate(self, factor, minGlyph, maxGlyph,
+                     round=True, suppressError=True):
         """
+        Subclasses may override this method.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
+        """
+        from fontMath.mathFunctions import setRoundIntegerFunction
+
         setRoundIntegerFunction(normalizers.normalizeVisualRounding)
 
         minGlyph = minGlyph._toMathGlyph()
@@ -2686,10 +2737,7 @@ class BaseGlyph(BaseObject,
     compatibilityReporterClass = GlyphCompatibilityReporter
 
     @staticmethod
-    def _checkPairs(object1: Any,
-                    object2: Any,
-                    reporter: Any,
-                    reporterObject: List[Any]) -> None:
+    def _checkPairs(object1, object2, reporter, reporterObject):
         compatibility = object1.isCompatible(object2)[1]
         if compatibility.fatal or compatibility.warning:
             if compatibility.fatal:
@@ -2698,38 +2746,28 @@ class BaseGlyph(BaseObject,
                 reporter.warning = True
             reporterObject.append(compatibility)
 
-    def isCompatible(self, other: BaseGlyph) -> Tuple[bool, str]:
-        """Evaluate interpolation compatibility with another glyph.
+    def isCompatible(self, other):
+        """
+        Evaluate the interpolation compatibility of this glyph
+        and ``other``.
 
-        :param other: The other :class:`BaseGlyph` instance to check
-            compatibility with.
-        :return: A :class:`tuple` where the first element is a :class:`bool`
-            indicating compatibility, and the second element is a :class:`str`
-            of compatibility notes.
+            >>> compatible, report = self.isCompatible(otherGlyph)
+            >>> compatible
+            False
 
+        This will return a :ref:`type-bool` indicating if this glyph is
+        compatible with ``other`` and a :class:`GlyphCompatibilityReporter`
+        containing a detailed report about compatibility errors.
         """
         return super(BaseGlyph, self).isCompatible(other, BaseGlyph)
 
-    def _isCompatible(self,
-                      other: BaseGlyph,
-                      reporter: GlyphCompatibilityReporter) -> None:
-        """Evaluate interpolation compatibility with another native glyph.
-
-        This is the environment implementation of :meth:`BaseGlyph.isCompatible`.
-
-        :param other: The other :class:`BaseGlyph` instance to check
-            compatibility with.
-        :param reporter: An object used to report compatibility issues.
-
-        .. note::
-
-            Subclasses may override this method.
-
-
+    def _isCompatible(self, other, reporter):
         """
-        GuidelineListType = List[Tuple[Optional[str], int]]
-        DiffType = List[Tuple[int, Optional[str], Optional[str]]]
+        This is the environment implementation of
+        :meth:`BaseGlyph.isCompatible`.
 
+        Subclasses may override this method.
+        """
         glyph1 = self
         glyph2 = other
         # contour count
@@ -2746,11 +2784,9 @@ class BaseGlyph(BaseObject,
             reporter.fatal = True
             reporter.componentCountDifference = True
         # component check
-        component_diff: DiffType = []
-        selfComponents = [component.baseGlyph
-        for component in glyph1.components]
-        otherComponents = [component.baseGlyph
-        for component in glyph2.components]
+        component_diff = []
+        selfComponents = [component.baseGlyph for component in glyph1.components]
+        otherComponents = [component.baseGlyph for component in glyph2.components]
         for index, (left, right) in enumerate(
             zip_longest(selfComponents, otherComponents)
         ):
@@ -2760,12 +2796,13 @@ class BaseGlyph(BaseObject,
         if component_diff:
             reporter.warning = True
             reporter.componentDifferences = component_diff
-            if (not reporter.componentCountDifference
-                and set(selfComponents) == set(otherComponents)):
+            if not reporter.componentCountDifference and set(selfComponents) == set(
+                otherComponents
+            ):
                 reporter.componentOrderDifference = True
 
-            selfComponents_counted_set = Counter(selfComponents)
-            otherComponents_counted_set = Counter(otherComponents)
+            selfComponents_counted_set = collections.Counter(selfComponents)
+            otherComponents_counted_set = collections.Counter(otherComponents)
             missing_from_glyph1 = (
                 otherComponents_counted_set - selfComponents_counted_set
             )
@@ -2787,8 +2824,8 @@ class BaseGlyph(BaseObject,
             reporter.warning = True
             reporter.guidelineCountDifference = True
         # guideline check
-        selfGuidelines: GuidelineListType = []
-        otherGuidelines: GuidelineListType = []
+        selfGuidelines = []
+        otherGuidelines = []
         for source, names in ((self, selfGuidelines),
                               (other, otherGuidelines)):
             for i, guideline in enumerate(source.guidelines):
@@ -2808,31 +2845,29 @@ class BaseGlyph(BaseObject,
             reporter.warning = True
             reporter.anchorCountDifference = True
         # anchor check
-        anchor_diff: DiffType = []
+        anchor_diff = []
         selfAnchors = [anchor.name for anchor in glyph1.anchors]
         otherAnchors = [anchor.name for anchor in glyph2.anchors]
-        for index, (left, right) in enumerate(
-            zip_longest(selfAnchors, otherAnchors)):
+        for index, (left, right) in enumerate(zip_longest(selfAnchors, otherAnchors)):
             if left != right:
                 anchor_diff.append((index, left, right))
 
         if anchor_diff:
             reporter.warning = True
             reporter.anchorDifferences = anchor_diff
-            if (not reporter.anchorCountDifference
-                and set(selfAnchors) == set(otherAnchors)):
+            if not reporter.anchorCountDifference and set(selfAnchors) == set(
+                otherAnchors
+            ):
                 reporter.anchorOrderDifference = True
 
-            selfAnchors_counted_set = Counter(selfAnchors)
-            otherAnchors_counted_set = Counter(otherAnchors)
-            missing_from_glyph1 = (otherAnchors_counted_set
-                - selfAnchors_counted_set)
+            selfAnchors_counted_set = collections.Counter(selfAnchors)
+            otherAnchors_counted_set = collections.Counter(otherAnchors)
+            missing_from_glyph1 = otherAnchors_counted_set - selfAnchors_counted_set
             if missing_from_glyph1:
                 reporter.anchorsMissingFromGlyph1 = sorted(
                     missing_from_glyph1.elements()
                 )
-            missing_from_glyph2 = (selfAnchors_counted_set
-                - otherAnchors_counted_set)
+            missing_from_glyph2 = selfAnchors_counted_set - otherAnchors_counted_set
             if missing_from_glyph2:
                 reporter.anchorsMissingFromGlyph2 = sorted(
                     missing_from_glyph2.elements()
@@ -2842,42 +2877,30 @@ class BaseGlyph(BaseObject,
     # Data Queries
     # ------------
 
-    def pointInside(self, point: CoordinateType) -> bool:
-        """Check if `point` lies inside the filled area of the glyph.
-
-        :param point: The point to check as a :ref:`type-coordinate`.
-        :return: :obj:`True` if `point` is inside the filled area of the
-            glyph, :obj:`False` otherwise.
-
-        Example::
+    def pointInside(self, point):
+        """
+        Determine if ``point`` is in the black or white of the glyph.
 
             >>> glyph.pointInside((40, 65))
             True
 
+        ``point`` must be a :ref:`type-coordinate`.
         """
         point = normalizers.normalizeCoordinateTuple(point)
         return self._pointInside(point)
 
-    def _pointInside(self, point: CoordinateType) -> bool:
-        """Check if `point` lies inside the filled area of the native glyph.
-
-        This is the environment implementation of :meth:`BaseGlyph.pointInside`.
-
-        :param point: The point to check as a :ref:`type-coordinate`.
-        :return: :obj:`True` if `point` is inside the filled area of the
-            glyph, :obj:`False` otherwise.
-
-        .. note::
-
-            Subclasses may override this method.
-
+    def _pointInside(self, point):
         """
+        Subclasses may override this method.
+        """
+        from fontTools.pens.pointInsidePen import PointInsidePen
         pen = PointInsidePen(glyphSet=None, testPoint=point, evenOdd=False)
         self.draw(pen)
         return pen.getResult()
 
-    bounds: dynamicProperty = dynamicProperty(
+    bounds = dynamicProperty(
         "bounds",
+<<<<<<< HEAD
         """Get the bounds of the glyph.
 
         :return: A :class:`tuple` of four :class:`int` or :class:`float` values
@@ -2886,73 +2909,64 @@ class BaseGlyph(BaseObject,
             is empty.
 
         Example::
+=======
+        """
+        The bounds of the glyph in the form
+        ``(x minimum, y minimum, x maximum, y maximum)`` or,
+        in the case of empty glyphs ``None``.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
             >>> glyph.bounds
             (10, 30, 765, 643)
-
         """
     )
 
-    def _get_base_bounds(self) -> Optional[BoundsType]:
+    def _get_base_bounds(self):
         value = self._get_bounds()
         if value is not None:
             value = normalizers.normalizeBoundingBox(value)
         return value
 
-    def _get_bounds(self) -> Optional[BoundsType]:
-        """Get the bounds of the native glyph.
-
-        This is the environment implementation of the :attr:`BaseGlyph.bounds`
-        property getter.
-
-        :return: A :class:`tuple` of four :class:`int` or :class:`float` values
-            in the form ``(x minimum, y minimum, x maximum, y maximum)``
-            representing the bounds of the glyph, or :obj:`None` if the glyph
-            is empty.
-
-        .. note::
-
-            Subclasses may override this method.
-
+    def _get_bounds(self):
         """
+        Subclasses may override this method.
+        """
+        from fontTools.pens.boundsPen import BoundsPen
         pen = BoundsPen(self.layer)
         self.draw(pen)
         return pen.bounds
 
-    area: dynamicProperty = dynamicProperty(
+    area = dynamicProperty(
         "area",
+<<<<<<< HEAD
         """Get the area of the glyph
 
         :return: An :class:`int` or a :class:` float value representing the
             area of the glyph, or or :obj:`None` if the glyph is empty.
 
         Example::
+=======
+        """
+        The area of the glyph as a :ref:`type-int-float` or,
+        in the case of empty glyphs ``None``.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
             >>> glyph.area
             583
         """
     )
 
-    def _get_base_area(self) -> Optional[float]:
+    def _get_base_area(self):
         value = self._get_area()
         if value is not None:
             value = normalizers.normalizeArea(value)
         return value
 
-    def _get_area(self) -> Optional[float]:
-        """Get the area of the native glyph
-
-        This is the environment implementation of the :attr:`BaseGlyph.area`
-        property getter.
-
-        :return: An :class:`int` or a :class:` float value representing the
-             area of the glyph, or or :obj:`None` if the glyph is empty.
-
-        .. note::
-
-            Subclasses may override this method.
-
+    def _get_area(self):
         """
+        Subclasses may override this method.
+        """
+        from fontTools.pens.areaPen import AreaPen
         pen = AreaPen(self.layer)
         self.draw(pen)
         return abs(pen.value)
@@ -2961,28 +2975,27 @@ class BaseGlyph(BaseObject,
     # Layer Interaction
     # -----------------
 
-    layers: dynamicProperty = dynamicProperty(
+    layers = dynamicProperty(
         "layers",
+<<<<<<< HEAD
         """Get the layers of the glyph.
 
         :return: A :class:`tuple` of the :class:`BaseLayer` instances belonging
             to the glyph.
 
         Example::
+=======
+        """
+        Immutable tuple of the glyph's layers.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
             >>> glyphLayers = glyph.layers
 
+        This will return a tuple of all :ref:`type-glyph-layer` in the glyph.
         """
     )
 
-    def _get_layers(self, **kwargs) -> Tuple[BaseGlyph, ...]:
-        r"""Get the layers of the native glyph.
-
-        :param \**kwargs: Additional keyword arguments.
-        :return: A :class:`tuple` of the :class:`BaseLayer` subclass instances
-            belonging to the glyph.
-
-        """
+    def _get_layers(self, **kwargs):
         font = self.font
         if font is None:
             return tuple()
@@ -2994,37 +3007,22 @@ class BaseGlyph(BaseObject,
 
     # get
 
-    def getLayer(self, name: str) -> BaseGlyph:
-        """Get the named layer from the glyph.
-
-        :param name: The name of the :class:`BaseLayer` instance to
-            retrieve.
-        :return: The specified :class:`Baselayer` instance.
-        :raises ValueError: If no layer with the given `name` exists in
-            the font.
-
-        Example::
+    def getLayer(self, name):
+        """
+        Get the :ref:`type-glyph-layer` with ``name`` in this glyph.
 
             >>> glyphLayer = glyph.getLayer("foreground")
-
         """
         name = normalizers.normalizeLayerName(name)
         return self._getLayer(name)
 
-    def _getLayer(self, name: str, **kwargs) -> BaseGlyph:
-        r"""Get the named layer from the native glyph.
+    def _getLayer(self, name, **kwargs):
+        """
+        name will be a string, but there may not be a
+        layer with a name matching the string. If not,
+        a ``ValueError`` must be raised.
 
-        :param name: The name of the :class:`BaseLayer` instance to
-            retrieve.
-        :param \**kwargs: Additional keyword arguments.
-        :return: The specified :class:`Baselayer` instance.
-        :raises ValueError: If no layer with the given `name` exists in
-            the font.
-
-        .. note::
-
-            Subclasses may override this method.
-
+        Subclasses may override this method.
         """
         for glyph in self.layers:
             if glyph.layer.name == name:
@@ -3034,19 +3032,15 @@ class BaseGlyph(BaseObject,
 
     # new
 
-    def newLayer(self, name: str) -> BaseGlyph:
-        """Create a new layer in the glyph.
-
-        If the named layer already exists in the glyph, it
-        will be cleared.
-
-        :param name: The name of the new layer to create.
-        :return: A newly created :class:`BaseLayer` instance.
-
-        Example::
+    def newLayer(self, name):
+        """
+        Make a new layer with ``name`` in this glyph.
 
             >>> glyphLayer = glyph.newLayer("background")
 
+        This will return the new :ref:`type-glyph-layer`.
+        If the layer already exists in this glyph, it
+        will be cleared.
         """
         layerName = name
         glyphName = self.name
@@ -3058,8 +3052,10 @@ class BaseGlyph(BaseObject,
                 break
         glyph = self._newLayer(name=layerName)
         layer = self.font.getLayer(layerName)
+        # layer._setLayerInGlyph(glyph)
         return glyph
 
+<<<<<<< HEAD
     def _newLayer(self, name: str, **kwargs) -> BaseGlyph:
         r"""Create a new layer in the glyph.
 
@@ -3074,24 +3070,30 @@ class BaseGlyph(BaseObject,
             overridden by a subclass.
 
         .. important::
+=======
+    def _newLayer(self, name, **kwargs):
+        """
+        name will be a string representing a valid layer
+        name. The name will have been tested to make sure
+        that no layer in the glyph already has the name.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
-            Subclasses must override this method.
+        This must returned the new glyph.
 
+        Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
     # remove
 
-    def removeLayer(self, layer: Union[BaseGlyph, str]) -> None:
-        """Remove the specified layer from the glyph.
-
-        :param name: The layer to remove as a :class:`BaseLayer` instance,
-            or a :class:`str` representing the layer name.
-
-        Example::
+    def removeLayer(self, layer):
+        """
+        Remove ``layer`` from this glyph.
 
             >>> glyph.removeLayer("background")
 
+        Layer can be a :ref:`type-glyph-layer` or a :ref:`type-string`
+        representing a layer name.
         """
         if isinstance(layer, BaseGlyph):
             layer = layer.layer.name
@@ -3099,6 +3101,7 @@ class BaseGlyph(BaseObject,
         layerName = normalizers.normalizeLayerName(layerName)
         if self._getLayer(layerName).layer.name == layerName:
             self._removeLayer(layerName)
+<<<<<<< HEAD
 
     def _removeLayer(self, name: str, **kwargs) -> None:
         r"""Remove the specified layer from the native glyph.
@@ -3112,9 +3115,15 @@ class BaseGlyph(BaseObject,
             overridden by a subclass.
 
         .. note::
+=======
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
-            Subclasses may override this method.
+    def _removeLayer(self, name, **kwargs):
+        """
+        name will be a valid layer name. It will
+        represent an existing layer in the font.
 
+        Subclasses may override this method.
         """
         self.raiseNotImplementedError()
 
@@ -3122,21 +3131,26 @@ class BaseGlyph(BaseObject,
     # Image
     # -----
 
-    image: dynamicProperty = dynamicProperty(
+    image = dynamicProperty(
         "base_image",
+<<<<<<< HEAD
         """Get the image for the glyph.
 
         :return: The :class:`BaseImage` instance belonging to the glyph.
 
         """
+=======
+        "The :class:`BaseImage` for the glyph."
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
     )
 
-    def _get_base_image(self) -> BaseImage:
+    def _get_base_image(self):
         image = self._get_image()
         if image.glyph is None:
             image.glyph = self
         return image
 
+<<<<<<< HEAD
     def _get_image(self) -> BaseImage:
         """Get the image for the native glyph.
 
@@ -3179,25 +3193,48 @@ class BaseGlyph(BaseObject,
         :raises FontPartsError:  If `path` and `data` are both provided.
 
         Add the image as a filepath::
+=======
+    def _get_image(self):
+        """
+        Subclasses must override this method.
+        """
+        self.raiseNotImplementedError()
+
+    def addImage(self, path=None, data=None, scale=None,
+                 position=None, color=None):
+        """
+        Set the image in the glyph. This will return the
+        assigned :class:`BaseImage`. The image data can be
+        defined via ``path`` to an image file:
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
             >>> image = glyph.addImage(path="/path/to/my/image.png")
 
-        Add the image as raw data::
+        The image data can be defined with raw image data
+        via ``data``.
 
             >>> image = glyph.addImage(data=someImageData)
 
-        Add the image with scale::
+        If ``path`` and ``data`` are both provided, a
+        :class:`FontPartsError` will be raised. The supported
+        image formats will vary across environments. Refer
+        to :class:`BaseImage` for complete details.
+
+        ``scale`` indicates the x and y scale values that should be
+        applied to the image. It must be a :ref:`type-scale` value
+        or ``None``.
 
             >>> image = glyph.addImage(path="/p/t/image.png", scale=(0.5, 1.0))
 
-        Add the image with position::
+        ``position`` indicates the x and y location of the lower left
+        point of the image.
 
             >>> image = glyph.addImage(path="/p/t/image.png", position=(10, 20))
 
-        Add the image with color::
+        ``color`` indicates the color to be applied to the image. It must
+        be a :ref:`type-color` or ``None``.
 
             >>> image = glyph.addImage(path="/p/t/image.png", color=(1, 0, 0, 0.5))
-
         """
         if path is not None and data is not None:
             raise FontPartsError("Only path or data may be defined, not both.")
@@ -3215,6 +3252,7 @@ class BaseGlyph(BaseObject,
         if path is not None:
             if not os.path.exists(path):
                 raise IOError("No image located at '%s'." % path)
+<<<<<<< HEAD
             with open(path, "rb") as f:
                 data = f.read()
         self._addImage(data=data, transformation=transformation, color=color)
@@ -3226,10 +3264,21 @@ class BaseGlyph(BaseObject,
                   color: Optional[ColorType] = None) -> BaseImage:
         """Set the image in the native glyph.
 
-        Each environment may have different possible
-        formats, so this is unspecified. Assigning the image
-        to the glyph will be handled by the base class.
+=======
+            f = open(path, "rb")
+            data = f.read()
+            f.close()
+        self._addImage(data=data, transformation=transformation, color=color)
+        return self.image
 
+    def _addImage(self, data, transformation=None, color=None):
+        """
+        data will be raw, unnormalized image data.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
+        Each environment may have different possible
+        formats, so this is unspecified.
+
+<<<<<<< HEAD
         :param data: The optional raw image data to add to the glyph
             as :class:`bytes`. Defaults to :obj:`None`.
         :param transformation: The optional :ref:`type-transformation` values
@@ -3239,25 +3288,29 @@ class BaseGlyph(BaseObject,
         :return: The :class:`BaseImage` subclass instance added to the glyph.
         :raises NotImplementedError: If the method has not been overridden by a
             subclass.
+=======
+        transformation will be a valid transformation matrix.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
-        .. important::
+        color will be a color tuple or None.
 
-            Subclasses must override this method.
+        This must return an Image object. Assigning it
+        to the glyph will be handled by the base class.
 
+        Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
-    def clearImage(self) -> None:
-        """Remove the image from the glyph.
-
-        Example::
+    def clearImage(self):
+        """
+        Remove the image from the glyph.
 
             >>> glyph.clearImage()
-
         """
         if self.image is not None:
             self._clearImage()
 
+<<<<<<< HEAD
     def _clearImage(self, **kwargs:Any) -> None:
         r"""Remove the image from the native glyph.
 
@@ -3265,6 +3318,11 @@ class BaseGlyph(BaseObject,
         :raises NotImplementedError: If the method has not
             been overridden by a subclass.
 
+=======
+    def _clearImage(self, **kwargs):
+        """
+        Subclasses must override this method.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
         """
         self.raiseNotImplementedError()
 
@@ -3272,35 +3330,32 @@ class BaseGlyph(BaseObject,
     # Mark color
     # ----------
 
-    markColor: dynamicProperty = dynamicProperty(
+    markColor = dynamicProperty(
         "base_markColor",
-        """Get or set the glyph's mark color.
-
-        The value must be either a :ref:`type-color` or :obj:`None`.
-        :return: The color value assigned to the glyph, or:obj:`None` if
-            no color has been assigned.
-
-        Example::
+        """
+        The glyph's mark color.
 
             >>> glyph.markColor
             (1, 0, 0, 0.5)
             >>> glyph.markColor = None
 
+        The value may be a :ref:`type-color` or ``None``.
         """
     )
 
-    def _get_base_markColor(self) -> Optional[ColorType]:
+    def _get_base_markColor(self):
         value = self._get_markColor()
         if value is not None:
             value = normalizers.normalizeColor(value)
             value = Color(value)
         return value
 
-    def _set_base_markColor(self, value: Optional[ColorType]) -> None:
+    def _set_base_markColor(self, value):
         if value is not None:
             value = normalizers.normalizeColor(value)
         self._set_markColor(value)
 
+<<<<<<< HEAD
     def _get_markColor(self) -> Optional[ColorType]:
         """Get the glyph's mark color.
 
@@ -3315,25 +3370,21 @@ class BaseGlyph(BaseObject,
         .. important::
 
             Subclasses must override this method.
+=======
+    def _get_markColor(self):
+        """
+        Return the mark color value as a color tuple or None.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
+        Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
-    def _set_markColor(self, value: Optional[ColorType]) -> None:
-        """Set the glyph's mark color.
+    def _set_markColor(self, value):
+        """
+        value will be a color tuple or None.
 
-        This is the environment implementation of
-        the :attr:`BaseGlyph.markColor` property setter.
-
-        :param value: The :ref:`type-color` value to assign to the glyph,
-            or :obj:`None`.
-        :raises NotImplementedError: If the method has not been overridden
-            by a subclass.
-
-        .. important::
-
-            Subclasses must override this method.
-
+        Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
@@ -3341,34 +3392,31 @@ class BaseGlyph(BaseObject,
     # Note
     # ----
 
-    note: dynamicProperty = dynamicProperty(
+    note = dynamicProperty(
         "base_note",
-        """Get or set the glyph's note.
-
-        The value must be a :class:`str` or :obj:`None`.
-
-        :return: A :class:`str`, or :obj:`None` representing an empty note.
-
-        Example::
+        """
+        The glyph's note.
 
             >>> glyph.note
             "P.B. said this looks 'awesome.'"
             >>> glyph.note = "P.B. said this looks 'AWESOME.'"
 
+        The value may be a :ref:`type-string` or ``None``.
         """
     )
 
-    def _get_base_note(self) -> Optional[str]:
+    def _get_base_note(self):
         value = self._get_note()
         if value is not None:
             value = normalizers.normalizeGlyphNote(value)
         return value
 
-    def _set_base_note(self, value: Optional[str]) -> None:
+    def _set_base_note(self, value):
         if value is not None:
             value = normalizers.normalizeGlyphNote(value)
         self._set_note(value)
 
+<<<<<<< HEAD
     def _get_note(self) -> Optional[str]:
         """Get the glyph's note.
 
@@ -3383,24 +3431,17 @@ class BaseGlyph(BaseObject,
 
             Subclasses must override this method.
 
+=======
+    def _get_note(self):
+        """
+        Subclasses must override this method.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
         """
         self.raiseNotImplementedError()
 
-    def _set_note(self, value: Optional[str]) -> None:
-        """Set the glyph's note.
-
-        This is the environment implementation of the :attr:`BaseGlyph.note`
-        property setter.
-
-        :param value: The note to assign to the glyph as a :class:`str`
-            or :obj:`None`.
-        :raises NotImplementedError: If the method has not been overridden
-            by a subclass.
-
-        .. important::
-
-            Subclasses must override this method.
-
+    def _set_note(self, value):
+        """
+        Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
@@ -3408,24 +3449,29 @@ class BaseGlyph(BaseObject,
     # Lib
     # ---
 
-    lib: dynamicProperty = dynamicProperty(
+    lib = dynamicProperty(
         "base_lib",
+<<<<<<< HEAD
         """Get the font's lib object.
 
         :return: An instance of the :class:`BaseLib` class.
 
         Example::
+=======
+        """
+        The :class:`BaseLib` for the glyph.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
             >>> lib = glyph.lib
-
         """
     )
 
-    def _get_base_lib(self) -> BaseLib:
+    def _get_base_lib(self):
         lib = self._get_lib()
         lib.glyph = self
         return lib
 
+<<<<<<< HEAD
     def _get_lib(self) -> BaseLib:
         """Get the native glyph's lib object.
 
@@ -3439,6 +3485,11 @@ class BaseGlyph(BaseObject,
 
             Subclasses must override this method.
 
+=======
+    def _get_lib(self):
+        """
+        Subclasses must override this method.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
         """
         self.raiseNotImplementedError()
 
@@ -3446,8 +3497,9 @@ class BaseGlyph(BaseObject,
     # Temp Lib
     # --------
 
-    tempLib: dynamicProperty = dynamicProperty(
+    tempLib = dynamicProperty(
         "base_tempLib",
+<<<<<<< HEAD
         """Get the glyph's temporary lib object.
 
         This property provides access to a temporary instance of
@@ -3459,17 +3511,21 @@ class BaseGlyph(BaseObject,
         :return: A temporary instance of the :class:`BaseLib` class.
 
         Example::
+=======
+        """
+        The :class:`BaseLib` for the glyph.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
 
             >>> tempLib = glyph.tempLib
-
         """
     )
 
-    def _get_base_tempLib(self) -> BaseLib:
+    def _get_base_tempLib(self):
         lib = self._get_tempLib()
         lib.glyph = self
         return lib
 
+<<<<<<< HEAD
     def _get_tempLib(self) -> BaseLib:
         """Get the native glyph's temporary lib object.
 
@@ -3484,6 +3540,11 @@ class BaseGlyph(BaseObject,
 
             Subclasses must override this method.
 
+=======
+    def _get_tempLib(self):
+        """
+        Subclasses must override this method.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
         """
         self.raiseNotImplementedError()
 
@@ -3491,20 +3552,16 @@ class BaseGlyph(BaseObject,
     # API
     # ---
 
-    def isEmpty(self) -> bool:
-        """Check if the glyph is empty.
-
-        :return: :obj:`True` if there are no contours and/or
-        components in the glyph, :obj:`False` otherwise.
-
-        Example::
+    def isEmpty(self):
+        """
+        This will return :ref:`type-bool` indicating if there are contours and/or
+        components in the glyph.
 
             >>> glyph.isEmpty()
 
-        .. note:: This method only checks for the presence of contours and
-           components. Other attributes (guidelines, anchors, a lib, etc.) will
-           not affect what this method returns.
-
+        Note: This method only checks for the presence of contours and components.
+        Other attributes (guidelines, anchors, a lib, etc.) will not affect what
+        this method returns.
         """
         if self.contours:
             return False
@@ -3512,46 +3569,37 @@ class BaseGlyph(BaseObject,
             return False
         return True
 
-    def loadFromGLIF(self, glifData: str) -> None:
-        """Read data in `GLIF format <http://unifiedfontobject.org/versions/ufo3/glyphs/glif/>`_ into the glyph.
-
-        :param glifData: The data to read as a :class:`str`.
-
-        Example::
+    def loadFromGLIF(self, glifData):
+        """
+        Reads ``glifData``, in
+        `GLIF format <http://unifiedfontobject.org/versions/ufo3/glyphs/glif/>`_,
+        into this glyph.
 
             >>> glyph.readGlyphFromString(xmlData)
-
         """
         self._loadFromGLIF(glifData)
 
-    def _loadFromGLIF(self, glifData: str) -> None:
-        """Read data in `GLIF format <http://unifiedfontobject.org/versions/ufo3/glyphs/glif/>`_ into the native glyph.
-
-        :param glifData: The data to read as a :class:`str`.
-        :raises NotImplementedError: If the method has not been
-            overridden by a subclass.
-
-        .. important::
-
-            Subclasses must override this method.
-
+    def _loadFromGLIF(self, glifData):
+        """
+        Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
-    def dumpToGLIF(self, glyphFormatVersion: int = 2) -> str:
-        """Return the glyph's contents as a string in `GLIF format <http://unifiedfontobject.org/versions/ufo3/glyphs/glif/>`_.
-
-        :param glyphFormatVersion: An :class:`int` defining the preferred GLIF
-            format version.
-
-        Example::
+    def dumpToGLIF(self, glyphFormatVersion=2):
+        """
+        This will return the glyph's contents as a string in
+        `GLIF format <http://unifiedfontobject.org/versions/ufo3/glyphs/glif/>`_.
 
             >>> xml = glyph.writeGlyphToString()
 
+        ``glyphFormatVersion`` must be a :ref:`type-int` that defines
+        the preferred GLIF format version.
         """
-        glyphFormatVersion = normalizers.normalizeGlyphFormatVersion(glyphFormatVersion)
+        glyphFormatVersion = normalizers.normalizeGlyphFormatVersion(
+            glyphFormatVersion)
         return self._dumpToGLIF(glyphFormatVersion)
 
+<<<<<<< HEAD
     def _dumpToGLIF(self, glyphFormatVersion: int) -> str:
         """Return the native glyph's contents as a string in `GLIF format <http://unifiedfontobject.org/versions/ufo3/glyphs/glif/>`_.
 
@@ -3564,6 +3612,11 @@ class BaseGlyph(BaseObject,
 
             Subclasses must override this method.
 
+=======
+    def _dumpToGLIF(self, glyphFormatVersion):
+        """
+        Subclasses must override this method.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
         """
         self.raiseNotImplementedError()
 
@@ -3573,29 +3626,26 @@ class BaseGlyph(BaseObject,
 
     # contours
 
-    selectedContours: dynamicProperty = dynamicProperty(
+    selectedContours = dynamicProperty(
         "base_selectedContours",
-        """Get or set the selected contours in the glyph.
+        """
+        An :ref:`type-immutable-list` of contours selected in the glyph.
 
-        The value must be a :class:`tuple` or :class:`list` of
-        either :class:`BaseContour` instances or :class:`int` values
-        representing contour indexes to select.
-
-        :return: A :class:`tuple` of the currently
-            selected :class:`BaseContour` instances.
-
-        Example::
-
+<<<<<<< HEAD
             >>> components = glyph.selectedContours
+=======
+            >>> contours = glyph.selectedContours:
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
             >>> glyph.selectedContours = otherContours
 
-        Set selection using indexes::
+        It is possible to use a list of :ref:`type-int` representing
+        contour indexes when setting the selected contours.
 
             >>> glyph.selectedContours = [0, 2]
-
         """
     )
 
+<<<<<<< HEAD
     def _get_base_selectedContours(self) -> Tuple[BaseContour, ...]:
         selected = tuple([normalizers.normalizeContour(contour)
             for contour in self._get_selectedContours()])
@@ -3614,11 +3664,20 @@ class BaseGlyph(BaseObject,
 
             Subclasses may override this method.
 
+=======
+    def _get_base_selectedContours(self):
+        selected = tuple([normalizers.normalizeContour(contour) for
+                         contour in self._get_selectedContours()])
+        return selected
+
+    def _get_selectedContours(self):
+        """
+        Subclasses may override this method.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
         """
         return self._getSelectedSubObjects(self.contours)
 
-    def _set_base_selectedContours(self,
-        value: CollectionType[Union[int, BaseContour]]) -> None:
+    def _set_base_selectedContours(self, value):
         normalized = []
         for i in value:
             if isinstance(i, int):
@@ -3628,6 +3687,7 @@ class BaseGlyph(BaseObject,
             normalized.append(i)
         self._set_selectedContours(normalized)
 
+<<<<<<< HEAD
     def _set_selectedContours(self,
         value: CollectionType[Union[int, BaseContour]]) -> None:
         """Set the selected contours in the glyph.
@@ -3643,34 +3703,32 @@ class BaseGlyph(BaseObject,
 
             Subclasses may override this method.
 
+=======
+    def _set_selectedContours(self, value):
+        """
+        Subclasses may override this method.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
         """
         return self._setSelectedSubObjects(self.contours, value)
 
     # components
 
-    selectedComponents: dynamicProperty = dynamicProperty(
+    selectedComponents = dynamicProperty(
         "base_selectedComponents",
-        """Get or set the selected components in the glyph.
+        """
+        An :ref:`type-immutable-list` of components selected in the glyph.
 
-        The value must be a :class:`tuple` or :class:`list` of
-        either :class:`BaseComponent` instances or :class:`int` values
-        representing component indexes to select.
-
-        :return: A :class:`tuple` of the currently
-            selected :class:`BaseComponent` instances.
-
-        Example::
-
-            >>> components = glyph.selectedComponents
+            >>> components = glyph.selectedComponents:
             >>> glyph.selectedComponents = otherComponents
 
-        Set selection using indexes::
+        It is possible to use a list of :ref:`type-int` representing
+        component indexes when setting the selected components.
 
             >>> glyph.selectedComponents = [0, 2]
-
         """
     )
 
+<<<<<<< HEAD
     def _get_base_selectedComponents(self) -> Tuple[BaseComponent, ...]:
         selected = tuple([normalizers.normalizeComponent(component)
             for component in self._get_selectedComponents()])
@@ -3689,11 +3747,20 @@ class BaseGlyph(BaseObject,
 
             Subclasses may override this method.
 
+=======
+    def _get_base_selectedComponents(self):
+        selected = tuple([normalizers.normalizeComponent(component) for
+                         component in self._get_selectedComponents()])
+        return selected
+
+    def _get_selectedComponents(self):
+        """
+        Subclasses may override this method.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
         """
         return self._getSelectedSubObjects(self.components)
 
-    def _set_base_selectedComponents(self,
-        value: CollectionType[Union[int, BaseComponent]]) -> None:
+    def _set_base_selectedComponents(self, value):
         normalized = []
         for i in value:
             if isinstance(i, int):
@@ -3703,6 +3770,7 @@ class BaseGlyph(BaseObject,
             normalized.append(i)
         self._set_selectedComponents(normalized)
 
+<<<<<<< HEAD
     def _set_selectedComponents(self,
         value: CollectionType[Union[int, BaseComponent]]) -> None:
         """Set the selected components in the glyph.
@@ -3718,34 +3786,32 @@ class BaseGlyph(BaseObject,
 
             Subclasses may override this method.
 
+=======
+    def _set_selectedComponents(self, value):
+        """
+        Subclasses may override this method.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
         """
         return self._setSelectedSubObjects(self.components, value)
 
     # anchors
 
-    selectedAnchors: dynamicProperty = dynamicProperty(
+    selectedAnchors = dynamicProperty(
         "base_selectedAnchors",
-        """Get or set the selected anchors in the glyph.
-
-        The value must be a :class:`tuple` or :class:`list` of
-        either :class:`BaseAnchor` instances or :class:`int` values
-        representing anchor indexes to select.
-
-        :return: A :class:`tuple` of the currently
-            selected :class:`BaseAnchor` instances.
-
-        Example::
+        """
+        An :ref:`type-immutable-list` of anchors selected in the glyph.
 
             >>> anchors = glyph.selectedAnchors:
             >>> glyph.selectedAnchors = otherAnchors
 
-        Set selection using indexes::
+        It is possible to use a list of :ref:`type-int` representing
+        anchor indexes when setting the selected anchors.
 
             >>> glyph.selectedAnchors = [0, 2]
-
         """
     )
 
+<<<<<<< HEAD
     def _get_base_selectedAnchors(self) -> Tuple[BaseAnchor, ...]:
         selected = tuple([normalizers.normalizeAnchor(anchor)
             for anchor in self._get_selectedAnchors()])
@@ -3764,11 +3830,20 @@ class BaseGlyph(BaseObject,
 
             Subclasses may override this method.
 
+=======
+    def _get_base_selectedAnchors(self):
+        selected = tuple([normalizers.normalizeAnchor(anchor) for
+                         anchor in self._get_selectedAnchors()])
+        return selected
+
+    def _get_selectedAnchors(self):
+        """
+        Subclasses may override this method.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
         """
         return self._getSelectedSubObjects(self.anchors)
 
-    def _set_base_selectedAnchors(self,
-        value: CollectionType[Union[int, BaseAnchor]]) -> None:
+    def _set_base_selectedAnchors(self, value):
         normalized = []
         for i in value:
             if isinstance(i, int):
@@ -3778,6 +3853,7 @@ class BaseGlyph(BaseObject,
             normalized.append(i)
         self._set_selectedAnchors(normalized)
 
+<<<<<<< HEAD
     def _set_selectedAnchors(self,
         value: CollectionType[Union[int, BaseAnchor]]) -> None:
         """Set the selected anchors in the glyph.
@@ -3793,34 +3869,32 @@ class BaseGlyph(BaseObject,
 
             Subclasses may override this method.
 
+=======
+    def _set_selectedAnchors(self, value):
+        """
+        Subclasses may override this method.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
         """
         return self._setSelectedSubObjects(self.anchors, value)
 
     # guidelines
 
-    selectedGuidelines: dynamicProperty = dynamicProperty(
+    selectedGuidelines = dynamicProperty(
         "base_selectedGuidelines",
-        """Get or set the selected guidelines in the glyph.
+        """
+        An :ref:`type-immutable-list` of guidelines selected in the glyph.
 
-        The value must be a :class:`tuple` or :class:`list` of
-        either :class:`BaseGuideline` instances or :class:`int` values
-        representing component indexes to select.
-
-        :return: A :class:`tuple` of the currently
-            selected :class:`BaseGuideline` instances.
-
-        Example::
-
-            >>> guidelines = glyph.selectedGuidelines
+            >>> guidelines = glyph.selectedGuidelines:
             >>> glyph.selectedGuidelines = otherGuidelines
 
-        Set selection using indexes::
+        It is possible to use a list of :ref:`type-int` representing
+        guidelines indexes when setting the selected guidelines.
 
             >>> glyph.selectedGuidelines = [0, 2]
-
         """
     )
 
+<<<<<<< HEAD
     def _get_base_selectedGuidelines(self) -> Tuple[BaseGuideline, ...]:
         selected = tuple([normalizers.normalizeGuideline(guideline)
             for guideline in self._get_selectedGuidelines()])
@@ -3839,11 +3913,20 @@ class BaseGlyph(BaseObject,
 
             Subclasses may override this method.
 
+=======
+    def _get_base_selectedGuidelines(self):
+        selected = tuple([normalizers.normalizeGuideline(guideline) for
+                         guideline in self._get_selectedGuidelines()])
+        return selected
+
+    def _get_selectedGuidelines(self):
+        """
+        Subclasses may override this method.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
         """
         return self._getSelectedSubObjects(self.guidelines)
 
-    def _set_base_selectedGuidelines(self,
-        value: CollectionType[Union[int, BaseGuideline]]) -> None:
+    def _set_base_selectedGuidelines(self, value):
         normalized = []
         for i in value:
             if isinstance(i, int):
@@ -3853,6 +3936,7 @@ class BaseGlyph(BaseObject,
             normalized.append(i)
         self._set_selectedGuidelines(normalized)
 
+<<<<<<< HEAD
     def _set_selectedGuidelines(self,
         value: CollectionType[Union[int, BaseGuideline]]) -> None:
         """Set the selected guidelines in the glyph.
@@ -3868,5 +3952,10 @@ class BaseGlyph(BaseObject,
 
             Subclasses may override this method.
 
+=======
+    def _set_selectedGuidelines(self, value):
+        """
+        Subclasses may override this method.
+>>>>>>> parent of 3d67a1d (Update documentation (#739))
         """
         return self._setSelectedSubObjects(self.guidelines, value)

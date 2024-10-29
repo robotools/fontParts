@@ -37,7 +37,7 @@ Each of these require their own specific environment overrides, but the general 
 
     class MySomething(BaseSomething):
 
-        # Initialization:
+        # Initialization.
         # This will be called when objects are initialized.
         # The behavior, args and kwargs may be designed by the
         # subclass to implement specific behaviors.
@@ -45,7 +45,7 @@ Each of these require their own specific environment overrides, but the general 
         def _init(self, myObj):
             self.myObj = myObj
 
-        # Comparison:
+        # Comparison.
         # The __eq__ method must be implemented by subclasses.
         # It must return a boolean indicating if the lower level
         # objects are the same object. This does not mean that two
@@ -64,7 +64,7 @@ Each of these require their own specific environment overrides, but the general 
         def __ne__(self, other):
             return self.myObj != other.myObj
 
-        # Properties:
+        # Properties.
         # Properties are get and set through standard method names.
         # Within these methods, the subclass may do whatever is
         #   necessary to get/set the value from/to the environment.
@@ -75,7 +75,7 @@ Each of these require their own specific environment overrides, but the general 
         def _set_something(self, value):
             self.myObj.setSomething(value)
 
-        # Methods:
+        # Methods.
         # Generally, the public methods call internal methods with
         # the same name, but preceded with an underscore. Subclasses
         # may implement the internal method. Any values passed to
@@ -85,7 +85,7 @@ Each of these require their own specific environment overrides, but the general 
         def _whatever(self, value):
             self.myObj.doWhatever(value)
 
-        # Copying:
+        # Copying.
         # Copying is handled in most cases by the base objects.
         # If subclasses have a special class that should be used
         # when creating a copy of an object, the class must be
@@ -101,7 +101,7 @@ Each of these require their own specific environment overrides, but the general 
             super(MySomething, self).copyData(source)
             self.myObj.internalThing = source.internalThing
 
-        # Environment updating:
+        # Environment updating.
         # If the environment requires the scripter to manually
         # notify the environment that the object has been changed,
         # the subclass must implement the changed method. Please
@@ -110,7 +110,7 @@ Each of these require their own specific environment overrides, but the general 
         def changed(self):
             myEnv.goUpdateYourself()
 
-        # Wrapped objects:
+        # Wrapped objects.
         # It is very useful for scripters to have access to the
         # lower level, wrapped object. Subclasses implement this
         # with the naked method.
@@ -160,7 +160,7 @@ Method Arguments
 
 In some cases, you are likely to discover that your environment supports specific options in a method that are not supported by the environment agnostic API. For example, your environment may have an optional heuristic that can be used in the ``font.autoUnicodes`` method. However, the ``font.autoUnicodes`` method does not have a ``useHeuristics`` argument. Unfortunately, Python doesn't offer a way to handle this in a way that is both flexible for developers and friendly for scripters. The only two options for handling this are:
 
-    #. Create an environment specific clone of the ``font.autoUnicodes`` method as ``myapp_autoUnicodes`` and add your ``useHeuristics`` argument there.
-    #. Contact the FontParts developers by opening a GitHub issue requesting support for your argument. If it is generic enough, we may add support for it.
+1. Create an environment specific clone of the ``font.autoUnicodes`` method as ``myapp_autoUnicodes`` and add your ``useHeuristics`` argument there.
+2. Contact the FontParts developers by opening a GitHub issue requesting support for your argument. If it is generic enough, we may add support for it.
 
 We're experimenting with a third way to handle this. You can see it as the ``**environmentOptions`` argument in the :meth:`BaseFont.generate` method. This may or may not move to other methods. Please contact us if you are interested in this being applied to other methods.

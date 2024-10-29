@@ -74,9 +74,7 @@ class RLayer(RBaseObject, BaseLayer):
     # -------
 
     def _getReverseComponentMapping(self):
-        mapping = self.naked().componentReferences
-        return {k: tuple(v) for k, v in mapping.items()}
+        return self.naked().componentReferences
 
     def _getCharacterMapping(self):
-        mapping = self.naked().unicodeData
-        return {k: tuple(v) for k, v in mapping.items()}
+        return self.naked().unicodeData
