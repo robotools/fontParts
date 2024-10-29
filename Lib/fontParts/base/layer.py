@@ -1,7 +1,6 @@
 # pylint: disable=C0103, C0302, C0114, W0613
 from __future__ import annotations
 from typing import TYPE_CHECKING, Any, Callable, Iterator, List, Optional, Tuple
-from abc import ABC, abstractmethod
 import collections
 
 from fontParts.base.base import (
@@ -571,15 +570,6 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
     # --------------------
 
     has_key: Callable[[_BaseGlyphVendor, str], bool] = __contains__
-
-    # ----------------
-    # Abstract Members
-    # ----------------
-
-    @property
-    @abstractmethod
-    def defaultLayer(self) -> BaseLayer:
-        """Subclasses must implement this attribute."""
 
 
 class BaseLayer(_BaseGlyphVendor,
