@@ -559,8 +559,8 @@ class BaseDict(BaseObject):
         :param key: The key to set. If a :cvar:`BaseDict.keyNormalizer`
             is set, it will have been applied to the value in the calling method.
         :param value: The value to set for the given key. If
-            a :cvar:`BaseDict.valueNormalizer` is set, it will have be applied to
-            the value in the calling method .
+            a :cvar:`BaseDict.valueNormalizer` is set, it will have been applied
+            to the value in the calling method .
         :raises NotImplementedError: If the method has not been overridden by a
             subclass.
 
