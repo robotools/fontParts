@@ -7,11 +7,11 @@ Layer
 
 .. note::
 
-	This section needs to contain the following:
+    This section needs to contain the following:
 
-	* description of what this is
-	* sub-object with basic usage
-	* glyph interaction with basic usage
+    * description of what this is
+    * sub-object with basic usage
+    * glyph interaction with basic usage
 
 ********
 Overview
@@ -24,6 +24,7 @@ Copy
     :nosignatures:
 
     BaseLayer.copy
+    BaseLayer.copyData
 
 Parents
 =======
@@ -75,6 +76,24 @@ Interpolation
     BaseLayer.isCompatible
     BaseLayer.interpolate
 
+Mapping
+=======
+
+.. autosummary::
+    :nosignatures:
+
+    BaseLayer.getCharacterMapping
+    BaseLayer.getReverseComponentMapping
+
+Selection
+=========
+
+.. autosummary::
+    :nosignatures:
+
+    BaseLayer.selectedGlyphs
+    BaseLayer.selectedGlyphNames
+
 Normalization
 =============
 
@@ -104,6 +123,7 @@ Copy
 ====
 
 .. automethod:: BaseLayer.copy
+.. automethod:: BaseLayer.copyData
 
 Parents
 =======
@@ -120,6 +140,7 @@ Sub-Objects
 ===========
 
 .. autoattribute:: BaseLayer.lib
+.. autoattribute:: BaseLayer.tempLib
 
 Glyphs
 ======
@@ -139,6 +160,18 @@ Interpolation
 .. automethod:: BaseLayer.isCompatible
 .. automethod:: BaseLayer.interpolate
 
+Mapping
+=======
+
+.. automethod:: BaseLayer.getCharacterMapping
+.. automethod:: BaseLayer.getReverseComponentMapping
+
+Selection
+=========
+
+.. automethod:: BaseLayer.selectedGlyphs
+.. automethod:: BaseLayer.selectedGlyphNames
+
 Normalization
 =============
 
@@ -150,3 +183,20 @@ Environment
 
 .. automethod:: BaseLayer.naked
 .. automethod:: BaseLayer.changed
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

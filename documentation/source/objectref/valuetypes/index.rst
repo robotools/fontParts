@@ -2,7 +2,7 @@
 Common Value Types
 ##################
 
-FontParts scripts are built on with objects that represent fonts, glyphs, contours and so on. The objects are obtained through :ref:`fontparts-world`.
+FontParts scripts are built on with objects that represent fonts, glyphs, contours and so on. The objects are obtained through :ref:`fontParts.world`.
 
 
 .. _fontparts-objects:
@@ -28,7 +28,8 @@ Unicode (unencoded) or string. Internally everything is a unicode string.
 Integer/Float
 -------------
 
-Integers and floats are interchangeable in FontParts (unless the specification states that only one is allowed).
+Integers and floats are interchangeable in FontParts (unless the specification
+states that only one is allowed).
 
 
 .. _type-coordinate:
@@ -47,7 +48,8 @@ An immutable iterable containing two :ref:`type-int-float` representing:
 Angle
 -----
 
-XXX define the angle specifications here. Direction, degrees, etc. This will always be a float.
+XXX define the angle specifications here. Direction, degrees, etc. This will
+always be a float.
 
 
 .. _type-identifier:
