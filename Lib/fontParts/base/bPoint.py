@@ -159,13 +159,24 @@ class BaseBPoint(BaseObject,
         "glyph",
         """Get the bPoint's parent glyph object.
 
+<<<<<<< HEAD
+=======
+        This property is read-only.
+
+>>>>>>> v1
         The value must be a :class:`BaseGlyph` instance or :obj:`None`.
 
         :return: The :class:`BaseGlyph` instance containing the bPoint
             or :obj:`None`.
+<<<<<<< HEAD
 
         Example::
 
+=======
+
+        Example::
+
+>>>>>>> v1
             >>> glyph = bPoint.glyph
 
         """
@@ -182,9 +193,17 @@ class BaseBPoint(BaseObject,
         "layer",
         """Get the bPoint's parent layer object.
 
+<<<<<<< HEAD
         :return: The :class:`BaseLayer` instance containing the bPoint
             or :obj:`None`.
 
+=======
+        This property is read-only.
+
+        :return: The :class:`BaseLayer` instance containing the bPoint
+            or :obj:`None`.
+
+>>>>>>> v1
         Example::
 
             >>> layer = bPoint.layer
@@ -203,16 +222,28 @@ class BaseBPoint(BaseObject,
         "font",
         """Get the bPoint's parent font object.
 
+<<<<<<< HEAD
+=======
+        This property is read-only.
+
+>>>>>>> v1
         :return: The :class:`BaseFont` instance containing the bPoint
             or :obj:`None`.
 
         Example::
 
             >>> font = bPoint.font
+<<<<<<< HEAD
 
         """
     )
 
+=======
+
+        """
+    )
+
+>>>>>>> v1
     def _get_font(self) -> Optional[BaseFont]:
         if self._contour is None:
             return None
@@ -227,6 +258,7 @@ class BaseBPoint(BaseObject,
     anchor: dynamicProperty = dynamicProperty(
         "base_anchor",
         """Get or set the the bPoint's anchor point.
+<<<<<<< HEAD
 
         The value must be a :ref:`type-coordianate`.
 
@@ -235,6 +267,16 @@ class BaseBPoint(BaseObject,
         """
     )
 
+=======
+
+        The value must be a :ref:`type-coordianate`.
+
+        :return: a :ref:`type-coordianate` representing the anchor point of the bPoint.
+
+        """
+    )
+
+>>>>>>> v1
     def _get_base_anchor(self) -> CoordinateType:
         value = self._get_anchor()
         value = normalizers.normalizeCoordinateTuple(value)
@@ -251,7 +293,11 @@ class BaseBPoint(BaseObject,
         property getter.
 
         :return: a :ref:`type-coordianate` representing the anchor point of the
+<<<<<<< HEAD
             bPoint. The value will have been normalized
+=======
+            bPoint. The value will be normalized
+>>>>>>> v1
             with :func:`normalizers.normalizeCoordinateTuple`.
 
         .. note::
@@ -290,10 +336,17 @@ class BaseBPoint(BaseObject,
         """Get or set the bPoint's incoming off-curve.
 
         The value must be a :ref:`type-coordinate`.
+<<<<<<< HEAD
 
         :return: A :ref:`type-coordinate` representing the incoming
             off-curve of the bPoin.
 
+=======
+
+        :return: A :ref:`type-coordinate` representing the incoming
+            off-curve of the bPoin.
+
+>>>>>>> v1
         """
     )
 
@@ -313,7 +366,11 @@ class BaseBPoint(BaseObject,
         property getter.
 
         :return: A :ref:`type-coordinate` representing the incoming off-curve of
+<<<<<<< HEAD
             the bPoin. The value will have been normalized
+=======
+            the bPoin. The value will be normalized
+>>>>>>> v1
             with :func:`normalizers.normalizeCoordinateTuple`.
 
         .. note::
@@ -400,7 +457,11 @@ class BaseBPoint(BaseObject,
         property getter.
 
         :return: A :ref:`type-coordinate` representing the outgoing
+<<<<<<< HEAD
             off-curve of the bPoin. The value will have been normalized
+=======
+            off-curve of the bPoin. The value will be normalized
+>>>>>>> v1
             with :func:`normalizers.normalizeCoordinateTuple`.
 
         .. note::
@@ -467,12 +528,21 @@ class BaseBPoint(BaseObject,
         The value must be a :class:`str` containing one of the following
         alternatives:
 
+<<<<<<< HEAD
         +--------+---------------------------------------------------------+
         | type   | Description                                             |
         +--------+---------------------------------------------------------+
         | curve  | A point where bcpIn and bcpOut are smooth (linked).     |
         | corner | A point where bcpIn and bcpOut are not smooth (linked). |
         +--------+---------------------------------------------------------+
+=======
+        +--------------+-----------------------------------------------------------+
+        | Type         | Description                                               |
+        +--------------+-----------------------------------------------------------+
+        | ``'curve'``  | A point where bcpIn and bcpOut are smooth (linked).       |
+        | ``'corner'`` | A point where bcpIn and bcpOut are not smooth (unlinked). |
+        +--------+-----------------------------------------------------------------+
+>>>>>>> v1
 
         :return: A :class:`str` representing the type of the bPoint.
 
@@ -495,7 +565,11 @@ class BaseBPoint(BaseObject,
         property getter.
 
         :return: A :class:`str` representing the type of the bPoint. The value
+<<<<<<< HEAD
             will have been normalized with :func:`normalizers.normalizeBPointType`.
+=======
+            will be normalized with :func:`normalizers.normalizeBPointType`.
+>>>>>>> v1
         :raises FontPartsError: If the point's type cannot be converted to a valid
             bPoint type.
 
@@ -560,6 +634,7 @@ class BaseBPoint(BaseObject,
     index: dynamicProperty = dynamicProperty(
         "base_index",
         """Get the index of the bPoint.
+<<<<<<< HEAD
 
         :return: An :class:`int` representing the bPoint's index within an
             ordered list of the parent contour's bPoints, or :obj:`None` if the
@@ -573,6 +648,23 @@ class BaseBPoint(BaseObject,
         """
     )
 
+=======
+
+        This property is read-only.
+
+        :return: An :class:`int` representing the bPoint's index within an
+            ordered list of the parent contour's bPoints, or :obj:`None` if the
+            bPoint does not belong to a contour.
+
+        Example::
+
+            >>> bPoint.index
+            0
+
+        """
+    )
+
+>>>>>>> v1
     def _get_base_index(self) -> Optional[int]:
         if self.contour is None:
             return None
@@ -588,7 +680,11 @@ class BaseBPoint(BaseObject,
 
         :return: An :class:`int` representing the bPoint's index within an
             ordered list of the parent contour's bPoints, or :obj:`None` if the
+<<<<<<< HEAD
             bPoint does not belong to a contour. The value will have been
+=======
+            bPoint does not belong to a contour. The value will be
+>>>>>>> v1
             normalized with :func:`normalizers.normalizeIndex`.
 
         .. note::

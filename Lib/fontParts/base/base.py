@@ -3,9 +3,14 @@ from __future__ import annotations
 from typing import (
     Any, Callable, Dict, List, NoReturn, Optional, Tuple, Type, TypeVar, Union
 )
+<<<<<<< HEAD
 from numbers import Number
 import math
 from weakref import ReferenceType
+=======
+from copy import deepcopy
+import math
+>>>>>>> v1
 
 from fontTools.misc import transform
 from fontParts.base.errors import FontPartsError
@@ -35,6 +40,20 @@ class dynamicProperty:
     automatically resolved by name, making it possible to partially override
     the property in a subclass without having to re-register both the getter
     and setter methods.
+<<<<<<< HEAD
+=======
+
+    :param name: The base name of the property, used to resolve the getter and
+        setter method names.
+    :param doc: Optional documentation string for the property.
+    :raises: FontPartsError: If the getter or setter method is not defined.
+
+    Example of why this is needed:
+
+    .. code-block:: python
+
+        class BaseObject:
+>>>>>>> v1
 
     :param name: The base name of the property, used to resolve the getter and
         setter method names.
@@ -45,7 +64,34 @@ class dynamicProperty:
 
     .. code-block:: python
 
+<<<<<<< HEAD
         class BaseObject:
+=======
+
+        class MyObject(BaseObject):
+
+            def _set_foo(self, value):
+                self._foo = value * 100
+
+
+        >>> m = MyObject()
+        >>> m.foo
+        1
+        >>> m.foo = 2
+        >>> m.foo
+        2
+
+    The expected value is ``200``. The ``_set_foo`` method needs to be
+    reregistered. Doing that also requires reregistering the ``_get_foo``
+    method. It's possible to do this, but it's messy and will make subclassing
+    less than ideal.
+
+    Using dynamicProperty solves this:
+
+    .. code-block:: python
+
+        class BaseObject(object):
+>>>>>>> v1
 
             _foo = 1
 
@@ -97,6 +143,7 @@ class dynamicProperty:
             raise FontPartsError("no setter for %r" % self.name)
 
 
+<<<<<<< HEAD
 def interpolate(a: InterpolatableType,
                 b: InterpolatableType,
                 v: FactorType) -> InterpolatableType:
@@ -122,6 +169,36 @@ def interpolate(a: InterpolatableType,
     except TypeError as exc:
         raise TypeError(
             f"Factor must be an int or a float, not {type(v).__name__}."
+=======
+def interpolate(minValue: InterpolatableType,
+                maxValue: InterpolatableType,
+                factor: FactorType) -> InterpolatableType:
+    """Interpolate between two number-like objects.
+
+    This method performs linear interpolation, calculating a value that is
+    proportionally between `minValue` and `maxValue`, determined by the factor `factor`.
+
+    :param minValue: The value corresponding to the 0.0 position in the interpolation
+        as any object :ref:`emulating numeric types <numeric-types>`.
+    :param maxValue: The value corresponding to the 1.0 position in the interpolation
+        as any object :ref:`emulating numeric types <numeric-types>`.
+    :param factor: The factor value determining the interpolation between
+        `minValue` and `maxValue` as a single :class:`int` or :class:`float`.
+        If `minValue` and `maxValue` supports it, `factor` may also be
+        a :class:`tuple` of two :class:`int` or :class:`float` values representing
+        the factors ``(x, y)``.
+    :return: The interpolated value as any object :ref:`emulating numeric types
+        <numeric-types>`.
+    :raises TypeError: If `minValue` or `maxValue` does not support the provided
+        `factor` type.
+
+    """
+    try:
+        return minValue + (maxValue - minValue) * factor
+    except TypeError as exc:
+        raise TypeError(
+            f"Factor must be an int or minValue float, not {type(factor).__name__}."
+>>>>>>> v1
         ) from exc
 
 # ------------
@@ -225,7 +302,13 @@ class BaseObject:
 
         """
         equal = self.__eq__(other)
+<<<<<<< HEAD
         return False if equal is NotImplemented else not equal
+=======
+        if equal is NotImplemented:
+            return NotImplemented
+        return not equal
+>>>>>>> v1
 
     # ----
     # Hash
@@ -309,6 +392,7 @@ class BaseObject:
 
     def changed(self, *args: Any, **kwargs: Any) -> None:
         r"""Tell the environment that something has changed in the object.
+<<<<<<< HEAD
 
         The behavior of this method will vary from environment to environment.
 
@@ -322,6 +406,29 @@ class BaseObject:
 
         :raises NotImplementedError: If the method has not been overridden by a
             subclass.
+=======
+
+        The behavior of this method will vary from environment to environment.
+
+        :param \*args: Any positional arguments.
+        :param \**kwargs: Any keyword arguments.
+
+        Example::
+
+            >>> obj.changed()
+
+        """
+
+    def naked(self) -> Any:
+        """Return the environment's native object wrapped by the current object.
+
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        Example::
+
+            >>> loweLevelObj = obj.naked()
+>>>>>>> v1
 
         """
         self.raiseNotImplementedError()
@@ -390,8 +497,13 @@ class BaseDict(BaseObject):
         This is the environment implementation of :meth:`BaseDict.keys`.
 
         :return: A :class:`list` of dictionary keys. If
+<<<<<<< HEAD
             a :cvar:`BaseDict.keyNormalizer` is set, it will have been applied
             to each key.
+=======
+            a :cvar:`BaseDict.keyNormalizer` is set, it will be applied to each
+            key in the calling method.
+>>>>>>> v1
 
         .. note::
 
@@ -422,7 +534,11 @@ class BaseDict(BaseObject):
 
         :return: A :class:`list` of :class:`tuple` items containing key-value pairs.
             If both :cvar:`BaseDict.keyNormalizer` and :cvar:`BaseDict.valueNormalizer`
+<<<<<<< HEAD
             are set, they will have been applied to the keys and values, respectively.
+=======
+            are set, they will be applied in the calling method to the keys and values.
+>>>>>>> v1
         :raises NotImplementedError: If the method has not been overridden by a
             subclass.
 
@@ -450,8 +566,13 @@ class BaseDict(BaseObject):
         This is the environment implementation of :meth:`BaseDict.values`.
 
         :return: A :class:`list` of dictionary values. If
+<<<<<<< HEAD
             a :cvar:`BaseDict.valueNormalizer` is set, it will have been applied
             to each value.
+=======
+         a :cvar:`BaseDict.valueNormalizer` is set, it will be applied in the
+            calling method to each value.
+>>>>>>> v1
 
         .. note::
 
@@ -494,6 +615,15 @@ class BaseDict(BaseObject):
         :param key: The key to set.
         :param value: The value to set for the given key.
 
+<<<<<<< HEAD
+=======
+    def __setitem__(self, key: Any, value: Any) -> None:
+        """Set the value for a given key in the object.
+
+        :param key: The key to set.
+        :param value: The value to set for the given key.
+
+>>>>>>> v1
         """
         if self.keyNormalizer is not None:
             key = self.keyNormalizer.__func__(key)
@@ -507,10 +637,17 @@ class BaseDict(BaseObject):
         This is the environment implementation of :meth:`BaseDict.__setitem__`.
 
         :param key: The key to set. If a :cvar:`BaseDict.keyNormalizer`
+<<<<<<< HEAD
             is set, it will have been applied to the given key.
         :param value: The value to set for the given key. If
             a :cvar:`BaseDict.valueNormalizer` is set, it will have been applied
             to the given value.
+=======
+            is set, it will have been applied to the value in the calling method.
+        :param value: The value to set for the given key. If
+            a :cvar:`BaseDict.valueNormalizer` is set, it will have been applied
+            to the value in the calling method .
+>>>>>>> v1
         :raises NotImplementedError: If the method has not been overridden by a
             subclass.
 
@@ -541,11 +678,19 @@ class BaseDict(BaseObject):
         This is the environment implementation of :meth:`BaseDict.__getitem__`.
 
         :param key: The key to retrieve the value for. If
+<<<<<<< HEAD
             a :cvar:`BaseDict.keyNormalizer` is set, it will have been applied
             to the key.
         :return: The value for the given key. If
             a :cvar:`BaseDict.valueNormalizer` is set, it will have been applied
             to the returned value.
+=======
+            a :cvar:`BaseDict.keyNormalizer` is set, it will have been applied to
+            the key in the calling method.
+        :return: The value for the given key. If
+            a :cvar:`BaseDict.valueNormalizer` is set, it will be applied in the
+            calling method to the returned value.
+>>>>>>> v1
         :raises NotImplementedError: If the method has not been overridden by a
             subclass.
 
@@ -587,7 +732,11 @@ class BaseDict(BaseObject):
         :param default: The default value to return if the key is not found.
         :return: The value associated with the given key, or the default value
             if the key is not found. If a :cvar:`BaseDict.valueNormalizer` is set,
+<<<<<<< HEAD
             it will have been applied to the returned value.
+=======
+            it will be applied in the calling method to the returned value.
+>>>>>>> v1
 
         .. note::
 
@@ -656,7 +805,11 @@ class BaseDict(BaseObject):
         :param default: The default value to return if the key is not found.
         :return: The value associated with the given key, or the default value
             if the key is not found. If a :cvar:`BaseDict.valueNormalizer` is set,
+<<<<<<< HEAD
             it will have been applied to the returned value.
+=======
+            it will be applied in the calling method to the returned value.
+>>>>>>> v1
 
         .. note::
 
@@ -704,7 +857,10 @@ class BaseDict(BaseObject):
         :param other: An object of key-value pairs to update this dictionary with.
 
         """
+<<<<<<< HEAD
         from copy import deepcopy
+=======
+>>>>>>> v1
         otherCopy = deepcopy(other)
         if self.keyNormalizer is not None and self.valueNormalizer is not None:
             d = {}
@@ -712,6 +868,7 @@ class BaseDict(BaseObject):
                 key = self.keyNormalizer.__func__(key)
                 value = self.valueNormalizer.__func__(value)
                 d[key] = value
+<<<<<<< HEAD
             other = d
         self._update(other)
 
@@ -728,6 +885,24 @@ class BaseDict(BaseObject):
 
             Subclasses may override this method.
 
+=======
+            otherCopy = d
+        self._update(otherCopy)
+
+    def _update(self, other: BaseDict) -> None:
+        """Update the current native object instance with key-value pairs from another.
+
+        This is the environment implementation of :meth:`BaseDict.update`.
+
+        :param other: An object of key-value pairs to update this dictionary with.
+            If both :cvar:`BaseDict.keyNormalizer` and :cvar:`BaseDict.valueNormalizer`
+            are set, they will have been applied to the keys and values, respectively.
+
+        .. note::
+
+            Subclasses may override this method.
+
+>>>>>>> v1
         """
         for key, value in other.items():
             self[key] = value
@@ -799,9 +974,15 @@ class TransformationMixin:
         :param \**kwargs: Additional keyword arguments.
         :raises NotImplementedError: If the method has not been overridden by a
             subclass.
+<<<<<<< HEAD
 
         .. important::
 
+=======
+
+        .. important::
+
+>>>>>>> v1
             Subclasses must override this method.
 
         """
@@ -823,9 +1004,15 @@ class TransformationMixin:
 
     def _moveBy(self, value: CoordinateType, **kwargs: Any) -> None:
         r"""Move the native object according to the given coordinates.
+<<<<<<< HEAD
 
         This is the environment implementation of :meth:`BaseObject.moveBy`.
 
+=======
+
+        This is the environment implementation of :meth:`BaseObject.moveBy`.
+
+>>>>>>> v1
         :param value: The x and y values to move the object by as
             a :ref:`type-coordinate`. The value will have been normalized with
             :func:`normalizers.normalizeTransformationOffset`.
@@ -872,6 +1059,7 @@ class TransformationMixin:
         This is the environment implementation of :meth:`BaseObject.scaleBy`.
 
         :param value: The x and y values to scale the glyph by as
+<<<<<<< HEAD
             a :class:`tuple` of two :class:`int` or :class:`float` values.
         :param origin: The point at which the scale should originate as
             a :ref:`type-coordinate` or :obj:`None`.
@@ -879,6 +1067,18 @@ class TransformationMixin:
 
         .. note::
 
+=======
+            a :class:`tuple` of two :class:`int` or :class:`float` values. The
+            value will have been normalized
+            with :func:`normalizeTransformationScale`.
+        :param origin: The point at which the scale should originate as
+            a :ref:`type-coordinate` or :obj:`None`. The value will have been
+            normalized with :func:`normalizers.normalizeCoordinateTuple`.
+        :param \**kwargs: Additional keyword arguments.
+
+        .. note::
+
+>>>>>>> v1
             Subclasses may override this method.
 
         """
@@ -914,6 +1114,7 @@ class TransformationMixin:
                   origin: Optional[CoordinateType],
                   **kwargs: Any) -> None:
         r"""Rotate the native object by the specified value.
+<<<<<<< HEAD
 
         This is the environment implementation of :meth:`TransformationMixin.rotateBy`.
 
@@ -925,6 +1126,19 @@ class TransformationMixin:
             normalized with :func:`normalizers.normalizeCoordinateTuple`.
         :param \**kwargs: Additional keyword arguments.
 
+=======
+
+        This is the environment implementation of :meth:`TransformationMixin.rotateBy`.
+
+        :param value: The angle at which to rotate the object as an :class:`int`
+            or a :class:`float`. The value will have been normalized with
+            :func:`normalizers.normalizeRotationAngle`.
+        :param origin: The point at which the rotation should originate as
+            a :ref:`type-coordinate` or :obj:`None`. The value will have been
+            normalized with :func:`normalizers.normalizeCoordinateTuple`.
+        :param \**kwargs: Additional keyword arguments.
+
+>>>>>>> v1
         .. note::
 
             Subclasses may override this method.
@@ -964,6 +1178,7 @@ class TransformationMixin:
                 origin: Optional[CoordinateType],
                 **kwargs: Any) -> None:
         r"""Skew the native object by the given value.
+<<<<<<< HEAD
 
         This is the environment implementation of :meth:`TransformationMixin.skewBy`.
 
@@ -977,6 +1192,21 @@ class TransformationMixin:
             normalized with :func:`normalizers.normalizeCoordinateTuple`.
         :param \**kwargs: Additional keyword arguments.
 
+=======
+
+        This is the environment implementation of :meth:`TransformationMixin.skewBy`.
+
+        :param value: The value by which to skew the object as either a
+            single :class:`int` or :class:`float` corresponding to the x
+            direction, or a :class:`tuple` of two :class:`int` or :class:`float`
+            values corresponding to the x and y directions. The value will have
+            been normalized with :func:`normalizers.normalizeTransformationSkewAngle`.
+        :param origin: The point at which the rotation should originate
+            as a :ref:`type-coordinate` or :obj:`None`. The value will have been
+            normalized with :func:`normalizers.normalizeCoordinateTuple`.
+        :param \**kwargs: Additional keyword arguments.
+
+>>>>>>> v1
         .. note::
 
             Subclasses may override this method.
@@ -1083,8 +1313,12 @@ class SelectionMixin:
         of :attr:`BaseObject.selected` property getter.
 
         :return: :obj:`True` if the object is selected, :obj:`False` otherwise.
+<<<<<<< HEAD
             The value will have been normalized
             with :func:`normalizers.normalizeBoolean`.
+=======
+            The value will be normalized with :func:`normalizers.normalizeBoolean`.
+>>>>>>> v1
         :raises NotImplementedError: If the method has not been overridden by a
             subclass.
 
@@ -1108,7 +1342,11 @@ class SelectionMixin:
 
         .. important::
 
+<<<<<<< HEAD
             Subclasses must override this method.
+=======
+            Subclasses must override this method if they implement object selection.
+>>>>>>> v1
 
         """
         self.raiseNotImplementedError()
@@ -1165,7 +1403,11 @@ class PointPositionMixin:
         the :attr:`PointPositionMixin.position` property getter.
 
         :return: The current point position as a :ref:`type-coordinate`.
+<<<<<<< HEAD
             The value will have been normalized
+=======
+            The value will be normalized
+>>>>>>> v1
             with :func:`normalizers.normalizeCoordinateTuple`.
 
         .. note::
@@ -1276,7 +1518,11 @@ class IdentifierMixin:
     def _setIdentifier(self, value: str) -> None:
         """Force a specific identifier onto an object.
 
+<<<<<<< HEAD
         THis method is intended for subclasses that allow setting an
+=======
+        This method is intended for subclasses that allow setting an
+>>>>>>> v1
         identifier to a specific value.
 
         :param value: The identifier to set as a :class:`str` or :obj:`None`.
