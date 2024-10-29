@@ -1,6 +1,7 @@
 # pylint: disable=C0103, C0302, C0114, W0613
 from __future__ import annotations
 from typing import TYPE_CHECKING, Any, Callable, Iterator, List, Optional, Tuple
+from abc import ABC, abstractmethod
 import collections
 
 from fontParts.base.base import (
@@ -57,6 +58,11 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
         :return: The number of :class:`BaseGlyph` instances in
             the layer as an :class:`int`.
 
+        Example::
+
+            >>> len(layer)
+            256
+
         """
         return self._len()
 
@@ -81,6 +87,14 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
         """Iterate through the glyphs in the layer.
 
         :return: An iterator over :class:`BaseGlyph` instances.
+
+        Example::
+
+            >>> for glyph in layer:
+            ...     glyph.name
+            "A"
+            "B"
+            "C"
 
         """
         return self._iter()
@@ -108,6 +122,10 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
         :return: a :class:`BaseGlyph` instance with the specified name.
         :raises KeyError: If no glyph with the given name exists in the layer.
 
+        Example::
+
+             >>> glyph = layer["A"]
+
         """
         name = normalizers.normalizeGlyphName(name)
         if name not in self:
@@ -116,14 +134,14 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
         self._setLayerInGlyph(glyph)
         return glyph
 
-    def _getItem(self, name: str, **kwargs: Any) -> BaseGlyph:
+    def _getItem(self, name: str, **kwargs: Any) -> BaseGlyph:  # type: ignore[return]
         r"""Get the specified glyph from the native layer.
 
         This is the environment implementation of
         :meth:`BaseLayer.__getitem__` and :meth:`BaseFont.__getitem__`.
 
         :param name: The name representing the glyph to get. The value
-            will be normalized with :func:`normalizers.normalizeGlyphName`.
+            will have been normalized with :func:`normalizers.normalizeGlyphName`.
         :param \**kwargs: Additional keyword arguments.
         :return: an instance of a :class:`BaseGlyph` subclass with the
             specified name.
@@ -152,7 +170,7 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
 
         Example::
 
-            >>> glyph = font.insertGlyph(otherGlyph, name="glyph2")
+            >>> glyph = layer["A"] = otherGlyph
 
         """
         name = normalizers.normalizeGlyphName(name)
@@ -161,7 +179,13 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
         return self._insertGlyph(glyph, name=name)
 
     def __delitem__(self, name: str) -> None:
-        """Remove the glyph with name from the layer."""
+        """Remove the glyph with name from the layer.
+
+        Example::
+
+            >>> del layer["A"]
+
+        """
         name = normalizers.normalizeGlyphName(name)
         if name not in self:
             raise KeyError(f"No glyph named '{name}'.")
@@ -180,10 +204,15 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
         :return: A :class:`tuple` of glyph names representing the glyphs
             in the current or default :class:`BaseLayer` instance.
 
+        Example::
+
+            >>> layer.keys()
+            ["B", "C", "A"]
+
         """
         return self._keys()
 
-    def _keys(self, **kwargs: Any) -> Tuple[str, ...]:
+    def _keys(self, **kwargs: Any) -> Tuple[str, ...]:  # type: ignore[return]
         r"""Get the names of all glyphs in the native layer.
 
         This is the environment implementation of
@@ -220,6 +249,11 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
             backward compatibility but may be deprecated in the future.
             It is advisable to use :meth:`__contains__` instead.
 
+        Example::
+
+            >>> "A" in layer
+            True
+
         """
         name = normalizers.normalizeGlyphName(name)
         return self._contains(name)
@@ -229,7 +263,6 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
 
         This is the environment implementation of
         :meth:`BaseLayer.__contains__` and :meth:`BaseFont.__contains__`.
-        :func:`normalizers.normalizeGlyphName`.
 
         :param name: The name of the glyph to check. The value will be
             normalized with :func:`normalizers.normalizeGlyphName`.
@@ -263,6 +296,10 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
             specified `name` before creation. Defaults to :obj:`True`
         :return: A newly created :class:`BaseGlyph` instance.
 
+        Example::
+
+            >>> glyph = layer.newGlyph("A")
+
         """
         name = normalizers.normalizeGlyphName(name)
         if name not in self:
@@ -275,7 +312,7 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
         self._setLayerInGlyph(glyph)
         return glyph
 
-    def _newGlyph(self, name: str, **kwargs: Any) -> BaseGlyph:
+    def _newGlyph(self, name: str, **kwargs: Any) -> BaseGlyph:  # type: ignore[return]
         r"""Create a new glyph in the native layer.
 
         This is the environment implementation of
@@ -306,6 +343,10 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
         current layer.
 
         :param name: The name of the glyph to remove.
+
+        Example::
+
+            >>> layer.removeGlyph("A")
 
         """
         del self[name]
@@ -371,7 +412,7 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
         :param glyph: A glyph object with the attributes necessary
             for copying as defined in :meth:`BaseGlyph.copy`
         :param name: The name to assign to the new glyph after
-            insertion. The value will be normalized
+            insertion. The value will have been normalized
             with :func:`normalizers.normalizeGlyphName` and tested to
             make sure that it is unique to the layer.
         :param \**kwargs: Additional keyword arguments.
@@ -402,6 +443,15 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
 
         :return: An unordered :class:`tuple` of currently selected
             :class:`BaseGlyph` instances.
+
+        Getting selected glyph objects::
+
+            >>> for glyph in layer.selectedGlyphs:
+            ...     glyph.markColor = (1, 0, 0, 0.5)
+
+        Setting selected glyph objects::
+
+            >>> layer.selectedGlyphs = someGlyphs
 
         """
     )
@@ -457,6 +507,15 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
         :return: An unordered :class:`tuple` of glyph names representing
             the currently selected :class:`BaseGlyph` instances.
 
+        Getting selected glyph names:
+
+            >>> for name in layer.selectedGlyphNames:
+            ...     print(name)
+
+        Setting selected glyph names:
+
+            >>> layer.selectedGlyphNames = ["A", "B", "C"]
+
         """
     )
 
@@ -509,6 +568,15 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
 
     has_key: Callable[[_BaseGlyphVendor, str], bool] = __contains__
 
+    # ----------------
+    # Abstract Members
+    # ----------------
+
+    @property
+    @abstractmethod
+    def defaultLayer(self) -> BaseLayer:
+        """Subclasses must implement this attribute."""
+
 
 class BaseLayer(_BaseGlyphVendor,
                 InterpolationMixin,
@@ -560,7 +628,7 @@ class BaseLayer(_BaseGlyphVendor,
         return super(BaseLayer, self).copy()
 
     def copyData(self, source: BaseLayer) -> None:
-        """Copy data from `source` into the current layer.
+        """Copy data from another layer instance.
 
         Refer to :meth:`BaseLayer.copy` for a list of values that will
             be copied.
@@ -589,9 +657,12 @@ class BaseLayer(_BaseGlyphVendor,
 
     font: dynamicProperty = dynamicProperty(
         "font",
-        """Get the layer's parent font object.
+        """Get  or set the layer's parent font object.
 
-        :return: An instance of the :class:`BaseFont` class.
+        The value must be a :class:`BaseFont` instance or :obj:`None`.
+
+        :return: The :class:`BaseFont` instance containing the layer
+            or :obj:`None`.
         :raises AssertionError: If attempting to set the font when it
             has already been set.
 
@@ -659,7 +730,7 @@ class BaseLayer(_BaseGlyphVendor,
                 )
         self._set_name(value)
 
-    def _get_name(self) -> Optional[str]:
+    def _get_name(self) -> Optional[str]:  # type: ignore[return]
         """Get the name of the native layer.
 
         This is the environment implementation of the :attr:`BaseLayer.name`
@@ -667,7 +738,8 @@ class BaseLayer(_BaseGlyphVendor,
 
         :return A :class:`str` defining the name of the current layer
             or :obj:`None` to indicate that the layer is the default.
-            The value will be normalized with :func:`normalizers.normalizeLayerName`.
+            The value will have been normalized
+            with :func:`normalizers.normalizeLayerName`.
         :raises NotImplementedError: If the method has not been
             overridden by a subclass.
 
@@ -735,16 +807,15 @@ class BaseLayer(_BaseGlyphVendor,
             value = normalizers.normalizeColor(value)
         self._set_color(value)
 
-    def _get_color(self) -> ColorType:
+    def _get_color(self) -> ColorType:  # type: ignore[return]
         """Get the color of the layer.
 
         This is the environment implementation of
         the :attr:`BaseLayer.color` property getter.
 
-        :return: A : defining the :ref:`type-color` assigned to the
-            layer or :obj`None` to indicate that the layer does not have
-            an assigned color. The value will be normalized with
-            :func:`normalizers.normalizeColor`.
+        :return: The :ref:`type-color` assigned to the layer, or :obj`None` to
+            indicate that the layer does not have an assigned color. The value
+            will have been normalized with :func:`normalizers.normalizeColor`.
         :raises NotImplementedError: If the method has not been
             overridden by a subclass.
 
@@ -762,7 +833,7 @@ class BaseLayer(_BaseGlyphVendor,
         the :attr:`BaseLayer.color` property setter.
 
         :param value: A :ref:`type-color` or :obj:`None` defining the
-            color to assign to the layer. The value will be normalized
+            color to assign to the layer. The value will have been normalized
             with :func:`normalizers.normalizeColor`.
         :param \**kwargs: Additional keyword arguments.
         :raises NotImplementedError: If the method has not been
@@ -785,6 +856,8 @@ class BaseLayer(_BaseGlyphVendor,
         "base_lib",
         """Get the layer's lib object.
 
+        This property is read-only.
+
         :return: An instance of the :class:`BaseLib` class.
 
         Example::
@@ -800,7 +873,7 @@ class BaseLayer(_BaseGlyphVendor,
         lib.font = self
         return lib
 
-    def _get_lib(self) -> BaseLib:
+    def _get_lib(self) -> BaseLib:  # type: ignore[return]
         """Get the native layer's :class:`BaseLib` object.
 
         This is the environment implementation of
@@ -818,6 +891,8 @@ class BaseLayer(_BaseGlyphVendor,
     tempLib: dynamicProperty = dynamicProperty(
         "base_tempLib",
         """Get the layer's temporary lib object.
+
+        This property is read-only.
 
         This property provides access to a temporary instance of
         the :class:`BaseLib` class, used for storing data that should
@@ -840,7 +915,7 @@ class BaseLayer(_BaseGlyphVendor,
         lib.font = self
         return lib
 
-    def _get_tempLib(self) -> BaseLib:
+    def _get_tempLib(self) -> BaseLib:  # type: ignore[return]
         """Get the layer's temporary lib object.
 
         This is the environment implementation of
@@ -971,8 +1046,8 @@ class BaseLayer(_BaseGlyphVendor,
                      factor: FactorType,
                      minLayer: BaseLayer,
                      maxLayer: BaseLayer,
-                     round: bool = True,
-                     suppressError: bool = True) -> None:
+                     round: bool,
+                     suppressError: bool) -> None:
         """Interpolate all possible data in the native layer.
 
         This is the environment implementation of :meth:`BaseLayer.interpolate`.
@@ -985,10 +1060,10 @@ class BaseLayer(_BaseGlyphVendor,
         :param maxLayer: The :class:`BaseLayer` subclass instance
             corresponding to the 1.0 position in the interpolation.
         :param round: A :class:`bool` indicating whether the result should
-            be rounded to integers. Defaults to :obj:`True`.
+            be rounded to integers.
         :param suppressError: A :class:`bool` indicating whether to ignore
             incompatible data or raise an error when such
-            incompatibilities are found. Defaults to :obj:`True`.
+            incompatibilities are found.
         :raises FontPartsError: If ``suppressError=False`` and the interpolation
             data is incompatible.
 
@@ -1087,15 +1162,12 @@ class BaseLayer(_BaseGlyphVendor,
         the composite glyph names that include the comoponent. All
         glyphs are loaded.
 
-        Note that one glyph can have multiple unicode values, and a
-        unicode value can have multiple glyphs pointing to it.
-
         :return: A :class:`dict` of component glyph names mapped to
             tuples of composite glyph names.
 
         Example::
 
-            >>> mapping = getReverseComponentMapping()
+            >>> mapping = layer.getReverseComponentMapping()
             >>> mapping
             {'A': ('Aacute', 'Aring'), 'acute': ('Aacute',),
             'ring': ('Aring',), ...}
@@ -1131,6 +1203,11 @@ class BaseLayer(_BaseGlyphVendor,
         tuples of glyph names. Each Unicode value corresponds to one or
         more glyphs, and the glyph names represent these glyphs in the
         mapping.
+
+        .. note::
+
+            One glyph can have multiple unicode values, and a unicode value can
+            have multiple glyphs pointing to it.
 
         :return: A :class:`dict` mapping Unicode values to tuples of
             glyph names.

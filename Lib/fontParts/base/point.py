@@ -108,6 +108,8 @@ class BasePoint(BaseObject,
         "glyph",
         """Get the point's parent glyph object.
 
+        This property is read-only.
+
         The value must be a :class:`BaseGlyph` instance or :obj:`None`.
 
         :return: The :class:`BaseGlyph` instance containing the point
@@ -131,6 +133,8 @@ class BasePoint(BaseObject,
         "layer",
         """Get the point's parent layer object.
 
+        This property is read-only.
+
         :return: The :class:`BaseLayer` instance containing the point
             or :obj:`None`.
 
@@ -152,6 +156,8 @@ class BasePoint(BaseObject,
         "font",
 
         """Get the point's parent font object.
+
+        This property is read-only.
 
         :return: The :class:`BaseFont` instance containing the point
             or :obj:`None`.
@@ -181,17 +187,15 @@ class BasePoint(BaseObject,
         The value must be a :class:`str` containing one of the following
         alternatives:
 
-        +----------+---------------------------------+
-        | move     | An on-curve move to.            |
-        +----------+---------------------------------+
-        | line     | An on-curve line to.            |
-        +----------+---------------------------------+
-        | curve    | An on-curve cubic curve to.     |
-        +----------+---------------------------------+
-        | qcurve   | An on-curve quadratic curve to. |
-        +----------+---------------------------------+
-        | offcurve | An off-curve.                   |
-        +----------+---------------------------------+
+        +----------------+---------------------------------+
+        | Type           | Description                     |
+        +----------------+---------------------------------+
+        | ``'move'``     | An on-curve move to.            |
+        | ``'line'``     | An on-curve line to.            |
+        | ``'curve'``    | An on-curve cubic curve to.     |
+        | ``'qcurve'``   | An on-curve quadratic curve to. |
+        | ``'offcurve'`` | An off-curve.                   |
+        +----------------+---------------------------------+
 
         :return: A :class:`str` representing the type of the point.
 
@@ -454,8 +458,11 @@ class BasePoint(BaseObject,
         "base_index",
         """Get the index of the point.
 
+        This property is read-only.
+
         :return: An :class:`int` representing the point's index within an
-            ordered list of the parent glyph's points.
+            ordered list of the parent contour's points, or :obj:`None` if the
+            point does not belong to a contour.
 
         Example::
 
@@ -477,7 +484,8 @@ class BasePoint(BaseObject,
         property getter.
 
         :return: An :class:`int` representing the point's index within an
-            ordered list of the parent glyph's points. The value will have been
+            ordered list of the parent contour's points, or :obj:`None` if the
+            point does not belong to a contour. The value will have been
             normalized with :func:`normalizers.normalizeIndex`.
 
         .. note::

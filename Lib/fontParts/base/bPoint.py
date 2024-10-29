@@ -159,6 +159,8 @@ class BaseBPoint(BaseObject,
         "glyph",
         """Get the bPoint's parent glyph object.
 
+        This property is read-only.
+
         The value must be a :class:`BaseGlyph` instance or :obj:`None`.
 
         :return: The :class:`BaseGlyph` instance containing the bPoint
@@ -182,6 +184,8 @@ class BaseBPoint(BaseObject,
         "layer",
         """Get the bPoint's parent layer object.
 
+        This property is read-only.
+
         :return: The :class:`BaseLayer` instance containing the bPoint
             or :obj:`None`.
 
@@ -202,6 +206,8 @@ class BaseBPoint(BaseObject,
     font: dynamicProperty = dynamicProperty(
         "font",
         """Get the bPoint's parent font object.
+
+        This property is read-only.
 
         :return: The :class:`BaseFont` instance containing the bPoint
             or :obj:`None`.
@@ -467,12 +473,12 @@ class BaseBPoint(BaseObject,
         The value must be a :class:`str` containing one of the following
         alternatives:
 
-        +--------+---------------------------------------------------------+
-        | type   | Description                                             |
-        +--------+---------------------------------------------------------+
-        | curve  | A point where bcpIn and bcpOut are smooth (linked).     |
-        | corner | A point where bcpIn and bcpOut are not smooth (linked). |
-        +--------+---------------------------------------------------------+
+        +--------------+-----------------------------------------------------------+
+        | Type         | Description                                               |
+        +--------------+-----------------------------------------------------------+
+        | ``'curve'``  | A point where bcpIn and bcpOut are smooth (linked).       |
+        | ``'corner'`` | A point where bcpIn and bcpOut are not smooth (unlinked). |
+        +--------+-----------------------------------------------------------------+
 
         :return: A :class:`str` representing the type of the bPoint.
 
@@ -560,6 +566,8 @@ class BaseBPoint(BaseObject,
     index: dynamicProperty = dynamicProperty(
         "base_index",
         """Get the index of the bPoint.
+
+        This property is read-only.
 
         :return: An :class:`int` representing the bPoint's index within an
             ordered list of the parent contour's bPoints, or :obj:`None` if the
