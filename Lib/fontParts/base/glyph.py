@@ -240,7 +240,7 @@ class BaseGlyph(BaseObject,
         property getter.
 
         :return A :class:`str` defining the name of the glyph. The value
-            will have been normalized with :func:`normalizers.normalizeLayerName`.
+            will be normalized with :func:`normalizers.normalizeLayerName`.
 
         .. important::
 
@@ -308,7 +308,7 @@ class BaseGlyph(BaseObject,
 
         :return: A :class:`tuple` of :class:`int` values representing
             the glyphs Unicode values in order from most to least important.
-            The value will have been normalized
+            The value will be normalized
             with :func:`normalizers.normalizeGlyphUnicodes(value)`.
         :raises NotImplementedError: If the method has not been
             overridden by a subclass.
@@ -327,8 +327,8 @@ class BaseGlyph(BaseObject,
         the :attr:`BaseGlyph.unicodes` property setter.
 
         :param value: A :class:`list` or :class:`tuple` of :class:`int`
-            values in order from most to least important. The value will be
-            normalized with :func:`normalizers.normalizeGlyphUnicodes(value)`.
+            values in order from most to least important. The value will have
+            been normalized with :func:`normalizers.normalizeGlyphUnicodes(value)`.
         :raises NotImplementedError: If the method has not been
             overridden by a subclass.
 
@@ -3138,7 +3138,7 @@ class BaseGlyph(BaseObject,
 
         This is the environment implementation of :meth:`BaseGlyph.removeLayer`.
 
-        :param name: The name of the layer to remove. The value will be
+        :param name: The name of the layer to remove. The value will have been
             normalized with :func:`normalizers.normalizeLayerName`.
         :param \**kwargs: Additional keyword arguments.
         :raises NotImplementedError: If the method has not been
@@ -3648,8 +3648,9 @@ class BaseGlyph(BaseObject,
         This is the environment implementation of
         the :attr:`BaseGlyph.selectedContour` property getter.
 
-        :return: A :class:`tuple` of the currently
-            selected :class:`BaseContour` instances.
+        :return: A :class:`tuple` of the currently selected :class:`BaseContour`
+            instances. Each value item will be normalized
+            with :func:`normalizers.normalizeContour`.
 
         .. note::
 
@@ -3678,7 +3679,9 @@ class BaseGlyph(BaseObject,
 
         :param value: a :class:`tuple` or :class:`list` of
             either :class:`BaseContour` instances or :class:`int` values
-            representing contour indexes to select.
+            representing contour indexes to select. Each value item will have
+            been normalized with :func:`normalizers.normalizeContour`.
+            or :func:`normalizers.normalizeIndex`.
 
         .. note::
 
@@ -3724,7 +3727,8 @@ class BaseGlyph(BaseObject,
         the :attr:`BaseGlyph.selectedComponents` property getter.
 
         :return: A :class:`tuple` of the currently
-            selected :class:`BaseComponent` instances.
+            selected :class:`BaseComponent` instances. Each value item will be
+            normalized with :func:`normalizers.normalizeComponent`.
 
         .. note::
 
@@ -3753,7 +3757,9 @@ class BaseGlyph(BaseObject,
 
         :param value: a :class:`tuple` or :class:`list` of
             either :class:`BaseComponent` instances or :class:`int` values
-            representing component indexes to select.
+            representing component indexes to select. Each value item will have
+            been normalized with :func:`normalizers.normalizeComponent`
+            or :func:`normalizers.normalizeIndex`.
 
         .. note::
 
@@ -3799,7 +3805,8 @@ class BaseGlyph(BaseObject,
         the :attr:`BaseGlyph.selectedAnchors` property getter.
 
         :return: A :class:`tuple` of the currently
-            selected :class:`BaseAnchor` instances.
+            selected :class:`BaseAnchor` instances. Each value item will be
+            normalized with :func:`normalizers.normalizeAnchor`.
 
         .. note::
 
@@ -3828,7 +3835,9 @@ class BaseGlyph(BaseObject,
 
         :param value: a :class:`tuple` or :class:`list` of
             either :class:`BaseAnchor` instances or :class:`int` values
-            representing anchor indexes to select.
+            representing anchor indexes to select. Each value item will have
+            been normalized with :func:`normalizers.normalizeAnchor`
+            or :func:`normalizers.normalizeIndex`.
 
         .. note::
 
@@ -3874,7 +3883,8 @@ class BaseGlyph(BaseObject,
         the :attr:`BaseGlyph.selectedGuideline` property getter.
 
         :return: A :class:`tuple` of the currently
-            selected :class:`BaseGuideline` instances.
+            selected :class:`BaseGuideline` instances. Each value item will be
+            normalized with :func:`normalizers.normalizeGuideline`.
 
         .. note::
 
@@ -3903,7 +3913,9 @@ class BaseGlyph(BaseObject,
 
         :param value: a :class:`tuple` or :class:`list` of
             either :class:`BaseGuideline` instances or :class:`int` values
-            representing guideline indexes to select.
+            representing guideline indexes to select. Each value item will have
+            been normalized with :func:`normalizers.normalizeGuideline`
+            or :func:`normalizers.normalizeIndex`.
 
         .. note::
 

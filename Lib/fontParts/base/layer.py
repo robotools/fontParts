@@ -264,7 +264,7 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
         This is the environment implementation of
         :meth:`BaseLayer.__contains__` and :meth:`BaseFont.__contains__`.
 
-        :param name: The name of the glyph to check. The value will be
+        :param name: The name of the glyph to check. The value will have been
             normalized with :func:`normalizers.normalizeGlyphName`.
         :param \**kwargs: Additional keyword arguments.
         :return: :obj:`True` if the glyph exists in the layer,
@@ -318,7 +318,7 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
         This is the environment implementation of
         :meth:`BaseLayer.newGlyph` and :meth:`BaseFont.newGlyph`.
 
-        :param name: The name of the glyph to create. The value will be
+        :param name: The name of the glyph to create. The value will have been
             normalized with :func:`normalizers.normalizeGlyphName` and
             tested to make sure that it is unique to the layer.
         :param \**kwargs: Additional keyword arguments.
@@ -358,7 +358,7 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
         :meth:`BaseLayer.removeGlyph` and :meth:`BaseFont.removeGlyph`.
 
         :param name: The name of the glyph to remove. The value will
-            be normalized with :func:`normalizers.normalizeGlyphName`.
+            have been normalized with :func:`normalizers.normalizeGlyphName`.
         :param \**kwargs: Additional keyword arguments.
         :raises NotImplementedError: If the method has not been
             overridden by a subclass.
@@ -468,7 +468,8 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
         the :attr:`BaseLayer.selectedGlyphs` property getter.
 
         :return: An unordered :class:`tuple` of selected :class:`BaseGlyph`
-            subclass instances.
+            subclass instances. Each value item will be normalized
+            with :func:`normalizers.normalizeGlyph`.
 
         .. note::
 
@@ -488,7 +489,8 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
         the :attr:`BaseLayer.selectedGlyphs` property setter.
 
         :param value: A :class:`list` or :class:`tuple` of :class:`BaseGlyph`
-            subclass instances to select.
+            subclass instances to select. Each value item will have been normalized
+            with :func:`normalizers.normalizeGlyph`.
 
         .. note::
 
@@ -530,8 +532,9 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
         This is the environment implementation of
         the :attr:`BaseLayer.selectedGlyphNames` property getter.
 
-        :return: An unordered :class:`tuple` of glyph names representing
-            the currently selected :class:`BaseGlyph` subclass instances.
+        :return: An unordered :class:`tuple` of glyph names representing the
+            currently selected :class:`BaseGlyph` subclass instances. Each value
+            item will be normalized with :func:`normalizers.normalizeGlyphName`.
 
         .. note::
 
@@ -552,7 +555,8 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
         the :attr:`BaseLayer.selectedGlyphNames` property setter.
 
         :param value: A :class:`list` or :class:`tuple` of names representing
-            the :class:`BaseGlyph` subclass instances to select.
+            the :class:`BaseGlyph` subclass instances to select. Each value item
+            will have been normalized with :func:`normalizers.normalizeGlyphName`.
 
         .. note::
 
@@ -738,8 +742,7 @@ class BaseLayer(_BaseGlyphVendor,
 
         :return A :class:`str` defining the name of the current layer
             or :obj:`None` to indicate that the layer is the default.
-            The value will have been normalized
-            with :func:`normalizers.normalizeLayerName`.
+            The value will be normalized with :func:`normalizers.normalizeLayerName`.
         :raises NotImplementedError: If the method has not been
             overridden by a subclass.
 
@@ -756,9 +759,9 @@ class BaseLayer(_BaseGlyphVendor,
         This is the environment implementation of the :attr:`BaseLayer.name`
             property setter.
 
-        :param value: The name to assign to the layer. The value will be
-            normalized with :func:`normalizers.normalizeLayerName` and must be
-            unique to the font.
+        :param value: The name to assign to the layer. The value must be unique
+            to the font and will have been normalized
+            with :func:`normalizers.normalizeLayerName`
         :param \**kwargs: Additional keyword arguments.
         :raises NotImplementedError: If the method has not been
             overridden by a subclass.
@@ -815,7 +818,7 @@ class BaseLayer(_BaseGlyphVendor,
 
         :return: The :ref:`type-color` assigned to the layer, or :obj`None` to
             indicate that the layer does not have an assigned color. The value
-            will have been normalized with :func:`normalizers.normalizeColor`.
+            will be normalized with :func:`normalizers.normalizeColor`.
         :raises NotImplementedError: If the method has not been
             overridden by a subclass.
 

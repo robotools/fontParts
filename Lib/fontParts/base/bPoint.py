@@ -257,7 +257,7 @@ class BaseBPoint(BaseObject,
         property getter.
 
         :return: a :ref:`type-coordianate` representing the anchor point of the
-            bPoint. The value will have been normalized
+            bPoint. The value will be normalized
             with :func:`normalizers.normalizeCoordinateTuple`.
 
         .. note::
@@ -319,7 +319,7 @@ class BaseBPoint(BaseObject,
         property getter.
 
         :return: A :ref:`type-coordinate` representing the incoming off-curve of
-            the bPoin. The value will have been normalized
+            the bPoin. The value will be normalized
             with :func:`normalizers.normalizeCoordinateTuple`.
 
         .. note::
@@ -406,7 +406,7 @@ class BaseBPoint(BaseObject,
         property getter.
 
         :return: A :ref:`type-coordinate` representing the outgoing
-            off-curve of the bPoin. The value will have been normalized
+            off-curve of the bPoin. The value will be normalized
             with :func:`normalizers.normalizeCoordinateTuple`.
 
         .. note::
@@ -501,7 +501,7 @@ class BaseBPoint(BaseObject,
         property getter.
 
         :return: A :class:`str` representing the type of the bPoint. The value
-            will have been normalized with :func:`normalizers.normalizeBPointType`.
+            will be normalized with :func:`normalizers.normalizeBPointType`.
         :raises FontPartsError: If the point's type cannot be converted to a valid
             bPoint type.
 
@@ -596,7 +596,7 @@ class BaseBPoint(BaseObject,
 
         :return: An :class:`int` representing the bPoint's index within an
             ordered list of the parent contour's bPoints, or :obj:`None` if the
-            bPoint does not belong to a contour. The value will have been
+            bPoint does not belong to a contour. The value will be
             normalized with :func:`normalizers.normalizeIndex`.
 
         .. note::

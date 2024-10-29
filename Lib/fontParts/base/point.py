@@ -217,7 +217,7 @@ class BasePoint(BaseObject,
         property getter.
 
         :return: A :class:`str` representing the type of the point. The value
-            will have been normalized with :func:`normalizers.normalizePointType`.
+            will be normalized with :func:`normalizers.normalizePointType`.
         :raises NotImplementedError: If the method has not been overridden by
             a subclass.
 
@@ -283,7 +283,7 @@ class BasePoint(BaseObject,
         property getter.
 
         :return: A :class:`bool` indicating the point's smooth state. The value
-            will have been normalized with :func:`normalizers.normalizeBoolean`.
+            will be normalized with :func:`normalizers.normalizeBoolean`.
         :raises NotImplementedError: If the method has not been overridden by a
             subclass.
 
@@ -350,7 +350,7 @@ class BasePoint(BaseObject,
         property getter.
 
         :return: An :class:`int` or a :class:`float` representing the point's
-            x coordinate. The value will have been normalized with
+            x coordinate. The value will be normalized with
             :func:`normalizers.normalizeX`.
         :raises NotImplementedError: If the method has not been overridden by a
             subclass.
@@ -417,7 +417,7 @@ class BasePoint(BaseObject,
         property getter.
 
         :return: An :class:`int` or a :class:`float` representing the point's
-            y coordinate. The value will have been normalized
+            y coordinate. The value will be normalized
             with :func:`normalizers.normalizeY`.
         :raises NotImplementedError: If the method has not been overridden by a
             subclass.
@@ -485,7 +485,7 @@ class BasePoint(BaseObject,
 
         :return: An :class:`int` representing the point's index within an
             ordered list of the parent contour's points, or :obj:`None` if the
-            point does not belong to a contour. The value will have been
+            point does not belong to a contour. The value will be
             normalized with :func:`normalizers.normalizeIndex`.
 
         .. note::
@@ -535,8 +535,7 @@ class BasePoint(BaseObject,
         property getter.
 
         :return: A :class:`str` representing the point's name or :obj:`None`.
-            The value will have been normalized
-            with :func:`normalizers.normalizePointName`.
+            The value will be normalized with :func:`normalizers.normalizePointName`.
         :raises NotImplementedError: If the method has not been overridden by a
             subclass.
 

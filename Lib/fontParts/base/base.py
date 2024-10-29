@@ -557,10 +557,10 @@ class BaseDict(BaseObject):
         This is the environment implementation of :meth:`BaseDict.__setitem__`.
 
         :param key: The key to set. If a :cvar:`BaseDict.keyNormalizer`
-            is set, it will be applied in the calling method to the returned value.
+            is set, it will have been applied to the value in the calling method.
         :param value: The value to set for the given key. If
-            a :cvar:`BaseDict.valueNormalizer` is set, it will be applied in the
-            calling method to the returned value.
+            a :cvar:`BaseDict.valueNormalizer` is set, it will have be applied to
+            the value in the calling method .
         :raises NotImplementedError: If the method has not been overridden by a
             subclass.
 
@@ -591,8 +591,8 @@ class BaseDict(BaseObject):
         This is the environment implementation of :meth:`BaseDict.__getitem__`.
 
         :param key: The key to retrieve the value for. If
-         a :cvar:`BaseDict.keyNormalizer` is set, it will be applied in the
-            calling method to the returned value.
+            a :cvar:`BaseDict.keyNormalizer` is set, it will have been applied to
+            the key in the calling method.
         :return: The value for the given key. If
             a :cvar:`BaseDict.valueNormalizer` is set, it will be applied in the
             calling method to the returned value.
@@ -1135,8 +1135,7 @@ class SelectionMixin:
         of :attr:`BaseObject.selected` property getter.
 
         :return: :obj:`True` if the object is selected, :obj:`False` otherwise.
-            The value will have been normalized
-            with :func:`normalizers.normalizeBoolean`.
+            The value will be normalized with :func:`normalizers.normalizeBoolean`.
         :raises NotImplementedError: If the method has not been overridden by a
             subclass.
 

@@ -509,7 +509,7 @@ class BaseFont(_BaseGlyphVendor,
             for `format` is not supported by the environment,
             the environment must raise :exc:`FontPartsError`.
         :param path: The location where the generated file should be
-            saved. It is normalized
+            saved. The value will have been normalized
             with :func:`normalizers.normalizeFilePath`.
         :param environmentOptions: A dictionary of environment-specific
             options. These options are validated
@@ -919,8 +919,7 @@ class BaseFont(_BaseGlyphVendor,
 
         :param \**kwargs: Additional keyword arguments.
         :return: A :class:`list` of layer names in their defined order.
-            The value will have been normalized
-            with :func:`normalizers.normalizeLayerOrder`.
+            The value will be normalized with :func:`normalizers.normalizeLayerOrder`.
         :raises NotImplementedError: If the method has not
             beenoverridden by a subclass.
 
@@ -994,7 +993,7 @@ class BaseFont(_BaseGlyphVendor,
         This is the environment implementation of
         :attr:`BaseFont.defaultLayerName` property getter.
         :return: The name of the current default :class`BaseLayer`
-            subclass instance. The value will have been normalized
+            subclass instance. The value will be normalized
             with :func:`normalizers.normalizeDefaultLayerName`.
         :raises NotImplementedError: If the method has not been
             overridden by a subclass.
@@ -1057,8 +1056,7 @@ class BaseFont(_BaseGlyphVendor,
         :attr:`BaseFont.defaultLayer` property getter.
 
         :return: The default :class:`BaseLayer` subclass instance.
-            The value will have been normalized
-            with :func:`normalizers.normalizeLayer`.
+            The value will be normalized with :func:`normalizers.normalizeLayer`.
 
         .. important::
 
@@ -1216,7 +1214,7 @@ class BaseFont(_BaseGlyphVendor,
         This is the environment implementation of
         :meth:`BaseFont.removeLayer`.
 
-        :param name: The name of the layer to remove. The value will be
+        :param name: The name of the layer to remove. The value will have been
             normalized with :func:`normalizers.normalizeLayerName`.
         :param \**kwargs: Additional keyword arguments.
         :raises NotImplementedError: If the method has not been
@@ -1381,7 +1379,7 @@ class BaseFont(_BaseGlyphVendor,
             raise ValueError(
                 "No layer with the name '%s' exists." % otherLayerName
             )
-        self._swapLayers(layerName, otherLayerName)
+        self._swapLayerNames(layerName, otherLayerName)
 
     def _swapLayerNames(self, layerName: str, otherLayerName: str) -> None:
         """Swap the names of two specific layers in the native font.
@@ -1453,8 +1451,7 @@ class BaseFont(_BaseGlyphVendor,
     def _keys(self, **kwargs: Any) -> Tuple[str, ...]:
         r"""Get a list of all glyph names in the native default layer.
 
-        This is the environment implementation of
-        :meth:`BaseFont.keys`.
+        This is the environment implementation of :meth:`BaseFont.keys`.
 
         :param \**kwargs: Additional keyword arguments.
         :return: A :class:`tuple` of glyph names as :class:`str`.
@@ -1469,6 +1466,8 @@ class BaseFont(_BaseGlyphVendor,
 
     def _newGlyph(self, name: str, **kwargs: Any) -> BaseGlyph:
         r"""Create a new glyph in the native default layer.
+
+        This is the environment implementation of :meth:`BaseFont.newGlyph.
 
         :param name: The name to assign to the new glyph. The value will
             have been normalized
@@ -1578,8 +1577,7 @@ class BaseFont(_BaseGlyphVendor,
 
         :param \**kwargs: Additional keyword arguments.
         :return: A :class:`tuple` of layer names in their defined order.
-            The value will have been normalized
-            with :func:`normalizers.normalizeGlyphOrder`.
+            The value will be normalized with :func:`normalizers.normalizeGlyphOrder`.
         :raises NotImplementedError: If the method has not
             beenoverridden by a subclass.
 
@@ -2245,7 +2243,8 @@ class BaseFont(_BaseGlyphVendor,
         the :attr:`BaseFont.selectedLayers` property getter.
 
         :return: A :class:`tuple` of currently selected :class:`BaseLayer`
-            instances.
+            instances. Each value item will be normalized
+            with :func:`normalizers.normalizeLayer`.
 
         .. note::
 
@@ -2265,7 +2264,8 @@ class BaseFont(_BaseGlyphVendor,
         the :attr:`BaseFont.selectedLayers` property setter.
 
         :param value: The :class:`list` of :class:`BaseLayer` instances
-            to select.
+            to select. Each value item will have been normalized
+            with :func:`normalizers.normalizeLayer`.
 
         .. note::
 
@@ -2307,7 +2307,8 @@ class BaseFont(_BaseGlyphVendor,
         the :attr:`BaseFont.selectedLayerNames` property getter.
 
         :return: A :class:`tuple` of layer names representing the currently
-            selected :class:`BaseLayer` instances.
+            selected :class:`BaseLayer` instances. Each value item will be
+            normalized with :func:`normalizers.normalizeLayerName`.
 
         .. note::
 
@@ -2327,7 +2328,8 @@ class BaseFont(_BaseGlyphVendor,
         the :attr:`BaseFont.selectedLayerNames` property setter.
 
         :param value: The :class:`list` of layer names representing
-            the :class:`BaseLayer` instances to select.
+            the :class:`BaseLayer` instances to select. Each value item will
+            have been normalized with :func:`normalizers.normalizeLayerName`.
 
         .. note::
 
@@ -2376,7 +2378,8 @@ class BaseFont(_BaseGlyphVendor,
         the :attr:`BaseFont.selectedGuidelines` property getter.
 
         :return: A :class:`tuple` of currently selected :class:`BaseGuideline`
-            instances.
+            instances. Each value item will be normalized
+            with :func:`normalizers.normalizeGuideline`.
 
         .. note::
 
@@ -2401,8 +2404,9 @@ class BaseFont(_BaseGlyphVendor,
         This is the environment implementation of
         the :attr:`BaseFont.selectedGuidelines` property setter.
 
-        :param value: The :class:`list` of :class:`BaseGuideline` instances
-            to select.
+        :param value: The :class:`list` of :class:`BaseGuideline` instances to
+            select. Each value item will have been normalized
+            with :func:`normalizers.normalizeGuideline`.
 
         .. note::
 
