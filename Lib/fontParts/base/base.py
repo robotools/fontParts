@@ -761,7 +761,7 @@ class BaseDict(BaseObject):
                 key = self.keyNormalizer.__func__(key)
                 value = self.valueNormalizer.__func__(value)
                 d[key] = value
-            value = d
+            otherCopy = d
         self._update(otherCopy)
 
     def _update(self, other: BaseDict) -> None:

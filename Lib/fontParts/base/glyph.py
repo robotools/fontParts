@@ -1492,7 +1492,7 @@ class BaseGlyph(BaseObject,
                 if normalizedComponent.identifier not in existing:
                     identifier = normalizedComponent.identifier
         normalizedBaseGlyph = normalizers.normalizeGlyphName(baseGlyph)
-        if self.name == baseGlyph:
+        if self.name == normalizedBaseGlyph:
             raise FontPartsError(
                 "A glyph cannot contain a component referencing itself."
             )
