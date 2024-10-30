@@ -1717,8 +1717,8 @@ class BaseFont(_BaseGlyphVendor,
             Subclasses may override this method.
 
         """
-        return tuple([self._getitem__guidelines(i)
-                      for i in range(self._len__guidelines())])
+        return tuple(self._getitem__guidelines(i)
+                      for i in range(self._len__guidelines()))
 
     def _len__guidelines(self) -> int:
         return self._lenGuidelines()
@@ -2232,8 +2232,8 @@ class BaseFont(_BaseGlyphVendor,
     )
 
     def _get_base_selectedLayers(self) -> Tuple[BaseLayer, ...]:
-        selected = tuple([normalizers.normalizeLayer(layer) for
-                          layer in self._get_selectedLayers()])
+        selected = tuple(normalizers.normalizeLayer(layer) for
+                          layer in self._get_selectedLayers())
         return selected
 
     def _get_selectedLayers(self) -> Tuple[BaseLayer, ...]:
@@ -2296,8 +2296,8 @@ class BaseFont(_BaseGlyphVendor,
     )
 
     def _get_base_selectedLayerNames(self) -> Tuple[str, ...]:
-        selected = tuple([normalizers.normalizeLayerName(name) for
-                          name in self._get_selectedLayerNames()])
+        selected = tuple(normalizers.normalizeLayerName(name) for
+                          name in self._get_selectedLayerNames())
         return selected
 
     def _get_selectedLayerNames(self) -> Tuple[str, ...]:
@@ -2367,8 +2367,8 @@ class BaseFont(_BaseGlyphVendor,
     )
 
     def _get_base_selectedGuidelines(self) -> Tuple[BaseGuideline, ...]:
-        selected = tuple([normalizers.normalizeGuideline(guideline) for
-                          guideline in self._get_selectedGuidelines()])
+        selected = tuple(normalizers.normalizeGuideline(guideline) for
+                          guideline in self._get_selectedGuidelines())
         return selected
 
     def _get_selectedGuidelines(self) -> Tuple[BaseGuideline, ...]:
