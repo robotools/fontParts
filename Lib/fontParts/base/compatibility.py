@@ -52,9 +52,9 @@ class BaseCompatibilityReporter(object):
     @staticmethod
     def _getObjectName(obj):
         if hasattr(obj, "name") and obj.name is not None:
-            return f"\"{obj.name}\""
+            return f'"{obj.name}"'
         elif hasattr(obj, "identifier") and obj.identifier is not None:
-            return f"\"{obj.identifier}\""
+            return f'"{obj.identifier}"'
         elif hasattr(obj, "index"):
             return f"[{obj.index}]"
         else:
