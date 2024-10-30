@@ -23,6 +23,3 @@ htmlcov
 
 # scm version
 Lib/fontParts/_version.py
-
-fontParts.sublime-project
-fontParts.sublime-workspace
