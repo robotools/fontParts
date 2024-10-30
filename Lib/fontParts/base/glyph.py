@@ -1487,8 +1487,8 @@ class BaseGlyph(BaseObject,
             if baseGlyph is None:
                 baseGlyph = normalizedComponent.baseGlyph
             if normalizedComponent.identifier is not None:
-                existing = set([c.identifier for c in self.components
-                                if c.identifier is not None])
+                existing = set(c.identifier for c in self.components
+                                if c.identifier is not None)
                 if normalizedComponent.identifier not in existing:
                     identifier = normalizedComponent.identifier
         normalizedBaseGlyph = normalizers.normalizeGlyphName(baseGlyph)
@@ -1982,8 +1982,8 @@ class BaseGlyph(BaseObject,
             if color is None:
                 color = normalizedGuideline.color
             if normalizedGuideline.identifier is not None:
-                existing = set([g.identifier for g in self.guidelines
-                                if g.identifier is not None])
+                existing = set(g.identifier for g in self.guidelines
+                                if g.identifier is not None)
                 if normalizedGuideline.identifier not in existing:
                     identifier = normalizedGuideline.identifier
         normalizedPosition = normalizers.normalizeCoordinateTuple(position)
