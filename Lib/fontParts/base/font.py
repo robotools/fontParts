@@ -2232,13 +2232,8 @@ class BaseFont(_BaseGlyphVendor,
     )
 
     def _get_base_selectedLayers(self) -> Tuple[BaseLayer, ...]:
-<<<<<<< HEAD
-        selected = tuple([normalizers.normalizeLayer(layer) for
-                          layer in self._get_selectedLayers()])
-=======
         selected = tuple(normalizers.normalizeLayer(layer) for
                           layer in self._get_selectedLayers())
->>>>>>> v1
         return selected
 
     def _get_selectedLayers(self) -> Tuple[BaseLayer, ...]:
@@ -2301,13 +2296,8 @@ class BaseFont(_BaseGlyphVendor,
     )
 
     def _get_base_selectedLayerNames(self) -> Tuple[str, ...]:
-<<<<<<< HEAD
-        selected = tuple([normalizers.normalizeLayerName(name) for
-                          name in self._get_selectedLayerNames()])
-=======
         selected = tuple(normalizers.normalizeLayerName(name) for
                           name in self._get_selectedLayerNames())
->>>>>>> v1
         return selected
 
     def _get_selectedLayerNames(self) -> Tuple[str, ...]:
@@ -2377,13 +2367,8 @@ class BaseFont(_BaseGlyphVendor,
     )
 
     def _get_base_selectedGuidelines(self) -> Tuple[BaseGuideline, ...]:
-<<<<<<< HEAD
-        selected = tuple([normalizers.normalizeGuideline(guideline) for
-                          guideline in self._get_selectedGuidelines()])
-=======
         selected = tuple(normalizers.normalizeGuideline(guideline) for
                           guideline in self._get_selectedGuidelines())
->>>>>>> v1
         return selected
 
     def _get_selectedGuidelines(self) -> Tuple[BaseGuideline, ...]:
