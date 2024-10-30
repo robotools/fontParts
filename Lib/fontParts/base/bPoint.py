@@ -110,15 +110,38 @@ class BaseBPoint(
         "glyph",
         """Get the bPoint's parent glyph object.
 
+<<<<<<< HEAD
+=======
+        This property is read-only.
+
+>>>>>>> v1
         The value must be a :class:`BaseGlyph` instance or :obj:`None`.
 
         :return: The :class:`BaseGlyph` instance containing the bPoint
             or :obj:`None`.
+<<<<<<< HEAD
 =======
     glyph = dynamicProperty("glyph", "The bPoint's parent glyph.")
 >>>>>>> parent of 3d67a1d (Update documentation (#739))
 
     def _get_glyph(self):
+=======
+<<<<<<< HEAD
+
+        Example::
+
+=======
+
+        Example::
+
+>>>>>>> v1
+            >>> glyph = bPoint.glyph
+
+        """
+    )
+
+    def _get_glyph(self) -> Optional[BaseGlyph]:
+>>>>>>> 22b80489e1d622ce017f67062fcffa4595ce82ea
         if self._contour is None:
             return None
         return self.contour.glyph
@@ -130,9 +153,17 @@ class BaseBPoint(
         "layer",
         """Get the bPoint's parent layer object.
 
+<<<<<<< HEAD
         :return: The :class:`BaseLayer` instance containing the bPoint
             or :obj:`None`.
 
+=======
+        This property is read-only.
+
+        :return: The :class:`BaseLayer` instance containing the bPoint
+            or :obj:`None`.
+
+>>>>>>> v1
         Example::
 
             >>> layer = bPoint.layer
@@ -157,17 +188,37 @@ class BaseBPoint(
         "font",
         """Get the bPoint's parent font object.
 
+<<<<<<< HEAD
+=======
+        This property is read-only.
+
+>>>>>>> v1
         :return: The :class:`BaseFont` instance containing the bPoint
             or :obj:`None`.
 
         Example::
 
             >>> font = bPoint.font
+<<<<<<< HEAD
 =======
     font = dynamicProperty("font", "The bPoint's parent font.")
 >>>>>>> parent of 3d67a1d (Update documentation (#739))
 
     def _get_font(self):
+=======
+<<<<<<< HEAD
+
+        """
+    )
+
+=======
+
+        """
+    )
+
+>>>>>>> v1
+    def _get_font(self) -> Optional[BaseFont]:
+>>>>>>> 22b80489e1d622ce017f67062fcffa4595ce82ea
         if self._contour is None:
             return None
         return self.glyph.font
@@ -178,9 +229,35 @@ class BaseBPoint(
 
     # anchor
 
+<<<<<<< HEAD
     anchor = dynamicProperty("base_anchor", "The anchor point.")
 
     def _get_base_anchor(self):
+=======
+    anchor: dynamicProperty = dynamicProperty(
+        "base_anchor",
+        """Get or set the the bPoint's anchor point.
+<<<<<<< HEAD
+
+        The value must be a :ref:`type-coordianate`.
+
+        :return: a :ref:`type-coordianate` representing the anchor point of the bPoint.
+
+        """
+    )
+
+=======
+
+        The value must be a :ref:`type-coordianate`.
+
+        :return: a :ref:`type-coordianate` representing the anchor point of the bPoint.
+
+        """
+    )
+
+>>>>>>> v1
+    def _get_base_anchor(self) -> CoordinateType:
+>>>>>>> 22b80489e1d622ce017f67062fcffa4595ce82ea
         value = self._get_anchor()
         value = normalizers.normalizeCoordinateTuple(value)
         return value
@@ -197,7 +274,11 @@ class BaseBPoint(
         property getter.
 
         :return: a :ref:`type-coordianate` representing the anchor point of the
+<<<<<<< HEAD
             bPoint. The value will have been normalized
+=======
+            bPoint. The value will be normalized
+>>>>>>> v1
             with :func:`normalizers.normalizeCoordinateTuple`.
 
         .. note::
@@ -225,9 +306,32 @@ class BaseBPoint(
 
     # bcp in
 
+<<<<<<< HEAD
     bcpIn = dynamicProperty("base_bcpIn", "The incoming off curve.")
 
     def _get_base_bcpIn(self):
+=======
+    bcpIn: dynamicProperty = dynamicProperty(
+        "base_bcpIn",
+        """Get or set the bPoint's incoming off-curve.
+
+        The value must be a :ref:`type-coordinate`.
+<<<<<<< HEAD
+
+        :return: A :ref:`type-coordinate` representing the incoming
+            off-curve of the bPoin.
+
+=======
+
+        :return: A :ref:`type-coordinate` representing the incoming
+            off-curve of the bPoin.
+
+>>>>>>> v1
+        """
+    )
+
+    def _get_base_bcpIn(self) -> CoordinateType:
+>>>>>>> 22b80489e1d622ce017f67062fcffa4595ce82ea
         value = self._get_bcpIn()
         value = normalizers.normalizeCoordinateTuple(value)
         return value
@@ -244,7 +348,11 @@ class BaseBPoint(
         property getter.
 
         :return: A :ref:`type-coordinate` representing the incoming off-curve of
+<<<<<<< HEAD
             the bPoin. The value will have been normalized
+=======
+            the bPoin. The value will be normalized
+>>>>>>> v1
             with :func:`normalizers.normalizeCoordinateTuple`.
 
         .. note::
@@ -314,7 +422,11 @@ class BaseBPoint(
         property getter.
 
         :return: A :ref:`type-coordinate` representing the outgoing
+<<<<<<< HEAD
             off-curve of the bPoin. The value will have been normalized
+=======
+            off-curve of the bPoin. The value will be normalized
+>>>>>>> v1
             with :func:`normalizers.normalizeCoordinateTuple`.
 
         .. note::
@@ -374,12 +486,21 @@ class BaseBPoint(
         The value must be a :class:`str` containing one of the following
         alternatives:
 
+<<<<<<< HEAD
         +--------+---------------------------------------------------------+
         | type   | Description                                             |
         +--------+---------------------------------------------------------+
         | curve  | A point where bcpIn and bcpOut are smooth (linked).     |
         | corner | A point where bcpIn and bcpOut are not smooth (linked). |
         +--------+---------------------------------------------------------+
+=======
+        +--------------+-----------------------------------------------------------+
+        | Type         | Description                                               |
+        +--------------+-----------------------------------------------------------+
+        | ``'curve'``  | A point where bcpIn and bcpOut are smooth (linked).       |
+        | ``'corner'`` | A point where bcpIn and bcpOut are not smooth (unlinked). |
+        +--------+-----------------------------------------------------------------+
+>>>>>>> v1
 
         :return: A :class:`str` representing the type of the bPoint.
 =======
@@ -403,7 +524,11 @@ class BaseBPoint(
         property getter.
 
         :return: A :class:`str` representing the type of the bPoint. The value
+<<<<<<< HEAD
             will have been normalized with :func:`normalizers.normalizeBPointType`.
+=======
+            will be normalized with :func:`normalizers.normalizeBPointType`.
+>>>>>>> v1
         :raises FontPartsError: If the point's type cannot be converted to a valid
             bPoint type.
 
@@ -460,11 +585,34 @@ class BaseBPoint(
     # Identification
     # --------------
 
+<<<<<<< HEAD
     index = dynamicProperty("index",
                             ("The index of the bPoint within the ordered "
                              "list of the parent contour's bPoints. None "
                              "if the bPoint does not belong to a contour.")
                             )
+=======
+    index: dynamicProperty = dynamicProperty(
+        "base_index",
+        """Get the index of the bPoint.
+<<<<<<< HEAD
+
+        :return: An :class:`int` representing the bPoint's index within an
+            ordered list of the parent contour's bPoints, or :obj:`None` if the
+            bPoint does not belong to a contour.
+
+        Example::
+
+            >>> bPoint.index
+            0
+
+        """
+    )
+
+=======
+
+        This property is read-only.
+>>>>>>> 22b80489e1d622ce017f67062fcffa4595ce82ea
 
 <<<<<<< HEAD
         :return: An :class:`int` representing the bPoint's index within an
@@ -479,6 +627,7 @@ class BaseBPoint(
         """
     )
 
+>>>>>>> v1
     def _get_base_index(self) -> Optional[int]:
 =======
     def _get_base_index(self):
@@ -498,7 +647,11 @@ class BaseBPoint(
 
         :return: An :class:`int` representing the bPoint's index within an
             ordered list of the parent contour's bPoints, or :obj:`None` if the
+<<<<<<< HEAD
             bPoint does not belong to a contour. The value will have been
+=======
+            bPoint does not belong to a contour. The value will be
+>>>>>>> v1
             normalized with :func:`normalizers.normalizeIndex`.
 
         .. note::

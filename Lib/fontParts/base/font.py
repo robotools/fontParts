@@ -83,7 +83,11 @@ class BaseFont(
 
 <<<<<<< HEAD
     def copyData(self, source: BaseFont) -> None:
+<<<<<<< HEAD
         """Copy data from `source` into the current font.
+=======
+        """Copy data from another font instance.
+>>>>>>> v1
 
         Refer to :meth:`BaseFont.copy` for a list of values that will be
         copied.
@@ -124,6 +128,7 @@ class BaseFont(
 
 <<<<<<< HEAD
     def _init(self,
+<<<<<<< HEAD
               pathOrObject: Optional[Union[str, BaseFont]] = None,
               showInterface: bool = True,
               **kwargs: Any) -> None:
@@ -150,6 +155,7 @@ class BaseFont(
         object based on the values for **pathOrObject**:
 >>>>>>> parent of 3d67a1d (Update documentation (#739))
 
+<<<<<<< HEAD
         +--------------------+---------------------------------------------------+
         | None               | Create a new font.                                |
         +--------------------+---------------------------------------------------+
@@ -157,6 +163,36 @@ class BaseFont(
         +--------------------+---------------------------------------------------+
         | native font object | Wrap the given object.                            |
         +--------------------+---------------------------------------------------+
+=======
+=======
+              pathOrObject: Optional[Union[str, BaseFont]],
+              showInterface: bool,
+              **kwargs: Any) -> None:
+        r"""Initialize the native font object.
+
+        This method is the environment implementation
+        of :meth:`BaseFont.__init__`. It will wrap a native font
+        object based on the value type of the `pathOrObject` parameter.
+
+        :param pathOrObject: The source for initializing the font. Options are:
+
+            +--------------------+---------------------------------------------------+
+            | Type               | Description                                       |
+            +--------------------+---------------------------------------------------+
+            | :obj:`None`        | Create a new font.                                |
+            | :class:`str`       | Open the font file located at the given location. |
+            | native font object | Wrap the given object.                            |
+            +--------------------+---------------------------------------------------+
+
+        :param showInterface: Whether to display the graphical
+            interface.
+        :param \**kwargs: Additional keyword arguments.
+        :raises NotImplementedError: If the method has not been
+            overridden by a subclass.
+
+>>>>>>> v1
+        .. important::
+>>>>>>> 22b80489e1d622ce017f67062fcffa4595ce82ea
 
         If **showInterface** is ``False``, the font should be
         created without graphical interface.
@@ -171,11 +207,21 @@ class BaseFont(
         "base_path",
 <<<<<<< HEAD
         """Get the path to the font file.
+<<<<<<< HEAD
 
         :return: A :class:`str` defining the location of the file
             or :obj:`None` to indicate that the font does not have a
             file representation.
 
+=======
+
+        This property is read-only.
+
+        :return: A :class:`str` defining the location of the file
+            or :obj:`None` to indicate that the font does not have a
+            file representation.
+
+>>>>>>> v1
         Example::
 =======
         """
@@ -193,10 +239,43 @@ class BaseFont(
             path = normalizers.normalizeFilePath(path)
         return path
 
+<<<<<<< HEAD
     def _get_path(self, **kwargs):
         """
         This is the environment implementation of
         :attr:`BaseFont.path`.
+=======
+    def _get_path(self, **kwargs: Any) -> Optional[str]:
+        r"""Get the path to the native font file.
+<<<<<<< HEAD
+
+        This method is the environment implementation
+        of :attr:`BaseFont.path`.
+
+        :param \**kwargs: Additional keyword arguments.
+        :return: A :class:`str` defining the location of the file
+            or :obj:`None` to indicate that the font does not have a
+            file representation. If the value is not :obj:`None` it will
+            be normalized with :func:`normalizers.normalizeFilePath`.
+        :raises NotImplementedError: If the method has not been
+            overridden by a subclass.
+
+=======
+
+        This method is the environment implementation
+        of :attr:`BaseFont.path`.
+
+        :param \**kwargs: Additional keyword arguments.
+        :return: A :class:`str` defining the location of the file
+            or :obj:`None` to indicate that the font does not have a
+            file representation. If the value is not :obj:`None` it will
+            be normalized with :func:`normalizers.normalizeFilePath`.
+        :raises NotImplementedError: If the method has not been
+            overridden by a subclass.
+
+>>>>>>> v1
+        .. important::
+>>>>>>> 22b80489e1d622ce017f67062fcffa4595ce82ea
 
         This must return a :ref:`type-string` defining the
         location of the file or ``None`` indicating that the
@@ -262,15 +341,23 @@ class BaseFont(
 
 <<<<<<< HEAD
     def _save(self,
+<<<<<<< HEAD
               path: Optional[str] = None,
               showProgress: bool = False,
               formatVersion: Optional[float] = None,
               fileStructure: Optional[str] = None,
+=======
+              path: Optional[str],
+              showProgress: bool,
+              formatVersion: Optional[float],
+              fileStructure: Optional[str],
+>>>>>>> v1
               **kwargs: Any) -> None:
         r"""Save the native font to the specified path.
 
         This is the environment implementation of :meth:`BaseFont.save`.
 
+<<<<<<< HEAD
         :param path: The file path to save the data to. If
             not :obj:`None`, the value will be normalized
             with :func:`normalizers.normalizeFilePath`.
@@ -279,6 +366,15 @@ class BaseFont(
             progress bar even if value is :obj:`True`.
         :param formatVersion: The file format version to write the data
             into.  If not :obj:`None`, the value will be normalized
+=======
+        :param path: The file path to save the data to. If not :obj:`None`, the value
+            will have been normalized with :func:`normalizers.normalizeFilePath`.
+        :param showProgress: Whether to display a progress bar during the
+            operation. Environments are not required to display a progress bar
+            even if value is :obj:`True`.
+        :param formatVersion: The file format version to write the data into.
+            If not :obj:`None`, the value will have been normalized
+>>>>>>> v1
             with :func:`normalizers.normalizeFileFormatVersion`.
         :param fileStructure: The file structure to use.
         :param \**kwargs: Additional keyword arguments.
@@ -319,6 +415,10 @@ class BaseFont(
         """Close the font.
 
         :param save: Whether to save the font before closing.
+<<<<<<< HEAD
+=======
+            Defaults to :obj:`False`
+>>>>>>> v1
 
         Example::
 =======
@@ -358,6 +458,7 @@ class BaseFont(
         provided `format` is not in the map, the method returns the
         `fallbackFormat`.
 
+<<<<<<< HEAD
         Format Identifiers:
 
         +------------+-------------------------------------------------------+
@@ -374,6 +475,28 @@ class BaseFont(
         +------------+-------------------------------------------------------+
 
         :param format: The format identifier to map to a file extension.
+=======
+        :param format: The format identifier to map to a file extension. Options are:
+
+        +--------------------+-------------------------------------------------------+
+        | Format             | Description                                           |
+        +--------------------+-------------------------------------------------------+
+        | ``'mactype1'``     | Mac Type 1 font (generates suitcase  and LWFN file)   |
+        | ``'macttf'``       | Mac TrueType font (generates suitcase)                |
+        | ``'macttdfont'``   | Mac TrueType font (generates suitcase with data fork) |
+        | ``'otfcff'``       | PS OpenType (CFF-based) font (OTF)                    |
+        | ``'otfttf'``       | PC TrueType/TT OpenType font (TTF)                    |
+        | ``'pctype1'``      | PC Type 1 font (binary/PFB)                           |
+        | ``'pcmm'``         | PC MultipleMaster font (PFB)                          |
+        | ``'pctype1ascii'`` | PC Type 1 font (ASCII/PFA)                            |
+        | ``'pcmmascii'``    | PC MultipleMaster font (ASCII/PFA)                    |
+        | ``'ufo1'``         | UFO format version 1                                  |
+        | ``'ufo2'``         | UFO format version 2                                  |
+        | ``'ufo3'``         | UFO format version 3                                  |
+        | ``'unixascii'``    | UNIX ASCII font (ASCII/PFA)                           |
+        +--------------------+-------------------------------------------------------+
+
+>>>>>>> v1
         :param fallbackFormat: The extension to return if `format` is
             unrecognized.
         :return: The corresponding file extension for the `format`
@@ -456,7 +579,11 @@ class BaseFont(
         :param \**environmentOptions: Additional keyword arguments for
             environment-specific options.
         :raises ValueError: If `format` is not defined.
+<<<<<<< HEAD
         :raises TypeError: If `format` is not a string.
+=======
+        :raises TypeError: If `format` is not a :class:`str`.
+>>>>>>> v1
         :raises UserWarning: If an unsupported environment option is
             passed.
         :raises IOError: If the output path is not defined and the
@@ -558,7 +685,11 @@ class BaseFont(
             for `format` is not supported by the environment,
             the environment must raise :exc:`FontPartsError`.
         :param path: The location where the generated file should be
+<<<<<<< HEAD
             saved. It is normalized
+=======
+            saved. The value will have been normalized
+>>>>>>> v1
             with :func:`normalizers.normalizeFilePath`.
         :param environmentOptions: A dictionary of environment-specific
             options. These options are validated
@@ -606,6 +737,11 @@ class BaseFont(
 <<<<<<< HEAD
         """Get the font's info object.
 
+<<<<<<< HEAD
+=======
+        This property is read-only.
+
+>>>>>>> v1
         :return: An instance of the :class:`BaseInfo` class.
 
         Example::
@@ -641,6 +777,11 @@ class BaseFont(
 <<<<<<< HEAD
         """Get the font's groups object.
 
+<<<<<<< HEAD
+=======
+        This property is read-only.
+
+>>>>>>> v1
         :return: An instance of the :class:`BaseGroups` class.
 
         Example::
@@ -676,6 +817,11 @@ class BaseFont(
 <<<<<<< HEAD
         """Get the font's kerning object.
 
+<<<<<<< HEAD
+=======
+        This property is read-only.
+
+>>>>>>> v1
         :return: An instance of the :class:`BaseKerning` class.
 
         Example::
@@ -760,6 +906,11 @@ class BaseFont(
 <<<<<<< HEAD
         """Get the font's features object.
 
+<<<<<<< HEAD
+=======
+        This property is read-only.
+
+>>>>>>> v1
         :return: An instance of the :class:`BaseFeatures` class.
 
         Example::
@@ -795,6 +946,11 @@ class BaseFont(
 <<<<<<< HEAD
         """Get the font's lib object.
 
+<<<<<<< HEAD
+=======
+        This property is read-only.
+
+>>>>>>> v1
         :return: An instance of the :class:`BaseLib` class.
 
         Example::
@@ -830,6 +986,11 @@ class BaseFont(
 <<<<<<< HEAD
         """Get the font's temporary lib object.
 
+<<<<<<< HEAD
+=======
+        This property is read-only.
+
+>>>>>>> v1
         This property provides access to a temporary instance of
         the :class:`BaseLib` class, used for storing data that should
         not be persisted. It is similar to :attr:`BaseFont.lib`, except
@@ -870,6 +1031,11 @@ class BaseFont(
 <<<<<<< HEAD
         """Get the font's layer objects.
 
+<<<<<<< HEAD
+=======
+        This property is read-only.
+
+>>>>>>> v1
         :return: A :class:`tuple` containing instances of
             the :class:`BaseLayer` class.
 
@@ -914,8 +1080,15 @@ class BaseFont(
 
             >>> font.layerOrder = ["My Layer 2", "My Layer 1"]
             >>> font.layerOrder
+<<<<<<< HEAD
             ["My Layer 2", "My Layer 1"]
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+            ("My Layer 2", "My Layer 1")
+>>>>>>> v1
+>>>>>>> 22b80489e1d622ce017f67062fcffa4595ce82ea
 
 =======
 >>>>>>> parent of 3d67a1d (Update documentation (#739))
@@ -940,8 +1113,12 @@ class BaseFont(
 
         :param \**kwargs: Additional keyword arguments.
         :return: A :class:`list` of layer names in their defined order.
+<<<<<<< HEAD
             The value will be normalized
             with :func:`normalizers.normalizeLayerOrder`.
+=======
+            The value will be normalized with :func:`normalizers.normalizeLayerOrder`.
+>>>>>>> v1
         :raises NotImplementedError: If the method has not
             beenoverridden by a subclass.
 
@@ -974,7 +1151,11 @@ class BaseFont(
 
         :param value: A :class:`list` or :class:`tuple` of layer names
             reflecting the desired order of the font's :class:`BaseLayer` objects.
+<<<<<<< HEAD
             The value will be normalized
+=======
+            The value will have been normalized
+>>>>>>> v1
             with :func:`normalizers.normalizeLayerOrder`.
         :param \**kwargs: Additional keyword arguments.
         :raises NotImplementedError: If the method has not been
@@ -1041,7 +1222,11 @@ class BaseFont(
 <<<<<<< HEAD
         :attr:`BaseFont.defaultLayerName` property setter.
         :param value: The name of the desired default :class`BaseLayer`
+<<<<<<< HEAD
             subclass instance. The name will be normalized
+=======
+            subclass instance. The name will have been normalized
+>>>>>>> v1
             with :func:`normalizers.normalizeDefaultLayerName`.
         :param \**kwargs: Additional keyword arguments.
         :raises NotImplementedError: If the method has not been
@@ -1081,8 +1266,12 @@ class BaseFont(
 
 <<<<<<< HEAD
         :return: The default :class:`BaseLayer` subclass instance.
+<<<<<<< HEAD
             The value will be normalized
             with :func:`normalizers.normalizeLayer`.
+=======
+            The value will be normalized with :func:`normalizers.normalizeLayer`.
+>>>>>>> v1
 
         .. important::
 
@@ -1111,7 +1300,11 @@ class BaseFont(
         :attr:`BaseFont.defaultLayer` property setter.
 
         :param value: The desired default :class:`BaseLayer` subclass
+<<<<<<< HEAD
             instance. The value will be normalized
+=======
+            instance. The value will have been normalized
+>>>>>>> v1
             with :func:`normalizers.normalizeLayer`.
 
         .. important::
@@ -1154,9 +1347,17 @@ class BaseFont(
         :param name: The name of the :class:`BaseLayer` subclass
             instance to retrieve.
         :param \**kwargs: Additional keyword arguments.
+<<<<<<< HEAD
         :return: The specified :class:`BaseLayer` subclass instance.
             The value will be normalized with :func:`normalizers.normalizeLayerName`
             and verified as an existing layer.
+=======
+        :return: The specified :class:`BaseLayer` subclass instance. The value
+            will have been normalized with :func:`normalizers.normalizeLayerName`
+            and verified as an existing layer.
+        :raises ValueError: If no layer with the given `name` exists in
+            the font.
+>>>>>>> v1
 
         .. note::
 
@@ -1178,7 +1379,12 @@ class BaseFont(
         else:
             raise ValueError("No layer with the name '%s' exists." % name)
 =======
+<<<<<<< HEAD
 >>>>>>> parent of 3d67a1d (Update documentation (#739))
+=======
+        raise ValueError("No layer with the name '%s' exists." % name)
+>>>>>>> v1
+>>>>>>> 22b80489e1d622ce017f67062fcffa4595ce82ea
 
     # new
 
@@ -1208,7 +1414,11 @@ class BaseFont(
 <<<<<<< HEAD
     def _newLayer(self,
                   name: str,
+<<<<<<< HEAD
                   color: Optional[ColorType] = None,
+=======
+                  color: Optional[ColorType],
+>>>>>>> v1
                   **kwargs: Any) -> BaseLayer:
         r"""Create a new layer in the native font.
 
@@ -1216,11 +1426,19 @@ class BaseFont(
         :meth:`BaseFont.newLayer`.
 
         :param name: The name of the new layer to create. The value must
+<<<<<<< HEAD
             be unique to the font and will be normalized
             with :func:`normalizers.normalizeLayerName`.
         :param color: The color value to assign to the new layer. If the
             value is not :obj:`None`, it will be normalized with
             :func:`normalizers.normalizeColor`. Defaults to :obj:`None`.
+=======
+            be unique to the font and will have been normalized
+            with :func:`normalizers.normalizeLayerName`.
+        :param color: The color value to assign to the new layer. If the
+            value is not :obj:`None`, it will have been normalized with
+            :func:`normalizers.normalizeColor`.
+>>>>>>> v1
         :param \**kwargs: Additional keyword arguments.
         :return: A newly created :class:`BaseLayer` subclass instance.
         :raises NotImplementedError: If the method has not been
@@ -1270,7 +1488,11 @@ class BaseFont(
 <<<<<<< HEAD
         :meth:`BaseFont.removeLayer`.
 
+<<<<<<< HEAD
         :param name: The name of the layer to remove. The value will be
+=======
+        :param name: The name of the layer to remove. The value will have been
+>>>>>>> v1
             normalized with :func:`normalizers.normalizeLayerName`.
         :param \**kwargs: Additional keyword arguments.
         :raises NotImplementedError: If the method has not been
@@ -1334,7 +1556,11 @@ class BaseFont(
         :param layer: A layer object with the attributes  necessary for
             copying as defined in :meth:`BaseLayer.copy`.
         :param name: The name to assign to the new layer after
+<<<<<<< HEAD
             insertion. The value will be normalized
+=======
+            insertion. The value will have been normalized
+>>>>>>> v1
             with :func:`normalizers.normalizeLayerName` and tested to
             make sure that it is unique to the font.
         :param \**kwargs: Additional keyword arguments.
@@ -1384,11 +1610,19 @@ class BaseFont(
         of :meth:`BaseFont.duplicateLayer`.
 
         :param layerName: The name of the layer to duplicate. The value
+<<<<<<< HEAD
             will be normalized
             with :func:`normalizers.normalizeLayerName` and tested to
             make sure that it already exists in the font.
         :param newLayerName: The new name to assign to the duplicated
             layer. The value will be normalized
+=======
+            will have been normalized
+            with :func:`normalizers.normalizeLayerName` and tested to
+            make sure that it already exists in the font.
+        :param newLayerName: The new name to assign to the duplicated
+            layer. The value will have been normalized
+>>>>>>> v1
             with :func:`normalizers.normalizeLayerName` and tested to
             make sure that it does not already exist in the font.
         :return: The newly duplicated :class:`BaseLayer` subclass
@@ -1434,7 +1668,11 @@ class BaseFont(
             raise ValueError(
                 "No layer with the name '%s' exists." % otherLayerName
             )
+<<<<<<< HEAD
         self._swapLayers(layerName, otherLayerName)
+=======
+        self._swapLayerNames(layerName, otherLayerName)
+>>>>>>> v1
 
     def _swapLayerNames(self, layerName: str, otherLayerName: str) -> None:
         """Swap the names of two specific layers in the native font.
@@ -1442,7 +1680,11 @@ class BaseFont(
         This is the environment implementation
         of :meth:`BaseFont.swapLayerNames`.
 
+<<<<<<< HEAD
         Both `layerName` and `otherLayerName` will be normalized
+=======
+        Both `layerName` and `otherLayerName` will have been normalized
+>>>>>>> v1
         with :func:`normalizers.normalizeLayerName` and tested to make
         sure they already exist in the font.
 
@@ -1512,8 +1754,12 @@ class BaseFont(
     def _keys(self, **kwargs: Any) -> Tuple[str, ...]:
         r"""Get a list of all glyph names in the native default layer.
 
+<<<<<<< HEAD
         This is the environment implementation of
         :meth:`BaseFont.keys`.
+=======
+        This is the environment implementation of :meth:`BaseFont.keys`.
+>>>>>>> v1
 
         :param \**kwargs: Additional keyword arguments.
         :return: A :class:`tuple` of glyph names as :class:`str`.
@@ -1539,6 +1785,11 @@ class BaseFont(
     def _newGlyph(self, name: str, **kwargs: Any) -> BaseGlyph:
         r"""Create a new glyph in the native default layer.
 
+<<<<<<< HEAD
+=======
+        This is the environment implementation of :meth:`BaseFont.newGlyph.
+
+>>>>>>> v1
         :param name: The name to assign to the new glyph. The value will
             have been normalized
             with :func:`normalizers.normalizeGlyphName` and verified as
@@ -1619,10 +1870,17 @@ class BaseFont(
 <<<<<<< HEAD
         """Get or set the order of the glyphs in the font.
 
+<<<<<<< HEAD
         The value must be a :class:`list` of glyph names reflecting the
         desired order of the font's :class:`BaseGlyph` objects.
 
         :return: A :class:`list` of glyph names in their defined order.
+=======
+        The value must be a :class:`list` or :class:`tuple` of glyph names
+        reflecting the desired order of the font's :class:`BaseGlyph` objects.
+
+        :return: A :class:`tuple` of glyph names in their defined order.
+>>>>>>> v1
 
         Example::
 =======
@@ -1632,19 +1890,32 @@ class BaseFont(
 
             >>> font.glyphOrder
             ["C", "B", "A"]
+<<<<<<< HEAD
             >>> font.glyphOrder = ["A", "B", "C"]
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+            >>> font.glyphOrder = ("A", "B", "C")
+>>>>>>> v1
+>>>>>>> 22b80489e1d622ce017f67062fcffa4595ce82ea
 
         """
     )
 
+<<<<<<< HEAD
     def _get_base_glyphOrder(self) -> List[str]:
 =======
+<<<<<<< HEAD
         """
     )
 
     def _get_base_glyphOrder(self):
 >>>>>>> parent of 3d67a1d (Update documentation (#739))
+=======
+    def _get_base_glyphOrder(self) -> Tuple[str]:
+>>>>>>> v1
+>>>>>>> 22b80489e1d622ce017f67062fcffa4595ce82ea
         value = self._get_glyphOrder()
         value = normalizers.normalizeGlyphOrder(value)
         return value
@@ -1655,15 +1926,27 @@ class BaseFont(
         self._set_glyphOrder(value)
 
     def _get_glyphOrder(self) -> List[str]:
+=======
+    def _set_base_glyphOrder(self, value: CollectionType[str]) -> None:
+        value = normalizers.normalizeGlyphOrder(value)
+        self._set_glyphOrder(value)
+
+    def _get_glyphOrder(self) -> Tuple[str]:
+>>>>>>> v1
         r"""Get the order of the glyphs in the native font.
 
         This is the environment implementation of the
         :attr:`BaseFont.glyphrOrder` property getter.
 
         :param \**kwargs: Additional keyword arguments.
+<<<<<<< HEAD
         :return: A :class:`list` of layer names in their defined order.
             The value will be normalized
             with :func:`normalizers.normalizeGlyphOrder`.
+=======
+        :return: A :class:`tuple` of layer names in their defined order.
+            The value will be normalized with :func:`normalizers.normalizeGlyphOrder`.
+>>>>>>> v1
         :raises NotImplementedError: If the method has not
             beenoverridden by a subclass.
 
@@ -1691,6 +1974,9 @@ class BaseFont(
 
 <<<<<<< HEAD
     def _set_glyphOrder(self, value: List[str]) -> None:
+=======
+    def _set_glyphOrder(self, value: CollectionType[str]) -> None:
+>>>>>>> v1
         r"""Set the order of the glyphs in the native font.
 
         This is the environment implementation of the
@@ -1698,7 +1984,11 @@ class BaseFont(
 
         :param value: A :class:`list` of glyph names reflecting the
             desired order of the font's :class:`BaseGlyph` objects.
+<<<<<<< HEAD
             The value will be normalized
+=======
+            The value will have been normalized
+>>>>>>> v1
             with :func:`normalizers.normalizeGlyphOrder`.
         :param \**kwargs: Additional keyword arguments.
         :raises NotImplementedError: If the method has not been
@@ -1792,6 +2082,11 @@ class BaseFont(
 <<<<<<< HEAD
         """Get the font-level guideline objects.
 
+<<<<<<< HEAD
+=======
+        This property is read-only.
+
+>>>>>>> v1
         :return: A :class:`tuple` containing instances of
             the :class:`BaseGuideline` class.
 =======
@@ -1908,11 +2203,19 @@ class BaseFont(
         return newGuideline
 
     def _appendGuideline(self,
+<<<<<<< HEAD
                          position: Optional[CoordinateType] = None,
                          angle: Optional[float] = None,
                          name: Optional[str] = None,
                          color: Optional[ColorType] = None,
                          guideline: Optional[BaseGuideline] = None,
+=======
+                         position: Optional[CoordinateType],
+                         angle: Optional[float],
+                         name: Optional[str],
+                         color: Optional[ColorType],
+                         guideline: Optional[BaseGuideline],
+>>>>>>> v1
                          **kwargs) -> BaseGuideline:
         r"""Append a new guideline to the native font.
 =======
@@ -1927,6 +2230,7 @@ class BaseFont(
 <<<<<<< HEAD
         :meth:`BaseFont.appendGuideline`.
 
+<<<<<<< HEAD
         :param position: The optional position for the guideline as
             a :ref:`type-coordinate`. Defaults to :obj:`None`.
         :param angle: The optional angle for the guideline as
@@ -1939,6 +2243,16 @@ class BaseFont(
             instance from which to copy values. If `position`, `angle`,
             `name`, or `color` are specified, those values will be used
             instead. Defaults to :obj:`None`.
+=======
+        :param position: The position for the guideline as
+            a :ref:`type-coordinate`.
+        :param angle: The angle for the guideline as a :class:`float`.
+        :param name: The name for the guideline as a :class:`str`.
+        :param color: The color for the guideline as a :ref:`type-color`.
+        :param guideline: The :class:`BaseGuideline` subclass instance from
+            which to copy values. If `position`, `angle`, `name`, or `color`
+            are specified, those values will be used instead.
+>>>>>>> v1
         :param \**kwargs: Additional keyword arguments.
         :return: The newly appended instance of
             the :class:`BaseGuideline` subclass.
@@ -2049,8 +2363,13 @@ class BaseFont(
                      factor: FactorType,
                      minFont: BaseFont,
                      maxFont: BaseFont,
+<<<<<<< HEAD
                      round: bool = True,
                      suppressError: bool = True) -> None:
+=======
+                     round: bool,
+                     suppressError: bool) -> None:
+>>>>>>> v1
         """Interpolate all possible data in the native font.
 
         This is the environment implementation of :meth:`BaseFont.interpolate`.
@@ -2063,10 +2382,17 @@ class BaseFont(
         :param maxFont: The :class:`BaseFont` subclass instance
             corresponding to the 1.0 position in the interpolation.
         :param round: A boolean indicating whether the result should
+<<<<<<< HEAD
             be rounded to integers. Defaults to :obj:`True`.
         :param suppressError: A boolean indicating whether to ignore
             incompatible data or raise an error when such
             incompatibilities are found. Defaults to :obj:`True`.
+=======
+            be rounded to integers.
+        :param suppressError: A boolean indicating whether to ignore
+            incompatible data or raise an error when such incompatibilities
+            are found.
+>>>>>>> v1
         :raises TypeError: If `minFont` or `maxFont` are not instances
             of :class:`BaseFont`.
 
@@ -2179,6 +2505,7 @@ class BaseFont(
         """Get a reversed map of all component references in the font.
 
         This method creates a :class:`dict` mapping each component glyph
+<<<<<<< HEAD
         name in the font to a :class:`set` containing the composite
         glyph names that include the comoponent.
 
@@ -2196,6 +2523,20 @@ class BaseFont(
             'ring': {'Aring'},
             ...
             }
+=======
+        name in the font to a :class:`tuple` containing the composite
+        glyph names that include the comoponent.
+
+        :return: A :class:`dict` of component glyph names mapped to
+            tuples of composite glyph names.
+
+        Example::
+
+            >>> mapping = font.getReverseComponentMapping()
+            >>> mapping
+            {'A': ('Aacute', 'Aring'), 'acute': ('Aacute',),
+            'ring': ('Aring',)  , ...}
+>>>>>>> v1
 
 =======
     def getReverseComponentMapping(self):
@@ -2220,6 +2561,8 @@ class BaseFont(
         :raises NotImplementedError: If the method has not been
             overridden by a subclass.
 
+=======
+>>>>>>> v1
         .. note::
 
             Subclasses may override this method.
@@ -2235,16 +2578,41 @@ class BaseFont(
     def getCharacterMapping(self) -> CharacterMappingType:
         """Get the font's character mapping.
 
+<<<<<<< HEAD
         :return: A :class:`dict` mapping Unicode values to lists of
             glyph names.
 
 =======
+<<<<<<< HEAD
     def getCharacterMapping(self):
         """
         Create a dictionary of unicode -> [glyphname, ...] mappings.
         All glyphs are loaded. Note that one glyph can have multiple unicode values,
         and a unicode value can have multiple glyphs pointing to it.
 >>>>>>> parent of 3d67a1d (Update documentation (#739))
+=======
+        This method creates a :class:`dict` mapping Unicode values to
+        tuples of glyph names. Each Unicode value corresponds to one or
+        more glyphs, and the glyph names represent these glyphs in the
+        mapping.
+
+        .. note::
+
+            One glyph can have multiple unicode values, and a unicode value can
+            have multiple glyphs pointing to it.
+
+        :return: A :class:`dict` mapping Unicode values to :class:`tuple` of
+            glyph names.
+
+        Example::
+
+            >>> mapping = font.getCharacterMapping()
+            >>> mapping
+            {65: ('A', 'A.alt'), 66: ('B',),
+            67: ('C', 'C.alt', 'C.swash') , ...}
+
+>>>>>>> v1
+>>>>>>> 22b80489e1d622ce017f67062fcffa4595ce82ea
         """
         return self._getCharacterMapping()
 
@@ -2255,6 +2623,9 @@ class BaseFont(
 
 <<<<<<< HEAD
         :return: A :class:`dict` mapping Unicode values to lists of
+=======
+        :return: A :class:`dict` mapping Unicode values to :class:`tuple` of
+>>>>>>> v1
             glyph names.
         :raises NotImplementedError: If the method has not been
             overridden by a subclass.
@@ -2305,7 +2676,12 @@ class BaseFont(
         the :attr:`BaseFont.selectedLayers` property getter.
 
         :return: A :class:`tuple` of currently selected :class:`BaseLayer`
+<<<<<<< HEAD
             instances.
+=======
+            instances. Each value item will be normalized
+            with :func:`normalizers.normalizeLayer`.
+>>>>>>> v1
 
         .. note::
 
@@ -2331,7 +2707,12 @@ class BaseFont(
         the :attr:`BaseFont.selectedLayers` property setter.
 
         :param value: The :class:`list` of :class:`BaseLayer` instances
+<<<<<<< HEAD
             to select.
+=======
+            to select. Each value item will have been normalized
+            with :func:`normalizers.normalizeLayer`.
+>>>>>>> v1
 
         .. note::
 
@@ -2347,10 +2728,30 @@ class BaseFont(
 
     selectedLayerNames = dynamicProperty(
         "base_selectedLayerNames",
+<<<<<<< HEAD
         """
         A list of names of layers selected in the layer.
 
         Getting selected layer names:
+=======
+        """Get or set the selected glyph layer names in the default font layer.
+<<<<<<< HEAD
+
+        :param value: The :class:`list` of layer names representing
+            the :class:`BaseLayer` instances to select.
+        :return: A :class:`tuple` of layer names representing the currently
+            selected :class:`BaseLayer` instances.
+
+=======
+
+        :param value: The :class:`list` of layer names representing
+            the :class:`BaseLayer` instances to select.
+        :return: A :class:`tuple` of layer names representing the currently
+            selected :class:`BaseLayer` instances.
+
+>>>>>>> v1
+        Getting selected layer names::
+>>>>>>> 22b80489e1d622ce017f67062fcffa4595ce82ea
 
             >>> for name in layer.selectedLayerNames:
             ...     print(name)
@@ -2374,7 +2775,12 @@ class BaseFont(
         the :attr:`BaseFont.selectedLayerNames` property getter.
 
         :return: A :class:`tuple` of layer names representing the currently
+<<<<<<< HEAD
             selected :class:`BaseLayer` instances.
+=======
+            selected :class:`BaseLayer` instances. Each value item will be
+            normalized with :func:`normalizers.normalizeLayerName`.
+>>>>>>> v1
 
         .. note::
 
@@ -2401,7 +2807,12 @@ class BaseFont(
         the :attr:`BaseFont.selectedLayerNames` property setter.
 
         :param value: The :class:`list` of layer names representing
+<<<<<<< HEAD
             the :class:`BaseLayer` instances to select.
+=======
+            the :class:`BaseLayer` instances to select. Each value item will
+            have been normalized with :func:`normalizers.normalizeLayerName`.
+>>>>>>> v1
 
         .. note::
 
@@ -2420,10 +2831,30 @@ class BaseFont(
 
     selectedGuidelines = dynamicProperty(
         "base_selectedGuidelines",
+<<<<<<< HEAD
         """
         A list of guidelines selected in the font.
 
         Getting selected guideline objects:
+=======
+        """Get or set the selected guidelines in the font.
+<<<<<<< HEAD
+
+        :param value: The :class:`list` of :class:`BaseGuideline` instances
+            to select.
+        :return: A :class:`tuple` of currently selected :class:`BaseGuideline`
+            instances.
+
+=======
+
+        :param value: The :class:`list` of :class:`BaseGuideline` instances
+            to select.
+        :return: A :class:`tuple` of currently selected :class:`BaseGuideline`
+            instances.
+
+>>>>>>> v1
+        Getting selected guideline objects::
+>>>>>>> 22b80489e1d622ce017f67062fcffa4595ce82ea
 
             >>> for guideline in font.selectedGuidelines:
             ...     guideline.color = (1, 0, 0, 0.5)
@@ -2451,7 +2882,12 @@ class BaseFont(
         the :attr:`BaseFont.selectedGuidelines` property getter.
 
         :return: A :class:`tuple` of currently selected :class:`BaseGuideline`
+<<<<<<< HEAD
             instances.
+=======
+            instances. Each value item will be normalized
+            with :func:`normalizers.normalizeGuideline`.
+>>>>>>> v1
 
         .. note::
 
@@ -2482,8 +2918,14 @@ class BaseFont(
         This is the environment implementation of
         the :attr:`BaseFont.selectedGuidelines` property setter.
 
+<<<<<<< HEAD
         :param value: The :class:`list` of :class:`BaseGuideline` instances
             to select.
+=======
+        :param value: The :class:`list` of :class:`BaseGuideline` instances to
+            select. Each value item will have been normalized
+            with :func:`normalizers.normalizeGuideline`.
+>>>>>>> v1
 
         .. note::
 

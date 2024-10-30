@@ -1,4 +1,56 @@
 # pylint: disable=R0904, R0913, C0103, C0114, C0415
+<<<<<<< HEAD
+=======
+"""Docstring generation module for FontParts.
+
+This module provides tools for generating docstrings formatted according to
+the :ref:`style-guide`, which can then be inserted into object source code.
+
+Classes
+    - :class:`Docstring`: A class representation of a docstring, split into
+      various sections.
+    - :class:`DynamicPropertyMixin`: A mixin to
+      handle :class:`base.dynamicProperty` objects specifically.
+    - :class:`CodeAnalyzer`: An :class:`ast.NodeVisitor` subclass that analyzes
+      source code to locate specific object references.
+
+Functions
+    - :func:`generateDocstring`: Creates instances of the classes in this module
+      to generate a docstring formatted for a given object.
+    - :func:`insertDocstring`: Inserts the generated docstring into the source
+      code of an object.
+
+Customization
+    This module allows for the following customizations:
+
+    - Variadic argument preservation: Includes or excludes the asterisk symbol
+      `*args` and `**kwargs` in generated docstrings.
+    - Indentation level and line length: Controls the indentation and maximum
+      line length in generated docstrings.
+
+Example
+    To create a docstring for a method in a certain class::
+
+        >>> docstring = generateDocstring(
+        ...     someMethod,
+        ...     globalNamespace=globals(),
+        ...     containingClass=SomeClass
+        ... )
+
+    To generate new source code for the method including the new docstring::
+
+        >>> insertDocstring(someMethod, docstring)
+
+.. note::
+
+    Generating docstrings for dynamic base properties is not supported. The
+    contents of :meth:`dynamicProperty.doc` is however used as a basis for
+    creating any docstrings for derived native environment getter and setter
+    methods.
+
+"""
+
+>>>>>>> v1
 from __future__ import annotations
 from typing import (
     TYPE_CHECKING,
@@ -32,7 +84,11 @@ ParsedAnnotation = Union[str, Tuple[str, List[Any]]]
 NORMALIZATION_MODULE = 'normalizers'
 DEPRECATION_ID = 'This method is deprecated.'
 INDENT = ' ' * 4
+<<<<<<< HEAD
 LINE_LENGTH = 80
+=======
+LINE_LENGTH = 72
+>>>>>>> v1
 
 FORMAT_STRINGS: Dict[str, str] = {
     'implementationNote': (
@@ -57,7 +113,11 @@ FORMAT_STRINGS: Dict[str, str] = {
         ":param {parameterName}: Description of {typeString}."
     ),
     'normalizer': (
+<<<<<<< HEAD
         " The value will be normalized with :func:`{normalizer}`."
+=======
+        " The value will have been normalized with :func:`{normalizer}`."
+>>>>>>> v1
     ),
     'default': (
         " Defaults to {value}."
@@ -103,7 +163,11 @@ DIRECTIVES: Dict[str, str] = {
     'important': '.. important::',
     'seealso': '.. seealso::',
     'tip': '.. tip::',
+<<<<<<< HEAD
     'todo': '..todo::'
+=======
+    'todo': '.. todo::'
+>>>>>>> v1
 }
 
 
@@ -116,20 +180,32 @@ class DynamicPropertyMixin(ABC):
 
     Subclasses must implement several abstract methods and properties,
     including those for managing the object's type hints, signature information,
+<<<<<<< HEAD
     and object name. This mixin framework is designed for flexibility in
     defining dynamic properties, ensuring that both getter and setter
     functionalities can be handled in a consistent way.
+=======
+    and object name.
+>>>>>>> v1
 
     """
 
     def _getGetterSetter(self) -> GetterSetterType:
         # Retrieve getter and setter functions for the dynamic property.
+<<<<<<< HEAD
         try:
             getter = getattr(self.containingClass, self.obj.getterName, None)
             setter = getattr(self.containingClass, self.obj.setterName, None)
         except AttributeError:
             return (None, None)
         return getter, setter
+=======
+        if self.containingClass:
+            getter = getattr(self.containingClass, self.obj.getterName, None)
+            setter = getattr(self.containingClass, self.obj.setterName, None)
+            return getter, setter
+        return (None, None)
+>>>>>>> v1
 
     def _mergeSignatures(self) -> Optional[inspect.Signature]:
         # Merge the signatures of the getter and setter
@@ -147,6 +223,12 @@ class DynamicPropertyMixin(ABC):
 
     def _mergeTypeHints(self) -> Dict[str, Optional[Any]]:
         """Merge the type hints from the getter and setter."""
+<<<<<<< HEAD
+=======
+        if not self.getterObject:
+            return {}
+
+>>>>>>> v1
         typeHints = {}
         getterHints = get_type_hints(
             self.getterObject, globalns=self.globalNamespace
@@ -213,37 +295,65 @@ class DynamicPropertyMixin(ABC):
         """Subclasses must define this method."""
 
     @abstractmethod
+<<<<<<< HEAD
     def _getSignatureInfo(self):
+=======
+    def _getSignatureInfo(self) -> Dict[str, Any]:
+>>>>>>> v1
         """Subclasses must define this method."""
 
     @property
     @abstractmethod
+<<<<<<< HEAD
     def obj(self):
+=======
+    def obj(self) -> Any:
+>>>>>>> v1
         """Subclasses must define this attribute."""
 
     @property
     @abstractmethod
+<<<<<<< HEAD
     def containingClass(self):
+=======
+    def containingClass(self) -> Optional[Any]:
+>>>>>>> v1
         """Subclasses must define this attribute."""
 
     @property
     @abstractmethod
+<<<<<<< HEAD
     def globalNamespace(self):
+=======
+    def globalNamespace(self) -> Dict[str, Any]:
+>>>>>>> v1
         """Subclasses must define this attribute."""
 
     @property
     @abstractmethod
+<<<<<<< HEAD
     def preserveVariadics(self):
+=======
+    def preserveVariadics(self) -> bool:
+>>>>>>> v1
         """Subclasses must define this attribute."""
 
     @property
     @abstractmethod
+<<<<<<< HEAD
     def objectName(self):
+=======
+    def objectName(self) -> str:
+>>>>>>> v1
         """Subclasses must define this attribute."""
 
     @property
     @abstractmethod
+<<<<<<< HEAD
     def publicQualname(self):
+=======
+    def publicQualname(self) -> str:
+>>>>>>> v1
         """Subclasses must define this attribute."""
 
     @staticmethod
@@ -317,6 +427,10 @@ class CodeAnalyzer(ast.NodeVisitor):
 
     - Raised exceptions using :keyword:`raise` statements.
     - Calls to normalization functions from a specified module.
+<<<<<<< HEAD
+=======
+    - Identifies if a return value has passed through a normalization function.
+>>>>>>> v1
 
     :param normalizationModule: The name of the module containing normalization
         functions as a :class:`str`. Defaults to :const:`NORMALIZATION_MODULE`.
@@ -327,12 +441,28 @@ class CodeAnalyzer(ast.NodeVisitor):
 
     """
 
+<<<<<<< HEAD
     def __init__(self, normalizationModule: str = NORMALIZATION_MODULE):
+=======
+    def __init__(self, normalizationModule: str = 'normalizers'):
+>>>>>>> v1
         self.exceptions: Set[str] = set()
         self.normalizers: Dict[str, str] = {}
         self.normalizationModule = normalizationModule
 
+<<<<<<< HEAD
     def visit_Raise(self, node):
+=======
+    def _extractNormalizer(self, node: ast.Call) -> Optional[str]:
+        """Extract the normalizer function."""
+        if (isinstance(node.func, ast.Attribute)
+            and isinstance(node.func.value, ast.Name)
+                and node.func.value.id == self.normalizationModule):
+            return f'{self.normalizationModule}.{node.func.attr}'
+        return None
+
+    def visit_Raise(self, node: ast.Raise) -> None:
+>>>>>>> v1
         """Analyze exception raises."""
         # Extract raised exceptions
         if node.exc and isinstance(node.exc, ast.Call):
@@ -343,6 +473,7 @@ class CodeAnalyzer(ast.NodeVisitor):
 
         self.generic_visit(node)
 
+<<<<<<< HEAD
     def visit_Call(self, node):
         """Analyze function calls."""
         # Handle `raiseNotImplementedError` call
@@ -360,6 +491,31 @@ class CodeAnalyzer(ast.NodeVisitor):
                 self.normalizers[argName] = qualifiedNormalizer
 
         # Continue visiting other child nodes
+=======
+    def visit_Call(self, node: ast.Call) -> None:
+        """Analyze function calls."""
+        if (hasattr(node.func, 'attr')
+                and node.func.attr == 'raiseNotImplementedError'):
+            self.exceptions.add('NotImplementedError')
+
+        normalizer = self._extractNormalizer(node)
+        if normalizer and node.args and isinstance(node.args[0], ast.Name):
+            self.normalizers[node.args[0].id] = normalizer
+
+        self.generic_visit(node)
+
+    def visit_Return(self, node: ast.Return) -> None:
+        """Analyze return values for normalization."""
+        if isinstance(node.value, ast.Call):
+            normalizer = self._extractNormalizer(node.value)
+            if normalizer and isinstance(node.value.args[0], ast.Name):
+                self.normalizers['return'] = normalizer
+        elif isinstance(node.value, ast.Name):
+            returnValue = node.value.id
+            if returnValue in self.normalizers:
+                self.normalizers['return'] = self.normalizers[returnValue]
+
+>>>>>>> v1
         self.generic_visit(node)
 
 
@@ -369,14 +525,22 @@ class Docstring(DynamicPropertyMixin):
     :param obj: The object to which the docstring belongs.
     :param containingClass: The class containing the object, if any.
         Defaults to :obj:`None`.
+<<<<<<< HEAD
     :param description: A detailed description to add. Defaults
         to :obj:`None`.
     :param examples: Examples to add to the docstring. These will
         override any examples in the objects existing docstring.
+=======
+    :param description: A detailed description to add to the docstring.
+        Defaults to :obj:`None`.
+    :param examples: Examples to add to the docstring. These will
+        override any examples in the object's existing docstring.
+>>>>>>> v1
         Defaults to :obj:`None`.
     :param preeserveVariadics: Whether to preserve and escape variadic
         parameters (`*args` and `**kwargs`) in the outputted docstring.
         Defaults to :obj:`True`.
+<<<<<<< HEAD
     :param globalNamespace: A global namespace dictionary to be used for type hints.
         Defaults to the current global namespace.
 
@@ -385,6 +549,16 @@ class Docstring(DynamicPropertyMixin):
         When ``preserveVariadics=True``, the generated docstring should be
         inserted into your source code as a raw string to correctly preserve
         the asterisk symbols.
+=======
+    :param globalNamespace: A global namespace dictionary to be used for
+         type hints. Defaults to the current global namespace.
+
+    .. note::
+
+        When ``preserveVariadics=True``, the generated docstring should
+        be inserted into your source code as a raw string to correctly
+        preserve the asterisk symbols.
+>>>>>>> v1
 
     """
 
@@ -436,13 +610,24 @@ class Docstring(DynamicPropertyMixin):
 
         return annotations
 
+<<<<<<< HEAD
     def _extractReturnAnnotation(self) -> ParsedAnnotation:
+=======
+    def _extractReturnAnnotation(self) -> Optional[ParsedAnnotation]:
+>>>>>>> v1
         # Extract the return type annotation of the object.
         hints = self._getTypeHints()
         signature = self._getSignature()
 
+<<<<<<< HEAD
         returnAnnotation = hints.get('return', signature.return_annotation)
         return self._parseTypeAnnotation(returnAnnotation)
+=======
+        if signature:
+            returnAnnotation = hints.get('return', signature.return_annotation)
+            return self._parseTypeAnnotation(returnAnnotation)
+        return None
+>>>>>>> v1
 
     def _extractDefaultValues(self) -> Dict[str, Any]:
         # Extract default values for the parameters of the object.
@@ -456,14 +641,22 @@ class Docstring(DynamicPropertyMixin):
 
         return defaults
 
+<<<<<<< HEAD
     def _getRaisedExceptions(self) -> List[str]:
+=======
+    def _getRaisedExceptions(self) -> Set[str]:
+>>>>>>> v1
         # Get the exceptions raised by the object based on the `obj` source.
         source = inspect.getsource(self.obj)
         dedentedSource = textwrap.dedent(source)
         tree = ast.parse(dedentedSource)
         extractor = CodeAnalyzer()
         extractor.visit(tree)
+<<<<<<< HEAD
         return list(extractor.exceptions)
+=======
+        return extractor.exceptions
+>>>>>>> v1
 
     @staticmethod
     def _getNormalizers(source: str) -> Dict[str, str]:
@@ -489,6 +682,7 @@ class Docstring(DynamicPropertyMixin):
             if isinstance(annotation, tuple):
                 container, elements = annotation[0], annotation[1]
                 if container == 'typing.Union':
+<<<<<<< HEAD
                     return " or ".join(
                         [_typeToString(elem) for elem in elements]
                     )
@@ -501,6 +695,20 @@ class Docstring(DynamicPropertyMixin):
 
         typeString = _typeToString(annotation)
         return typeString
+=======
+                    return " or ".join([_typeToString(e) for e in elements])
+                return (
+                    f"{self._assignRole(container)} of "
+                    f"{', '.join([_typeToString(e) for e in elements])} "
+                    f"items"
+                )
+            elif annotation.startswith('Optional[') and annotation.endswith(']'):
+                elements = [annotation[9:-1], 'None']
+                return " or ".join([_typeToString(e) for e in elements])
+            return self._assignRole(annotation)
+
+        return _typeToString(annotation)
+>>>>>>> v1
 
     def _parseTypeAnnotation(self,
                              annotation: Any
@@ -532,6 +740,7 @@ class Docstring(DynamicPropertyMixin):
     # Helpers
     # -------
 
+<<<<<<< HEAD
     def _getSignature(self):
         # Select signature getter based on object type.
         if self.objectName == 'dynamicProperty':
@@ -539,6 +748,16 @@ class Docstring(DynamicPropertyMixin):
         return inspect.signature(self.obj)
 
     def _getTypeHints(self):
+=======
+    def _getSignature(self) -> Optional[inspect.Signature]:
+        # Select signature getter based on object type.
+        if (not isinstance(self.obj, type)
+                and self.objectName == 'dynamicProperty'):
+            return self._mergeSignatures()
+        return inspect.signature(self.obj)
+
+    def _getTypeHints(self) -> Dict[str, Any]:
+>>>>>>> v1
         # Select type hint getter based on object type.
         if self.objectName == 'dynamicProperty':
             return self._mergeTypeHints()
@@ -550,9 +769,15 @@ class Docstring(DynamicPropertyMixin):
         if objectName == 'NoneType':
             return ':obj:`None`'
 
+<<<<<<< HEAD
         def removePrefix(string, prefix):
             # Remove a specified prefix from a string.
             if string.startswith(prefix):
+=======
+        def removePrefix(string: str, prefix: str) -> str:
+            # Remove a specified prefix from a string.
+            if string and string.startswith(prefix):
+>>>>>>> v1
                 return string[len(prefix):]
             return string
 
@@ -582,6 +807,28 @@ class Docstring(DynamicPropertyMixin):
         return (f'{prefix}`{objectName}`'
                 if prefix else f':class:`{objectName}`')
 
+<<<<<<< HEAD
+=======
+    def _resolveSource(self) -> str:
+        # Resolves the source based on object type.
+        if self.dynamicPropertyObject:
+            if self.isGetter:
+                obj = Docstring(
+                    self.dynamicPropertyObject,
+                    containingClass=self.containingClass
+                ).getterObject
+            elif self.isSetter:
+                obj = Docstring(
+                    self.dynamicPropertyObject,
+                    containingClass=self.containingClass
+                ).setterObject
+        elif self.isPrivate:
+            obj = self.publicObject
+        else:
+            obj = self.obj
+        return inspect.getsource(obj)
+
+>>>>>>> v1
     @staticmethod
     def isQualified(objectName) -> bool:
         """Check if the given object name is qualified.
@@ -591,7 +838,11 @@ class Docstring(DynamicPropertyMixin):
             :obj:`False` otherwise.
 
         """
+<<<<<<< HEAD
         return '.' in objectName and objectName[0].isupper()
+=======
+        return objectName and '.' in objectName and objectName[0].isupper()
+>>>>>>> v1
 
     # ------------------
     # Docstring Elements
@@ -663,18 +914,29 @@ class Docstring(DynamicPropertyMixin):
         description.
 
         """
+<<<<<<< HEAD
         description = (textwrap.fill(self._description, LINE_LENGTH)
                        if self._description else 'Description')
         if self.isPrivate:
             implementationNote = self.implementationNote
             return (f"{description}\n\n{implementationNote}"
                     if description else implementationNote)
+=======
+        description = textwrap.fill(self._description or 'Description', LINE_LENGTH)
+        if self.isPrivate:
+            return "\n\n".join([description, self.implementationNote]
+                               if self.implementationNote else [description])
+>>>>>>> v1
         return description
 
     @property
     def paramSection(self) -> str:
         """Get the parameter section of the docstring."""
+<<<<<<< HEAD
         if self.objectName == 'dynamicProperty':
+=======
+        if not isinstance(self.obj, type) and self.objectName == 'dynamicProperty':
+>>>>>>> v1
             return self.setterValueDescription
 
         lines = []
@@ -693,6 +955,7 @@ class Docstring(DynamicPropertyMixin):
                 parameterName=name, typeString=typeString
             )
 
+<<<<<<< HEAD
             source = inspect.getsource(self.obj)
             normalizerDict = self._getNormalizers(source)
             if normalizerDict and name in normalizerDict:
@@ -702,6 +965,17 @@ class Docstring(DynamicPropertyMixin):
                 )
 
             # Handle defaults.
+=======
+            if self.isPrivate:
+                source = self._resolveSource()
+                normalizerDict = self._getNormalizers(source)
+                if normalizerDict and name in normalizerDict:
+                    normalizer = normalizerDict[name]
+                    formatString += FORMAT_STRINGS['normalizer'].format(
+                        normalizer=normalizer
+                    )
+
+>>>>>>> v1
             defaults = self._getSignatureInfo().get('defaults')
             if defaults and name in defaults:
                 value = self._formatValue(defaults[name])
@@ -715,10 +989,28 @@ class Docstring(DynamicPropertyMixin):
     def returnSection(self) -> str:
         """Get the return section of the docstring."""
         returnValue = self._extractReturnAnnotation()
+<<<<<<< HEAD
         if returnValue == 'NoneType':
             return ''
         typeString = self._createTypeString()
         formatString = FORMAT_STRINGS['return'].format(typeString=typeString)
+=======
+        if returnValue in ['NoneType', 'None']:
+            return ''
+
+        typeString = self._createTypeString()
+        formatString = FORMAT_STRINGS['return'].format(typeString=typeString)
+
+        if self.isPrivate:
+            source = self._resolveSource()
+            normalizerDict = self._getNormalizers(source)
+            if normalizerDict and 'return' in normalizerDict:
+                normalizer = normalizerDict['return']
+                formatString += FORMAT_STRINGS['normalizer'].format(
+                    normalizer=normalizer
+                )
+
+>>>>>>> v1
         return textwrap.fill(formatString, LINE_LENGTH, subsequent_indent=INDENT)
 
     @property
@@ -726,6 +1018,10 @@ class Docstring(DynamicPropertyMixin):
         """Get the raises section of the docstring."""
         if self.objectName == 'dynamicProperty':
             return ''
+<<<<<<< HEAD
+=======
+
+>>>>>>> v1
         exceptions = self._getRaisedExceptions()
         lines = []
         for exc in exceptions:
@@ -737,6 +1033,10 @@ class Docstring(DynamicPropertyMixin):
             )
             wrapped = textwrap.fill(formatString, LINE_LENGTH, subsequent_indent=INDENT)
             lines.append(wrapped)
+<<<<<<< HEAD
+=======
+
+>>>>>>> v1
         return '\n'.join(lines) or ''
 
     @property
@@ -777,6 +1077,7 @@ class Docstring(DynamicPropertyMixin):
         return self._obj
 
     @property
+<<<<<<< HEAD
     def containingClass(self):
         return self._containingClass
 
@@ -786,6 +1087,28 @@ class Docstring(DynamicPropertyMixin):
 
     @property
     def preserveVariadics(self):
+=======
+    def containingClass(self) -> Optional[Any]:
+        """Get the class containing the object."""
+        return self._containingClass
+
+    @property
+    def publicObject(self):
+        """Get the public equivalen of the object."""
+        try:
+            return getattr(self.containingClass, self.publicQualname.split('.')[-1])
+        except AttributeError:
+            return self.obj
+
+    @property
+    def globalNamespace(self) -> Dict[str, Any]:
+        """Get the current global namespace."""
+        return self._globalNamespace or globals()
+
+    @property
+    def preserveVariadics(self) -> bool:
+        """Get the setting for preserving variadics."""
+>>>>>>> v1
         return self._preserveVariadics
 
     @property
@@ -814,11 +1137,16 @@ class Docstring(DynamicPropertyMixin):
 
     @property
     def publicQualname(self) -> str:
+<<<<<<< HEAD
         """Retrieve the public qualified name of the object.
+=======
+        """Retrieve the public qualified name of the object, if it exists.
+>>>>>>> v1
 
         If the object is a `dynamicProperty`, it returns the
         `dynamicPropertyQualname`.
         If the object is not private, it returns the object's name.
+<<<<<<< HEAD
         If the object is private, it formats and checks if the member exists
         in the containing class and returns the formatted name.
 
@@ -847,6 +1175,41 @@ class Docstring(DynamicPropertyMixin):
         if objectExists(formattedName):
             return formattedName
         return ''
+=======
+        If the object is private, it formats and checks if the member
+        exists in the containing class and returns the formatted name.
+
+        """
+        def getNamespace(objectName: str) -> str:
+            # Get the name of the object's namespace (i.e., the part of the
+            # qualname before the last dot) from `objectName` or `containingClass`.
+            if '.' in objectName:
+                segments = objectName.split('.')
+                return '.'.join(segments[:-1])
+            if self.containingClass:
+                return self.containingClass.__class__.__qualname__
+            return ''
+
+        def objectExists(publicMemberName: str) -> bool:
+            # Check if an object exists within a class.
+            return self.containingClass and hasattr(
+                self.containingClass, publicMemberName
+            )
+
+        if self.dynamicPropertyObject.__class__.__name__ == 'dynamicProperty':
+            return self.dynamicPropertyQualname
+
+        namespace = getNamespace(self.objectName)
+        memberName = (self.objectName.split('.')[-1]
+                      if '.' in self.objectName else self.objectName)
+        publicMemberName = memberName[1:] if self.isPrivate else memberName
+        if not objectExists(publicMemberName):
+            magicMemberName = f"__{publicMemberName.lower()}__"
+            if not objectExists(magicMemberName):
+                raise ValueError(f"Cannot find public member for '{memberName}'.")
+            publicMemberName = magicMemberName
+        return '.'.join([namespace, publicMemberName])
+>>>>>>> v1
 
     @property
     def overrideValue(self) -> int:
@@ -872,8 +1235,13 @@ def insertDocstring(obj: Any,
 
     :param obj: The object whose docstring will be modified.
     :param newDocstring: The new docstring to be inserted.
+<<<<<<< HEAD
     :param preserveVariadics: Whether to preserve variadic arguments in the
         docstring. Defaults to :obj:`True`.
+=======
+    :param preserveVariadics: Whether to preserve variadic
+        arguments in the docstring. Defaults to :obj:`True`.
+>>>>>>> v1
     :return: The updated source code with the new docstring.
 
     """
@@ -934,7 +1302,12 @@ def generateDocstring(obj: Any,
     :param summary: A brief summary of the object.
     :param description: A detailed description of the object.
     :param examples: Code examples for the object.
+<<<<<<< HEAD
     :param preserveVariadics: Whether to preserve variadic arguments in the docstring.
+=======
+    :param preserveVariadics: Whether to preserve variadic arguments
+        in the docstring.
+>>>>>>> v1
     :param globalNamespace: The global namespace.
     :param containingClass: The containing class of the object, if applicable.
     :return: A generated docstring formatted in reST.
@@ -950,6 +1323,7 @@ def generateDocstring(obj: Any,
         preserveVariadics=preserveVariadics,
         globalNamespace=globalNamespace
     )
+<<<<<<< HEAD
     sections = [
         docstring.summary,
         docstring.deprecationNotice,
@@ -957,8 +1331,31 @@ def generateDocstring(obj: Any,
         docstring.paramSection,
         docstring.returnSection,
         docstring.raisesSection,
+=======
+
+    preliminarySections = [
+        docstring.summary,
+        docstring.deprecationNotice,
+        docstring.description,
+    ]
+
+    middleSections = [
+        docstring.paramSection,
+        docstring.returnSection,
+        docstring.raisesSection,
+    ]
+
+    conclusiveSections = [
+>>>>>>> v1
         docstring.overrideNotice,
         docstring.examples
     ]
 
+<<<<<<< HEAD
     return '\n\n'.join(filter(None, sections))
+=======
+    preliminaryContent = '\n\n'.join(filter(None, preliminarySections))
+    middleContent = '\n'.join(filter(None, middleSections))
+    conclusiveContent = '\n\n'.join(filter(None, conclusiveSections))
+    return f"{preliminaryContent}\n\n{middleContent}\n\n{conclusiveContent}"
+>>>>>>> v1
