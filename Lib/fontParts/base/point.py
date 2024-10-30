@@ -81,11 +81,6 @@ class BasePoint(
         "glyph",
         """Get the point's parent glyph object.
 
-<<<<<<< HEAD
-=======
-        This property is read-only.
-
->>>>>>> v1
         The value must be a :class:`BaseGlyph` instance or :obj:`None`.
 
         :return: The :class:`BaseGlyph` instance containing the point
@@ -108,7 +103,6 @@ class BasePoint(
         "layer",
         """Get the point's parent layer object.
 
-<<<<<<< HEAD
         :return: The :class:`BaseLayer` instance containing the point
             or :obj:`None`.
 
@@ -119,20 +113,6 @@ class BasePoint(
         """
     )
 
-=======
-        This property is read-only.
-
-        :return: The :class:`BaseLayer` instance containing the point
-            or :obj:`None`.
-
-        Example::
-
-            >>> layer = point.layer
-
-        """
-    )
-
->>>>>>> v1
     def _get_layer(self) -> Optional[BaseObject]:
 =======
     layer = dynamicProperty("layer", "The point's parent :class:`BaseLayer`.")
@@ -151,7 +131,6 @@ class BasePoint(
 
         """Get the point's parent font object.
 
-<<<<<<< HEAD
         :return: The :class:`BaseFont` instance containing the point
             or :obj:`None`.
 
@@ -162,20 +141,6 @@ class BasePoint(
         """
     )
 
-=======
-        This property is read-only.
-
-        :return: The :class:`BaseFont` instance containing the point
-            or :obj:`None`.
-
-        Example::
-
-            >>> font = point.font
-
-        """
-    )
-
->>>>>>> v1
     def _get_font(self) -> Optional[BaseObject]:
 =======
     font = dynamicProperty("font", "The point's parent :class:`BaseFont`.")
@@ -205,7 +170,6 @@ class BasePoint(
         The possible types are:
 >>>>>>> parent of 3d67a1d (Update documentation (#739))
 
-<<<<<<< HEAD
         +----------+---------------------------------+
         | move     | An on-curve move to.            |
         +----------+---------------------------------+
@@ -218,20 +182,6 @@ class BasePoint(
         | offcurve | An off-curve.                   |
         +----------+---------------------------------+
 <<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
-        +----------------+---------------------------------+
-        | Type           | Description                     |
-        +----------------+---------------------------------+
-        | ``'move'``     | An on-curve move to.            |
-        | ``'line'``     | An on-curve line to.            |
-        | ``'curve'``    | An on-curve cubic curve to.     |
-        | ``'qcurve'``   | An on-curve quadratic curve to. |
-        | ``'offcurve'`` | An off-curve.                   |
-        +----------------+---------------------------------+
->>>>>>> v1
->>>>>>> 22b80489e1d622ce017f67062fcffa4595ce82ea
 
         :return: A :class:`str` representing the type of the point.
 
@@ -256,11 +206,7 @@ class BasePoint(
         property getter.
 
         :return: A :class:`str` representing the type of the point. The value
-<<<<<<< HEAD
             will have been normalized with :func:`normalizers.normalizePointType`.
-=======
-            will be normalized with :func:`normalizers.normalizePointType`.
->>>>>>> v1
         :raises NotImplementedError: If the method has not been overridden by
             a subclass.
 
@@ -323,11 +269,7 @@ class BasePoint(
         property getter.
 
         :return: A :class:`bool` indicating the point's smooth state. The value
-<<<<<<< HEAD
             will have been normalized with :func:`normalizers.normalizeBoolean`.
-=======
-            will be normalized with :func:`normalizers.normalizeBoolean`.
->>>>>>> v1
         :raises NotImplementedError: If the method has not been overridden by a
             subclass.
 
@@ -391,11 +333,7 @@ class BasePoint(
         property getter.
 
         :return: An :class:`int` or a :class:`float` representing the point's
-<<<<<<< HEAD
             x coordinate. The value will have been normalized with
-=======
-            x coordinate. The value will be normalized with
->>>>>>> v1
             :func:`normalizers.normalizeX`.
         :raises NotImplementedError: If the method has not been overridden by a
             subclass.
@@ -456,11 +394,7 @@ class BasePoint(
         property getter.
 
         :return: An :class:`int` or a :class:`float` representing the point's
-<<<<<<< HEAD
             y coordinate. The value will have been normalized
-=======
-            y coordinate. The value will be normalized
->>>>>>> v1
             with :func:`normalizers.normalizeY`.
         :raises NotImplementedError: If the method has not been overridden by a
             subclass.
@@ -501,16 +435,8 @@ class BasePoint(
 <<<<<<< HEAD
         """Get the index of the point.
 
-<<<<<<< HEAD
         :return: An :class:`int` representing the point's index within an
             ordered list of the parent glyph's points.
-=======
-        This property is read-only.
-
-        :return: An :class:`int` representing the point's index within an
-            ordered list of the parent contour's points, or :obj:`None` if the
-            point does not belong to a contour.
->>>>>>> v1
 
         Example::
 =======
@@ -538,12 +464,7 @@ class BasePoint(
         property getter.
 
         :return: An :class:`int` representing the point's index within an
-<<<<<<< HEAD
             ordered list of the parent glyph's points. The value will have been
-=======
-            ordered list of the parent contour's points, or :obj:`None` if the
-            point does not belong to a contour. The value will be
->>>>>>> v1
             normalized with :func:`normalizers.normalizeIndex`.
 
         .. note::
@@ -596,12 +517,8 @@ class BasePoint(
         property getter.
 
         :return: A :class:`str` representing the point's name or :obj:`None`.
-<<<<<<< HEAD
             The value will have been normalized
             with :func:`normalizers.normalizePointName`.
-=======
-            The value will be normalized with :func:`normalizers.normalizePointName`.
->>>>>>> v1
         :raises NotImplementedError: If the method has not been overridden by a
             subclass.
 
