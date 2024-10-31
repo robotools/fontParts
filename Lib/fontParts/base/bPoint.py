@@ -14,8 +14,9 @@ from fontParts.base.errors import FontPartsError
 from fontParts.base import normalizers
 from fontParts.base.deprecated import DeprecatedBPoint, RemovedBPoint
 from fontParts.base.annotations import (
-    CoordinateType,
-    TransformationMatrixType
+    Pair,
+    PairCollectionType,
+    SextupleCollectionType
 )
 if TYPE_CHECKING:
     from fontParts.base.contour import BaseContour
@@ -241,16 +242,16 @@ class BaseBPoint(BaseObject,
         """
     )
 
-    def _get_base_anchor(self) -> CoordinateType:
+    def _get_base_anchor(self) -> PairType[IntFloatType]:
         value = self._get_anchor()
         value = normalizers.normalizeCoordinateTuple(value)
         return value
 
-    def _set_base_anchor(self, value: CoordinateType) -> None:
+    def _set_base_anchor(self, value: PairCollectionType[IntFloatType]) -> None:
         value = normalizers.normalizeCoordinateTuple(value)
         self._set_anchor(value)
 
-    def _get_anchor(self) -> CoordinateType:
+    def _get_anchor(self) -> PairType[IntFloatType]:
         """Get the the bPoint's anchor point.
 
         This is the environment implementation of the :attr:`BaseBPoint.anchor`
@@ -268,7 +269,7 @@ class BaseBPoint(BaseObject,
         point = self._point
         return (point.x, point.y)
 
-    def _set_anchor(self, value: CoordinateType) -> None:
+    def _set_anchor(self, value: PairCollectionType[IntFloatType]) -> None:
         """Set the the bPoint's anchor point.
 
         This is the environment implementation of the :attr:`BaseBPoint.anchor`
@@ -303,16 +304,16 @@ class BaseBPoint(BaseObject,
         """
     )
 
-    def _get_base_bcpIn(self) -> CoordinateType:
+    def _get_base_bcpIn(self) -> PairType[IntFloatType]:
         value = self._get_bcpIn()
         value = normalizers.normalizeCoordinateTuple(value)
         return value
 
-    def _set_base_bcpIn(self, value: CoordinateType) -> None:
+    def _set_base_bcpIn(self, value: PairCollectionType[IntFloatType]) -> None:
         value = normalizers.normalizeCoordinateTuple(value)
         self._set_bcpIn(value)
 
-    def _get_bcpIn(self) -> CoordinateType:
+    def _get_bcpIn(self) -> PairType[IntFloatType]:
         """Get the bPoint's incoming off-curve.
 
         This is the environment implementation of the :attr:`BaseBPoint.bcpIn`
@@ -336,7 +337,7 @@ class BaseBPoint(BaseObject,
             x = y = 0
         return (x, y)
 
-    def _set_bcpIn(self, value: CoordinateType) -> None:
+    def _set_bcpIn(self, value: PairCollectionType[IntFloatType]) -> None:
         """Set the bPoint's incoming off-curve.
 
         This is the environment implementation of the :attr:`BaseBPoint.bcpIn`
@@ -390,16 +391,16 @@ class BaseBPoint(BaseObject,
         """
     )
 
-    def _get_base_bcpOut(self) -> CoordinateType:
+    def _get_base_bcpOut(self) -> PairType[IntFloatType]:
         value = self._get_bcpOut()
         value = normalizers.normalizeCoordinateTuple(value)
         return value
 
-    def _set_base_bcpOut(self, value: CoordinateType) -> None:
+    def _set_base_bcpOut(self, value: PairCollectionType[IntFloatType]) -> None:
         value = normalizers.normalizeCoordinateTuple(value)
         self._set_bcpOut(value)
 
-    def _get_bcpOut(self) -> CoordinateType:
+    def _get_bcpOut(self) -> PairType[IntFloatType]:
         """Get the bPoint's outgoing off-curve.
 
         This is the environment implementation of the :attr:`BaseBPoint.bcpOut`
@@ -423,7 +424,7 @@ class BaseBPoint(BaseObject,
             x = y = 0
         return (x, y)
 
-    def _set_bcpOut(self, value: CoordinateType) -> None:
+    def _set_bcpOut(self, value: PairCollectionType[IntFloatType]) -> None:
         """Set the bPoint's outgoing off-curve.
 
         This is the environment implementation of the :attr:`BaseBPoint.bcpOut`
@@ -612,7 +613,9 @@ class BaseBPoint(BaseObject,
     # Transformation
     # --------------
 
-    def _transformBy(self, matrix: TransformationMatrixType, **kwargs: Any) -> None:
+    def _transformBy(self,
+                     matrix: SextupleCollectionType[IntFloatType],
+                     **kwargs: Any) -> None:
         r"""Transform the native bPoint.
 
         This is the environment implementation of :meth:`BaseBPoint.transformBy`.
@@ -666,7 +669,8 @@ class BaseBPoint(BaseObject,
                        normalizers.normalizeVisualRounding(y))
 
 
-def relativeBCPIn(anchor: CoordinateType, BCPIn: CoordinateType) -> CoordinateType:
+def relativeBCPIn(anchor: PairCollectionType[IntFloatType],
+                  BCPIn: PairCollectionType[IntFloatType]) -> PairType[IntFloatType]:
     """convert absolute incoming bcp value to a relative value.
 
     :param anchor: The anchor reference point from which to measure the relative
@@ -679,7 +683,8 @@ def relativeBCPIn(anchor: CoordinateType, BCPIn: CoordinateType) -> CoordinateTy
     return (BCPIn[0] - anchor[0], BCPIn[1] - anchor[1])
 
 
-def absoluteBCPIn(anchor: CoordinateType, BCPIn: CoordinateType) -> CoordinateType:
+def absoluteBCPIn(anchor: PairCollectionType[IntFloatType],
+                  BCPIn: PairCollectionType[IntFloatType]) -> PairType[IntFloatType]:
     """convert relative incoming bcp value to an absolute value.
 
     :param anchor: The anchor reference point from which the relative BCP value
@@ -692,7 +697,8 @@ def absoluteBCPIn(anchor: CoordinateType, BCPIn: CoordinateType) -> CoordinateTy
     return (BCPIn[0] + anchor[0], BCPIn[1] + anchor[1])
 
 
-def relativeBCPOut(anchor: CoordinateType, BCPOut: CoordinateType) -> CoordinateType:
+def relativeBCPOut(anchor: PairCollectionType[IntFloatType],
+                   BCPOut: PairCollectionType[IntFloatType]) -> PairType[IntFloatType]:
     """convert absolute outgoing bcp value to a relative value.
 
     :param anchor: The anchor reference point from which to measure the relative
@@ -705,7 +711,8 @@ def relativeBCPOut(anchor: CoordinateType, BCPOut: CoordinateType) -> Coordinate
     return (BCPOut[0] - anchor[0], BCPOut[1] - anchor[1])
 
 
-def absoluteBCPOut(anchor: CoordinateType, BCPOut: CoordinateType) -> CoordinateType:
+def absoluteBCPOut(anchor: PairCollectionType[IntFloatType],
+                   BCPOut: PairCollectionType[IntFloatType]) -> PairType[IntFloatType]:
     """convert relative outgoing bcp value to an absolute value.
 
     :param anchor: The anchor reference point from which the relative BCP value

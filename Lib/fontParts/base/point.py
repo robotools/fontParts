@@ -14,8 +14,9 @@ from fontParts.base.base import (
 from fontParts.base import normalizers
 from fontParts.base.deprecated import DeprecatedPoint, RemovedPoint
 from fontParts.base.annotations import(
-    IntFloatType,
-    TransformationMatrixType
+    QuintupleType,
+    SextupleCollectionType,
+    IntFloatType
 )
 
 if TYPE_CHECKING:
@@ -45,7 +46,7 @@ class BasePoint(BaseObject,
 
     """
 
-    copyAttributes: Tuple[str, str, str, str, str] = (
+    copyAttributes: QuintupleType[str] = (
         "type",
         "smooth",
         "x",
@@ -568,7 +569,9 @@ class BasePoint(BaseObject,
     # Transformation
     # --------------
 
-    def _transformBy(self, matrix: TransformationMatrixType, **kwargs: Any) -> None:
+    def _transformBy(self,
+                     matrix: SextupleCollectionType[IntFloatType],
+                     **kwargs: Any) -> None:
         r"""Transform the native point.
 
         This is the environment implementation of :meth:`BasePoint.transformBy`.

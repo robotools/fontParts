@@ -14,9 +14,9 @@ from fontParts.base.deprecated import DeprecatedFont, RemovedFont
 from fontParts.base.annotations import (
     CharacterMappingType,
     CollectionType,
-    ColorType,
-    CoordinateType,
-    FactorType,
+    QuadrupleCollectionType,
+    PairCollectionType,
+    TransformationType,
     KerningDictType,
     ReverseComponentMappingType
 )
@@ -1137,7 +1137,8 @@ class BaseFont(_BaseGlyphVendor,
 
     def newLayer(self,
                  name: str,
-                 color: Optional[ColorType] = None) -> BaseLayer:
+                 color: Optional[QuadrupleCollectionType[IntFloatType]] = None
+                 ) -> BaseLayer:
         """Create a new layer in the font.
 
         :param name: The name of the new layer to create.
@@ -1164,7 +1165,7 @@ class BaseFont(_BaseGlyphVendor,
 
     def _newLayer(self,
                   name: str,
-                  color: Optional[ColorType],
+                  color: Optional[QuadrupleCollectionType[IntFloatType]],
                   **kwargs: Any) -> BaseLayer:
         r"""Create a new layer in the native font.
 
@@ -1718,7 +1719,7 @@ class BaseFont(_BaseGlyphVendor,
 
         """
         return tuple(self._getitem__guidelines(i)
-                      for i in range(self._len__guidelines()))
+                     for i in range(self._len__guidelines()))
 
     def _len__guidelines(self) -> int:
         return self._lenGuidelines()
@@ -1769,10 +1770,10 @@ class BaseFont(_BaseGlyphVendor,
         raise FontPartsError("The guideline could not be found.")
 
     def appendGuideline(self,
-                        position: Optional[CoordinateType] = None,
+                        position: Optional[PairCollectionType[IntFloatType]] = None,
                         angle: Optional[float] = None,
                         name: Optional[str] = None,
-                        color: Optional[ColorType] = None,
+                        color: Optional[QuadrupleCollectionType[IntFloatType]] = None,
                         guideline: Optional[BaseGuideline] = None
                         ) -> BaseGuideline:
         """Append a new guideline to the font.
@@ -1836,10 +1837,10 @@ class BaseFont(_BaseGlyphVendor,
         return newGuideline
 
     def _appendGuideline(self,
-                         position: Optional[CoordinateType],
+                         position: Optional[PairCollectionType[IntFloatType]],
                          angle: Optional[float],
                          name: Optional[str],
-                         color: Optional[ColorType],
+                         color: Optional[QuadrupleCollectionType[IntFloatType]],
                          guideline: Optional[BaseGuideline],
                          **kwargs) -> BaseGuideline:
         r"""Append a new guideline to the native font.
@@ -1935,7 +1936,7 @@ class BaseFont(_BaseGlyphVendor,
     # -------------
 
     def interpolate(self,
-                    factor: FactorType,
+                    factor: TransformationType,
                     minFont: BaseFont,
                     maxFont: BaseFont,
                     round: bool = True,
@@ -1985,7 +1986,7 @@ class BaseFont(_BaseGlyphVendor,
                           round=round, suppressError=suppressError)
 
     def _interpolate(self,
-                     factor: FactorType,
+                     factor: TransformationType,
                      minFont: BaseFont,
                      maxFont: BaseFont,
                      round: bool,
@@ -2233,7 +2234,7 @@ class BaseFont(_BaseGlyphVendor,
 
     def _get_base_selectedLayers(self) -> Tuple[BaseLayer, ...]:
         selected = tuple(normalizers.normalizeLayer(layer) for
-                          layer in self._get_selectedLayers())
+                         layer in self._get_selectedLayers())
         return selected
 
     def _get_selectedLayers(self) -> Tuple[BaseLayer, ...]:
@@ -2297,7 +2298,7 @@ class BaseFont(_BaseGlyphVendor,
 
     def _get_base_selectedLayerNames(self) -> Tuple[str, ...]:
         selected = tuple(normalizers.normalizeLayerName(name) for
-                          name in self._get_selectedLayerNames())
+                         name in self._get_selectedLayerNames())
         return selected
 
     def _get_selectedLayerNames(self) -> Tuple[str, ...]:
@@ -2368,7 +2369,7 @@ class BaseFont(_BaseGlyphVendor,
 
     def _get_base_selectedGuidelines(self) -> Tuple[BaseGuideline, ...]:
         selected = tuple(normalizers.normalizeGuideline(guideline) for
-                          guideline in self._get_selectedGuidelines())
+                         guideline in self._get_selectedGuidelines())
         return selected
 
     def _get_selectedGuidelines(self) -> Tuple[BaseGuideline, ...]:
