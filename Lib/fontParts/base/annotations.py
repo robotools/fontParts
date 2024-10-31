@@ -8,13 +8,14 @@ from fontTools.pens.pointPen import AbstractPointPen
 # Generic
 T = TypeVar('T')
 
-Pair = Tuple[T, T]
-Quadruple = Tuple[T, T, T, T]
-Sextuple = Tuple[T, T, T, T, T, T]
+PairType = Tuple[T, T]
+QuadrupleType = Tuple[T, T, T, T]
+QuintupleType = Tuple[T, T, T, T, T]
+SextupleType = Tuple[T, T, T, T, T, T]
 CollectionType = Union[List[T], Tuple[T, ...]]
-PairCollectionType = Union[List[T], Pair[T]]
-QuadrupleCollectionType = Union[List[T], Quadruple[T]]
-SextupleCollectionType = Union[List[T], Sextuple[T]]
+PairCollectionType = Union[List[T], PairType[T]]
+QuadrupleCollectionType = Union[List[T], QuadrupleType[T]]
+SextupleCollectionType = Union[List[T], SextupleType[T]]
 
 # Builtins
 IntFloatType = Union[int, float]
@@ -27,8 +28,11 @@ PointPenType = AbstractPointPen
 CharacterMappingType = Dict[int, Tuple[str, ...]]
 ReverseComponentMappingType = Dict[str, Tuple[str, ...]]
 
+# Kerning
+KerningDictType = Dict[Pair[str], Pair[str]]
+
 # Transformation
-TransformationType = Union[IntFloatType, List[IntFloatType], Pair[IntFloatType]]
+TransformationType = Union[IntFloatType, List[IntFloatType], PairType[IntFloatType]]
 
 # Interpolation
 InterpolatableType = TypeVar('InterpolatableType', bound='Interpolatable')
