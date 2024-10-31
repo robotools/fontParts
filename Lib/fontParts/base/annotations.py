@@ -29,7 +29,7 @@ CharacterMappingType = Dict[int, Tuple[str, ...]]
 ReverseComponentMappingType = Dict[str, Tuple[str, ...]]
 
 # Kerning
-KerningDictType = Dict[Pair[str], Pair[str]]
+KerningDictType = Dict[PairType[str], PairType[str]]
 
 # Transformation
 TransformationType = Union[IntFloatType, List[IntFloatType], PairType[IntFloatType]]
