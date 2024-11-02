@@ -55,3 +55,17 @@ jobs:
         name: codecov-umbrella
         fail_ci_if_error: true
         token: ${{ secrets.CODECOV_TOKEN }}
+
+  test-pypy3:
+        runs-on: ubuntu-latest
+        if: "! contains(toJSON(github.event.commits.*.message), '[skip ci]')"
+        steps:
+        - uses: actions/checkout@v4
+        - name: Set up Python pypy3
+          uses: actions/setup-python@v5
+          with:
+            python-version: "pypy-3.9"
+        - name: Install packages
+          run: pip install tox
+        - name: Run Tox
+          run: tox $TOX_OPTIONS -e pypy3
