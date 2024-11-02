@@ -15,9 +15,9 @@ from fontParts.base.compatibility import LayerCompatibilityReporter
 from fontParts.base.color import Color
 from fontParts.base.deprecated import DeprecatedLayer, RemovedLayer
 from fontParts.base.annotations import (
-    QuadrupleCollectionType,
+    CharacterMappingType,
     CollectionType,
-    ColorType,
+    QuadrupleCollectionType,
     TransformationType,
     ReverseComponentMappingType,
 )
