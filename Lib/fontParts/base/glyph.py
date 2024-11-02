@@ -47,6 +47,12 @@ if TYPE_CHECKING:
     from fontParts.base.component import BaseComponent
     from fontParts.base.anchor import BaseAnchor
     from fontParts.base.image import BaseImage
+    TempContourListType = List[
+        Tuple[int, int, IntFloatType, IntFloatType, IntFloatType, BaseContour]
+    ]
+    ContourListType = List[
+        Tuple[int, int, FuzzyNumber, FuzzyNumber, IntFloatType, BaseContour]
+    ]
 
 
 class BaseGlyph(
@@ -2247,12 +2253,6 @@ class BaseGlyph(
         :param \**kwargs: Additional keyword arguments.
 
         """
-        TempContourListType = List[
-            Tuple[int, int, IntFloatType, IntFloatType, IntFloatType, BaseContour]
-        ]
-        ContourListType = List[
-            Tuple[int, int, FuzzyNumber, FuzzyNumber, IntFloatType, BaseContour]
-        ]
         tempContourList: TempContourListType = []
         contourList: ContourListType = []
         xThreshold: Optional[IntFloatType] = None
