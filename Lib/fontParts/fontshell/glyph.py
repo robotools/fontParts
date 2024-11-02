@@ -9,12 +9,14 @@ from fontParts.fontshell.anchor import RAnchor
 from fontParts.fontshell.guideline import RGuideline
 from fontParts.fontshell.image import RImage
 from fontParts.fontshell.lib import RLib
-from fontTools.ufoLib.glifLib import (GlifLibError, readGlyphFromString,
-                                      writeGlyphToString)
+from fontTools.ufoLib.glifLib import (
+    GlifLibError,
+    readGlyphFromString,
+    writeGlyphToString,
+)
 
 
 class RGlyph(RBaseObject, BaseGlyph):
-
     wrapClass = defcon.Glyph
     contourClass = RContour
     componentClass = RComponent
@@ -141,8 +143,13 @@ class RGlyph(RBaseObject, BaseGlyph):
                 for point in contour.points:
                     if point.type == "qcurve":
                         raise TypeError("fontshell can't removeOverlap for quadratics")
-            self.clear(contours=True, components=False,
-                       anchors=False, guidelines=False, image=False)
+            self.clear(
+                contours=True,
+                components=False,
+                anchors=False,
+                guidelines=False,
+                image=False,
+            )
             booleanOperations.union(contours, self.getPointPen())
 
     def _correctDirection(self, trueType=False, **kwargs):
@@ -201,7 +208,9 @@ class RGlyph(RBaseObject, BaseGlyph):
         guideline = glyph.guidelines[index]
         return self.guidelineClass(guideline)
 
-    def _appendGuideline(self, position, angle, name=None, color=None, identifier=None, **kwargs):
+    def _appendGuideline(
+        self, position, angle, name=None, color=None, identifier=None, **kwargs
+    ):
         glyph = self.naked()
         guideline = self.guidelineClass().naked()
         guideline.x = position[0]
@@ -312,7 +321,7 @@ class RGlyph(RBaseObject, BaseGlyph):
                 aString=glifData,
                 glyphObject=self.naked(),
                 pointPen=self.getPointPen(),
-                validate=validate
+                validate=validate,
             )
         except GlifLibError:
             raise FontPartsError("Not valid glif data")
@@ -323,5 +332,5 @@ class RGlyph(RBaseObject, BaseGlyph):
             glyphName=glyph.name,
             glyphObject=glyph,
             drawPointsFunc=glyph.drawPoints,
-            formatVersion=glyphFormatVersion
+            formatVersion=glyphFormatVersion,
         )

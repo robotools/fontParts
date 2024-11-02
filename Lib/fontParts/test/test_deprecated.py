@@ -3,7 +3,6 @@ from fontParts.base.deprecated import RemovedError
 
 
 class TestDeprecated(unittest.TestCase):
-
     # ----
     # Font
     # ----
@@ -135,28 +134,19 @@ class TestDeprecated(unittest.TestCase):
         anchor, _ = self.objectGenerator("anchor")
         with self.assertWarnsRegex(DeprecationWarning, "Anchor._generateIdentifier()"):
             anchor._generateIdentifier()
-        self.assertEqual(
-            anchor._generateIdentifier(),
-            anchor._getIdentifier()
-        )
+        self.assertEqual(anchor._generateIdentifier(), anchor._getIdentifier())
 
     def test_anchor_deprecated_generateIdentifer(self):
         anchor, _ = self.objectGenerator("anchor")
         with self.assertWarnsRegex(DeprecationWarning, "Anchor.generateIdentifier()"):
             anchor.generateIdentifier()
-        self.assertEqual(
-            anchor.generateIdentifier(),
-            anchor.getIdentifier()
-        )
+        self.assertEqual(anchor.generateIdentifier(), anchor.getIdentifier())
 
     def test_anchor_deprecated_getParent(self):
         anchor = self.getAnchor()
         with self.assertWarnsRegex(DeprecationWarning, "Anchor.getParent()"):
             anchor.getParent()
-        self.assertEqual(
-            anchor.getParent(),
-            anchor.glyph
-        )
+        self.assertEqual(anchor.getParent(), anchor.glyph)
 
     def test_anchor_deprecated_update(self):
         # As changed() is defined by the environment, only test if a Warning is issued.
@@ -362,6 +352,7 @@ class TestDeprecated(unittest.TestCase):
 
     def getImage_glyph(self):
         from fontParts.test.test_image import testImageData
+
         glyph, _ = self.objectGenerator("glyph")
         glyph.addImage(data=testImageData)
         image = glyph.image
@@ -426,12 +417,14 @@ class TestDeprecated(unittest.TestCase):
         groups["public.kern1.X"] = ["A", "B", "C"]
         groups["public.kern2.X"] = ["A", "B", "C"]
         kerning = font.kerning
-        kerning.update({
-            ("public.kern1.X", "public.kern2.X"): 100,
-            ("B", "public.kern2.X"): 101,
-            ("public.kern1.X", "B"): 102,
-            ("A", "A"): 103,
-        })
+        kerning.update(
+            {
+                ("public.kern1.X", "public.kern2.X"): 100,
+                ("B", "public.kern2.X"): 101,
+                ("public.kern1.X", "B"): 102,
+                ("A", "A"): 103,
+            }
+        )
         return kerning
 
     def test_kerning_removed_setParent(self):
@@ -529,12 +522,14 @@ class TestDeprecated(unittest.TestCase):
     def test_groups_deprecated_getParent(self):
         font, _ = self.objectGenerator("font")
         groups = font.groups
-        groups.update({
-            "group 1": ["A", "B", "C"],
-            "group 2": ["x", "y", "z"],
-            "group 3": [],
-            "group 4": ["A"]
-        })
+        groups.update(
+            {
+                "group 1": ["A", "B", "C"],
+                "group 2": ["x", "y", "z"],
+                "group 3": [],
+                "group 4": ["A"],
+            }
+        )
         with self.assertWarnsRegex(DeprecationWarning, "Groups.font"):
             groups.getParent()
         self.assertEqual(groups.getParent(), groups.font)
@@ -548,12 +543,14 @@ class TestDeprecated(unittest.TestCase):
     def test_groups_removed_setParent(self):
         font, _ = self.objectGenerator("font")
         groups, _ = self.objectGenerator("groups")
-        groups.update({
-            "group 1": ["A", "B", "C"],
-            "group 2": ["x", "y", "z"],
-            "group 3": [],
-            "group 4": ["A"]
-        })
+        groups.update(
+            {
+                "group 1": ["A", "B", "C"],
+                "group 2": ["x", "y", "z"],
+                "group 3": [],
+                "group 4": ["A"],
+            }
+        )
         with self.assertRaises(RemovedError):
             groups.setParent(font)
 
@@ -564,12 +561,7 @@ class TestDeprecated(unittest.TestCase):
     def test_lib_deprecated_getParent_font(self):
         font, _ = self.objectGenerator("font")
         lib = font.lib
-        lib.update({
-            "key 1": ["A", "B", "C"],
-            "key 2": "x",
-            "key 3": [],
-            "key 4": 20
-        })
+        lib.update({"key 1": ["A", "B", "C"], "key 2": "x", "key 3": [], "key 4": 20})
         with self.assertWarnsRegex(DeprecationWarning, "Lib.font"):
             lib.getParent()
         self.assertEqual(lib.getParent(), lib.font)
@@ -578,12 +570,7 @@ class TestDeprecated(unittest.TestCase):
         font, _ = self.objectGenerator("font")
         glyph = font.newGlyph("Test")
         lib = glyph.lib
-        lib.update({
-            "key 1": ["A", "B", "C"],
-            "key 2": "x",
-            "key 3": [],
-            "key 4": 20
-        })
+        lib.update({"key 1": ["A", "B", "C"], "key 2": "x", "key 3": [], "key 4": 20})
         with self.assertWarnsRegex(DeprecationWarning, "Lib.glyph"):
             lib.getParent()
         self.assertEqual(lib.getParent(), lib.glyph)
@@ -597,24 +584,14 @@ class TestDeprecated(unittest.TestCase):
     def test_lib_removed_setParent_font(self):
         font, _ = self.objectGenerator("font")
         lib, _ = self.objectGenerator("lib")
-        lib.update({
-            "key 1": ["A", "B", "C"],
-            "key 2": "x",
-            "key 3": [],
-            "key 4": 20
-        })
+        lib.update({"key 1": ["A", "B", "C"], "key 2": "x", "key 3": [], "key 4": 20})
         with self.assertRaises(RemovedError):
             lib.setParent(font)
 
     def test_lib_removed_setParent_glyph(self):
         glyph, _ = self.objectGenerator("glyph")
         lib, _ = self.objectGenerator("lib")
-        lib.update({
-            "key 1": ["A", "B", "C"],
-            "key 2": "x",
-            "key 3": [],
-            "key 4": 20
-        })
+        lib.update({"key 1": ["A", "B", "C"], "key 2": "x", "key 3": [], "key 4": 20})
         with self.assertRaises(RemovedError):
             lib.setParent(glyph)
 
@@ -1050,15 +1027,17 @@ class TestDeprecated(unittest.TestCase):
 
     def test_contour_deprecated__generateIdentiferforPoint(self):
         contour = self.getContour_bounds()
-        with self.assertWarnsRegex(DeprecationWarning,
-                                   "Contour._generateIdentifierforPoint()"):
+        with self.assertWarnsRegex(
+            DeprecationWarning, "Contour._generateIdentifierforPoint()"
+        ):
             i = contour._generateIdentifierforPoint(contour[0][0])
         self.assertEqual(i, contour._getIdentifierforPoint(contour[0][0]))
 
     def test_contour_deprecated_generateIdentiferForPoint(self):
         contour = self.getContour_bounds()
-        with self.assertWarnsRegex(DeprecationWarning,
-                                   "Contour.generateIdentifierforPoint()"):
+        with self.assertWarnsRegex(
+            DeprecationWarning, "Contour.generateIdentifierforPoint()"
+        ):
             i = contour.generateIdentifierforPoint(contour[0][0])
         self.assertEqual(i, contour.getIdentifierForPoint(contour[0][0]))
 

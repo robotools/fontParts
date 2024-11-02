@@ -4,7 +4,6 @@ from fontParts.fontshell.base import RBaseObject
 
 
 class RKerning(RBaseObject, BaseKerning):
-
     wrapClass = defcon.Kerning
 
     def _items(self):

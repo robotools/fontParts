@@ -43,8 +43,10 @@ def normalizeFileFormatVersion(value: int) -> int:
 
     """
     if not isinstance(value, int):
-        raise TypeError("Expected file formmat verison 'value' to be of type int, not %s."
-                        % type(value).__name__)
+        raise TypeError(
+            "Expected file formmat verison 'value' to be of type int, not %s."
+            % type(value).__name__
+        )
     return value
 
 
@@ -58,8 +60,10 @@ def normalizeFileStructure(value: str) -> str:
     """
     allowedFileStructures = ["zip", "package"]
     if value not in allowedFileStructures:
-        raise TypeError("File Structure must be %s, not %s"
-                        % (", ".join(allowedFileStructures), value))
+        raise TypeError(
+            "File Structure must be %s, not %s"
+            % (", ".join(allowedFileStructures), value)
+        )
     return value
 
 
@@ -84,19 +88,21 @@ def normalizeLayerOrder(value: CollectionType[str], font) -> Tuple[str, ...]:
 
     """
     if not isinstance(value, (tuple, list)):
-        raise TypeError("Layer order must be a list, not %s."
-                        % type(value).__name__)
+        raise TypeError("Layer order must be a list, not %s." % type(value).__name__)
     for v in value:
         normalizeLayerName(v)
     fontLayers = [layer.name for layer in font.layers]
     for name in value:
         if name not in fontLayers:
-            raise ValueError("Layer must exist in font. %s does not exist "
-                             "in font.layers." % name)
+            raise ValueError(
+                "Layer must exist in font. %s does not exist " "in font.layers." % name
+            )
     duplicates = [v for v, count in Counter(value).items() if count > 1]
     if len(duplicates) != 0:
-        raise ValueError("Duplicate layers are not allowed. Layer name(s) "
-                         "'%s' are duplicate(s)." % ", ".join(duplicates))
+        raise ValueError(
+            "Duplicate layers are not allowed. Layer name(s) "
+            "'%s' are duplicate(s)." % ", ".join(duplicates)
+        )
     return tuple(value)
 
 
@@ -138,20 +144,22 @@ def normalizeGlyphOrder(value: CollectionType[str]) -> Tuple[str, ...]:
 
     """
     if not isinstance(value, (tuple, list)):
-        raise TypeError("Glyph order must be a list, not %s."
-                        % type(value).__name__)
+        raise TypeError("Glyph order must be a list, not %s." % type(value).__name__)
     for v in value:
         normalizeGlyphName(v)
     duplicates = sorted(v for v, count in Counter(value).items() if count > 1)
     if len(duplicates) != 0:
-        raise ValueError("Duplicate glyph names are not allowed. Glyph "
-                         "name(s) '%s' are duplicate." % ", ".join(duplicates))
+        raise ValueError(
+            "Duplicate glyph names are not allowed. Glyph "
+            "name(s) '%s' are duplicate." % ", ".join(duplicates)
+        )
     return tuple(value)
 
 
 # -------
 # Kerning
 # -------
+
 
 def normalizeKerningKey(value: PairCollectionType[str]) -> PairType[str]:
     """Normalize a kerning key.
@@ -175,25 +183,24 @@ def normalizeKerningKey(value: PairCollectionType[str]) -> PairType[str]:
 
     """
     if not isinstance(value, (tuple, list)):
-        raise TypeError("Kerning key must be a tuple instance, not %s."
-                        % type(value).__name__)
+        raise TypeError(
+            "Kerning key must be a tuple instance, not %s." % type(value).__name__
+        )
     if len(value) != 2:
-        raise ValueError("Kerning key must be a tuple containing two items, "
-                         "not %d." % len(value))
+        raise ValueError(
+            "Kerning key must be a tuple containing two items, " "not %d." % len(value)
+        )
     for v in value:
         if not isinstance(v, str):
-            raise TypeError("Kerning key items must be strings, not %s."
-                            % type(v).__name__)
+            raise TypeError(
+                "Kerning key items must be strings, not %s." % type(v).__name__
+            )
         if len(v) < 1:
             raise ValueError("Kerning key items must be at least one character long")
-    if value[0].startswith("public.") and not value[0].startswith(
-            "public.kern1."):
-        raise ValueError("Left Kerning key group must start with "
-                         "public.kern1.")
-    if value[1].startswith("public.") and not value[1].startswith(
-            "public.kern2."):
-        raise ValueError("Right Kerning key group must start with "
-                         "public.kern2.")
+    if value[0].startswith("public.") and not value[0].startswith("public.kern1."):
+        raise ValueError("Left Kerning key group must start with " "public.kern1.")
+    if value[1].startswith("public.") and not value[1].startswith("public.kern2."):
+        raise ValueError("Right Kerning key group must start with " "public.kern2.")
     return tuple(value)
 
 
@@ -207,9 +214,11 @@ def normalizeKerningValue(value: IntFloatType) -> IntFloatType:
 
     """
     if not isinstance(value, (int, float)):
-        raise TypeError("Kerning value must be a int or a float, not %s."
-                        % type(value).__name__)
+        raise TypeError(
+            "Kerning value must be a int or a float, not %s." % type(value).__name__
+        )
     return value
+
 
 # ------
 # Groups
@@ -226,8 +235,7 @@ def normalizeGroupKey(value: str) -> str:
 
     """
     if not isinstance(value, str):
-        raise TypeError("Group key must be a string, not %s."
-                        % type(value).__name__)
+        raise TypeError("Group key must be a string, not %s." % type(value).__name__)
     if len(value) < 1:
         raise ValueError("Group key must be at least one character long.")
     return value
@@ -246,8 +254,7 @@ def normalizeGroupValue(value: CollectionType[str]) -> Tuple[str, ...]:
 
     """
     if not isinstance(value, (tuple, list)):
-        raise TypeError("Group value must be a list, not %s."
-                        % type(value).__name__)
+        raise TypeError("Group value must be a list, not %s." % type(value).__name__)
     value = [normalizeGlyphName(v) for v in value]
     return tuple(value)
 
@@ -255,6 +262,7 @@ def normalizeGroupValue(value: CollectionType[str]) -> Tuple[str, ...]:
 # --------
 # Features
 # --------
+
 
 def normalizeFeatureText(value: str) -> str:
     """Normalize feature text.
@@ -265,14 +273,14 @@ def normalizeFeatureText(value: str) -> str:
 
     """
     if not isinstance(value, str):
-        raise TypeError("Feature text must be a string, not %s."
-                        % type(value).__name__)
+        raise TypeError("Feature text must be a string, not %s." % type(value).__name__)
     return value
 
 
 # ---
 # Lib
 # ---
+
 
 def normalizeLibKey(value: str) -> str:
     """Normalize a lib key.
@@ -284,8 +292,7 @@ def normalizeLibKey(value: str) -> str:
 
     """
     if not isinstance(value, str):
-        raise TypeError("Lib key must be a string, not %s."
-                        % type(value).__name__)
+        raise TypeError("Lib key must be a string, not %s." % type(value).__name__)
     if len(value) < 1:
         raise ValueError("Lib key must be at least one character.")
     return value
@@ -319,6 +326,7 @@ def normalizeLibValue(value: Any) -> Any:
 # Layer
 # -----
 
+
 def normalizeLayer(value: BaseLayer) -> BaseLayer:
     """Normalize a layer.
 
@@ -328,6 +336,7 @@ def normalizeLayer(value: BaseLayer) -> BaseLayer:
 
     """
     from fontParts.base.layer import BaseLayer
+
     return normalizeInternalObjectType(value, BaseLayer, "Layer")
 
 
@@ -341,8 +350,7 @@ def normalizeLayerName(value: str) -> str:
 
     """
     if not isinstance(value, str):
-        raise TypeError("Layer names must be strings, not %s."
-                        % type(value).__name__)
+        raise TypeError("Layer names must be strings, not %s." % type(value).__name__)
     if len(value) < 1:
         raise ValueError("Layer names must be at least one character long.")
     return value
@@ -351,6 +359,7 @@ def normalizeLayerName(value: str) -> str:
 # -----
 # Glyph
 # -----
+
 
 def normalizeGlyph(value: BaseGlyph) -> BaseGlyph:
     """Normalize a glyph.
@@ -361,6 +370,7 @@ def normalizeGlyph(value: BaseGlyph) -> BaseGlyph:
 
     """
     from fontParts.base.glyph import BaseGlyph
+
     return normalizeInternalObjectType(value, BaseGlyph, "Glyph")
 
 
@@ -397,8 +407,7 @@ def normalizeGlyphUnicodes(value: CollectionType[int]) -> Tuple[int, ...]:
 
     """
     if not isinstance(value, (tuple, list)):
-        raise TypeError("Glyph unicodes must be a list, not %s."
-                        % type(value).__name__)
+        raise TypeError("Glyph unicodes must be a list, not %s." % type(value).__name__)
     values = [normalizeGlyphUnicode(v) for v in value]
     duplicates = [v for v, count in Counter(value).items() if count > 1]
     if len(duplicates) != 0:
@@ -419,8 +428,9 @@ def normalizeGlyphUnicode(value: Union[int, str]) -> int:
 
     """
     if not isinstance(value, (int, str)) or isinstance(value, bool):
-        raise TypeError("Glyph unicode must be an int or hex string, not %s."
-                        % type(value).__name__)
+        raise TypeError(
+            "Glyph unicode must be an int or hex string, not %s." % type(value).__name__
+        )
     if isinstance(value, str):
         try:
             value = int(value, 16)
@@ -440,8 +450,10 @@ def normalizeGlyphWidth(value: IntFloatType) -> IntFloatType:
 
     """
     if not isinstance(value, (int, float)):
-        raise TypeError("Glyph width must be an :ref:`type-int-float`, not %s."
-                        % type(value).__name__)
+        raise TypeError(
+            "Glyph width must be an :ref:`type-int-float`, not %s."
+            % type(value).__name__
+        )
     return value
 
 
@@ -455,8 +467,10 @@ def normalizeGlyphLeftMargin(value: Optional[IntFloatType]) -> Optional[IntFloat
 
     """
     if not isinstance(value, (int, float)) and value is not None:
-        raise TypeError("Glyph left margin must be an :ref:`type-int-float`, "
-                        "not %s." % type(value).__name__)
+        raise TypeError(
+            "Glyph left margin must be an :ref:`type-int-float`, "
+            "not %s." % type(value).__name__
+        )
     return value
 
 
@@ -470,8 +484,10 @@ def normalizeGlyphRightMargin(value: Optional[IntFloatType]) -> Optional[IntFloa
 
     """
     if not isinstance(value, (int, float)) and value is not None:
-        raise TypeError("Glyph right margin must be an :ref:`type-int-float`, "
-                        "not %s." % type(value).__name__)
+        raise TypeError(
+            "Glyph right margin must be an :ref:`type-int-float`, "
+            "not %s." % type(value).__name__
+        )
     return value
 
 
@@ -484,8 +500,10 @@ def normalizeGlyphHeight(value: IntFloatType) -> IntFloatType:
 
     """
     if not isinstance(value, (int, float)):
-        raise TypeError("Glyph height must be an :ref:`type-int-float`, not "
-                        "%s." % type(value).__name__)
+        raise TypeError(
+            "Glyph height must be an :ref:`type-int-float`, not "
+            "%s." % type(value).__name__
+        )
     return value
 
 
@@ -499,9 +517,10 @@ def normalizeGlyphBottomMargin(value: Optional[IntFloatType]) -> Optional[IntFlo
 
     """
     if not isinstance(value, (int, float)) and value is not None:
-        raise TypeError("Glyph bottom margin must be an "
-                        ":ref:`type-int-float`, not %s."
-                        % type(value).__name__)
+        raise TypeError(
+            "Glyph bottom margin must be an "
+            ":ref:`type-int-float`, not %s." % type(value).__name__
+        )
     return value
 
 
@@ -515,9 +534,10 @@ def normalizeGlyphTopMargin(value: Optional[IntFloatType]) -> Optional[IntFloatT
 
     """
     if not isinstance(value, (int, float)) and value is not None:
-        raise TypeError("Glyph top margin must be an "
-                        ":ref:`type-int-float`, not %s."
-                        % type(value).__name__)
+        raise TypeError(
+            "Glyph top margin must be an "
+            ":ref:`type-int-float`, not %s." % type(value).__name__
+        )
     return value
 
 
@@ -532,14 +552,15 @@ def normalizeGlyphFormatVersion(value: IntFloatType) -> int:
 
     """
     if not isinstance(value, (int, float)):
-        raise TypeError("Glyph Format Version must be an "
-                        ":ref:`type-int-float`, not %s."
-                        % type(value).__name__)
+        raise TypeError(
+            "Glyph Format Version must be an "
+            ":ref:`type-int-float`, not %s." % type(value).__name__
+        )
     value = int(value)
     if value not in (1, 2):
-        raise ValueError("Glyph Format Version must be either 1 or 2, not %s."
-                         % value)
+        raise ValueError("Glyph Format Version must be either 1 or 2, not %s." % value)
     return value
+
 
 # -------
 # Contour
@@ -555,12 +576,14 @@ def normalizeContour(value: BaseContour) -> BaseContour:
 
     """
     from fontParts.base.contour import BaseContour
+
     return normalizeInternalObjectType(value, BaseContour, "Contour")
 
 
 # -----
 # Point
 # -----
+
 
 def normalizePointType(value: str) -> str:
     """Normalize a point type.
@@ -583,13 +606,13 @@ def normalizePointType(value: str) -> str:
     :raises ValueError: If `value` is not one of the allowed types.
 
     """
-    allowedTypes = ['move', 'line', 'offcurve', 'curve', 'qcurve']
+    allowedTypes = ["move", "line", "offcurve", "curve", "qcurve"]
     if not isinstance(value, str):
-        raise TypeError("Point type must be a string, not %s."
-                        % type(value).__name__)
+        raise TypeError("Point type must be a string, not %s." % type(value).__name__)
     if value not in allowedTypes:
-        raise ValueError("Point type must be '%s'; not %r."
-                         % ("', '".join(allowedTypes), value))
+        raise ValueError(
+            "Point type must be '%s'; not %r." % ("', '".join(allowedTypes), value)
+        )
     return value
 
 
@@ -603,8 +626,7 @@ def normalizePointName(value: str) -> str:
 
     """
     if not isinstance(value, str):
-        raise TypeError("Point names must be strings, not %s."
-                        % type(value).__name__)
+        raise TypeError("Point names must be strings, not %s." % type(value).__name__)
     if len(value) < 1:
         raise ValueError("Point names must be at least one character long.")
     return value
@@ -619,7 +641,9 @@ def normalizePoint(value: BasePoint) -> BasePoint:
 
     """
     from fontParts.base.point import BasePoint
+
     return normalizeInternalObjectType(value, BasePoint, "Point")
+
 
 # -------
 # Segment
@@ -635,6 +659,7 @@ def normalizeSegment(value: BaseSegment) -> BaseSegment:
 
     """
     from fontParts.base.segment import BaseSegment
+
     return normalizeInternalObjectType(value, BaseSegment, "Segment")
 
 
@@ -658,19 +683,20 @@ def normalizeSegmentType(value: str) -> str:
     :raises ValueError: If `value` is not one of the allowed types.
 
     """
-    allowedTypes = ['move', 'line', 'curve', 'qcurve']
+    allowedTypes = ["move", "line", "curve", "qcurve"]
     if not isinstance(value, str):
-        raise TypeError("Segment type must be a string, not %s."
-                        % type(value).__name__)
+        raise TypeError("Segment type must be a string, not %s." % type(value).__name__)
     if value not in allowedTypes:
-        raise ValueError("Segment type must be '%s'; not %r."
-                         % ("', '".join(allowedTypes), value))
+        raise ValueError(
+            "Segment type must be '%s'; not %r." % ("', '".join(allowedTypes), value)
+        )
     return value
 
 
 # ------
 # BPoint
 # ------
+
 
 def normalizeBPoint(value: BaseBPoint) -> BaseBPoint:
     """Normalize a bPoint.
@@ -681,6 +707,7 @@ def normalizeBPoint(value: BaseBPoint) -> BaseBPoint:
 
     """
     from fontParts.base.bPoint import BaseBPoint
+
     return normalizeInternalObjectType(value, BaseBPoint, "bPoint")
 
 
@@ -702,19 +729,18 @@ def normalizeBPointType(value: str) -> str:
     :raises ValueError: If `value` is not one of the allowed types.
 
     """
-    allowedTypes = ['corner', 'curve']
+    allowedTypes = ["corner", "curve"]
     if not isinstance(value, str):
-        raise TypeError("bPoint type must be a string, not %s."
-                        % type(value).__name__)
+        raise TypeError("bPoint type must be a string, not %s." % type(value).__name__)
     if value not in allowedTypes:
-        raise ValueError("bPoint type must be 'corner' or 'curve', not %r."
-                         % value)
+        raise ValueError("bPoint type must be 'corner' or 'curve', not %r." % value)
     return value
 
 
 # ---------
 # Component
 # ---------
+
 
 def normalizeComponent(value: BaseComponent) -> BaseComponent:
     """Normalize a component.
@@ -725,6 +751,7 @@ def normalizeComponent(value: BaseComponent) -> BaseComponent:
 
     """
     from fontParts.base.component import BaseComponent
+
     return normalizeInternalObjectType(value, BaseComponent, "Component")
 
 
@@ -738,17 +765,22 @@ def normalizeComponentScale(value: PairCollectionType[IntFloatType]) -> PairType
 
     """
     if not isinstance(value, (list, tuple)):
-        raise TypeError("Component scale must be a tuple "
-                        "instance, not %s." % type(value).__name__)
+        raise TypeError(
+            "Component scale must be a tuple "
+            "instance, not %s." % type(value).__name__
+        )
     else:
         if not len(value) == 2:
-            raise ValueError("Transformation scale tuple must contain two "
-                             "values, not %d." % len(value))
+            raise ValueError(
+                "Transformation scale tuple must contain two "
+                "values, not %d." % len(value)
+            )
         for v in value:
             if not isinstance(v, (int, float)):
-                raise TypeError("Transformation scale tuple values must be an "
-                                ":ref:`type-int-float`, not %s."
-                                % type(value).__name__)
+                raise TypeError(
+                    "Transformation scale tuple values must be an "
+                    ":ref:`type-int-float`, not %s." % type(value).__name__
+                )
         value = tuple(float(v) for v in value)
     return value
 
@@ -756,6 +788,7 @@ def normalizeComponentScale(value: PairCollectionType[IntFloatType]) -> PairType
 # ------
 # Anchor
 # ------
+
 
 def normalizeAnchor(value: BaseAnchor) -> BaseAnchor:
     """Normalize an anchor.
@@ -766,6 +799,7 @@ def normalizeAnchor(value: BaseAnchor) -> BaseAnchor:
 
     """
     from fontParts.base.anchor import BaseAnchor
+
     return normalizeInternalObjectType(value, BaseAnchor, "Anchor")
 
 
@@ -782,17 +816,18 @@ def normalizeAnchorName(value: str) -> str:
     if value is None:
         return None
     if not isinstance(value, str):
-        raise TypeError("Anchor names must be strings, not %s."
-                        % type(value).__name__)
+        raise TypeError("Anchor names must be strings, not %s." % type(value).__name__)
     if len(value) < 1:
-        raise ValueError(("Anchor names must be at least one character "
-                          "long or None."))
+        raise ValueError(
+            ("Anchor names must be at least one character " "long or None.")
+        )
     return value
 
 
 # ---------
 # Guideline
 # ---------
+
 
 def normalizeGuideline(value: BaseGuideline) -> BaseGuideline:
     """Normalize a guideline.
@@ -803,6 +838,7 @@ def normalizeGuideline(value: BaseGuideline) -> BaseGuideline:
 
     """
     from fontParts.base.guideline import BaseGuideline
+
     return normalizeInternalObjectType(value, BaseGuideline, "Guideline")
 
 
@@ -816,17 +852,18 @@ def normalizeGuidelineName(value: str) -> str:
 
     """
     if not isinstance(value, str):
-        raise TypeError("Guideline names must be strings, not %s."
-                        % type(value).__name__)
+        raise TypeError(
+            "Guideline names must be strings, not %s." % type(value).__name__
+        )
     if len(value) < 1:
-        raise ValueError("Guideline names must be at least one character "
-                         "long.")
+        raise ValueError("Guideline names must be at least one character " "long.")
     return value
 
 
 # -------
 # Generic
 # -------
+
 
 def normalizeInternalObjectType(value: object, cls: Type[T], name: str) -> T:
     """Normalize an internal object type.
@@ -839,8 +876,9 @@ def normalizeInternalObjectType(value: object, cls: Type[T], name: str) -> T:
 
     """
     if not isinstance(value, cls):
-        raise TypeError("%s must be a %s instance, not %s."
-                        % (name, name, type(value).__name__))
+        raise TypeError(
+            "%s must be a %s instance, not %s." % (name, name, type(value).__name__)
+        )
     return value
 
 
@@ -856,12 +894,12 @@ def normalizeBoolean(value: int) -> bool:
     if isinstance(value, int) and value in (0, 1):
         value = bool(value)
     if not isinstance(value, bool):
-        raise ValueError("Boolean values must be True or False, not '%s'."
-                         % value)
+        raise ValueError("Boolean values must be True or False, not '%s'." % value)
     return value
 
 
 # Identification
+
 
 def normalizeIndex(value: Optional[int]) -> Optional[int]:
     """Normalize an index.
@@ -873,8 +911,9 @@ def normalizeIndex(value: Optional[int]) -> Optional[int]:
     """
     if value is not None:
         if not isinstance(value, int):
-            raise TypeError("Indexes must be None or integers, not %s."
-                            % type(value).__name__)
+            raise TypeError(
+                "Indexes must be None or integers, not %s." % type(value).__name__
+            )
     return value
 
 
@@ -896,23 +935,26 @@ def normalizeIdentifier(value: Optional[str]) -> Optional[str]:
     if value is None:
         return value
     if not isinstance(value, str):
-        raise TypeError("Identifiers must be strings, not %s."
-                        % type(value).__name__)
+        raise TypeError("Identifiers must be strings, not %s." % type(value).__name__)
     if len(value) == 0:
         raise ValueError("The identifier string is empty.")
     if len(value) > 100:
-        raise ValueError("The identifier string has a length (%d) greater "
-                         "than the maximum allowed (100)." % len(value))
+        raise ValueError(
+            "The identifier string has a length (%d) greater "
+            "than the maximum allowed (100)." % len(value)
+        )
     for c in value:
         v = ord(c)
         if v < 0x20 or v > 0x7E:
-            raise ValueError("The identifier string ('%s') contains a "
-                             "character outside of the range 0x20 - 0x7E."
-                             % value)
+            raise ValueError(
+                "The identifier string ('%s') contains a "
+                "character outside of the range 0x20 - 0x7E." % value
+            )
     return value
 
 
 # Coordinates
+
 
 def normalizeX(value: IntFloatType) -> IntFloatType:
     """Normalize an x-coordinate.
@@ -923,9 +965,10 @@ def normalizeX(value: IntFloatType) -> IntFloatType:
 
     """
     if not isinstance(value, (int, float)):
-        raise TypeError("X-coordinates must be instances of "
-                        ":ref:`type-int-float`, not %s."
-                        % type(value).__name__)
+        raise TypeError(
+            "X-coordinates must be instances of "
+            ":ref:`type-int-float`, not %s." % type(value).__name__
+        )
     return value
 
 
@@ -938,14 +981,16 @@ def normalizeY(value: IntFloatType) -> IntFloatType:
 
     """
     if not isinstance(value, (int, float)):
-        raise TypeError("Y-coordinates must be instances of "
-                        ":ref:`type-int-float`, not %s."
-                        % type(value).__name__)
+        raise TypeError(
+            "Y-coordinates must be instances of "
+            ":ref:`type-int-float`, not %s." % type(value).__name__
+        )
     return value
 
 
-def normalizeCoordinateTuple(value: PairCollectionType[IntFloatType]
-                             ) -> PairType[IntFloatType]:
+def normalizeCoordinateTuple(
+    value: PairCollectionType[IntFloatType],
+) -> PairType[IntFloatType]:
     """Normalize a coordinate tuple.
 
     :param value: The coordinate tuple to noramlize as a :class:`list`
@@ -957,19 +1002,22 @@ def normalizeCoordinateTuple(value: PairCollectionType[IntFloatType]
 
     """
     if not isinstance(value, (tuple, list)):
-        raise TypeError("Coordinates must be tuple instances, not %s."
-                        % type(value).__name__)
+        raise TypeError(
+            "Coordinates must be tuple instances, not %s." % type(value).__name__
+        )
     if len(value) != 2:
-        raise ValueError("Coordinates must be tuples containing two items, "
-                         "not %d." % len(value))
+        raise ValueError(
+            "Coordinates must be tuples containing two items, " "not %d." % len(value)
+        )
     x, y = value
     x = normalizeX(x)
     y = normalizeY(y)
     return (x, y)
 
 
-def normalizeBoundingBox(value: QuadrupleCollectionType[IntFloatType]
-                         ) -> QuadrupleType[float]:
+def normalizeBoundingBox(
+    value: QuadrupleCollectionType[IntFloatType],
+) -> QuadrupleType[float]:
     """Normalize a bounding box.
 
     :param value: The bounding box to normalize as a :class:`list`
@@ -989,22 +1037,23 @@ def normalizeBoundingBox(value: QuadrupleCollectionType[IntFloatType]
 
     """
     if not isinstance(value, (tuple, list)):
-        raise TypeError("Bounding box must be tuple instances, not %s."
-                        % type(value).__name__)
+        raise TypeError(
+            "Bounding box must be tuple instances, not %s." % type(value).__name__
+        )
     if len(value) != 4:
-        raise ValueError("Bounding box must be tuples containing four items, not "
-                         "%d." % len(value))
+        raise ValueError(
+            "Bounding box must be tuples containing four items, not " "%d." % len(value)
+        )
     for v in value:
         if not isinstance(v, (int, float)):
-            raise TypeError("Bounding box values must be instances of "
-                            ":ref:`type-int-float`, not %s."
-                            % type(value).__name__)
+            raise TypeError(
+                "Bounding box values must be instances of "
+                ":ref:`type-int-float`, not %s." % type(value).__name__
+            )
     if value[0] > value[2]:
-        raise ValueError("Bounding box xMin must be less than or equal to "
-                         "xMax.")
+        raise ValueError("Bounding box xMin must be less than or equal to " "xMax.")
     if value[1] > value[3]:
-        raise ValueError("Bounding box yMin must be less than or equal to "
-                         "yMax.")
+        raise ValueError("Bounding box yMin must be less than or equal to " "yMax.")
     return tuple(float(v) for v in value)
 
 
@@ -1018,11 +1067,14 @@ def normalizeArea(value: IntFloatType) -> float:
 
     """
     if not isinstance(value, (int, float)):
-        raise TypeError("Area must be an instance of :ref:`type-int-float`, "
-                        "not %s." % type(value).__name__)
+        raise TypeError(
+            "Area must be an instance of :ref:`type-int-float`, "
+            "not %s." % type(value).__name__
+        )
     if value < 0:
-        raise ValueError("Area must be a positive :ref:`type-int-float`, "
-                         "not %s." % repr(value))
+        raise ValueError(
+            "Area must be a positive :ref:`type-int-float`, " "not %s." % repr(value)
+        )
     return float(value)
 
 
@@ -1039,9 +1091,10 @@ def normalizeRotationAngle(value: IntFloatType) -> float:
 
     """
     if not isinstance(value, (int, float)):
-        raise TypeError("Angle must be instances of "
-                        ":ref:`type-int-float`, not %s."
-                        % type(value).__name__)
+        raise TypeError(
+            "Angle must be instances of "
+            ":ref:`type-int-float`, not %s." % type(value).__name__
+        )
     if abs(value) > 360:
         raise ValueError("Angle must be between -360 and 360.")
     if value < 0:
@@ -1051,8 +1104,10 @@ def normalizeRotationAngle(value: IntFloatType) -> float:
 
 # Color
 
-def normalizeColor(value: QuadrupleCollectionType[IntFloatType]
-                   ) -> QuadrupleType[float]:
+
+def normalizeColor(
+    value: QuadrupleCollectionType[IntFloatType],
+) -> QuadrupleType[float]:
     """Normalize a color.
 
     :param value: The color to normalize as a :class:`list` or :class:`tuple`
@@ -1070,23 +1125,29 @@ def normalizeColor(value: QuadrupleCollectionType[IntFloatType]
 
     """
     from fontParts.base.color import Color
+
     if not isinstance(value, (tuple, list, Color)):
-        raise TypeError("Colors must be tuple instances, not %s."
-                        % type(value).__name__)
+        raise TypeError(
+            "Colors must be tuple instances, not %s." % type(value).__name__
+        )
     if not len(value) == 4:
-        raise ValueError("Colors must contain four values, not %d."
-                         % len(value))
+        raise ValueError("Colors must contain four values, not %d." % len(value))
     for component, v in zip("rgba", value):
         if not isinstance(v, (int, float)):
-            raise TypeError("The value for the %s component (%s) is not "
-                            "an int or float." % (component, v))
+            raise TypeError(
+                "The value for the %s component (%s) is not "
+                "an int or float." % (component, v)
+            )
         if v < 0 or v > 1:
-            raise ValueError("The value for the %s component (%s) is not "
-                             "between 0 and 1." % (component, v))
+            raise ValueError(
+                "The value for the %s component (%s) is not "
+                "between 0 and 1." % (component, v)
+            )
     return tuple(float(v) for v in value)
 
 
 # Note
+
 
 def normalizeGlyphNote(value: str) -> str:
     """Normalize a glyph note.
@@ -1097,12 +1158,12 @@ def normalizeGlyphNote(value: str) -> str:
 
     """
     if not isinstance(value, str):
-        raise TypeError("Note must be a string, not %s."
-                        % type(value).__name__)
+        raise TypeError("Note must be a string, not %s." % type(value).__name__)
     return value
 
 
 # File Path
+
 
 def normalizeFilePath(value: str) -> str:
     """Normalize a file path.
@@ -1113,12 +1174,12 @@ def normalizeFilePath(value: str) -> str:
 
     """
     if not isinstance(value, str):
-        raise TypeError("File paths must be strings, not %s."
-                        % type(value).__name__)
+        raise TypeError("File paths must be strings, not %s." % type(value).__name__)
     return value
 
 
 # Interpolation
+
 
 def normalizeInterpolationFactor(value: TransformationType) -> PairType[float]:
     """Normalize an interpolation factor.
@@ -1138,19 +1199,24 @@ def normalizeInterpolationFactor(value: TransformationType) -> PairType[float]:
 
     """
     if not isinstance(value, (int, float, list, tuple)):
-        raise TypeError("Interpolation factor must be an int, float, tuple, "
-                        "or list, not %s." % type(value).__name__)
+        raise TypeError(
+            "Interpolation factor must be an int, float, tuple, "
+            "or list, not %s." % type(value).__name__
+        )
     if isinstance(value, (int, float)):
         value = (float(value), float(value))
     else:
         if len(value) != 2:
-            raise ValueError("Interpolation factor tuple must contain two "
-                             "items, not %d." % len(value))
+            raise ValueError(
+                "Interpolation factor tuple must contain two "
+                "items, not %d." % len(value)
+            )
         for v in value:
             if not isinstance(v, (int, float)):
-                raise TypeError("Interpolation factor tuple values must be "
-                                "instances of int or float, not %s."
-                                % type(v).__name__)
+                raise TypeError(
+                    "Interpolation factor tuple values must be "
+                    "instances of int or float, not %s." % type(v).__name__
+                )
         value = tuple(float(v) for v in value)
     return value
 
@@ -1159,8 +1225,10 @@ def normalizeInterpolationFactor(value: TransformationType) -> PairType[float]:
 # Transformations
 # ---------------
 
-def normalizeTransformationMatrix(value: SextupleCollectionType[IntFloatType]
-                                  ) -> SextupleType[float]:
+
+def normalizeTransformationMatrix(
+    value: SextupleCollectionType[IntFloatType],
+) -> SextupleType[float]:
     """Normalize a transformation matrix.
 
     :param value: The transformation matrix to normalize as a :class:`list`
@@ -1174,21 +1242,26 @@ def normalizeTransformationMatrix(value: SextupleCollectionType[IntFloatType]
 
     """
     if not isinstance(value, (tuple, list)):
-        raise TypeError("Transformation matrices must be tuple instances, "
-                        "not %s." % type(value).__name__)
+        raise TypeError(
+            "Transformation matrices must be tuple instances, "
+            "not %s." % type(value).__name__
+        )
     if not len(value) == 6:
-        raise ValueError("Transformation matrices must contain six values, "
-                         "not %d." % len(value))
+        raise ValueError(
+            "Transformation matrices must contain six values, " "not %d." % len(value)
+        )
     for v in value:
         if not isinstance(v, (int, float)):
-            raise TypeError("Transformation matrix values must be instances "
-                            "of :ref:`type-int-float`, not %s."
-                            % type(v).__name__)
+            raise TypeError(
+                "Transformation matrix values must be instances "
+                "of :ref:`type-int-float`, not %s." % type(v).__name__
+            )
     return tuple(float(v) for v in value)
 
 
-def normalizeTransformationOffset(value: PairCollectionType[IntFloatType]
-                                  ) -> PairType[IntFloatType]:
+def normalizeTransformationOffset(
+    value: PairCollectionType[IntFloatType],
+) -> PairType[IntFloatType]:
     """Normalize a transformation offset.
 
     :param value: The transformation offset to normalize as a :class:`list`
@@ -1227,24 +1300,30 @@ def normalizeTransformationSkewAngle(value: TransformationType) -> PairType[floa
 
     """
     if not isinstance(value, (int, float, list, tuple)):
-        raise TypeError("Transformation skew angle must be an int, float, or "
-                        "tuple instances, not %s." % type(value).__name__)
+        raise TypeError(
+            "Transformation skew angle must be an int, float, or "
+            "tuple instances, not %s." % type(value).__name__
+        )
     if isinstance(value, (int, float)):
         value = (float(value), 0)
     else:
         if not len(value) == 2:
-            raise ValueError("Transformation skew angle tuple must contain "
-                             "two values, not %d." % len(value))
+            raise ValueError(
+                "Transformation skew angle tuple must contain "
+                "two values, not %d." % len(value)
+            )
         for v in value:
             if not isinstance(v, (int, float)):
-                raise TypeError("Transformation skew angle tuple values must "
-                                "be an :ref:`type-int-float`, not %s."
-                                % type(value).__name__)
+                raise TypeError(
+                    "Transformation skew angle tuple values must "
+                    "be an :ref:`type-int-float`, not %s." % type(value).__name__
+                )
         value = tuple(float(v) for v in value)
     for v in value:
         if abs(v) > 360:
-            raise ValueError("Transformation skew angle must be between -360 "
-                             "and 360.")
+            raise ValueError(
+                "Transformation skew angle must be between -360 " "and 360."
+            )
     return tuple(float(v + 360) if v < 0 else float(v) for v in value)
 
 
@@ -1266,19 +1345,24 @@ def normalizeTransformationScale(value: TransformationType) -> PairType[float]:
 
     """
     if not isinstance(value, (int, float, list, tuple)):
-        raise TypeError("Transformation scale must be an int, float, or tuple "
-                        "instances, not %s." % type(value).__name__)
+        raise TypeError(
+            "Transformation scale must be an int, float, or tuple "
+            "instances, not %s." % type(value).__name__
+        )
     if isinstance(value, (int, float)):
         value = (float(value), float(value))
     else:
         if not len(value) == 2:
-            raise ValueError("Transformation scale tuple must contain two "
-                             "values, not %d." % len(value))
+            raise ValueError(
+                "Transformation scale tuple must contain two "
+                "values, not %d." % len(value)
+            )
         for v in value:
             if not isinstance(v, (int, float)):
-                raise TypeError("Transformation scale tuple values must be an "
-                                ":ref:`type-int-float`, not %s."
-                                % type(value).__name__)
+                raise TypeError(
+                    "Transformation scale tuple values must be an "
+                    ":ref:`type-int-float`, not %s." % type(value).__name__
+                )
         value = tuple(float(v) for v in value)
     return value
 
@@ -1297,6 +1381,7 @@ def normalizeVisualRounding(value: IntFloatType) -> int:
 
     """
     if not isinstance(value, (int, float)):
-        raise TypeError("Value to round must be an int or float, not %s."
-                        % type(value).__name__)
+        raise TypeError(
+            "Value to round must be an int or float, not %s." % type(value).__name__
+        )
     return otRound(value)

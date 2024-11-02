@@ -6,7 +6,7 @@ from fontTools.pens.basePen import AbstractPen
 from fontTools.pens.pointPen import AbstractPointPen
 
 # Generic
-T = TypeVar('T')
+T = TypeVar("T")
 
 PairType = Tuple[T, T]
 QuadrupleType = Tuple[T, T, T, T]
@@ -35,17 +35,14 @@ KerningDictType = Dict[PairType[str], PairType[str]]
 TransformationType = Union[IntFloatType, List[IntFloatType], PairType[IntFloatType]]
 
 # Interpolation
-InterpolatableType = TypeVar('InterpolatableType', bound='Interpolatable')
+InterpolatableType = TypeVar("InterpolatableType", bound="Interpolatable")
 
 
 class Interpolatable(Protocol):
     """Represent a protocol for interpolatable types."""
 
-    def __add__(self, other: InterpolatableType) -> InterpolatableType:
-        ...
+    def __add__(self, other: InterpolatableType) -> InterpolatableType: ...
 
-    def __sub__(self, other: InterpolatableType) -> InterpolatableType:
-        ...
+    def __sub__(self, other: InterpolatableType) -> InterpolatableType: ...
 
-    def __mul__(self, other: TransformationType) -> InterpolatableType:
-        ...
+    def __mul__(self, other: TransformationType) -> InterpolatableType: ...

@@ -1,7 +1,7 @@
 from fontParts.world import _EnvironmentDispatcher
 
 
-def AskString(message, value='', title='FontParts'):
+def AskString(message, value="", title="FontParts"):
     """
     An ask a string dialog, a `message` is required.
     Optionally a `value` and `title` can be provided.
@@ -9,13 +9,14 @@ def AskString(message, value='', title='FontParts'):
     ::
 
         from fontParts.ui import AskString
+
         print(AskString("who are you?"))
 
     """
     return dispatcher["AskString"](message=message, value=value, title=title)
 
 
-def AskYesNoCancel(message, title='FontParts', default=0, informativeText=""):
+def AskYesNoCancel(message, title="FontParts", default=0, informativeText=""):
     """
     An ask yes, no or cancel dialog, a `message` is required.
     Optionally a `title`, `default` and `informativeText` can be provided.
@@ -24,14 +25,16 @@ def AskYesNoCancel(message, title='FontParts', default=0, informativeText=""):
     ::
 
         from fontParts.ui import AskYesNoCancel
+
         print(AskYesNoCancel("who are you?"))
 
     """
-    return dispatcher["AskYesNoCancel"](message=message, title=title,
-                                        default=default, informativeText=informativeText)
+    return dispatcher["AskYesNoCancel"](
+        message=message, title=title, default=default, informativeText=informativeText
+    )
 
 
-def FindGlyph(aFont, message="Search for a glyph:", title='FontParts'):
+def FindGlyph(aFont, message="Search for a glyph:", title="FontParts"):
     """
     A dialog to search a glyph for a provided  font.
     Optionally a `message`, `title` and `allFonts` can be provided.
@@ -46,8 +49,14 @@ def FindGlyph(aFont, message="Search for a glyph:", title='FontParts'):
     return dispatcher["FindGlyph"](aFont=aFont, message=message, title=title)
 
 
-def GetFile(message=None, title=None, directory=None, fileName=None,
-            allowsMultipleSelection=False, fileTypes=None):
+def GetFile(
+    message=None,
+    title=None,
+    directory=None,
+    fileName=None,
+    allowsMultipleSelection=False,
+    fileTypes=None,
+):
     """
     An get file dialog.
     Optionally a `message`, `title`, `directory`, `fileName` and
@@ -56,17 +65,28 @@ def GetFile(message=None, title=None, directory=None, fileName=None,
     ::
 
         from fontParts.ui import GetFile
+
         print(GetFile())
 
     """
-    return dispatcher["GetFile"](message=message, title=title, directory=directory,
-                                 fileName=fileName,
-                                 allowsMultipleSelection=allowsMultipleSelection,
-                                 fileTypes=fileTypes)
+    return dispatcher["GetFile"](
+        message=message,
+        title=title,
+        directory=directory,
+        fileName=fileName,
+        allowsMultipleSelection=allowsMultipleSelection,
+        fileTypes=fileTypes,
+    )
 
 
-def GetFileOrFolder(message=None, title=None, directory=None, fileName=None,
-                    allowsMultipleSelection=False, fileTypes=None):
+def GetFileOrFolder(
+    message=None,
+    title=None,
+    directory=None,
+    fileName=None,
+    allowsMultipleSelection=False,
+    fileTypes=None,
+):
     """
     An get file or folder dialog.
     Optionally a `message`, `title`, `directory`, `fileName`,
@@ -75,16 +95,21 @@ def GetFileOrFolder(message=None, title=None, directory=None, fileName=None,
     ::
 
         from fontParts.ui import GetFileOrFolder
+
         print(GetFileOrFolder())
 
     """
-    return dispatcher["GetFileOrFolder"](message=message, title=title,
-                                         directory=directory, fileName=fileName,
-                                         allowsMultipleSelection=allowsMultipleSelection,
-                                         fileTypes=fileTypes)
+    return dispatcher["GetFileOrFolder"](
+        message=message,
+        title=title,
+        directory=directory,
+        fileName=fileName,
+        allowsMultipleSelection=allowsMultipleSelection,
+        fileTypes=fileTypes,
+    )
 
 
-def Message(message, title='FontParts', informativeText=""):
+def Message(message, title="FontParts", informativeText=""):
     """
     An message dialog.
     Optionally a `message`, `title` and `informativeText` can be provided.
@@ -92,11 +117,13 @@ def Message(message, title='FontParts', informativeText=""):
     ::
 
         from fontParts.ui import Message
+
         print(Message("This is a message"))
 
     """
-    return dispatcher["Message"](message=message, title=title,
-                                 informativeText=informativeText)
+    return dispatcher["Message"](
+        message=message, title=title, informativeText=informativeText
+    )
 
 
 def PutFile(message=None, fileName=None):
@@ -107,13 +134,14 @@ def PutFile(message=None, fileName=None):
     ::
 
         from fontParts.ui import PutFile
+
         print(PutFile())
 
     """
     return dispatcher["PutFile"](message=message, fileName=fileName)
 
 
-def SearchList(items, message="Select an item:", title='FontParts'):
+def SearchList(items, message="Select an item:", title="FontParts"):
     """
     A dialgo to search a given list.
     Optionally a `message`, `title` and `allFonts` can be provided.
@@ -121,6 +149,7 @@ def SearchList(items, message="Select an item:", title='FontParts'):
     ::
 
         from fontParts.ui import SearchList
+
         result = SearchList(["a", "b", "c"])
         print(result)
 
@@ -128,7 +157,7 @@ def SearchList(items, message="Select an item:", title='FontParts'):
     return dispatcher["SearchList"](items=items, message=message, title=title)
 
 
-def SelectFont(message="Select a font:", title='FontParts', allFonts=None):
+def SelectFont(message="Select a font:", title="FontParts", allFonts=None):
     """
     Select a font from all open fonts.
     Optionally a `message`, `title` and `allFonts` can be provided.
@@ -137,6 +166,7 @@ def SelectFont(message="Select a font:", title='FontParts', allFonts=None):
     ::
 
         from fontParts.ui import SelectFont
+
         font = SelectFont()
         print(font)
 
@@ -144,7 +174,7 @@ def SelectFont(message="Select a font:", title='FontParts', allFonts=None):
     return dispatcher["SelectFont"](message=message, title=title, allFonts=allFonts)
 
 
-def SelectGlyph(aFont, message="Select a glyph:", title='FontParts'):
+def SelectGlyph(aFont, message="Select a glyph:", title="FontParts"):
     """
     Select a glyph for a given font.
     Optionally a `message` and `title` can be provided.
@@ -152,6 +182,7 @@ def SelectGlyph(aFont, message="Select a glyph:", title='FontParts'):
     ::
 
         from fontParts.ui import SelectGlyph
+
         font = CurrentFont()
         glyph = SelectGlyph(font)
         print(glyph)
@@ -181,18 +212,20 @@ def ProgressBar(title="RoboFab...", ticks=None, label=""):
 # Dispatcher
 # ----------
 
-dispatcher = _EnvironmentDispatcher([
-    "AskString",
-    "AskYesNoCancel",
-    "FindGlyph",
-    "GetFile",
-    "GetFolder",
-    "GetFileOrFolder",
-    "Message",
-    "OneList",
-    "PutFile",
-    "SearchList",
-    "SelectFont",
-    "SelectGlyph",
-    "ProgressBar",
-])
+dispatcher = _EnvironmentDispatcher(
+    [
+        "AskString",
+        "AskYesNoCancel",
+        "FindGlyph",
+        "GetFile",
+        "GetFolder",
+        "GetFileOrFolder",
+        "Message",
+        "OneList",
+        "PutFile",
+        "SearchList",
+        "SelectFont",
+        "SelectGlyph",
+        "ProgressBar",
+    ]
+)

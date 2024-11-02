@@ -1,0 +1,20 @@
+name: Ruff
+on: [push, pull_request]
+jobs:
+  ruff:
+    runs-on: ubuntu-latest
+
+    permissions:
+      # Give the default GITHUB_TOKEN write permission to commit and push the
+      # added or changed files to the repository.
+      contents: write
+    
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/ruff-action@v1
+        with:
+          args: "format"
+          changed-files: "true"
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'Format fixes by ruff'

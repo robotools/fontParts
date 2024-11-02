@@ -8,7 +8,7 @@ from fontParts.base.base import (
     SelectionMixin,
     IdentifierMixin,
     dynamicProperty,
-    reference
+    reference,
 )
 from fontParts.base.errors import FontPartsError
 from fontParts.base import normalizers
@@ -16,8 +16,9 @@ from fontParts.base.deprecated import DeprecatedBPoint, RemovedBPoint
 from fontParts.base.annotations import (
     PairType,
     PairCollectionType,
-    SextupleCollectionType
+    SextupleCollectionType,
 )
+
 if TYPE_CHECKING:
     from fontParts.base.contour import BaseContour
     from fontParts.base.font import BaseFont
@@ -27,12 +28,14 @@ if TYPE_CHECKING:
     from fontParts.base.segment import BaseSegment
 
 
-class BaseBPoint(BaseObject,
-                 TransformationMixin,
-                 SelectionMixin,
-                 DeprecatedBPoint,
-                 IdentifierMixin,
-                 RemovedBPoint):
+class BaseBPoint(
+    BaseObject,
+    TransformationMixin,
+    SelectionMixin,
+    DeprecatedBPoint,
+    IdentifierMixin,
+    RemovedBPoint,
+):
     """Represent the basis for a bPoint object."""
 
     def _reprContents(self) -> List[str]:
@@ -139,7 +142,7 @@ class BaseBPoint(BaseObject,
 
             >>> contour = bPoint.contour
 
-        """
+        """,
     )
 
     def _get_contour(self) -> Optional[BaseContour]:
@@ -171,7 +174,7 @@ class BaseBPoint(BaseObject,
 
             >>> glyph = bPoint.glyph
 
-        """
+        """,
     )
 
     def _get_glyph(self) -> Optional[BaseGlyph]:
@@ -194,7 +197,7 @@ class BaseBPoint(BaseObject,
 
             >>> layer = bPoint.layer
 
-        """
+        """,
     )
 
     def _get_layer(self) -> Optional[BaseLayer]:
@@ -217,7 +220,7 @@ class BaseBPoint(BaseObject,
 
             >>> font = bPoint.font
 
-        """
+        """,
     )
 
     def _get_font(self) -> Optional[BaseFont]:
@@ -239,7 +242,7 @@ class BaseBPoint(BaseObject,
 
         :return: a :ref:`type-coordianate` representing the anchor point of the bPoint.
 
-        """
+        """,
     )
 
     def _get_base_anchor(self) -> PairType[IntFloatType]:
@@ -301,7 +304,7 @@ class BaseBPoint(BaseObject,
         :return: A :ref:`type-coordinate` representing the incoming
             off-curve of the bPoin.
 
-        """
+        """,
     )
 
     def _get_base_bcpIn(self) -> PairType[IntFloatType]:
@@ -357,9 +360,9 @@ class BaseBPoint(BaseObject,
         x, y = absoluteBCPIn(self.anchor, value)
         segment = self._segment
         if segment.type == "move" and value != (0, 0):
-            raise FontPartsError(("Cannot set the bcpIn for the first "
-                                  "point in an open contour.")
-                                 )
+            raise FontPartsError(
+                ("Cannot set the bcpIn for the first " "point in an open contour.")
+            )
 
         offCurves = segment.offCurve
         if offCurves:
@@ -388,7 +391,7 @@ class BaseBPoint(BaseObject,
         :return: A :ref:`type-coordinate` representing the outgoing
             off-curve of the bPoin.
 
-        """
+        """,
     )
 
     def _get_base_bcpOut(self) -> PairType[IntFloatType]:
@@ -445,9 +448,9 @@ class BaseBPoint(BaseObject,
         segment = self._segment
         nextSegment = self._nextSegment
         if nextSegment.type == "move" and value != (0, 0):
-            raise FontPartsError(("Cannot set the bcpOut for the last "
-                                  "point in an open contour.")
-                                 )
+            raise FontPartsError(
+                ("Cannot set the bcpOut for the last " "point in an open contour.")
+            )
         else:
             offCurves = nextSegment.offCurve
             if offCurves:
@@ -483,7 +486,7 @@ class BaseBPoint(BaseObject,
 
         :return: A :class:`str` representing the type of the bPoint.
 
-        """
+        """,
     )
 
     def _get_base_type(self) -> str:
@@ -527,8 +530,7 @@ class BaseBPoint(BaseObject,
             bType = "corner"
 
         if bType is None:
-            raise FontPartsError("A %s point can not be converted to a bPoint."
-                                 % typ)
+            raise FontPartsError("A %s point can not be converted to a bPoint." % typ)
         return bType
 
     def _set_type(self, value: str) -> None:
@@ -579,7 +581,7 @@ class BaseBPoint(BaseObject,
             >>> bPoint.index
             0
 
-        """
+        """,
     )
 
     def _get_base_index(self) -> Optional[int]:
@@ -613,9 +615,9 @@ class BaseBPoint(BaseObject,
     # Transformation
     # --------------
 
-    def _transformBy(self,
-                     matrix: SextupleCollectionType[IntFloatType],
-                     **kwargs: Any) -> None:
+    def _transformBy(
+        self, matrix: SextupleCollectionType[IntFloatType], **kwargs: Any
+    ) -> None:
         r"""Transform the native bPoint.
 
         This is the environment implementation of :meth:`BaseBPoint.transformBy`.
@@ -659,18 +661,25 @@ class BaseBPoint(BaseObject,
 
         """
         x, y = self.anchor
-        self.anchor = (normalizers.normalizeVisualRounding(x),
-                       normalizers.normalizeVisualRounding(y))
+        self.anchor = (
+            normalizers.normalizeVisualRounding(x),
+            normalizers.normalizeVisualRounding(y),
+        )
         x, y = self.bcpIn
-        self.bcpIn = (normalizers.normalizeVisualRounding(x),
-                      normalizers.normalizeVisualRounding(y))
+        self.bcpIn = (
+            normalizers.normalizeVisualRounding(x),
+            normalizers.normalizeVisualRounding(y),
+        )
         x, y = self.bcpOut
-        self.bcpOut = (normalizers.normalizeVisualRounding(x),
-                       normalizers.normalizeVisualRounding(y))
+        self.bcpOut = (
+            normalizers.normalizeVisualRounding(x),
+            normalizers.normalizeVisualRounding(y),
+        )
 
 
-def relativeBCPIn(anchor: PairCollectionType[IntFloatType],
-                  BCPIn: PairCollectionType[IntFloatType]) -> PairType[IntFloatType]:
+def relativeBCPIn(
+    anchor: PairCollectionType[IntFloatType], BCPIn: PairCollectionType[IntFloatType]
+) -> PairType[IntFloatType]:
     """convert absolute incoming bcp value to a relative value.
 
     :param anchor: The anchor reference point from which to measure the relative
@@ -683,8 +692,9 @@ def relativeBCPIn(anchor: PairCollectionType[IntFloatType],
     return (BCPIn[0] - anchor[0], BCPIn[1] - anchor[1])
 
 
-def absoluteBCPIn(anchor: PairCollectionType[IntFloatType],
-                  BCPIn: PairCollectionType[IntFloatType]) -> PairType[IntFloatType]:
+def absoluteBCPIn(
+    anchor: PairCollectionType[IntFloatType], BCPIn: PairCollectionType[IntFloatType]
+) -> PairType[IntFloatType]:
     """convert relative incoming bcp value to an absolute value.
 
     :param anchor: The anchor reference point from which the relative BCP value
@@ -697,8 +707,9 @@ def absoluteBCPIn(anchor: PairCollectionType[IntFloatType],
     return (BCPIn[0] + anchor[0], BCPIn[1] + anchor[1])
 
 
-def relativeBCPOut(anchor: PairCollectionType[IntFloatType],
-                   BCPOut: PairCollectionType[IntFloatType]) -> PairType[IntFloatType]:
+def relativeBCPOut(
+    anchor: PairCollectionType[IntFloatType], BCPOut: PairCollectionType[IntFloatType]
+) -> PairType[IntFloatType]:
     """convert absolute outgoing bcp value to a relative value.
 
     :param anchor: The anchor reference point from which to measure the relative
@@ -711,8 +722,9 @@ def relativeBCPOut(anchor: PairCollectionType[IntFloatType],
     return (BCPOut[0] - anchor[0], BCPOut[1] - anchor[1])
 
 
-def absoluteBCPOut(anchor: PairCollectionType[IntFloatType],
-                   BCPOut: PairCollectionType[IntFloatType]) -> PairType[IntFloatType]:
+def absoluteBCPOut(
+    anchor: PairCollectionType[IntFloatType], BCPOut: PairCollectionType[IntFloatType]
+) -> PairType[IntFloatType]:
     """convert relative outgoing bcp value to an absolute value.
 
     :param anchor: The anchor reference point from which the relative BCP value

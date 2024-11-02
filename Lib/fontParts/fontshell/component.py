@@ -4,7 +4,6 @@ from fontParts.fontshell.base import RBaseObject
 
 
 class RComponent(RBaseObject, BaseComponent):
-
     wrapClass = defcon.Component
 
     # ----------
