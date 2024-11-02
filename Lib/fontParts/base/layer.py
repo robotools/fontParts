@@ -17,8 +17,8 @@ from fontParts.base.deprecated import DeprecatedLayer, RemovedLayer
 from fontParts.base.annotations import (
     CharacterMappingType,
     CollectionType,
-    ColorType,
-    FactorType,
+    QuadrupleCollectionType,
+    TransformationType,
     ReverseComponentMappingType,
 )
 
@@ -780,19 +780,19 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
         """,
     )
 
-    def _get_base_color(self) -> ColorType:
+    def _get_base_color(self) -> QuadrupleCollectionType[IntFloatType]:
         value = self._get_color()
         if value is not None:
             value = normalizers.normalizeColor(value)
             value = Color(value)
         return value
 
-    def _set_base_color(self, value: ColorType) -> None:
+    def _set_base_color(self, value: QuadrupleCollectionType[IntFloatType]) -> None:
         if value is not None:
             value = normalizers.normalizeColor(value)
         self._set_color(value)
 
-    def _get_color(self) -> ColorType:  # type: ignore[return]
+    def _get_color(self) -> QuadrupleCollectionType[IntFloatType]:  # type: ignore[return]
         """Get the color of the layer.
 
         This is the environment implementation of
@@ -811,7 +811,9 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
         """
         self.raiseNotImplementedError()
 
-    def _set_color(self, value: ColorType, **kwargs: Any) -> None:
+    def _set_color(
+        self, value: QuadrupleCollectionType[IntFloatType], **kwargs: Any
+    ) -> None:
         r"""Get or set the color of the layer.
 
         This is the environment implementation of
@@ -979,7 +981,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
 
     def interpolate(
         self,
-        factor: FactorType,
+        factor: TransformationType,
         minLayer: BaseLayer,
         maxLayer: BaseLayer,
         round: bool = True,
@@ -1036,7 +1038,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
 
     def _interpolate(
         self,
-        factor: FactorType,
+        factor: TransformationType,
         minLayer: BaseLayer,
         maxLayer: BaseLayer,
         round: bool,
