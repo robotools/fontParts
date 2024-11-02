@@ -572,7 +572,7 @@ def normalizePointType(value: str) -> str:
         | Value          | Description                                       |
         +----------------+---------------------------------------------------+
         | ``'move'``     | The first point in an open contour.               |
-        | ``'line'``     | A straigt line from the previous point.           |
+        | ``'line'``     | A straight line from the previous point.          |
         | ``'offcurve'`` | A control point in a curve or qcurve.             |
         | ``'curve'``    | A cubic Bézier curve from the previous point.     |
         | ``'qcurve'``   | A quadratic Bézier curve from the previous point. |
