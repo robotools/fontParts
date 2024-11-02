@@ -5,7 +5,7 @@ from fontParts.base.base import (
     InterpolationMixin,
     SelectionMixin,
     dynamicProperty,
-    reference
+    reference,
 )
 from fontParts.base import normalizers
 from fontParts.base.deprecated import DeprecatedSegment, RemovedSegment
@@ -13,14 +13,13 @@ from fontParts.base.compatibility import SegmentCompatibilityReporter
 
 
 class BaseSegment(
-                  BaseObject,
-                  TransformationMixin,
-                  InterpolationMixin,
-                  SelectionMixin,
-                  DeprecatedSegment,
-                  RemovedSegment
-                  ):
-
+    BaseObject,
+    TransformationMixin,
+    InterpolationMixin,
+    SelectionMixin,
+    DeprecatedSegment,
+    RemovedSegment,
+):
     def _setPoints(self, points):
         if hasattr(self, "_points"):
             raise AssertionError("segment has points")
@@ -111,10 +110,13 @@ class BaseSegment(
     # Identification
     # --------------
 
-    index = dynamicProperty("base_index",
-                            ("The index of the segment within the ordered "
-                             "list of the parent contour's segments.")
-                            )
+    index = dynamicProperty(
+        "base_index",
+        (
+            "The index of the segment within the ordered "
+            "list of the parent contour's segments."
+        ),
+    )
 
     def _get_base_index(self):
         if self.contour is None:
@@ -135,10 +137,10 @@ class BaseSegment(
     # Attributes
     # ----------
 
-    type = dynamicProperty("base_type",
-                           ("The segment type. The possible types are "
-                            "move, line, curve, qcurve.")
-                           )
+    type = dynamicProperty(
+        "base_type",
+        ("The segment type. The possible types are " "move, line, curve, qcurve."),
+    )
 
     def _get_base_type(self):
         value = self._get_type()
@@ -198,10 +200,9 @@ class BaseSegment(
             self._setPoints((off1, off2, on))
         self.onCurve.type = newType
 
-    smooth = dynamicProperty("base_smooth",
-                             ("Boolean indicating if the segment is "
-                              "smooth or not.")
-                             )
+    smooth = dynamicProperty(
+        "base_smooth", ("Boolean indicating if the segment is " "smooth or not.")
+    )
 
     def _get_base_smooth(self):
         value = self._get_smooth()
@@ -266,8 +267,7 @@ class BaseSegment(
         """
         return len(self.points)
 
-    points = dynamicProperty("base_points",
-                             "A list of points in the segment.")
+    points = dynamicProperty("base_points", "A list of points in the segment.")
 
     def _get_base_points(self):
         return tuple(self._get_points())
@@ -280,8 +280,7 @@ class BaseSegment(
             return tuple()
         return tuple(self._points)
 
-    onCurve = dynamicProperty("base_onCurve",
-                              "The on curve point in the segment.")
+    onCurve = dynamicProperty("base_onCurve", "The on curve point in the segment.")
 
     def _get_base_onCurve(self):
         return self._get_onCurve()
@@ -295,8 +294,7 @@ class BaseSegment(
             return None
         return value
 
-    offCurve = dynamicProperty("base_offCurve",
-                               "The off curve points in the segment.")
+    offCurve = dynamicProperty("base_offCurve", "The off curve points in the segment.")
 
     def _get_base_offCurve(self):
         """

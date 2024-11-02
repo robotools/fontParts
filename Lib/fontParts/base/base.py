@@ -1,7 +1,16 @@
 # pylint: disable=C0103, C0114
 from __future__ import annotations
 from typing import (
-    Any, Callable, Dict, List, NoReturn, Optional, Tuple, Type, TypeVar, Union
+    Any,
+    Callable,
+    Dict,
+    List,
+    NoReturn,
+    Optional,
+    Tuple,
+    Type,
+    TypeVar,
+    Union,
 )
 from copy import deepcopy
 import math
@@ -16,10 +25,10 @@ from fontParts.base.annotations import (
     IntFloatType,
     InterpolatableType,
     ScaleType,
-    TransformationMatrixType
+    TransformationMatrixType,
 )
 
-BaseObjectType = TypeVar('BaseObjectType', bound='BaseObject')
+BaseObjectType = TypeVar("BaseObjectType", bound="BaseObject")
 
 # -------
 # Helpers
@@ -132,9 +141,9 @@ class dynamicProperty:
             raise FontPartsError(f"no setter for {self.name!r}")
 
 
-def interpolate(minValue: InterpolatableType,
-                maxValue: InterpolatableType,
-                factor: FactorType) -> InterpolatableType:
+def interpolate(
+    minValue: InterpolatableType, maxValue: InterpolatableType, factor: FactorType
+) -> InterpolatableType:
     """Interpolate between two number-like objects.
 
     This method performs linear interpolation, calculating a value that is
@@ -162,6 +171,7 @@ def interpolate(minValue: InterpolatableType,
             f"Factor must be an int or minValue float, not {type(factor).__name__}."
         ) from exc
 
+
 # ------------
 # Base Objects
 # ------------
@@ -184,6 +194,7 @@ class BaseObject:
     :param \**kwargs: Any keyword arguments.
 
     """
+
     # --------------
     # Initialization
     # --------------
@@ -381,6 +392,7 @@ class BaseDict(BaseObject):
     :cvar valueNormalizer: An optional normalizer function for values.
 
     """
+
     keyNormalizer: Optional[Any] = None
     valueNormalizer: Optional[Any] = None
 
@@ -456,8 +468,7 @@ class BaseDict(BaseObject):
         items = self._items()
         if self.keyNormalizer is not None and self.valueNormalizer is not None:
             items = [
-                (self.keyNormalizer.__func__(key),
-                 self.valueNormalizer.__func__(value))
+                (self.keyNormalizer.__func__(key), self.valueNormalizer.__func__(value))
                 for (key, value) in items
             ]
         return items
@@ -805,9 +816,9 @@ class TransformationMixin:
     # Transformations
     # ---------------
 
-    def transformBy(self,
-                    matrix: TransformationMatrixType,
-                    origin: Optional[CoordinateType] = None) -> None:
+    def transformBy(
+        self, matrix: TransformationMatrixType, origin: Optional[CoordinateType] = None
+    ) -> None:
         """Transform the object according to the given matrix.
 
         :param matrix: The :ref:`type-transformation` to apply.
@@ -834,9 +845,7 @@ class TransformationMixin:
             matrix = tuple(t)
         self._transformBy(matrix)
 
-    def _transformBy(self,
-                     matrix: TransformationMatrixType,
-                     **kwargs: Any) -> None:
+    def _transformBy(self, matrix: TransformationMatrixType, **kwargs: Any) -> None:
         r"""Transform the native object according to the given matrix.
 
         This is the environment implementation of :meth:`TransformationMixin.transformBy`.
@@ -888,9 +897,9 @@ class TransformationMixin:
         t = transform.Offset(x, y)
         self.transformBy(tuple(t), **kwargs)
 
-    def scaleBy(self,
-                value: ScaleType,
-                origin: Optional[CoordinateType] = None) -> None:
+    def scaleBy(
+        self, value: ScaleType, origin: Optional[CoordinateType] = None
+    ) -> None:
         """Scale the object according to the given values.
 
         :param value: The x and y values to scale the glyph by as
@@ -911,10 +920,9 @@ class TransformationMixin:
         origin = normalizers.normalizeCoordinateTuple(origin)
         self._scaleBy(value, origin=origin)
 
-    def _scaleBy(self,
-                 value: ScaleType,
-                 origin: Optional[CoordinateType],
-                 **kwargs: Any) -> None:
+    def _scaleBy(
+        self, value: ScaleType, origin: Optional[CoordinateType], **kwargs: Any
+    ) -> None:
         r"""Scale the native object according to the given values.
 
         This is the environment implementation of :meth:`BaseObject.scaleBy`.
@@ -937,9 +945,9 @@ class TransformationMixin:
         t = transform.Identity.scale(x=x, y=y)
         self.transformBy(tuple(t), origin=origin, **kwargs)
 
-    def rotateBy(self,
-                 value: IntFloatType,
-                 origin: Optional[CoordinateType] = None) -> None:
+    def rotateBy(
+        self, value: IntFloatType, origin: Optional[CoordinateType] = None
+    ) -> None:
         """Rotate the object by the specified value.
 
         :param value: The angle at which to rotate the object as an :class:`int`
@@ -960,10 +968,9 @@ class TransformationMixin:
         origin = normalizers.normalizeCoordinateTuple(origin)
         self._rotateBy(value, origin=origin)
 
-    def _rotateBy(self,
-                  value: IntFloatType,
-                  origin: Optional[CoordinateType],
-                  **kwargs: Any) -> None:
+    def _rotateBy(
+        self, value: IntFloatType, origin: Optional[CoordinateType], **kwargs: Any
+    ) -> None:
         r"""Rotate the native object by the specified value.
 
         This is the environment implementation of :meth:`TransformationMixin.rotateBy`.
@@ -985,9 +992,9 @@ class TransformationMixin:
         t = transform.Identity.rotate(a)
         self.transformBy(tuple(t), origin=origin, **kwargs)
 
-    def skewBy(self,
-               value: FactorType,
-               origin: Optional[CoordinateType] = None) -> None:
+    def skewBy(
+        self, value: FactorType, origin: Optional[CoordinateType] = None
+    ) -> None:
         """Skew the object by the given value.
 
         :param value: The value by which to skew the object as either a
@@ -1010,10 +1017,9 @@ class TransformationMixin:
         origin = normalizers.normalizeCoordinateTuple(origin)
         self._skewBy(value, origin=origin)
 
-    def _skewBy(self,
-                value: FactorType,
-                origin: Optional[CoordinateType],
-                **kwargs: Any) -> None:
+    def _skewBy(
+        self, value: FactorType, origin: Optional[CoordinateType], **kwargs: Any
+    ) -> None:
         r"""Skew the native object by the given value.
 
         This is the environment implementation of :meth:`TransformationMixin.skewBy`.
@@ -1068,7 +1074,8 @@ class InterpolationMixin:
         """
         if not isinstance(other, cls):
             raise TypeError(
-                f"""Compatibility between an instance of {cls.__name__!r} and an                 instance of {other.__class__.__name__!r} can not be checked.""")
+                f"""Compatibility between an instance of {cls.__name__!r} and an                 instance of {other.__class__.__name__!r} can not be checked."""
+            )
         reporter = self.compatibilityReporterClass(self, other)
         self._isCompatible(other, reporter)
         return not reporter.fatal, reporter
@@ -1113,7 +1120,7 @@ class SelectionMixin:
             False
             >>> obj.selected = True
 
-        """
+        """,
     )
 
     def _get_base_selected(self) -> bool:
@@ -1165,15 +1172,14 @@ class SelectionMixin:
     # Sub-Objects
     # -----------
     @classmethod
-    def _getSelectedSubObjects(cls,
-                               subObjects: CollectionType[Any]) -> Tuple[Any]:
+    def _getSelectedSubObjects(cls, subObjects: CollectionType[Any]) -> Tuple[Any]:
         selected = tuple(obj for obj in subObjects if obj.selected)
         return selected
 
     @classmethod
-    def _setSelectedSubObjects(cls,
-                               subObjects: CollectionType[Any],
-                               selected: CollectionType[Any]) -> None:
+    def _setSelectedSubObjects(
+        cls, subObjects: CollectionType[Any], selected: CollectionType[Any]
+    ) -> None:
         for obj in subObjects:
             obj.selected = obj in selected
 
@@ -1194,7 +1200,7 @@ class PointPositionMixin:
 
         :return: The current point position as a :ref:`type-coordinate`.
 
-        """
+        """,
     )
 
     def _get_base_position(self) -> CoordinateType:
@@ -1265,7 +1271,7 @@ class IdentifierMixin:
             >>> object.identifier
             'ILHGJlygfds'
 
-        """
+        """,
     )
 
     def _get_base_identifier(self) -> Optional[str]:
@@ -1347,8 +1353,10 @@ def reference(obj: Callable[[], Any]) -> Callable[[], Any]:
     so this function was put in place to make sure existing code continued to
     function. The need for it is questionable, so it may be deleted soon.
     """
+
     def wrapper() -> Any:
         return obj
+
     return wrapper
 
 

@@ -8,7 +8,7 @@ from fontParts.base.base import (
     InterpolationMixin,
     SelectionMixin,
     dynamicProperty,
-    reference
+    reference,
 )
 from fontParts.base import normalizers
 from fontParts.base.compatibility import LayerCompatibilityReporter
@@ -19,8 +19,9 @@ from fontParts.base.annotations import (
     CollectionType,
     ColorType,
     FactorType,
-    ReverseComponentMappingType
+    ReverseComponentMappingType,
 )
+
 if TYPE_CHECKING:
     from fontParts.base.font import BaseFont
     from fontParts.base.glyph import BaseGlyph
@@ -396,10 +397,7 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
             name = glyph.name
         self[name] = glyph
 
-    def _insertGlyph(self,
-                     glyph: BaseGlyph,
-                     name: str,
-                     **kwargs: Any) -> BaseGlyph:
+    def _insertGlyph(self, glyph: BaseGlyph, name: str, **kwargs: Any) -> BaseGlyph:
         r"""Insert a specified glyph into the native layer.
 
         This is the environment implementation of
@@ -452,12 +450,13 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
 
             >>> layer.selectedGlyphs = someGlyphs
 
-        """
+        """,
     )
 
     def _get_base_selectedGlyphs(self) -> Tuple[BaseGlyph, ...]:
-        selected = tuple(normalizers.normalizeGlyph(glyph)
-                         for glyph in self._get_selectedGlyphs())
+        selected = tuple(
+            normalizers.normalizeGlyph(glyph) for glyph in self._get_selectedGlyphs()
+        )
         return selected
 
     def _get_selectedGlyphs(self) -> Tuple[BaseGlyph]:
@@ -517,12 +516,14 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
 
             >>> layer.selectedGlyphNames = ["A", "B", "C"]
 
-        """
+        """,
     )
 
     def _get_base_selectedGlyphNames(self) -> Tuple[str, ...]:
-        selected = tuple(normalizers.normalizeGlyphName(name)
-                         for name in self._get_selectedGlyphNames())
+        selected = tuple(
+            normalizers.normalizeGlyphName(name)
+            for name in self._get_selectedGlyphNames()
+        )
         return selected
 
     def _get_selectedGlyphNames(self) -> Tuple[str, ...]:
@@ -572,10 +573,7 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
     has_key: Callable[[_BaseGlyphVendor, str], bool] = __contains__
 
 
-class BaseLayer(_BaseGlyphVendor,
-                InterpolationMixin,
-                DeprecatedLayer,
-                RemovedLayer):
+class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLayer):
     """Represent the basis for a layer object.
 
     This object will almost always be created by retrieving it from a
@@ -596,11 +594,7 @@ class BaseLayer(_BaseGlyphVendor,
     # Copy
     # ----
 
-    copyAttributes: Tuple[str, ...] = (
-        "name",
-        "color",
-        "lib"
-    )
+    copyAttributes: Tuple[str, ...] = ("name", "color", "lib")
 
     def copy(self) -> BaseLayer:
         """Copy data from the current layer into a new layer.
@@ -664,7 +658,7 @@ class BaseLayer(_BaseGlyphVendor,
 
             >>> font = layer.font
 
-        """
+        """,
     )
 
     def _get_font(self) -> Optional[BaseFont]:
@@ -702,7 +696,7 @@ class BaseLayer(_BaseGlyphVendor,
             "foreground"
             >>> layer.name = "top"
 
-        """
+        """,
     )
 
     def _get_base_name(self) -> Optional[str]:
@@ -719,9 +713,7 @@ class BaseLayer(_BaseGlyphVendor,
         if font is not None:
             existing = self.font.layerOrder
             if value in existing:
-                raise ValueError(
-                    f"A layer with the name '{value}' already exists."
-                )
+                raise ValueError(f"A layer with the name '{value}' already exists.")
         self._set_name(value)
 
     def _get_name(self) -> Optional[str]:  # type: ignore[return]
@@ -785,7 +777,7 @@ class BaseLayer(_BaseGlyphVendor,
             None
             >>> layer.color = (1, 0, 0, 0.5)
 
-        """
+        """,
     )
 
     def _get_base_color(self) -> ColorType:
@@ -858,7 +850,7 @@ class BaseLayer(_BaseGlyphVendor,
             >>> layer.lib["org.robofab.hello"]
             "world"
 
-        """
+        """,
     )
 
     def _get_base_lib(self) -> BaseLib:
@@ -900,7 +892,7 @@ class BaseLayer(_BaseGlyphVendor,
             >>> layer.tempLib["org.robofab.hello"]
             "world"
 
-        """
+        """,
     )
 
     def _get_base_tempLib(self) -> BaseLib:
@@ -985,12 +977,14 @@ class BaseLayer(_BaseGlyphVendor,
     # Interpolation
     # -------------
 
-    def interpolate(self,
-                    factor: FactorType,
-                    minLayer: BaseLayer,
-                    maxLayer: BaseLayer,
-                    round: bool = True,
-                    suppressError: bool = True) -> None:
+    def interpolate(
+        self,
+        factor: FactorType,
+        minLayer: BaseLayer,
+        maxLayer: BaseLayer,
+        round: bool = True,
+        suppressError: bool = True,
+    ) -> None:
         """Interpolate all possible data in the layer.
 
         The interpolation occurs on a 0 to 1.0 range between `minLayer`
@@ -1028,15 +1022,18 @@ class BaseLayer(_BaseGlyphVendor,
             )
         round = normalizers.normalizeBoolean(round)
         suppressError = normalizers.normalizeBoolean(suppressError)
-        self._interpolate(factor, minLayer, maxLayer,
-                          round=round, suppressError=suppressError)
+        self._interpolate(
+            factor, minLayer, maxLayer, round=round, suppressError=suppressError
+        )
 
-    def _interpolate(self,
-                     factor: FactorType,
-                     minLayer: BaseLayer,
-                     maxLayer: BaseLayer,
-                     round: bool,
-                     suppressError: bool) -> None:
+    def _interpolate(
+        self,
+        factor: FactorType,
+        minLayer: BaseLayer,
+        maxLayer: BaseLayer,
+        round: bool,
+        suppressError: bool,
+    ) -> None:
         """Interpolate all possible data in the native layer.
 
         This is the environment implementation of :meth:`BaseLayer.interpolate`.
@@ -1069,8 +1066,9 @@ class BaseLayer(_BaseGlyphVendor,
             minGlyph = minLayer[glyphName]
             maxGlyph = maxLayer[glyphName]
             dstGlyph = self.newGlyph(glyphName)
-            dstGlyph.interpolate(factor, minGlyph, maxGlyph,
-                                 round=round, suppressError=suppressError)
+            dstGlyph.interpolate(
+                factor, minGlyph, maxGlyph, round=round, suppressError=suppressError
+            )
 
     compatibilityReporterClass = LayerCompatibilityReporter
 
@@ -1096,9 +1094,9 @@ class BaseLayer(_BaseGlyphVendor,
         """
         return super(BaseLayer, self).isCompatible(other, BaseLayer)
 
-    def _isCompatible(self,
-                      other: BaseLib,
-                      reporter: LayerCompatibilityReporter) -> None:
+    def _isCompatible(
+        self, other: BaseLib, reporter: LayerCompatibilityReporter
+    ) -> None:
         """Evaluate interpolation compatibility with another native layer.
 
         This is the environment implementation of :meth:`BaseFont.isCompatible`.

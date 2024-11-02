@@ -1,9 +1,4 @@
-from fontParts.base.base import (
-    BaseObject,
-    dynamicProperty,
-    interpolate,
-    reference
-)
+from fontParts.base.base import BaseObject, dynamicProperty, interpolate, reference
 from fontParts.base import normalizers
 from fontParts.base.errors import FontPartsError
 from fontParts.base.deprecated import DeprecatedInfo, RemovedInfo
@@ -52,6 +47,7 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
     @staticmethod
     def _validateFontInfoAttributeValue(attr, value):
         from fontTools.ufoLib import validateFontInfoVersion3ValueForAttribute
+
         valid = validateFontInfoVersion3ValueForAttribute(attr, value)
         if not valid:
             raise ValueError(f"Invalid value {value} for attribute '{attr}'.")
@@ -65,6 +61,7 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
 
     def __hasattr__(self, attr):
         from fontTools.ufoLib import fontInfoAttributesVersion3
+
         if attr in fontInfoAttributesVersion3:
             return True
         return super(BaseInfo, self).__hasattr__(attr)
@@ -73,6 +70,7 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
 
     def __getattribute__(self, attr):
         from fontTools.ufoLib import fontInfoAttributesVersion3
+
         if attr != "guidelines" and attr in fontInfoAttributesVersion3:
             value = self._getAttr(attr)
             if value is not None:
@@ -99,6 +97,7 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
 
     def __setattr__(self, attr, value):
         from fontTools.ufoLib import fontInfoAttributesVersion3
+
         if attr != "guidelines" and attr in fontInfoAttributesVersion3:
             if value is not None:
                 value = self._validateFontInfoAttributeValue(attr, value)
@@ -206,6 +205,7 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
         Subclasses may override this method.
         """
         from fontTools.ufoLib import fontInfoAttributesVersion3
+
         for attr in fontInfoAttributesVersion3:
             if attr == "guidelines":
                 continue
@@ -241,6 +241,7 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
         Subclasses may override this method.
         """
         import fontMath
+
         # A little trickery is needed here because MathInfo
         # handles font level guidelines. Those are not in this
         # object so we temporarily fake them just enough for
@@ -254,7 +255,7 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
                     angle=guideline.angle,
                     name=guideline.name,
                     identifier=guideline.identifier,
-                    color=guideline.color
+                    color=guideline.color,
                 )
                 self.guidelines.append(d)
         info = fontMath.MathInfo(self)
@@ -273,7 +274,7 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
                     position=(guideline["x"], guideline["y"]),
                     angle=guideline["angle"],
                     name=guideline["name"],
-                    color=guideline["color"]
+                    color=guideline["color"],
                     # XXX identifier is lost
                 )
 
@@ -296,13 +297,18 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
         """
         factor = normalizers.normalizeInterpolationFactor(factor)
         if not isinstance(minInfo, BaseInfo):
-            raise TypeError(f"Interpolation to an instance of {self.__class__.__name__!r} can not be performed from an instance of {minInfo.__class__.__name__!r}.")
+            raise TypeError(
+                f"Interpolation to an instance of {self.__class__.__name__!r} can not be performed from an instance of {minInfo.__class__.__name__!r}."
+            )
         if not isinstance(maxInfo, BaseInfo):
-            raise TypeError(f"Interpolation to an instance of {self.__class__.__name__!r} can not be performed from an instance of {maxInfo.__class__.__name__!r}.")
+            raise TypeError(
+                f"Interpolation to an instance of {self.__class__.__name__!r} can not be performed from an instance of {maxInfo.__class__.__name__!r}."
+            )
         round = normalizers.normalizeBoolean(round)
         suppressError = normalizers.normalizeBoolean(suppressError)
-        self._interpolate(factor, minInfo, maxInfo,
-                          round=round, suppressError=suppressError)
+        self._interpolate(
+            factor, minInfo, maxInfo, round=round, suppressError=suppressError
+        )
 
     def _interpolate(self, factor, minInfo, maxInfo, round=True, suppressError=True):
         """
@@ -316,7 +322,9 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
         maxInfo = maxInfo._toMathInfo()
         result = interpolate(minInfo, maxInfo, factor)
         if result is None and not suppressError:
-            raise FontPartsError(f"Info from font '{minInfo.font.name}' and font '{maxInfo.font.name}' could not be interpolated.")
+            raise FontPartsError(
+                f"Info from font '{minInfo.font.name}' and font '{maxInfo.font.name}' could not be interpolated."
+            )
         if round:
             result = result.round()
         self._fromMathInfo(result)

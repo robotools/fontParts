@@ -1,5 +1,4 @@
 class RBaseObject(object):
-
     wrapClass = None
 
     def _init(self, wrap=None):

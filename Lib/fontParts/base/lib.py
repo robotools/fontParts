@@ -4,7 +4,6 @@ from fontParts.base.deprecated import DeprecatedLib, RemovedLib
 
 
 class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
-
     """
     A Lib object. This object normally created as part of a
     :class:`BaseFont`. An orphan Lib object can be created like this::

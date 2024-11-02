@@ -6,7 +6,6 @@ from fontParts.base.base import dynamicProperty
 
 
 class BaseCompatibilityReporter(object):
-
     objectName = "Base"
 
     def __init__(self, obj1, obj2):
@@ -86,23 +85,24 @@ class BaseCompatibilityReporter(object):
         return report
 
     @staticmethod
-    def reportCountDifference(subObjectName,
-                              object1Name, object1Count,
-                              object2Name, object2Count):
+    def reportCountDifference(
+        subObjectName, object1Name, object1Count, object2Name, object2Count
+    ):
         text = f"{object1Name} contains {object1Count} {subObjectName} | {object2Name} contains {object2Count} {subObjectName}"
         return text
 
     @staticmethod
-    def reportOrderDifference(subObjectName,
-                              object1Name, object1Order,
-                              object2Name, object2Order):
+    def reportOrderDifference(
+        subObjectName, object1Name, object1Order, object2Name, object2Order
+    ):
         text = f"{object1Name} has {subObjectName} ordered {object1Order} | {object2Name} has {object2Order}"
         return text
 
     @staticmethod
-    def reportDifferences(object1Name, subObjectName,
-                          subObjectID, object2Name):
-        text = f"{object1Name} contains {subObjectName} {subObjectID} not in {object2Name}"
+    def reportDifferences(object1Name, subObjectName, subObjectID, object2Name):
+        text = (
+            f"{object1Name} contains {subObjectName} {subObjectID} not in {object2Name}"
+        )
         return text
 
 
@@ -110,8 +110,8 @@ class BaseCompatibilityReporter(object):
 # Font
 # ----
 
-class FontCompatibilityReporter(BaseCompatibilityReporter):
 
+class FontCompatibilityReporter(BaseCompatibilityReporter):
     objectName = "Font"
 
     def __init__(self, font1, font2):
@@ -139,7 +139,7 @@ class FontCompatibilityReporter(BaseCompatibilityReporter):
                 object1Name=self.font1Name,
                 object1Count=len(font1.guidelines),
                 object2Name=self.font2Name,
-                object2Count=len(font2.guidelines)
+                object2Count=len(font2.guidelines),
             )
             report.append(self.formatWarningString(text))
         for name in self.guidelinesMissingFromFont2:
@@ -164,7 +164,7 @@ class FontCompatibilityReporter(BaseCompatibilityReporter):
                 object1Name=self.font1Name,
                 object1Count=len(font1.layerOrder),
                 object2Name=self.font2Name,
-                object2Count=len(font2.layerOrder)
+                object2Count=len(font2.layerOrder),
             )
             report.append(self.formatWarningString(text))
         for name in self.layersMissingFromFont2:
@@ -183,8 +183,9 @@ class FontCompatibilityReporter(BaseCompatibilityReporter):
                 object2Name=self.font1Name,
             )
             report.append(self.formatWarningString(text))
-        report += self.reportSubObjects(self.layers, showOK=showOK,
-                                        showWarnings=showWarnings)
+        report += self.reportSubObjects(
+            self.layers, showOK=showOK, showWarnings=showWarnings
+        )
 
         if report or showOK:
             report.insert(0, self.title)
@@ -195,8 +196,8 @@ class FontCompatibilityReporter(BaseCompatibilityReporter):
 # Layer
 # -----
 
-class LayerCompatibilityReporter(BaseCompatibilityReporter):
 
+class LayerCompatibilityReporter(BaseCompatibilityReporter):
     objectName = "Layer"
 
     def __init__(self, layer1, layer2):
@@ -221,7 +222,7 @@ class LayerCompatibilityReporter(BaseCompatibilityReporter):
                 object1Name=self.layer1Name,
                 object1Count=len(layer1),
                 object2Name=self.layer2Name,
-                object2Count=len(layer2)
+                object2Count=len(layer2),
             )
             report.append(self.formatWarningString(text))
         for name in self.glyphsMissingFromLayer2:
@@ -240,9 +241,9 @@ class LayerCompatibilityReporter(BaseCompatibilityReporter):
                 object2Name=self.layer1Name,
             )
             report.append(self.formatWarningString(text))
-        report += self.reportSubObjects(self.glyphs,
-                                        showOK=showOK,
-                                        showWarnings=showWarnings)
+        report += self.reportSubObjects(
+            self.glyphs, showOK=showOK, showWarnings=showWarnings
+        )
 
         if report or showOK:
             report.insert(0, self.title)
@@ -253,8 +254,8 @@ class LayerCompatibilityReporter(BaseCompatibilityReporter):
 # Glyph
 # -----
 
-class GlyphCompatibilityReporter(BaseCompatibilityReporter):
 
+class GlyphCompatibilityReporter(BaseCompatibilityReporter):
     objectName = "Glyph"
 
     def __init__(self, glyph1, glyph2):
@@ -292,12 +293,12 @@ class GlyphCompatibilityReporter(BaseCompatibilityReporter):
                 object1Name=self.glyph1Name,
                 object1Count=len(glyph1),
                 object2Name=self.glyph2Name,
-                object2Count=len(glyph2)
+                object2Count=len(glyph2),
             )
             report.append(self.formatFatalString(text))
-        report += self.reportSubObjects(self.contours,
-                                        showOK=showOK,
-                                        showWarnings=showWarnings)
+        report += self.reportSubObjects(
+            self.contours, showOK=showOK, showWarnings=showWarnings
+        )
 
         # Component test
         if self.componentCountDifference:
@@ -306,7 +307,7 @@ class GlyphCompatibilityReporter(BaseCompatibilityReporter):
                 object1Name=self.glyph1Name,
                 object1Count=len(glyph1.components),
                 object2Name=self.glyph2Name,
-                object2Count=len(glyph2.components)
+                object2Count=len(glyph2.components),
             )
             report.append(self.formatFatalString(text))
         elif self.componentOrderDifference:
@@ -315,7 +316,7 @@ class GlyphCompatibilityReporter(BaseCompatibilityReporter):
                 object1Name=self.glyph1Name,
                 object1Order=[c.baseGlyph for c in glyph1.components],
                 object2Name=self.glyph2Name,
-                object2Order=[c.baseGlyph for c in glyph2.components]
+                object2Order=[c.baseGlyph for c in glyph2.components],
             )
             report.append(self.formatWarningString(text))
         for name in self.componentsMissingFromGlyph2:
@@ -342,7 +343,7 @@ class GlyphCompatibilityReporter(BaseCompatibilityReporter):
                 object1Name=self.glyph1Name,
                 object1Count=len(glyph1.anchors),
                 object2Name=self.glyph2Name,
-                object2Count=len(glyph2.anchors)
+                object2Count=len(glyph2.anchors),
             )
             report.append(self.formatWarningString(text))
         elif self.anchorOrderDifference:
@@ -351,7 +352,7 @@ class GlyphCompatibilityReporter(BaseCompatibilityReporter):
                 object1Name=self.glyph1Name,
                 object1Order=[a.name for a in glyph1.anchors],
                 object2Name=self.glyph2Name,
-                object2Order=[a.name for a in glyph2.anchors]
+                object2Order=[a.name for a in glyph2.anchors],
             )
             report.append(self.formatWarningString(text))
         for name in self.anchorsMissingFromGlyph2:
@@ -378,7 +379,7 @@ class GlyphCompatibilityReporter(BaseCompatibilityReporter):
                 object1Name=self.glyph1Name,
                 object1Count=len(glyph1.guidelines),
                 object2Name=self.glyph2Name,
-                object2Count=len(glyph2.guidelines)
+                object2Count=len(glyph2.guidelines),
             )
             report.append(self.formatWarningString(text))
         for name in self.guidelinesMissingFromGlyph2:
@@ -407,8 +408,8 @@ class GlyphCompatibilityReporter(BaseCompatibilityReporter):
 # Contour
 # -------
 
-class ContourCompatibilityReporter(BaseCompatibilityReporter):
 
+class ContourCompatibilityReporter(BaseCompatibilityReporter):
     objectName = "Contour"
 
     def __init__(self, contour1, contour2):
@@ -433,7 +434,7 @@ class ContourCompatibilityReporter(BaseCompatibilityReporter):
                 object1Name=self.contour1Name,
                 object1Count=len(contour1),
                 object2Name=self.contour2Name,
-                object2Count=len(contour2)
+                object2Count=len(contour2),
             )
             report.append(self.formatFatalString(text))
         if self.openDifference:
@@ -452,9 +453,9 @@ class ContourCompatibilityReporter(BaseCompatibilityReporter):
                 state2 = "clockwise"
             text = f"{self.contour1Name} is {state1} | {self.contour2Name} is {state2}"
             report.append(self.formatFatalString(text))
-        report += self.reportSubObjects(self.segments,
-                                        showOK=showOK,
-                                        showWarnings=showWarnings)
+        report += self.reportSubObjects(
+            self.segments, showOK=showOK, showWarnings=showWarnings
+        )
         if report or showOK:
             report.insert(0, self.title)
         return "\n".join(report)
@@ -464,8 +465,8 @@ class ContourCompatibilityReporter(BaseCompatibilityReporter):
 # Segment
 # -------
 
-class SegmentCompatibilityReporter(BaseCompatibilityReporter):
 
+class SegmentCompatibilityReporter(BaseCompatibilityReporter):
     objectName = "Segment"
 
     def __init__(self, contour1, contour2):
@@ -490,18 +491,17 @@ class SegmentCompatibilityReporter(BaseCompatibilityReporter):
             report.insert(0, self.title)
         return "\n".join(report)
 
+
 # ---------
 # Component
 # ---------
 
 
 class ComponentCompatibilityReporter(BaseCompatibilityReporter):
-
     objectName = "Component"
 
     def __init__(self, component1, component2):
-        super(ComponentCompatibilityReporter, self).__init__(component1,
-                                                             component2)
+        super(ComponentCompatibilityReporter, self).__init__(component1, component2)
         self.baseDifference = False
 
     component1 = dynamicProperty("object1")
@@ -522,13 +522,13 @@ class ComponentCompatibilityReporter(BaseCompatibilityReporter):
             report.insert(0, self.title)
         return "\n".join(report)
 
+
 # ------
 # Anchor
 # ------
 
 
 class AnchorCompatibilityReporter(BaseCompatibilityReporter):
-
     objectName = "Anchor"
 
     def __init__(self, anchor1, anchor2):
@@ -558,13 +558,12 @@ class AnchorCompatibilityReporter(BaseCompatibilityReporter):
 # Guideline
 # ---------
 
-class GuidelineCompatibilityReporter(BaseCompatibilityReporter):
 
+class GuidelineCompatibilityReporter(BaseCompatibilityReporter):
     objectName = "Guideline"
 
     def __init__(self, guideline1, guideline2):
-        super(GuidelineCompatibilityReporter, self).__init__(guideline1,
-                                                             guideline2)
+        super(GuidelineCompatibilityReporter, self).__init__(guideline1, guideline2)
         self.nameDifference = False
 
     guideline1 = dynamicProperty("object1")

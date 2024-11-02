@@ -8,15 +8,13 @@ from fontParts.base.base import (
     SelectionMixin,
     IdentifierMixin,
     dynamicProperty,
-    reference
+    reference,
 )
 from fontParts.base.errors import FontPartsError
 from fontParts.base import normalizers
 from fontParts.base.deprecated import DeprecatedBPoint, RemovedBPoint
-from fontParts.base.annotations import (
-    CoordinateType,
-    TransformationMatrixType
-)
+from fontParts.base.annotations import CoordinateType, TransformationMatrixType
+
 if TYPE_CHECKING:
     from fontParts.base.contour import BaseContour
     from fontParts.base.font import BaseFont
@@ -26,12 +24,14 @@ if TYPE_CHECKING:
     from fontParts.base.segment import BaseSegment
 
 
-class BaseBPoint(BaseObject,
-                 TransformationMixin,
-                 SelectionMixin,
-                 DeprecatedBPoint,
-                 IdentifierMixin,
-                 RemovedBPoint):
+class BaseBPoint(
+    BaseObject,
+    TransformationMixin,
+    SelectionMixin,
+    DeprecatedBPoint,
+    IdentifierMixin,
+    RemovedBPoint,
+):
     """Represent the basis for a bPoint object."""
 
     def _reprContents(self) -> List[str]:
@@ -138,7 +138,7 @@ class BaseBPoint(BaseObject,
 
             >>> contour = bPoint.contour
 
-        """
+        """,
     )
 
     def _get_contour(self) -> Optional[BaseContour]:
@@ -170,7 +170,7 @@ class BaseBPoint(BaseObject,
 
             >>> glyph = bPoint.glyph
 
-        """
+        """,
     )
 
     def _get_glyph(self) -> Optional[BaseGlyph]:
@@ -193,7 +193,7 @@ class BaseBPoint(BaseObject,
 
             >>> layer = bPoint.layer
 
-        """
+        """,
     )
 
     def _get_layer(self) -> Optional[BaseLayer]:
@@ -216,7 +216,7 @@ class BaseBPoint(BaseObject,
 
             >>> font = bPoint.font
 
-        """
+        """,
     )
 
     def _get_font(self) -> Optional[BaseFont]:
@@ -238,7 +238,7 @@ class BaseBPoint(BaseObject,
 
         :return: a :ref:`type-coordianate` representing the anchor point of the bPoint.
 
-        """
+        """,
     )
 
     def _get_base_anchor(self) -> CoordinateType:
@@ -300,7 +300,7 @@ class BaseBPoint(BaseObject,
         :return: A :ref:`type-coordinate` representing the incoming
             off-curve of the bPoin.
 
-        """
+        """,
     )
 
     def _get_base_bcpIn(self) -> CoordinateType:
@@ -356,9 +356,9 @@ class BaseBPoint(BaseObject,
         x, y = absoluteBCPIn(self.anchor, value)
         segment = self._segment
         if segment.type == "move" and value != (0, 0):
-            raise FontPartsError(("Cannot set the bcpIn for the first "
-                                  "point in an open contour.")
-                                 )
+            raise FontPartsError(
+                ("Cannot set the bcpIn for the first " "point in an open contour.")
+            )
 
         offCurves = segment.offCurve
         if offCurves:
@@ -387,7 +387,7 @@ class BaseBPoint(BaseObject,
         :return: A :ref:`type-coordinate` representing the outgoing
             off-curve of the bPoin.
 
-        """
+        """,
     )
 
     def _get_base_bcpOut(self) -> CoordinateType:
@@ -444,9 +444,9 @@ class BaseBPoint(BaseObject,
         segment = self._segment
         nextSegment = self._nextSegment
         if nextSegment.type == "move" and value != (0, 0):
-            raise FontPartsError(("Cannot set the bcpOut for the last "
-                                  "point in an open contour.")
-                                 )
+            raise FontPartsError(
+                ("Cannot set the bcpOut for the last " "point in an open contour.")
+            )
         else:
             offCurves = nextSegment.offCurve
             if offCurves:
@@ -482,7 +482,7 @@ class BaseBPoint(BaseObject,
 
         :return: A :class:`str` representing the type of the bPoint.
 
-        """
+        """,
     )
 
     def _get_base_type(self) -> str:
@@ -577,7 +577,7 @@ class BaseBPoint(BaseObject,
             >>> bPoint.index
             0
 
-        """
+        """,
     )
 
     def _get_base_index(self) -> Optional[int]:
@@ -655,14 +655,20 @@ class BaseBPoint(BaseObject,
 
         """
         x, y = self.anchor
-        self.anchor = (normalizers.normalizeVisualRounding(x),
-                       normalizers.normalizeVisualRounding(y))
+        self.anchor = (
+            normalizers.normalizeVisualRounding(x),
+            normalizers.normalizeVisualRounding(y),
+        )
         x, y = self.bcpIn
-        self.bcpIn = (normalizers.normalizeVisualRounding(x),
-                      normalizers.normalizeVisualRounding(y))
+        self.bcpIn = (
+            normalizers.normalizeVisualRounding(x),
+            normalizers.normalizeVisualRounding(y),
+        )
         x, y = self.bcpOut
-        self.bcpOut = (normalizers.normalizeVisualRounding(x),
-                       normalizers.normalizeVisualRounding(y))
+        self.bcpOut = (
+            normalizers.normalizeVisualRounding(x),
+            normalizers.normalizeVisualRounding(y),
+        )
 
 
 def relativeBCPIn(anchor: CoordinateType, BCPIn: CoordinateType) -> CoordinateType:

@@ -1,15 +1,9 @@
-from fontParts.base.base import (
-    BaseDict,
-    dynamicProperty,
-    interpolate,
-    reference
-)
+from fontParts.base.base import BaseDict, dynamicProperty, interpolate, reference
 from fontParts.base import normalizers
 from fontParts.base.deprecated import DeprecatedKerning, RemovedKerning
 
 
 class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
-
     """
     A Kerning object. This object normally created as part of a
     :class:`BaseFont`. An orphan Kerning object can be created
@@ -98,7 +92,9 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         The default behavior is to round to increments of 1.
         """
         if not isinstance(multiple, int):
-            raise TypeError(f"The round multiple must be an int not {multiple.__class__.__name__}.")
+            raise TypeError(
+                f"The round multiple must be an int not {multiple.__class__.__name__}."
+            )
         self._round(multiple)
 
     def _round(self, multiple=1):
@@ -109,15 +105,19 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         Subclasses may override this method.
         """
         for pair, value in self.items():
-            value = int(normalizers.normalizeVisualRounding(
-                        value / float(multiple))) * multiple
+            value = (
+                int(normalizers.normalizeVisualRounding(value / float(multiple)))
+                * multiple
+            )
             self[pair] = value
 
     # -------------
     # Interpolation
     # -------------
 
-    def interpolate(self, factor, minKerning, maxKerning, round=True, suppressError=True):
+    def interpolate(
+        self, factor, minKerning, maxKerning, round=True, suppressError=True
+    ):
         """
         Interpolates all pairs between two :class:`BaseKerning` objects:
 
@@ -141,16 +141,22 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         """
         factor = normalizers.normalizeInterpolationFactor(factor)
         if not isinstance(minKerning, BaseKerning):
-            raise TypeError(f"Interpolation to an instance of {self.__class__.__name__!r} can not be performed from an instance of {minKerning.__class__.__name__!r}.")
+            raise TypeError(
+                f"Interpolation to an instance of {self.__class__.__name__!r} can not be performed from an instance of {minKerning.__class__.__name__!r}."
+            )
         if not isinstance(maxKerning, BaseKerning):
-            raise TypeError(f"Interpolation to an instance of {self.__class__.__name__!r} can not be performed from an instance of {maxKerning.__class__.__name__!r}.")
+            raise TypeError(
+                f"Interpolation to an instance of {self.__class__.__name__!r} can not be performed from an instance of {maxKerning.__class__.__name__!r}."
+            )
         round = normalizers.normalizeBoolean(round)
         suppressError = normalizers.normalizeBoolean(suppressError)
-        self._interpolate(factor, minKerning, maxKerning,
-                          round=round, suppressError=suppressError)
+        self._interpolate(
+            factor, minKerning, maxKerning, round=round, suppressError=suppressError
+        )
 
-    def _interpolate(self, factor, minKerning, maxKerning,
-                     round=True, suppressError=True):
+    def _interpolate(
+        self, factor, minKerning, maxKerning, round=True, suppressError=True
+    ):
         """
         This is the environment implementation of :meth:`BaseKerning.interpolate`.
 
@@ -169,17 +175,17 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
 
         setRoundIntegerFunction(normalizers.normalizeVisualRounding)
         kerningGroupCompatibility = self._testKerningGroupCompatibility(
-                                                        minKerning,
-                                                        maxKerning,
-                                                        suppressError=suppressError
-                                                        )
+            minKerning, maxKerning, suppressError=suppressError
+        )
         if not kerningGroupCompatibility:
             self.clear()
         else:
             minKerning = fontMath.MathKerning(
-                kerning=minKerning, groups=minKerning.font.groups)
+                kerning=minKerning, groups=minKerning.font.groups
+            )
             maxKerning = fontMath.MathKerning(
-                kerning=maxKerning, groups=maxKerning.font.groups)
+                kerning=maxKerning, groups=maxKerning.font.groups
+            )
             result = interpolate(minKerning, maxKerning, factor)
             if round:
                 result.round()
@@ -193,9 +199,9 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         match = True
         while match:
             for _, sideAttr in (
-                    ("side 1", "side1KerningGroups"),
-                    ("side 2", "side2KerningGroups")
-                    ):
+                ("side 1", "side1KerningGroups"),
+                ("side 2", "side2KerningGroups"),
+            ):
                 minSideGroups = getattr(minGroups, sideAttr)
                 maxSideGroups = getattr(maxGroups, sideAttr)
                 if minSideGroups.keys() != maxSideGroups.keys():
@@ -369,6 +375,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         :ref:`type-int-float` or `default`.
         """
         from fontTools.ufoLib.kerning import lookupKerningValue
+
         font = self.font
         groups = font.groups
         return lookupKerningValue(pair, self, groups, fallback=default)

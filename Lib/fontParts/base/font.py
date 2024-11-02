@@ -1,9 +1,7 @@
 # pylint: disable=C0103, W0613
 from __future__ import annotations
 import os
-from typing import (
-    TYPE_CHECKING, Any, Generic, List, Optional, Tuple, Type, Union
-)
+from typing import TYPE_CHECKING, Any, Generic, List, Optional, Tuple, Type, Union
 
 from fontParts.base.errors import FontPartsError
 from fontParts.base.base import dynamicProperty, InterpolationMixin
@@ -18,8 +16,9 @@ from fontParts.base.annotations import (
     CoordinateType,
     FactorType,
     KerningDictType,
-    ReverseComponentMappingType
+    ReverseComponentMappingType,
 )
+
 if TYPE_CHECKING:
     from fontParts.base.info import BaseInfo
     from fontParts.base.groups import BaseGroups
@@ -31,10 +30,7 @@ if TYPE_CHECKING:
     from fontParts.base.guideline import BaseGuideline
 
 
-class BaseFont(_BaseGlyphVendor,
-               InterpolationMixin,
-               DeprecatedFont,
-               RemovedFont):
+class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont):
     """Represent the basis for a font object.
 
     Instances of this class are almost always created with one of the
@@ -54,11 +50,14 @@ class BaseFont(_BaseGlyphVendor,
 
     """
 
-    def __init__(self,
-                 pathOrObject: Optional[Union[str, 'BaseFont']] = None,
-                 showInterface: bool = True) -> None:
-        super(BaseFont, self).__init__(pathOrObject=pathOrObject,
-                                       showInterface=showInterface)
+    def __init__(
+        self,
+        pathOrObject: Optional[Union[str, "BaseFont"]] = None,
+        showInterface: bool = True,
+    ) -> None:
+        super(BaseFont, self).__init__(
+            pathOrObject=pathOrObject, showInterface=showInterface
+        )
 
     def _reprContents(self) -> List[str]:
         contents: List[str] = [
@@ -80,7 +79,7 @@ class BaseFont(_BaseGlyphVendor,
         "lib",
         "layerOrder",
         "defaultLayerName",
-        "glyphOrder"
+        "glyphOrder",
     )
 
     def copy(self) -> BaseFont:
@@ -142,10 +141,12 @@ class BaseFont(_BaseGlyphVendor,
 
     # Initialize
 
-    def _init(self,
-              pathOrObject: Optional[Union[str, BaseFont]],
-              showInterface: bool,
-              **kwargs: Any) -> None:
+    def _init(
+        self,
+        pathOrObject: Optional[Union[str, BaseFont]],
+        showInterface: bool,
+        **kwargs: Any,
+    ) -> None:
         r"""Initialize the native font object.
 
         This method is the environment implementation
@@ -192,7 +193,7 @@ class BaseFont(_BaseGlyphVendor,
             >>> print(font.path)
             "/path/to/my/font.ufo"
 
-        """
+        """,
     )
 
     def _get_base_path(self) -> Optional[str]:
@@ -224,11 +225,13 @@ class BaseFont(_BaseGlyphVendor,
 
     # save
 
-    def save(self,
-             path: Optional[str] = None,
-             showProgress: bool = False,
-             formatVersion: Optional[int] = None,
-             fileStructure: Optional[str] = None) -> None:
+    def save(
+        self,
+        path: Optional[str] = None,
+        showProgress: bool = False,
+        formatVersion: Optional[int] = None,
+        fileStructure: Optional[str] = None,
+    ) -> None:
         """Save the font to the specified path.
 
         :param path: The path to which the font should be saved.
@@ -269,25 +272,31 @@ class BaseFont(_BaseGlyphVendor,
 
         """
         if path is None and self.path is None:
-            raise IOError(("The font cannot be saved because no file "
-                           "location has been given."))
+            raise IOError(
+                ("The font cannot be saved because no file " "location has been given.")
+            )
         if path is not None:
             path = normalizers.normalizeFilePath(path)
         showProgress = bool(showProgress)
         if formatVersion is not None:
-            formatVersion = normalizers.normalizeFileFormatVersion(
-                formatVersion)
+            formatVersion = normalizers.normalizeFileFormatVersion(formatVersion)
         if fileStructure is not None:
             fileStructure = normalizers.normalizeFileStructure(fileStructure)
-        self._save(path=path, showProgress=showProgress,
-                   formatVersion=formatVersion, fileStructure=fileStructure)
+        self._save(
+            path=path,
+            showProgress=showProgress,
+            formatVersion=formatVersion,
+            fileStructure=fileStructure,
+        )
 
-    def _save(self,
-              path: Optional[str],
-              showProgress: bool,
-              formatVersion: Optional[float],
-              fileStructure: Optional[str],
-              **kwargs: Any) -> None:
+    def _save(
+        self,
+        path: Optional[str],
+        showProgress: bool,
+        formatVersion: Optional[float],
+        fileStructure: Optional[str],
+        **kwargs: Any,
+    ) -> None:
         r"""Save the native font to the specified path.
 
         This is the environment implementation of :meth:`BaseFont.save`.
@@ -401,10 +410,9 @@ class BaseFont(_BaseGlyphVendor,
         )
         return formatToExtension.get(format, fallbackFormat)
 
-    def generate(self,
-                 format: str,
-                 path: Optional[str] = None,
-                 **environmentOptions: Any) -> None:
+    def generate(
+        self, format: str, path: Optional[str] = None, **environmentOptions: Any
+    ) -> None:
         r"""Generate the font in another format.
 
         This method converts the font to the specified format and saves
@@ -440,6 +448,7 @@ class BaseFont(_BaseGlyphVendor,
 
         """
         import warnings
+
         if format is None:
             raise ValueError("The format must be defined when generating.")
         elif not isinstance(format, str):
@@ -448,28 +457,37 @@ class BaseFont(_BaseGlyphVendor,
         for key, value in environmentOptions.items():
             valid = self._isValidGenerateEnvironmentOption(key)
             if not valid:
-                warnings.warn(f"The {key} argument is not supported in this environment.", UserWarning)
+                warnings.warn(
+                    f"The {key} argument is not supported in this environment.",
+                    UserWarning,
+                )
             env[key] = value
         environmentOptions = env
         ext = self.generateFormatToExtension(format, "." + format)
         if path is None and self.path is None:
-            raise IOError(("The file cannot be generated because an "
-                           "output path was not defined."))
+            raise IOError(
+                (
+                    "The file cannot be generated because an "
+                    "output path was not defined."
+                )
+            )
         elif path is None:
             path = os.path.splitext(self.path)[0]
             path += ext
         elif os.path.isdir(path):
             if self.path is None:
-                raise IOError(("The file cannot be generated because "
-                               "the file does not have a path."))
+                raise IOError(
+                    (
+                        "The file cannot be generated because "
+                        "the file does not have a path."
+                    )
+                )
             fileName = os.path.basename(self.path)
             fileName += ext
             path = os.path.join(path, fileName)
         path = normalizers.normalizeFilePath(path)
         return self._generate(
-            format=format,
-            path=path,
-            environmentOptions=environmentOptions
+            format=format, path=path, environmentOptions=environmentOptions
         )
 
     @staticmethod
@@ -492,11 +510,13 @@ class BaseFont(_BaseGlyphVendor,
         """
         return False
 
-    def _generate(self,
-                  format: str,
-                  path: Optional[str],
-                  environmentOptions: dict,
-                  **kwargs: object) -> None:
+    def _generate(
+        self,
+        format: str,
+        path: Optional[str],
+        environmentOptions: dict,
+        **kwargs: object,
+    ) -> None:
         """Generate the native font in another format.
 
         This is the environment implementation
@@ -544,7 +564,7 @@ class BaseFont(_BaseGlyphVendor,
             >>> font.info.familyName
             "My Family"
 
-        """
+        """,
     )
 
     def _get_base_info(self) -> BaseInfo:
@@ -583,7 +603,7 @@ class BaseFont(_BaseGlyphVendor,
             >>> font.groups["myGroup"]
             ["A", "B", "C"]
 
-        """
+        """,
     )
 
     def _get_base_groups(self) -> BaseGroups:
@@ -623,7 +643,7 @@ class BaseFont(_BaseGlyphVendor,
             >>> font.kerning["A", "B"]
             -100
 
-        """
+        """,
     )
 
     def _get_base_kerning(self) -> BaseKerning:
@@ -654,7 +674,7 @@ class BaseFont(_BaseGlyphVendor,
         :return: A :class:`dict` of the font's :class:`BaseKerning` keys
             mapped to their respective values.
 
-         """
+        """
         return self._getFlatKerning()
 
     def _getFlatKerning(self) -> KerningDictType:
@@ -722,7 +742,7 @@ class BaseFont(_BaseGlyphVendor,
             >>> font.features.text
             "include(features/substitutions.fea);"
 
-        """
+        """,
     )
 
     def _get_base_features(self) -> BaseFeatures:
@@ -762,7 +782,7 @@ class BaseFont(_BaseGlyphVendor,
             >>> font.lib["org.robofab.hello"]
             "world"
 
-        """
+        """,
     )
 
     def _get_base_lib(self) -> BaseLib:
@@ -807,7 +827,7 @@ class BaseFont(_BaseGlyphVendor,
             >>> font.tempLib["org.robofab.hello"]
             "world"
 
-        """
+        """,
     )
 
     def _get_base_tempLib(self) -> BaseLib:
@@ -852,7 +872,7 @@ class BaseFont(_BaseGlyphVendor,
             "My Layer 1"
             "My Layer 2"
 
-        """
+        """,
     )
 
     def _get_base_layers(self) -> Tuple[BaseLayer, ...]:
@@ -898,7 +918,7 @@ class BaseFont(_BaseGlyphVendor,
             >>> font.layerOrder
             ("My Layer 2", "My Layer 1")
 
-        """
+        """,
     )
 
     def _get_base_layerOrder(self) -> Tuple[str, ...]:
@@ -929,9 +949,7 @@ class BaseFont(_BaseGlyphVendor,
         """
         self.raiseNotImplementedError()
 
-    def _set_layerOrder(self,
-                        value: CollectionType[str],
-                        **kwargs: Any) -> None:
+    def _set_layerOrder(self, value: CollectionType[str], **kwargs: Any) -> None:
         r"""Set the order of the layers in the native font.
 
         This is the environment implementation of the
@@ -974,7 +992,7 @@ class BaseFont(_BaseGlyphVendor,
             >>> font.defaultLayerName
             "My Layer 2"
 
-        """
+        """,
     )
 
     def _get_base_defaultLayerName(self) -> str:
@@ -1036,7 +1054,7 @@ class BaseFont(_BaseGlyphVendor,
             >>> layer = font.defaultLayer
             >>> font.defaultLayer = otherLayer
 
-        """
+        """,
     )
 
     def _get_base_defaultLayer(self) -> BaseLayer:
@@ -1134,9 +1152,7 @@ class BaseFont(_BaseGlyphVendor,
 
     # new
 
-    def newLayer(self,
-                 name: str,
-                 color: Optional[ColorType] = None) -> BaseLayer:
+    def newLayer(self, name: str, color: Optional[ColorType] = None) -> BaseLayer:
         """Create a new layer in the font.
 
         :param name: The name of the new layer to create.
@@ -1161,10 +1177,9 @@ class BaseFont(_BaseGlyphVendor,
         self._setFontInLayer(layer)
         return layer
 
-    def _newLayer(self,
-                  name: str,
-                  color: Optional[ColorType],
-                  **kwargs: Any) -> BaseLayer:
+    def _newLayer(
+        self, name: str, color: Optional[ColorType], **kwargs: Any
+    ) -> BaseLayer:
         r"""Create a new layer in the native font.
 
         This is the environment implementation of
@@ -1228,9 +1243,7 @@ class BaseFont(_BaseGlyphVendor,
 
     # insert
 
-    def insertLayer(self,
-                    layer: BaseLayer,
-                    name: Optional[str] = None) -> BaseLayer:
+    def insertLayer(self, layer: BaseLayer, name: Optional[str] = None) -> BaseLayer:
         """Insert a specified layer into the font.
 
         This method will not insert a layer directly, but rather create
@@ -1256,9 +1269,7 @@ class BaseFont(_BaseGlyphVendor,
             self.removeLayer(normalizedName)
         return self._insertLayer(layer, name=normalizedName)
 
-    def _insertLayer(self, layer: BaseLayer,
-                     name: str,
-                     **kwargs: Any) -> BaseLayer:
+    def _insertLayer(self, layer: BaseLayer, name: str, **kwargs: Any) -> BaseLayer:
         r"""Insert a specified layer into the native font.
 
         This is the environment implementation of :meth:`BaseFont.insertLayer`.
@@ -1312,14 +1323,10 @@ class BaseFont(_BaseGlyphVendor,
         layerOrder = self.layerOrder
         layerName = normalizers.normalizeLayerName(layerName)
         if layerName not in layerOrder:
-            raise ValueError(
-                f"No layer with the name '{layerName}' exists."
-            )
+            raise ValueError(f"No layer with the name '{layerName}' exists.")
         newLayerName = normalizers.normalizeLayerName(newLayerName)
         if newLayerName in layerOrder:
-            raise ValueError(
-                f"A layer with the name '{newLayerName}' already exists."
-            )
+            raise ValueError(f"A layer with the name '{newLayerName}' already exists.")
         newLayer = self._duplicateLayer(layerName, newLayerName)
         newLayer = normalizers.normalizeLayer(newLayer)
         return newLayer
@@ -1370,14 +1377,10 @@ class BaseFont(_BaseGlyphVendor,
         layerOrder = self.layerOrder
         layerName = normalizers.normalizeLayerName(layerName)
         if layerName not in layerOrder:
-            raise ValueError(
-                f"No layer with the name '{layerName}' exists."
-            )
+            raise ValueError(f"No layer with the name '{layerName}' exists.")
         otherLayerName = normalizers.normalizeLayerName(otherLayerName)
         if otherLayerName not in layerOrder:
-            raise ValueError(
-                f"No layer with the name '{otherLayerName}' exists."
-            )
+            raise ValueError(f"No layer with the name '{otherLayerName}' exists.")
         self._swapLayerNames(layerName, otherLayerName)
 
     def _swapLayerNames(self, layerName: str, otherLayerName: str) -> None:
@@ -1399,6 +1402,7 @@ class BaseFont(_BaseGlyphVendor,
 
         """
         import random
+
         layer1 = self.getLayer(layerName)
         layer2 = self.getLayer(otherLayerName)
         # make a temporary name and assign it to
@@ -1509,9 +1513,7 @@ class BaseFont(_BaseGlyphVendor,
         layer = self.defaultLayer
         layer.removeGlyph(name)
 
-    def __setitem__(self,
-                    name: str,
-                    glyph: BaseGlyph) -> BaseGlyph:
+    def __setitem__(self, name: str, glyph: BaseGlyph) -> BaseGlyph:
         """Insert the specified glyph into the font.
 
         Example::
@@ -1556,7 +1558,7 @@ class BaseFont(_BaseGlyphVendor,
             ["C", "B", "A"]
             >>> font.glyphOrder = ("A", "B", "C")
 
-        """
+        """,
     )
 
     def _get_base_glyphOrder(self) -> Tuple[str]:
@@ -1699,7 +1701,7 @@ class BaseFont(_BaseGlyphVendor,
             45
             90
 
-        """
+        """,
     )
 
     def _get_guidelines(self) -> Tuple[BaseGuideline, ...]:
@@ -1716,8 +1718,9 @@ class BaseFont(_BaseGlyphVendor,
             Subclasses may override this method.
 
         """
-        return tuple(self._getitem__guidelines(i)
-                      for i in range(self._len__guidelines()))
+        return tuple(
+            self._getitem__guidelines(i) for i in range(self._len__guidelines())
+        )
 
     def _len__guidelines(self) -> int:
         return self._lenGuidelines()
@@ -1767,13 +1770,14 @@ class BaseFont(_BaseGlyphVendor,
                 return i
         raise FontPartsError("The guideline could not be found.")
 
-    def appendGuideline(self,
-                        position: Optional[CoordinateType] = None,
-                        angle: Optional[float] = None,
-                        name: Optional[str] = None,
-                        color: Optional[ColorType] = None,
-                        guideline: Optional[BaseGuideline] = None
-                        ) -> BaseGuideline:
+    def appendGuideline(
+        self,
+        position: Optional[CoordinateType] = None,
+        angle: Optional[float] = None,
+        name: Optional[str] = None,
+        color: Optional[ColorType] = None,
+        guideline: Optional[BaseGuideline] = None,
+    ) -> BaseGuideline:
         """Append a new guideline to the font.
 
         This method will create a new :class:`BaseGuideline` with the
@@ -1816,8 +1820,7 @@ class BaseFont(_BaseGlyphVendor,
                 color = normalizedGuideline.color
             if normalizedGuideline.identifier is not None:
                 existing = set(
-                    [g.identifier for g in self.guidelines
-                     if g.identifier is not None]
+                    [g.identifier for g in self.guidelines if g.identifier is not None]
                 )
                 if normalizedGuideline.identifier not in existing:
                     identifier = normalizedGuideline.identifier
@@ -1834,13 +1837,15 @@ class BaseFont(_BaseGlyphVendor,
         newGuideline.font = self
         return newGuideline
 
-    def _appendGuideline(self,
-                         position: Optional[CoordinateType],
-                         angle: Optional[float],
-                         name: Optional[str],
-                         color: Optional[ColorType],
-                         guideline: Optional[BaseGuideline],
-                         **kwargs) -> BaseGuideline:
+    def _appendGuideline(
+        self,
+        position: Optional[CoordinateType],
+        angle: Optional[float],
+        name: Optional[str],
+        color: Optional[ColorType],
+        guideline: Optional[BaseGuideline],
+        **kwargs,
+    ) -> BaseGuideline:
         r"""Append a new guideline to the native font.
 
         This is the environment implementation of
@@ -1865,8 +1870,7 @@ class BaseFont(_BaseGlyphVendor,
         """
         self.raiseNotImplementedError()
 
-    def removeGuideline(self,
-                        guideline: Union[int, BaseGuideline]) -> None:
+    def removeGuideline(self, guideline: Union[int, BaseGuideline]) -> None:
         """Remove a guideline from the font.
 
         :param guideline: A :class:`BaseGuideline` object or an integer
@@ -1933,12 +1937,14 @@ class BaseFont(_BaseGlyphVendor,
     # Interpolation
     # -------------
 
-    def interpolate(self,
-                    factor: FactorType,
-                    minFont: BaseFont,
-                    maxFont: BaseFont,
-                    round: bool = True,
-                    suppressError: bool = True) -> None:
+    def interpolate(
+        self,
+        factor: FactorType,
+        minFont: BaseFont,
+        maxFont: BaseFont,
+        round: bool = True,
+        suppressError: bool = True,
+    ) -> None:
         """Interpolate all possible data in the font.
 
         The interpolation occurs on a 0 to 1.0 range between `minFont`
@@ -1976,15 +1982,18 @@ class BaseFont(_BaseGlyphVendor,
             )
         round = normalizers.normalizeBoolean(round)
         suppressError = normalizers.normalizeBoolean(suppressError)
-        self._interpolate(factor, minFont, maxFont,
-                          round=round, suppressError=suppressError)
+        self._interpolate(
+            factor, minFont, maxFont, round=round, suppressError=suppressError
+        )
 
-    def _interpolate(self,
-                     factor: FactorType,
-                     minFont: BaseFont,
-                     maxFont: BaseFont,
-                     round: bool,
-                     suppressError: bool) -> None:
+    def _interpolate(
+        self,
+        factor: FactorType,
+        minFont: BaseFont,
+        maxFont: BaseFont,
+        round: bool,
+        suppressError: bool,
+    ) -> None:
         """Interpolate all possible data in the native font.
 
         This is the environment implementation of :meth:`BaseFont.interpolate`.
@@ -2018,19 +2027,26 @@ class BaseFont(_BaseGlyphVendor,
             minLayer = minFont.getLayer(layerName)
             maxLayer = maxFont.getLayer(layerName)
             dstLayer = self.newLayer(layerName)
-            dstLayer.interpolate(factor, minLayer, maxLayer,
-                                 round=round, suppressError=suppressError)
+            dstLayer.interpolate(
+                factor, minLayer, maxLayer, round=round, suppressError=suppressError
+            )
         if self.layerOrder:
             if ufoLib.DEFAULT_LAYER_NAME in self.layerOrder:
                 self.defaultLayer = self.getLayer(ufoLib.DEFAULT_LAYER_NAME)
             else:
                 self.defaultLayer = self.getLayer(self.layerOrder[0])
         # kerning and groups
-        self.kerning.interpolate(factor, minFont.kerning, maxFont.kerning,
-                                 round=round, suppressError=suppressError)
+        self.kerning.interpolate(
+            factor,
+            minFont.kerning,
+            maxFont.kerning,
+            round=round,
+            suppressError=suppressError,
+        )
         # info
-        self.info.interpolate(factor, minFont.info, maxFont.info,
-                              round=round, suppressError=suppressError)
+        self.info.interpolate(
+            factor, minFont.info, maxFont.info, round=round, suppressError=suppressError
+        )
 
     compatibilityReporterClass = FontCompatibilityReporter
 
@@ -2059,9 +2075,9 @@ class BaseFont(_BaseGlyphVendor,
         """
         return super(BaseFont, self).isCompatible(other, BaseFont)
 
-    def _isCompatible(self,
-                      other: BaseFont,
-                      reporter: FontCompatibilityReporter) -> None:
+    def _isCompatible(
+        self, other: BaseFont, reporter: FontCompatibilityReporter
+    ) -> None:
         """Evaluate interpolation compatibility with another native font.
 
         This is the environment implementation of :meth:`BaseFont.isCompatible`.
@@ -2087,11 +2103,13 @@ class BaseFont(_BaseGlyphVendor,
         if len(guidelines1.difference(guidelines2)) != 0:
             reporter.warning = True
             reporter.guidelinesMissingFromFont2 = list(
-                guidelines1.difference(guidelines2))
+                guidelines1.difference(guidelines2)
+            )
         if len(guidelines2.difference(guidelines1)) != 0:
             reporter.warning = True
             reporter.guidelinesMissingInFont1 = list(
-                guidelines2.difference(guidelines1))
+                guidelines2.difference(guidelines1)
+            )
         # incompatible layers
         layers1 = set(font1.layerOrder)
         layers2 = set(font2.layerOrder)
@@ -2223,12 +2241,13 @@ class BaseFont(_BaseGlyphVendor,
 
             >>> layer.selectedLayers = someLayers
 
-        """
+        """,
     )
 
     def _get_base_selectedLayers(self) -> Tuple[BaseLayer, ...]:
-        selected = tuple(normalizers.normalizeLayer(layer) for
-                          layer in self._get_selectedLayers())
+        selected = tuple(
+            normalizers.normalizeLayer(layer) for layer in self._get_selectedLayers()
+        )
         return selected
 
     def _get_selectedLayers(self) -> Tuple[BaseLayer, ...]:
@@ -2287,12 +2306,14 @@ class BaseFont(_BaseGlyphVendor,
 
             >>> layer.selectedLayerNames = ["A", "B", "C"]
 
-        """
+        """,
     )
 
     def _get_base_selectedLayerNames(self) -> Tuple[str, ...]:
-        selected = tuple(normalizers.normalizeLayerName(name) for
-                          name in self._get_selectedLayerNames())
+        selected = tuple(
+            normalizers.normalizeLayerName(name)
+            for name in self._get_selectedLayerNames()
+        )
         return selected
 
     def _get_selectedLayerNames(self) -> Tuple[str, ...]:
@@ -2358,12 +2379,14 @@ class BaseFont(_BaseGlyphVendor,
 
             >>> font.selectedGuidelines = [0, 2]
 
-        """
+        """,
     )
 
     def _get_base_selectedGuidelines(self) -> Tuple[BaseGuideline, ...]:
-        selected = tuple(normalizers.normalizeGuideline(guideline) for
-                          guideline in self._get_selectedGuidelines())
+        selected = tuple(
+            normalizers.normalizeGuideline(guideline)
+            for guideline in self._get_selectedGuidelines()
+        )
         return selected
 
     def _get_selectedGuidelines(self) -> Tuple[BaseGuideline, ...]:

@@ -9,14 +9,11 @@ from fontParts.base.base import (
     SelectionMixin,
     IdentifierMixin,
     dynamicProperty,
-    reference
+    reference,
 )
 from fontParts.base import normalizers
 from fontParts.base.deprecated import DeprecatedPoint, RemovedPoint
-from fontParts.base.annotations import(
-    IntFloatType,
-    TransformationMatrixType
-)
+from fontParts.base.annotations import IntFloatType, TransformationMatrixType
 
 if TYPE_CHECKING:
     from fontParts.base.font import BaseFont
@@ -25,14 +22,15 @@ if TYPE_CHECKING:
     from fontParts.base.contour import BaseContour
 
 
-class BasePoint(BaseObject,
-                TransformationMixin,
-                PointPositionMixin,
-                SelectionMixin,
-                IdentifierMixin,
-                DeprecatedPoint,
-                RemovedPoint):
-
+class BasePoint(
+    BaseObject,
+    TransformationMixin,
+    PointPositionMixin,
+    SelectionMixin,
+    IdentifierMixin,
+    DeprecatedPoint,
+    RemovedPoint,
+):
     """Represent the basis for a point object.
 
     This object is almost always created with :meth:`BaseContour.appendPoint`,
@@ -50,7 +48,7 @@ class BasePoint(BaseObject,
         "smooth",
         "x",
         "y",
-        "name"
+        "name",
     )
 
     def _reprContents(self) -> list[str]:
@@ -87,7 +85,7 @@ class BasePoint(BaseObject,
 
             >>> contour = point.contour
 
-        """
+        """,
     )
 
     def _get_contour(self) -> Optional[BaseContour]:
@@ -119,7 +117,7 @@ class BasePoint(BaseObject,
 
             >>> glyph = point.glyph
 
-        """
+        """,
     )
 
     def _get_glyph(self) -> Optional[BaseObject]:
@@ -142,7 +140,7 @@ class BasePoint(BaseObject,
 
             >>> layer = point.layer
 
-        """
+        """,
     )
 
     def _get_layer(self) -> Optional[BaseObject]:
@@ -154,7 +152,6 @@ class BasePoint(BaseObject,
 
     font: dynamicProperty = dynamicProperty(
         "font",
-
         """Get the point's parent font object.
 
         This property is read-only.
@@ -166,7 +163,7 @@ class BasePoint(BaseObject,
 
             >>> font = point.font
 
-        """
+        """,
     )
 
     def _get_font(self) -> Optional[BaseObject]:
@@ -199,7 +196,8 @@ class BasePoint(BaseObject,
 
         :return: A :class:`str` representing the type of the point.
 
-        """)
+        """,
+    )
 
     def _get_base_type(self) -> str:
         value = self._get_type()
@@ -264,7 +262,7 @@ class BasePoint(BaseObject,
             False
             >>> point.smooth = True
 
-        """
+        """,
     )
 
     def _get_base_smooth(self) -> bool:
@@ -329,7 +327,7 @@ class BasePoint(BaseObject,
             100
             >>> point.x = 101
 
-        """
+        """,
     )
 
     def _get_base_x(self) -> IntFloatType:
@@ -398,7 +396,7 @@ class BasePoint(BaseObject,
             100
             >>> point.y = 101
 
-        """
+        """,
     )
 
     def _get_base_y(self) -> IntFloatType:
@@ -469,7 +467,7 @@ class BasePoint(BaseObject,
             >>> point.index
             0
 
-        """
+        """,
     )
 
     def _get_base_index(self) -> Optional[int]:
@@ -514,7 +512,7 @@ class BasePoint(BaseObject,
             'my point'
             >>> point.name = None
 
-        """
+        """,
     )
 
     def _get_base_name(self) -> Optional[str]:
