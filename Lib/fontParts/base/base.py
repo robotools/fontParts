@@ -1357,7 +1357,8 @@ class IdentifierMixin:
     def _setIdentifier(self, value: str) -> None:
         """Force a specific identifier onto an object.
 
-        This method is used internally to force a specific identifier onto an object in certain situations.
+        This method is used internally to force a specific identifier onto an
+        object in certain situations.
 
         :param value: The identifier to set as a :class:`str` or :obj:`None`.
 
