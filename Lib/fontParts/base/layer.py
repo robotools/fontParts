@@ -589,7 +589,7 @@ class BaseLayer(_BaseGlyphVendor,
             f"'{self.name}'",
         ]
         if self.color:
-            contents.append(f"color={str(self.color)!r}")
+            contents.append(f"color={self.color!r}")
         return contents
 
     # ----
