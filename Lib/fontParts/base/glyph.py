@@ -1772,6 +1772,8 @@ class BaseGlyph(
         normalizedPosition = normalizers.normalizeCoordinateTuple(position)
         if color is not None:
             normalizedColor = normalizers.normalizeColor(color)
+        else:
+            normalizedColor = None
         normalizedIdentifier = normalizers.normalizeIdentifier(identifier)
         return self._appendAnchor(
             normalizedName,
@@ -2016,8 +2018,12 @@ class BaseGlyph(
         normalizedAngle = normalizers.normalizeRotationAngle(angle)
         if name is not None:
             normalizedName = normalizers.normalizeGuidelineName(name)
+        else:
+            normalizedName = None
         if color is not None:
             normalizedColor = normalizers.normalizeColor(color)
+        else:
+            normalizedColor = None
         normalizedIdentifier = normalizers.normalizeIdentifier(identifier)
         newGuideline = self._appendGuideline(
             normalizedPosition,
@@ -3282,6 +3288,8 @@ class BaseGlyph(
         normalizedPosition = normalizers.normalizeTransformationOffset(position)
         if color is not None:
             normalizedColor = normalizers.normalizeColor(color)
+        else:
+            normalizedColor = None
         sx, sy = normalizedScale
         ox, oy = normalizedPosition
         transformation = (sx, 0, 0, sy, ox, oy)
