@@ -7,7 +7,6 @@ from fontParts.fontshell.bPoint import RBPoint
 
 
 class RContour(RBaseObject, BaseContour):
-
     wrapClass = defcon.Contour
     pointClass = RPoint
     segmentClass = RSegment
@@ -93,8 +92,16 @@ class RContour(RBaseObject, BaseContour):
         point = contour[index]
         return self.pointClass(point)
 
-    def _insertPoint(self, index, position, type=None, smooth=None,
-                     name=None, identifier=None, **kwargs):
+    def _insertPoint(
+        self,
+        index,
+        position,
+        type=None,
+        smooth=None,
+        name=None,
+        identifier=None,
+        **kwargs,
+    ):
         point = self.pointClass()
         point.x = position[0]
         point.y = position[1]

@@ -4,7 +4,6 @@ from fontParts.base.deprecated import DeprecatedGroups, RemovedGroups
 
 
 class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
-
     """
     A Groups object. This object normally created as part of a
     :class:`BaseFont`. An orphan Groups object can be created like this::
@@ -68,8 +67,9 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         """
         glyphName = normalizers.normalizeGlyphName(glyphName)
         groupNames = self._findGlyph(glyphName)
-        groupNames = [self.keyNormalizer.__func__(
-            groupName) for groupName in groupNames]
+        groupNames = [
+            self.keyNormalizer.__func__(groupName) for groupName in groupNames
+        ]
         return groupNames
 
     def _findGlyph(self, glyphName):
@@ -101,7 +101,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         The value will be a :ref:`dict` with
         :ref:`string` keys representing group names
         and :ref:`tuple` contaning glyph names.
-        """
+        """,
     )
 
     def _get_base_side1KerningGroups(self):
@@ -134,7 +134,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         The value will be a :ref:`dict` with
         :ref:`string` keys representing group names
         and :ref:`tuple` contaning glyph names.
-        """
+        """,
     )
 
     def _get_base_side2KerningGroups(self):

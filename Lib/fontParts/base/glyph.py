@@ -20,7 +20,7 @@ from fontParts.base.base import (
     SelectionMixin,
     dynamicProperty,
     interpolate,
-    FuzzyNumber
+    FuzzyNumber,
 )
 from fontParts.base import normalizers
 from fontParts.base.compatibility import GlyphCompatibilityReporter
@@ -36,8 +36,9 @@ from fontParts.base.annotations import (
     PenType,
     PointPenType,
     TransformationMatrixType,
-    ScaleType
+    ScaleType,
 )
+
 if TYPE_CHECKING:
     from fontParts.base.font import BaseFont
     from fontParts.base.lib import BaseLib
@@ -49,12 +50,14 @@ if TYPE_CHECKING:
     from fontParts.base.image import BaseImage
 
 
-class BaseGlyph(BaseObject,
-                TransformationMixin,
-                InterpolationMixin,
-                SelectionMixin,
-                DeprecatedGlyph,
-                RemovedGlyph):
+class BaseGlyph(
+    BaseObject,
+    TransformationMixin,
+    InterpolationMixin,
+    SelectionMixin,
+    DeprecatedGlyph,
+    RemovedGlyph,
+):
     """Represent the basis for a glyph object.
 
     This object will almost always be created by retrieving it from a
@@ -69,7 +72,7 @@ class BaseGlyph(BaseObject,
         "height",
         "note",
         "markColor",
-        "lib"
+        "lib",
     )
 
     def _reprContents(self) -> List[str]:
@@ -159,7 +162,7 @@ class BaseGlyph(BaseObject,
 
             >>> layer = glyph.layer
 
-        """
+        """,
     )
 
     def _get_layer(self) -> Optional[BaseLayer]:
@@ -185,7 +188,7 @@ class BaseGlyph(BaseObject,
 
             >>> font = glyph.font
 
-        """
+        """,
     )
 
     def _get_font(self) -> Optional[BaseFont]:
@@ -215,7 +218,7 @@ class BaseGlyph(BaseObject,
             "A"
             >>> glyph.name = "A.alt"
 
-        """
+        """,
     )
 
     def _get_base_name(self) -> str:
@@ -287,7 +290,7 @@ class BaseGlyph(BaseObject,
             >>> glyph.unicodes = [65, 66]
             >>> glyph.unicodes = []
 
-        """
+        """,
     )
 
     def _get_base_unicodes(self) -> Tuple[int, ...]:
@@ -370,7 +373,7 @@ class BaseGlyph(BaseObject,
             >>> glyph.unicodes
             ()
 
-        """
+        """,
     )
 
     def _get_base_unicode(self) -> Optional[int]:
@@ -474,7 +477,7 @@ class BaseGlyph(BaseObject,
             500
             >>> glyph.width = 200
 
-        """
+        """,
     )
 
     def _get_base_width(self) -> IntFloatType:
@@ -539,7 +542,7 @@ class BaseGlyph(BaseObject,
             35
             >>> glyph.leftMargin = 45
 
-        """
+        """,
     )
 
     def _get_base_leftMargin(self) -> Optional[IntFloatType]:
@@ -604,7 +607,7 @@ class BaseGlyph(BaseObject,
             35
             >>> glyph.rightMargin = 45
 
-        """
+        """,
     )
 
     def _get_base_rightMargin(self) -> Optional[IntFloatType]:
@@ -673,7 +676,7 @@ class BaseGlyph(BaseObject,
             500
             >>> glyph.height = 200
 
-        """
+        """,
     )
 
     def _get_base_height(self) -> IntFloatType:
@@ -734,7 +737,7 @@ class BaseGlyph(BaseObject,
             35
             >>> glyph.bottomMargin = 45
 
-        """
+        """,
     )
 
     def _get_base_bottomMargin(self) -> Optional[IntFloatType]:
@@ -798,7 +801,7 @@ class BaseGlyph(BaseObject,
             >>> glyph.topMargin
             35
             >>> glyph.topMargin = 45
-        """
+        """,
     )
 
     def _get_base_topMargin(self) -> Optional[IntFloatType]:
@@ -885,10 +888,9 @@ class BaseGlyph(BaseObject,
         """
         self.raiseNotImplementedError()
 
-    def draw(self,
-             pen: PenType,
-             contours: bool = True,
-             components: bool = True) -> None:
+    def draw(
+        self, pen: PenType, contours: bool = True, components: bool = True
+    ) -> None:
         """Draw the glyph's outline data to the given pen object.
 
         :param pen: The :class:`~fontTools.pens.basePen.AbstractPen` subclass
@@ -912,10 +914,9 @@ class BaseGlyph(BaseObject,
             for component in self.components:
                 component.draw(pen)
 
-    def drawPoints(self,
-                   pen: PointPenType,
-                   contours: bool = True,
-                   components: bool = True) -> None:
+    def drawPoints(
+        self, pen: PointPenType, contours: bool = True, components: bool = True
+    ) -> None:
         """Draw the glyph's outline data to the given point pen object.
 
         :param pen: The :class:`~fontTools.pens.pointPen.AbstractPointPen`
@@ -943,12 +944,14 @@ class BaseGlyph(BaseObject,
     # Contour, Component and Anchor Interaction
     # -----------------------------------------
 
-    def clear(self,
-              contours: bool = True,
-              components: bool = True,
-              anchors: bool = True,
-              guidelines: bool = True,
-              image: bool = True) -> None:
+    def clear(
+        self,
+        contours: bool = True,
+        components: bool = True,
+        anchors: bool = True,
+        guidelines: bool = True,
+        image: bool = True,
+    ) -> None:
         """Clear the glyph data.
 
         This will clear:
@@ -979,15 +982,22 @@ class BaseGlyph(BaseObject,
             >>> glyph.clear(guidelines=False)
 
         """
-        self._clear(contours=contours, components=components,
-                    anchors=anchors, guidelines=guidelines, image=image)
+        self._clear(
+            contours=contours,
+            components=components,
+            anchors=anchors,
+            guidelines=guidelines,
+            image=image,
+        )
 
-    def _clear(self,
-               contours: bool,
-               components: bool,
-               anchors: bool,
-               guidelines: bool,
-               image: bool) -> None:
+    def _clear(
+        self,
+        contours: bool,
+        components: bool,
+        anchors: bool,
+        guidelines: bool,
+        image: bool,
+    ) -> None:
         """Clear the native glyph data.
 
         This is the environment implementation of :meth:`BaseGlyph.clear`.
@@ -1014,9 +1024,9 @@ class BaseGlyph(BaseObject,
         if image:
             self.clearImage()
 
-    def appendGlyph(self,
-                    other: BaseGlyph,
-                    offset: Optional[CoordinateType] = None) -> None:
+    def appendGlyph(
+        self, other: BaseGlyph, offset: Optional[CoordinateType] = None
+    ) -> None:
         """Append data from `other` to new objects in the glyph.
 
         This will append:
@@ -1043,9 +1053,7 @@ class BaseGlyph(BaseObject,
         normalizedOffset = normalizers.normalizeTransformationOffset(offset)
         self._appendGlyph(other, normalizedOffset)
 
-    def _appendGlyph(self,
-                     other: BaseGlyph,
-                     offset: CoordinateType) -> None:
+    def _appendGlyph(self, other: BaseGlyph, offset: CoordinateType) -> None:
         """Append data from `other` to new objects in the native glyph.
 
         This is the environment implementation of :meth:`BaseGlyph.appendGlyph`.
@@ -1088,7 +1096,7 @@ class BaseGlyph(BaseObject,
 
             >>> contours = glyph.contours
 
-        """
+        """,
     )
 
     def _get_contours(self) -> Tuple[BaseContour, ...]:
@@ -1205,9 +1213,9 @@ class BaseGlyph(BaseObject,
                 return i
         raise FontPartsError("The contour could not be found.")
 
-    def appendContour(self,
-                      contour: BaseContour,
-                      offset: Optional[CoordinateType] = None) -> BaseContour:
+    def appendContour(
+        self, contour: BaseContour, offset: Optional[CoordinateType] = None
+    ) -> BaseContour:
         """Append the given contour's data to the glyph.
 
         :param contour: The :class:`BaseContour` instace containing the source
@@ -1229,10 +1237,9 @@ class BaseGlyph(BaseObject,
         normalizedOffset = normalizers.normalizeTransformationOffset(offset)
         return self._appendContour(normalizedContour, normalizedOffset)
 
-    def _appendContour(self,
-                       contour: BaseContour,
-                       offset: CoordinateType,
-                       **kwargs: Any) -> BaseContour:
+    def _appendContour(
+        self, contour: BaseContour, offset: CoordinateType, **kwargs: Any
+    ) -> BaseContour:
         r"""Append the given contour's data to the native glyph.
 
         This is the environment implementation of :meth:`BaseGlyph.appendContour`.
@@ -1369,7 +1376,7 @@ class BaseGlyph(BaseObject,
 
             >>> components = glyph.components
 
-        """
+        """,
     )
 
     def _get_components(self) -> Tuple[BaseComponent, ...]:
@@ -1385,8 +1392,9 @@ class BaseGlyph(BaseObject,
             Subclasses may override this method.
 
         """
-        return tuple(self._getitem__components(i) for
-                      i in range(self._len__components()))
+        return tuple(
+            self._getitem__components(i) for i in range(self._len__components())
+        )
 
     def _len__components(self) -> int:
         return self._lenComponents()
@@ -1437,12 +1445,13 @@ class BaseGlyph(BaseObject,
                 return i
         raise FontPartsError("The component could not be found.")
 
-    def appendComponent(self,
-                        baseGlyph: Optional[str] = None,
-                        offset: Optional[CoordinateType] = None,
-                        scale: Optional[ScaleType] = None,
-                        component: Optional[BaseComponent] = None
-                        ) -> BaseComponent:
+    def appendComponent(
+        self,
+        baseGlyph: Optional[str] = None,
+        offset: Optional[CoordinateType] = None,
+        scale: Optional[ScaleType] = None,
+        component: Optional[BaseComponent] = None,
+    ) -> BaseComponent:
         """Append a component to the glyph.
 
         If `baseGlyph`, `offset` or `scale` is specified, those values will be
@@ -1487,8 +1496,9 @@ class BaseGlyph(BaseObject,
             if baseGlyph is None:
                 baseGlyph = normalizedComponent.baseGlyph
             if normalizedComponent.identifier is not None:
-                existing = set(c.identifier for c in self.components
-                                if c.identifier is not None)
+                existing = set(
+                    c.identifier for c in self.components if c.identifier is not None
+                )
                 if normalizedComponent.identifier not in existing:
                     identifier = normalizedComponent.identifier
         normalizedBaseGlyph = normalizers.normalizeGlyphName(baseGlyph)
@@ -1509,14 +1519,16 @@ class BaseGlyph(BaseObject,
         return self._appendComponent(
             normalizedBaseGlyph,
             transformation=transformation,
-            identifier=normalizedIdentifier
+            identifier=normalizedIdentifier,
         )
 
-    def _appendComponent(self,
-                         baseGlyph: str,
-                         transformation: Optional[TransformationMatrixType],
-                         identifier: Optional[str],
-                         **kwargs: Any) -> BaseComponent:
+    def _appendComponent(
+        self,
+        baseGlyph: str,
+        transformation: Optional[TransformationMatrixType],
+        identifier: Optional[str],
+        **kwargs: Any,
+    ) -> BaseComponent:
         r"""Append a component to the native glyph.
 
         This is the environment implementation of :meth:`BaseGlyph.appendComponent`.
@@ -1642,7 +1654,7 @@ class BaseGlyph(BaseObject,
 
             >>> anchors = glyph.anchors
 
-        """
+        """,
     )
 
     def _get_anchors(self) -> Tuple[BaseAnchor, ...]:
@@ -1655,8 +1667,7 @@ class BaseGlyph(BaseObject,
             Subclasses may override this method.
 
         """
-        return tuple(self._getitem__anchors(i) for
-                      i in range(self._len__anchors()))
+        return tuple(self._getitem__anchors(i) for i in range(self._len__anchors()))
 
     def _len__anchors(self) -> int:
         return self._lenAnchors()
@@ -1706,11 +1717,13 @@ class BaseGlyph(BaseObject,
                 return i
         raise FontPartsError("The anchor could not be found.")
 
-    def appendAnchor(self,
-                     name: Optional[str] = None,
-                     position: Optional[CoordinateType] = None,
-                     color: Optional[ColorType] = None,
-                     anchor: Optional[BaseAnchor] = None) -> BaseAnchor:
+    def appendAnchor(
+        self,
+        name: Optional[str] = None,
+        position: Optional[CoordinateType] = None,
+        color: Optional[ColorType] = None,
+        anchor: Optional[BaseAnchor] = None,
+    ) -> BaseAnchor:
         """Append an anchor to the glyph.
 
         If `name`, `position` or `color` are specified, those values will be
@@ -1756,15 +1769,17 @@ class BaseGlyph(BaseObject,
             normalizedName,
             position=normalizedPosition,
             color=normalizedColor,
-            identifier=normalizedIdentifier
+            identifier=normalizedIdentifier,
         )
 
-    def _appendAnchor(self,  # type: ignore[return]
-                      name: str,
-                      position: Optional[CoordinateType],
-                      color: Optional[ColorType],
-                      identifier: Optional[str],
-                      **kwargs: Any) -> BaseAnchor:
+    def _appendAnchor(
+        self,  # type: ignore[return]
+        name: str,
+        position: Optional[CoordinateType],
+        color: Optional[ColorType],
+        identifier: Optional[str],
+        **kwargs: Any,
+    ) -> BaseAnchor:
         r"""Append an anchor to the native glyph.
 
         This is the environment implementation of :meth:`BaseGlyph.appendAnchor`.
@@ -1872,7 +1887,7 @@ class BaseGlyph(BaseObject,
 
             >>> guidelines = glyph.guidelines
 
-        """
+        """,
     )
 
     def _get_guidelines(self) -> Tuple[BaseGuideline, ...]:
@@ -1888,8 +1903,9 @@ class BaseGlyph(BaseObject,
             Subclasses may override this method.
 
         """
-        return tuple(self._getitem__guidelines(i)
-                      for i in range(self._len__guidelines()))
+        return tuple(
+            self._getitem__guidelines(i) for i in range(self._len__guidelines())
+        )
 
     def _len__guidelines(self) -> int:
         return self._lenGuidelines()
@@ -1940,13 +1956,14 @@ class BaseGlyph(BaseObject,
                 return i
         raise FontPartsError("The guideline could not be found.")
 
-    def appendGuideline(self,
-                        position: Optional[CoordinateType] = None,
-                        angle: Optional[IntFloatType] = None,
-                        name: Optional[str] = None,
-                        color: Optional[ColorType] = None,
-                        guideline: Optional[BaseGuideline] = None
-                        ) -> BaseGuideline:
+    def appendGuideline(
+        self,
+        position: Optional[CoordinateType] = None,
+        angle: Optional[IntFloatType] = None,
+        name: Optional[str] = None,
+        color: Optional[ColorType] = None,
+        guideline: Optional[BaseGuideline] = None,
+    ) -> BaseGuideline:
         """Append a guideline to the glyph.
 
         If `name`, `position` or `color` are specified, those values will be
@@ -1982,8 +1999,9 @@ class BaseGlyph(BaseObject,
             if color is None:
                 color = normalizedGuideline.color
             if normalizedGuideline.identifier is not None:
-                existing = set(g.identifier for g in self.guidelines
-                                if g.identifier is not None)
+                existing = set(
+                    g.identifier for g in self.guidelines if g.identifier is not None
+                )
                 if normalizedGuideline.identifier not in existing:
                     identifier = normalizedGuideline.identifier
         normalizedPosition = normalizers.normalizeCoordinateTuple(position)
@@ -1998,18 +2016,20 @@ class BaseGlyph(BaseObject,
             normalizedAngle,
             name=normalizedName,
             color=normalizedColor,
-            identifier=normalizedIdentifier
+            identifier=normalizedIdentifier,
         )
         newGuideline.glyph = self
         return newGuideline
 
-    def _appendGuideline(self,  # type: ignore[return]
-                         position: CoordinateType,
-                         angle: IntFloatType,
-                         name: Optional[str],
-                         color: Optional[ColorType],
-                         identifier: Optional[str],
-                         **kwargs: Any) -> BaseGuideline:
+    def _appendGuideline(
+        self,  # type: ignore[return]
+        position: CoordinateType,
+        angle: IntFloatType,
+        name: Optional[str],
+        color: Optional[ColorType],
+        identifier: Optional[str],
+        **kwargs: Any,
+    ) -> BaseGuideline:
         r"""Append a guideline to the native glyph.
 
         This is the environment implementation of :meth:`BaseGlyph.appendGuideline`.
@@ -2159,9 +2179,7 @@ class BaseGlyph(BaseObject,
         """
         self._correctDirection(trueType=trueType)
 
-    def _correctDirection(self,
-                          trueType: bool,
-                          **kwargs: Any) -> None:
+    def _correctDirection(self, trueType: bool, **kwargs: Any) -> None:
         r"""Correct the winding direction of the native glyph's contours.
 
         This is the environment implementation
@@ -2241,27 +2259,31 @@ class BaseGlyph(BaseObject,
                 xThreshold = xTh
             if yThreshold is None or yThreshold > yTh:
                 yThreshold = yTh
-            tempContourList.append((
-                -len(contour.points),
-                -len(contour.segments),
-                xC,
-                yC,
-                -(width * height),
-                contour
-            ))
+            tempContourList.append(
+                (
+                    -len(contour.points),
+                    -len(contour.segments),
+                    xC,
+                    yC,
+                    -(width * height),
+                    contour,
+                )
+            )
 
         xThreshold = xThreshold or 0.0
         yThreshold = yThreshold or 0.0
 
         for points, segments, x, y, surface, contour in tempContourList:
-            contourList.append((
-                points,
-                segments,
-                FuzzyNumber(x, xThreshold),
-                FuzzyNumber(y, yThreshold),
-                surface,
-                contour
-            ))
+            contourList.append(
+                (
+                    points,
+                    segments,
+                    FuzzyNumber(x, xThreshold),
+                    FuzzyNumber(y, yThreshold),
+                    surface,
+                    contour,
+                )
+            )
         contourList.sort()
 
         self.clearContours()
@@ -2272,9 +2294,7 @@ class BaseGlyph(BaseObject,
     # Transformation
     # --------------
 
-    def _transformBy(self,
-                     matrix: TransformationMatrixType,
-                     **kwargs: Any) -> None:
+    def _transformBy(self, matrix: TransformationMatrixType, **kwargs: Any) -> None:
         r"""Transform the glyph according to the given matrix.
 
         :param matrix: The :ref:`type-transformation` to apply.
@@ -2294,11 +2314,13 @@ class BaseGlyph(BaseObject,
         for guideline in self.guidelines:
             guideline.transformBy(matrix)
 
-    def scaleBy(self,
-                value: ScaleType,
-                origin: Optional[CoordinateType] = None,
-                width: bool = False,
-                height: bool = False) -> None:
+    def scaleBy(
+        self,
+        value: ScaleType,
+        origin: Optional[CoordinateType] = None,
+        width: bool = False,
+        height: bool = False,
+    ) -> None:
         """Scale the glyph according to the given values.
 
         :param value: The x and y values to scale the glyph by as
@@ -2324,8 +2346,9 @@ class BaseGlyph(BaseObject,
             origin = (0, 0)
         normalizedOrigin = normalizers.normalizeCoordinateTuple(origin)
         if normalizedOrigin != (0, 0) and (width or height):
-            raise FontPartsError(("The origin must not be set when "
-                                  "scaling the width or height."))
+            raise FontPartsError(
+                ("The origin must not be set when " "scaling the width or height.")
+            )
         super(BaseGlyph, self).scaleBy(normalizedValue, origin=normalizedOrigin)
         sX, sY = normalizedValue
         if width:
@@ -2363,9 +2386,9 @@ class BaseGlyph(BaseObject,
     # Interpolation & Math
     # --------------------
 
-    def toMathGlyph(self,
-                    scaleComponentTransform: bool = True,
-                    strict: bool = False) -> MathGlyph:
+    def toMathGlyph(
+        self, scaleComponentTransform: bool = True, strict: bool = False
+    ) -> MathGlyph:
         """Return the glyph as a `fontMath <https://github.com/typesupply/fontMath>`_ :class:`MathGlyph` object.
 
         This method returns the glyph as an object following the `MathGlyph
@@ -2387,9 +2410,7 @@ class BaseGlyph(BaseObject,
             scaleComponentTransform=scaleComponentTransform, strict=strict
         )
 
-    def _toMathGlyph(self,
-                     scaleComponentTransform: bool,
-                     strict: bool) -> MathGlyph:
+    def _toMathGlyph(self, scaleComponentTransform: bool, strict: bool) -> MathGlyph:
         """Return the native glyph as a MathGlyph object.
 
         This is the environment implementation of :meth:`BaseGlyph.toMathGlyph`.
@@ -2407,9 +2428,7 @@ class BaseGlyph(BaseObject,
 
         """
         mathGlyph = MathGlyph(
-            None,
-            scaleComponentTransform=scaleComponentTransform,
-            strict=strict
+            None, scaleComponentTransform=scaleComponentTransform, strict=strict
         )
         pen = mathGlyph.getPointPen()
         self.drawPoints(pen)
@@ -2419,7 +2438,7 @@ class BaseGlyph(BaseObject,
                 y=anchor.y,
                 name=anchor.name,
                 identifier=anchor.identifier,
-                color=anchor.color
+                color=anchor.color,
             )
             mathGlyph.anchors.append(d)
         for guideline in self.guidelines:
@@ -2429,7 +2448,7 @@ class BaseGlyph(BaseObject,
                 angle=guideline.angle,
                 name=guideline.name,
                 identifier=guideline.identifier,
-                color=guideline.color
+                color=guideline.color,
             )
             mathGlyph.guidelines.append(d)
         mathGlyph.lib = deepcopy(self.lib)
@@ -2440,9 +2459,9 @@ class BaseGlyph(BaseObject,
         mathGlyph.note = self.note
         return mathGlyph
 
-    def fromMathGlyph(self,
-                      mathGlyph: MathGlyph,
-                      filterRedundantPoints: bool = True) -> BaseGlyph:
+    def fromMathGlyph(
+        self, mathGlyph: MathGlyph, filterRedundantPoints: bool = True
+    ) -> BaseGlyph:
         """Replace the glyph's data with the specified mathGlyph.
 
         This method returns the glyph as an object following the `MathGlyph
@@ -2463,15 +2482,12 @@ class BaseGlyph(BaseObject,
 
         """
         return self._fromMathGlyph(
-            mathGlyph,
-            toThisGlyph=True,
-            filterRedundantPoints=filterRedundantPoints
+            mathGlyph, toThisGlyph=True, filterRedundantPoints=filterRedundantPoints
         )
 
-    def _fromMathGlyph(self,
-                       mathGlyph: MathGlyph,
-                       toThisGlyph: bool,
-                       filterRedundantPoints: bool) -> BaseGlyph:
+    def _fromMathGlyph(
+        self, mathGlyph: MathGlyph, toThisGlyph: bool, filterRedundantPoints: bool
+    ) -> BaseGlyph:
         """Replace native glyph data with the specified mathGlyph's data.
 
         This is the environment implementation of :meth:`BaseGlyph.fromMathGlyph`.
@@ -2499,14 +2515,12 @@ class BaseGlyph(BaseObject,
             copied = copyClass()
         # populate
         pen = copied.getPointPen()
-        mathGlyph.drawPoints(
-            pen, filterRedundantPoints=filterRedundantPoints
-        )
+        mathGlyph.drawPoints(pen, filterRedundantPoints=filterRedundantPoints)
         for anchor in mathGlyph.anchors:
             a = copied.appendAnchor(
                 name=anchor.get("name"),
                 position=(anchor["x"], anchor["y"]),
-                color=anchor["color"]
+                color=anchor["color"],
             )
             identifier = anchor.get("identifier")
             if identifier is not None:
@@ -2516,7 +2530,7 @@ class BaseGlyph(BaseObject,
                 position=(guideline["x"], guideline["y"]),
                 angle=guideline["angle"],
                 name=guideline["name"],
-                color=guideline["color"]
+                color=guideline["color"],
             )
             identifier = guideline.get("identifier")
             if identifier is not None:
@@ -2546,9 +2560,9 @@ class BaseGlyph(BaseObject,
         """
         mathGlyph = self._toMathGlyph(scaleComponentTransform=True, strict=False)
         result = mathGlyph * factor
-        copied = self._fromMathGlyph(result,
-            toThisGlyph=False,
-            filterRedundantPoints=True)
+        copied = self._fromMathGlyph(
+            result, toThisGlyph=False, filterRedundantPoints=True
+        )
         return copied
 
     __rmul__ = __mul__
@@ -2569,9 +2583,9 @@ class BaseGlyph(BaseObject,
         """
         mathGlyph = self._toMathGlyph(scaleComponentTransform=True, strict=False)
         result = mathGlyph / factor
-        copied = self._fromMathGlyph(result,
-            toThisGlyph=False,
-        filterRedundantPoints=True)
+        copied = self._fromMathGlyph(
+            result, toThisGlyph=False, filterRedundantPoints=True
+        )
         return copied
 
     # py2 support
@@ -2591,9 +2605,9 @@ class BaseGlyph(BaseObject,
         selfMathGlyph = self._toMathGlyph(scaleComponentTransform=True, strict=False)
         otherMathGlyph = other._toMathGlyph(scaleComponentTransform=True, strict=False)
         result = selfMathGlyph + otherMathGlyph
-        copied = self._fromMathGlyph(result,
-            toThisGlyph=False,
-        filterRedundantPoints=True)
+        copied = self._fromMathGlyph(
+            result, toThisGlyph=False, filterRedundantPoints=True
+        )
         return copied
 
     def __sub__(self, other: BaseGlyph) -> BaseGlyph:
@@ -2613,17 +2627,19 @@ class BaseGlyph(BaseObject,
         selfMathGlyph = self._toMathGlyph(scaleComponentTransform=True, strict=False)
         otherMathGlyph = other._toMathGlyph(scaleComponentTransform=True, strict=False)
         result = selfMathGlyph - otherMathGlyph
-        copied = self._fromMathGlyph(result,
-            toThisGlyph=False,
-        filterRedundantPoints=True)
+        copied = self._fromMathGlyph(
+            result, toThisGlyph=False, filterRedundantPoints=True
+        )
         return copied
 
-    def interpolate(self,
-                    factor: FactorType,
-                    minGlyph: BaseGlyph,
-                    maxGlyph: BaseGlyph,
-                    round: bool = True,
-                    suppressError: bool = True) -> None:
+    def interpolate(
+        self,
+        factor: FactorType,
+        minGlyph: BaseGlyph,
+        maxGlyph: BaseGlyph,
+        round: bool = True,
+        suppressError: bool = True,
+    ) -> None:
         """Interpolate all possible data in the glyph.
 
         :param factor: The interpolation value as a single :class:`int`
@@ -2649,26 +2665,39 @@ class BaseGlyph(BaseObject,
         """
         normalizedFactor = normalizers.normalizeInterpolationFactor(factor)
         if not isinstance(minGlyph, BaseGlyph):
-            raise TypeError(("Interpolation to an instance of %r can not be "
-                             "performed from an instance of %r.")
-                            % (self.__class__.__name__,
-                               minGlyph.__class__.__name__))
+            raise TypeError(
+                (
+                    "Interpolation to an instance of %r can not be "
+                    "performed from an instance of %r."
+                )
+                % (self.__class__.__name__, minGlyph.__class__.__name__)
+            )
         if not isinstance(maxGlyph, BaseGlyph):
-            raise TypeError(("Interpolation to an instance of %r can not be "
-                             "performed from an instance of %r.")
-                            % (self.__class__.__name__,
-                               maxGlyph.__class__.__name__))
+            raise TypeError(
+                (
+                    "Interpolation to an instance of %r can not be "
+                    "performed from an instance of %r."
+                )
+                % (self.__class__.__name__, maxGlyph.__class__.__name__)
+            )
         round = normalizers.normalizeBoolean(round)
         suppressError = normalizers.normalizeBoolean(suppressError)
-        self._interpolate(normalizedFactor, minGlyph, maxGlyph,
-                          round=round, suppressError=suppressError)
+        self._interpolate(
+            normalizedFactor,
+            minGlyph,
+            maxGlyph,
+            round=round,
+            suppressError=suppressError,
+        )
 
-    def _interpolate(self,
-                     factor: Tuple[IntFloatType, IntFloatType],
-                     minGlyph: BaseGlyph,
-                     maxGlyph: BaseGlyph,
-                     round: bool,
-                     suppressError: bool) -> None:
+    def _interpolate(
+        self,
+        factor: Tuple[IntFloatType, IntFloatType],
+        minGlyph: BaseGlyph,
+        maxGlyph: BaseGlyph,
+        round: bool,
+        suppressError: bool,
+    ) -> None:
         """Interpolate all possible data in the native glyph.
 
         This is the environment implementation of :meth:`BaseGlyph.interpolate`.
@@ -2702,9 +2731,10 @@ class BaseGlyph(BaseObject,
         except IndexError:
             result = None
         if result is None and not suppressError:
-            raise FontPartsError(("Glyphs '%s' and '%s' could not be "
-                                  "interpolated.")
-                                 % (minGlyph.name, maxGlyph.name))
+            raise FontPartsError(
+                ("Glyphs '%s' and '%s' could not be " "interpolated.")
+                % (minGlyph.name, maxGlyph.name)
+            )
         if result is not None:
             if round:
                 result = result.round()
@@ -2713,10 +2743,9 @@ class BaseGlyph(BaseObject,
     compatibilityReporterClass = GlyphCompatibilityReporter
 
     @staticmethod
-    def _checkPairs(object1: Any,
-                    object2: Any,
-                    reporter: Any,
-                    reporterObject: List[Any]) -> None:
+    def _checkPairs(
+        object1: Any, object2: Any, reporter: Any, reporterObject: List[Any]
+    ) -> None:
         compatibility = object1.isCompatible(object2)[1]
         if compatibility.fatal or compatibility.warning:
             if compatibility.fatal:
@@ -2737,9 +2766,9 @@ class BaseGlyph(BaseObject,
         """
         return super(BaseGlyph, self).isCompatible(other, BaseGlyph)
 
-    def _isCompatible(self,
-                      other: BaseGlyph,
-                      reporter: GlyphCompatibilityReporter) -> None:
+    def _isCompatible(
+        self, other: BaseGlyph, reporter: GlyphCompatibilityReporter
+    ) -> None:
         """Evaluate interpolation compatibility with another native glyph.
 
         This is the environment implementation of :meth:`BaseGlyph.isCompatible`.
@@ -2774,10 +2803,8 @@ class BaseGlyph(BaseObject,
             reporter.componentCountDifference = True
         # component check
         component_diff: DiffType = []
-        selfComponents = [component.baseGlyph
-        for component in glyph1.components]
-        otherComponents = [component.baseGlyph
-        for component in glyph2.components]
+        selfComponents = [component.baseGlyph for component in glyph1.components]
+        otherComponents = [component.baseGlyph for component in glyph2.components]
         for index, (left, right) in enumerate(
             zip_longest(selfComponents, otherComponents)
         ):
@@ -2787,8 +2814,9 @@ class BaseGlyph(BaseObject,
         if component_diff:
             reporter.warning = True
             reporter.componentDifferences = component_diff
-            if (not reporter.componentCountDifference
-                and set(selfComponents) == set(otherComponents)):
+            if not reporter.componentCountDifference and set(selfComponents) == set(
+                otherComponents
+            ):
                 reporter.componentOrderDifference = True
 
             selfComponents_counted_set = Counter(selfComponents)
@@ -2816,8 +2844,7 @@ class BaseGlyph(BaseObject,
         # guideline check
         selfGuidelines: GuidelineListType = []
         otherGuidelines: GuidelineListType = []
-        for source, names in ((self, selfGuidelines),
-                              (other, otherGuidelines)):
+        for source, names in ((self, selfGuidelines), (other, otherGuidelines)):
             for i, guideline in enumerate(source.guidelines):
                 names.append((guideline.name, i))
         guidelines1 = set(selfGuidelines)
@@ -2825,11 +2852,13 @@ class BaseGlyph(BaseObject,
         if len(guidelines1.difference(guidelines2)) != 0:
             reporter.warning = True
             reporter.guidelinesMissingFromGlyph2 = list(
-                guidelines1.difference(guidelines2))
+                guidelines1.difference(guidelines2)
+            )
         if len(guidelines2.difference(guidelines1)) != 0:
             reporter.warning = True
             reporter.guidelinesMissingFromGlyph1 = list(
-                guidelines2.difference(guidelines1))
+                guidelines2.difference(guidelines1)
+            )
         # anchor count
         if len(self.anchors) != len(glyph2.anchors):
             reporter.warning = True
@@ -2838,28 +2867,26 @@ class BaseGlyph(BaseObject,
         anchor_diff: DiffType = []
         selfAnchors = [anchor.name for anchor in glyph1.anchors]
         otherAnchors = [anchor.name for anchor in glyph2.anchors]
-        for index, (left, right) in enumerate(
-            zip_longest(selfAnchors, otherAnchors)):
+        for index, (left, right) in enumerate(zip_longest(selfAnchors, otherAnchors)):
             if left != right:
                 anchor_diff.append((index, left, right))
 
         if anchor_diff:
             reporter.warning = True
             reporter.anchorDifferences = anchor_diff
-            if (not reporter.anchorCountDifference
-                and set(selfAnchors) == set(otherAnchors)):
+            if not reporter.anchorCountDifference and set(selfAnchors) == set(
+                otherAnchors
+            ):
                 reporter.anchorOrderDifference = True
 
             selfAnchors_counted_set = Counter(selfAnchors)
             otherAnchors_counted_set = Counter(otherAnchors)
-            missing_from_glyph1 = (otherAnchors_counted_set
-                - selfAnchors_counted_set)
+            missing_from_glyph1 = otherAnchors_counted_set - selfAnchors_counted_set
             if missing_from_glyph1:
                 reporter.anchorsMissingFromGlyph1 = sorted(
                     missing_from_glyph1.elements()
                 )
-            missing_from_glyph2 = (selfAnchors_counted_set
-                - otherAnchors_counted_set)
+            missing_from_glyph2 = selfAnchors_counted_set - otherAnchors_counted_set
             if missing_from_glyph2:
                 reporter.anchorsMissingFromGlyph2 = sorted(
                     missing_from_glyph2.elements()
@@ -2919,7 +2946,7 @@ class BaseGlyph(BaseObject,
             >>> glyph.bounds
             (10, 30, 765, 643)
 
-        """
+        """,
     )
 
     def _get_base_bounds(self) -> Optional[BoundsType]:
@@ -2961,7 +2988,7 @@ class BaseGlyph(BaseObject,
 
             >>> glyph.area
             583
-        """
+        """,
     )
 
     def _get_base_area(self) -> Optional[float]:
@@ -3005,7 +3032,7 @@ class BaseGlyph(BaseObject,
 
             >>> glyphLayers = glyph.layers
 
-        """
+        """,
     )
 
     def _get_layers(self, **kwargs) -> Tuple[BaseGlyph, ...]:
@@ -3062,8 +3089,7 @@ class BaseGlyph(BaseObject,
         for glyph in self.layers:
             if glyph.layer.name == name:
                 return glyph
-        raise ValueError("No layer named '%s' in glyph '%s'."
-                         % (name, self.name))
+        raise ValueError("No layer named '%s' in glyph '%s'." % (name, self.name))
 
     # new
 
@@ -3163,7 +3189,7 @@ class BaseGlyph(BaseObject,
 
         :return: The :class:`BaseImage` instance belonging to the glyph.
 
-        """
+        """,
     )
 
     def _get_base_image(self) -> BaseImage:
@@ -3186,12 +3212,14 @@ class BaseGlyph(BaseObject,
         """
         self.raiseNotImplementedError()
 
-    def addImage(self,
-                 path: Optional[str] = None,
-                 data: Optional[bytes] = None,
-                 scale: Optional[ScaleType] = None,
-                 position: Optional[CoordinateType] = None,
-                 color: Optional[ColorType] = None) -> BaseImage:
+    def addImage(
+        self,
+        path: Optional[str] = None,
+        data: Optional[bytes] = None,
+        scale: Optional[ScaleType] = None,
+        position: Optional[CoordinateType] = None,
+        color: Optional[ColorType] = None,
+    ) -> BaseImage:
         """Set the image in the glyph.
 
         The image data may be provided as either the `path` to an image file or
@@ -3258,10 +3286,12 @@ class BaseGlyph(BaseObject,
             )
         return self.image
 
-    def _addImage(self,  # type: ignore[return]
-                  data: bytes,
-                  transformation: Optional[TransformationMatrixType],
-                  color: Optional[ColorType]) -> BaseImage:
+    def _addImage(
+        self,  # type: ignore[return]
+        data: bytes,
+        transformation: Optional[TransformationMatrixType],
+        color: Optional[ColorType],
+    ) -> BaseImage:
         """Set the image in the native glyph.
 
         Each environment may have different possible
@@ -3323,7 +3353,7 @@ class BaseGlyph(BaseObject,
             (1, 0, 0, 0.5)
             >>> glyph.markColor = None
 
-        """
+        """,
     )
 
     def _get_base_markColor(self) -> Optional[ColorType]:
@@ -3392,7 +3422,7 @@ class BaseGlyph(BaseObject,
             "P.B. said this looks 'awesome.'"
             >>> glyph.note = "P.B. said this looks 'AWESOME.'"
 
-        """
+        """,
     )
 
     def _get_base_note(self) -> Optional[str]:
@@ -3457,7 +3487,7 @@ class BaseGlyph(BaseObject,
 
             >>> lib = glyph.lib
 
-        """
+        """,
     )
 
     def _get_base_lib(self) -> BaseLib:
@@ -3503,7 +3533,7 @@ class BaseGlyph(BaseObject,
 
             >>> tempLib = glyph.tempLib
 
-        """
+        """,
     )
 
     def _get_base_tempLib(self) -> BaseLib:
@@ -3634,12 +3664,14 @@ class BaseGlyph(BaseObject,
 
             >>> glyph.selectedContours = [0, 2]
 
-        """
+        """,
     )
 
     def _get_base_selectedContours(self) -> Tuple[BaseContour, ...]:
-        selected = tuple(normalizers.normalizeContour(contour)
-            for contour in self._get_selectedContours())
+        selected = tuple(
+            normalizers.normalizeContour(contour)
+            for contour in self._get_selectedContours()
+        )
         return selected
 
     def _get_selectedContours(self) -> Tuple[BaseContour, ...]:
@@ -3659,8 +3691,9 @@ class BaseGlyph(BaseObject,
         """
         return self._getSelectedSubObjects(self.contours)
 
-    def _set_base_selectedContours(self,
-        value: CollectionType[Union[int, BaseContour]]) -> None:
+    def _set_base_selectedContours(
+        self, value: CollectionType[Union[int, BaseContour]]
+    ) -> None:
         normalized = []
         for i in value:
             if isinstance(i, int):
@@ -3670,8 +3703,9 @@ class BaseGlyph(BaseObject,
             normalized.append(i)
         self._set_selectedContours(normalized)
 
-    def _set_selectedContours(self,
-        value: CollectionType[Union[int, BaseContour]]) -> None:
+    def _set_selectedContours(
+        self, value: CollectionType[Union[int, BaseContour]]
+    ) -> None:
         """Set the selected contours in the glyph.
 
         This is the environment implementation of
@@ -3712,12 +3746,14 @@ class BaseGlyph(BaseObject,
 
             >>> glyph.selectedComponents = [0, 2]
 
-        """
+        """,
     )
 
     def _get_base_selectedComponents(self) -> Tuple[BaseComponent, ...]:
-        selected = tuple(normalizers.normalizeComponent(component)
-            for component in self._get_selectedComponents())
+        selected = tuple(
+            normalizers.normalizeComponent(component)
+            for component in self._get_selectedComponents()
+        )
         return selected
 
     def _get_selectedComponents(self) -> Tuple[BaseComponent, ...]:
@@ -3737,8 +3773,9 @@ class BaseGlyph(BaseObject,
         """
         return self._getSelectedSubObjects(self.components)
 
-    def _set_base_selectedComponents(self,
-        value: CollectionType[Union[int, BaseComponent]]) -> None:
+    def _set_base_selectedComponents(
+        self, value: CollectionType[Union[int, BaseComponent]]
+    ) -> None:
         normalized = []
         for i in value:
             if isinstance(i, int):
@@ -3748,8 +3785,9 @@ class BaseGlyph(BaseObject,
             normalized.append(i)
         self._set_selectedComponents(normalized)
 
-    def _set_selectedComponents(self,
-        value: CollectionType[Union[int, BaseComponent]]) -> None:
+    def _set_selectedComponents(
+        self, value: CollectionType[Union[int, BaseComponent]]
+    ) -> None:
         """Set the selected components in the glyph.
 
         This is the environment implementation of
@@ -3790,12 +3828,14 @@ class BaseGlyph(BaseObject,
 
             >>> glyph.selectedAnchors = [0, 2]
 
-        """
+        """,
     )
 
     def _get_base_selectedAnchors(self) -> Tuple[BaseAnchor, ...]:
-        selected = tuple(normalizers.normalizeAnchor(anchor)
-            for anchor in self._get_selectedAnchors())
+        selected = tuple(
+            normalizers.normalizeAnchor(anchor)
+            for anchor in self._get_selectedAnchors()
+        )
         return selected
 
     def _get_selectedAnchors(self) -> Tuple[BaseAnchor, ...]:
@@ -3815,8 +3855,9 @@ class BaseGlyph(BaseObject,
         """
         return self._getSelectedSubObjects(self.anchors)
 
-    def _set_base_selectedAnchors(self,
-        value: CollectionType[Union[int, BaseAnchor]]) -> None:
+    def _set_base_selectedAnchors(
+        self, value: CollectionType[Union[int, BaseAnchor]]
+    ) -> None:
         normalized = []
         for i in value:
             if isinstance(i, int):
@@ -3826,8 +3867,9 @@ class BaseGlyph(BaseObject,
             normalized.append(i)
         self._set_selectedAnchors(normalized)
 
-    def _set_selectedAnchors(self,
-        value: CollectionType[Union[int, BaseAnchor]]) -> None:
+    def _set_selectedAnchors(
+        self, value: CollectionType[Union[int, BaseAnchor]]
+    ) -> None:
         """Set the selected anchors in the glyph.
 
         This is the environment implementation of
@@ -3868,12 +3910,14 @@ class BaseGlyph(BaseObject,
 
             >>> glyph.selectedGuidelines = [0, 2]
 
-        """
+        """,
     )
 
     def _get_base_selectedGuidelines(self) -> Tuple[BaseGuideline, ...]:
-        selected = tuple(normalizers.normalizeGuideline(guideline)
-            for guideline in self._get_selectedGuidelines())
+        selected = tuple(
+            normalizers.normalizeGuideline(guideline)
+            for guideline in self._get_selectedGuidelines()
+        )
         return selected
 
     def _get_selectedGuidelines(self) -> Tuple[BaseGuideline, ...]:
@@ -3893,8 +3937,9 @@ class BaseGlyph(BaseObject,
         """
         return self._getSelectedSubObjects(self.guidelines)
 
-    def _set_base_selectedGuidelines(self,
-        value: CollectionType[Union[int, BaseGuideline]]) -> None:
+    def _set_base_selectedGuidelines(
+        self, value: CollectionType[Union[int, BaseGuideline]]
+    ) -> None:
         normalized = []
         for i in value:
             if isinstance(i, int):
@@ -3904,8 +3949,9 @@ class BaseGlyph(BaseObject,
             normalized.append(i)
         self._set_selectedGuidelines(normalized)
 
-    def _set_selectedGuidelines(self,
-        value: CollectionType[Union[int, BaseGuideline]]) -> None:
+    def _set_selectedGuidelines(
+        self, value: CollectionType[Union[int, BaseGuideline]]
+    ) -> None:
         """Set the selected guidelines in the glyph.
 
         This is the environment implementation of

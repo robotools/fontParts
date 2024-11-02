@@ -4,7 +4,6 @@ from fontParts.fontshell.base import RBaseObject
 
 
 class RGuideline(RBaseObject, BaseGuideline):
-
     wrapClass = defcon.Guideline
 
     def _init(self, wrap=None):

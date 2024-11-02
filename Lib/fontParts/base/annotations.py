@@ -12,7 +12,7 @@ from fontTools.pens.pointPen import AbstractPointPen
 
 # Builtins
 
-T = TypeVar('T')
+T = TypeVar("T")
 CollectionType = Union[List[T], Tuple[T, ...]]
 IntFloatType = Union[int, float]
 
@@ -28,14 +28,13 @@ CharacterMappingType = Dict[int, Tuple[str, ...]]
 ColorType = Tuple[IntFloatType, IntFloatType, IntFloatType, IntFloatType]
 CoordinateType = Tuple[IntFloatType, IntFloatType]
 FactorType = Union[IntFloatType, Tuple[IntFloatType, IntFloatType]]
-InterpolatableType = TypeVar('InterpolatableType', bound='Interpolatable')
+InterpolatableType = TypeVar("InterpolatableType", bound="Interpolatable")
 KerningKeyType = Tuple[str, str]
 KerningDictType = Dict[KerningKeyType, IntFloatType]
 ReverseComponentMappingType = Dict[str, Tuple[str, ...]]
 ScaleType = Tuple[IntFloatType, IntFloatType]
 TransformationMatrixType = Tuple[
-    IntFloatType, IntFloatType, IntFloatType,
-    IntFloatType, IntFloatType, IntFloatType
+    IntFloatType, IntFloatType, IntFloatType, IntFloatType, IntFloatType, IntFloatType
 ]
 
 
