@@ -749,7 +749,7 @@ def normalizeComponentScale(value: PairCollectionType[IntFloatType]) -> PairType
                 raise TypeError("Transformation scale tuple values must be an "
                                 ":ref:`type-int-float`, not %s."
                                 % type(value).__name__)
-        value = tuple([float(v) for v in value])
+        value = tuple(float(v) for v in value)
     return value
 
 
@@ -1005,7 +1005,7 @@ def normalizeBoundingBox(value: QuadrupleCollectionType[IntFloatType]
     if value[1] > value[3]:
         raise ValueError("Bounding box yMin must be less than or equal to "
                          "yMax.")
-    return tuple([float(v) for v in value])
+    return tuple(float(v) for v in value)
 
 
 def normalizeArea(value: IntFloatType) -> float:
@@ -1083,7 +1083,7 @@ def normalizeColor(value: QuadrupleCollectionType[IntFloatType]
         if v < 0 or v > 1:
             raise ValueError("The value for the %s component (%s) is not "
                              "between 0 and 1." % (component, v))
-    return tuple([float(v) for v in value])
+    return tuple(float(v) for v in value)
 
 
 # Note
@@ -1184,7 +1184,7 @@ def normalizeTransformationMatrix(value: SextupleCollectionType[IntFloatType]
             raise TypeError("Transformation matrix values must be instances "
                             "of :ref:`type-int-float`, not %s."
                             % type(v).__name__)
-    return tuple([float(v) for v in value])
+    return tuple(float(v) for v in value)
 
 
 def normalizeTransformationOffset(value: PairCollectionType[IntFloatType]
@@ -1240,12 +1240,12 @@ def normalizeTransformationSkewAngle(value: TransformationType) -> PairType[floa
                 raise TypeError("Transformation skew angle tuple values must "
                                 "be an :ref:`type-int-float`, not %s."
                                 % type(value).__name__)
-        value = tuple([float(v) for v in value])
+        value = tuple(float(v) for v in value)
     for v in value:
         if abs(v) > 360:
             raise ValueError("Transformation skew angle must be between -360 "
                              "and 360.")
-    return tuple([float(v + 360) if v < 0 else float(v) for v in value])
+    return tuple(float(v + 360) if v < 0 else float(v) for v in value)
 
 
 def normalizeTransformationScale(value: TransformationType) -> PairType[float]:
@@ -1279,7 +1279,7 @@ def normalizeTransformationScale(value: TransformationType) -> PairType[float]:
                 raise TypeError("Transformation scale tuple values must be an "
                                 ":ref:`type-int-float`, not %s."
                                 % type(value).__name__)
-        value = tuple([float(v) for v in value])
+        value = tuple(float(v) for v in value)
     return value
 
 
