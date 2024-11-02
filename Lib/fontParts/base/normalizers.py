@@ -43,7 +43,7 @@ def normalizeFileFormatVersion(value: int) -> int:
 
     """
     if not isinstance(value, int):
-        raise TypeError("Expected 'value' to be of type int, not %s."
+        raise TypeError("Expected file formmat verison 'value' to be of type int, not %s."
                         % type(value).__name__)
     return value
 
