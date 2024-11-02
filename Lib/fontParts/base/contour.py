@@ -801,8 +801,8 @@ class BaseContour(
         """
         Subclasses may override this method.
         """
-        return tuple([self._getitem__points(i)
-                     for i in range(self._len__points())])
+        return tuple(self._getitem__points(i)
+                     for i in range(self._len__points()))
 
     def _len__points(self):
         return self._lenPoints()
@@ -994,8 +994,8 @@ class BaseContour(
     )
 
     def _get_base_selectedSegments(self):
-        selected = tuple([normalizers.normalizeSegment(segment)
-                         for segment in self._get_selectedSegments()])
+        selected = tuple(normalizers.normalizeSegment(segment)
+                         for segment in self._get_selectedSegments())
         return selected
 
     def _get_selectedSegments(self):
@@ -1043,8 +1043,8 @@ class BaseContour(
     )
 
     def _get_base_selectedPoints(self):
-        selected = tuple([normalizers.normalizePoint(point)
-                         for point in self._get_selectedPoints()])
+        selected = tuple(normalizers.normalizePoint(point)
+                         for point in self._get_selectedPoints())
         return selected
 
     def _get_selectedPoints(self):
@@ -1092,8 +1092,8 @@ class BaseContour(
     )
 
     def _get_base_selectedBPoints(self):
-        selected = tuple([normalizers.normalizeBPoint(bPoint)
-                         for bPoint in self._get_selectedBPoints()])
+        selected = tuple(normalizers.normalizeBPoint(bPoint)
+                         for bPoint in self._get_selectedBPoints())
         return selected
 
     def _get_selectedBPoints(self):

@@ -810,7 +810,7 @@ def normalizeBoundingBox(value):
     if value[1] > value[3]:
         raise ValueError("Bounding box yMin must be less than or equal to "
                          "yMax.")
-    return tuple([float(v) for v in value])
+    return tuple(float(v) for v in value)
 
 
 def normalizeArea(value):
@@ -944,6 +944,7 @@ def normalizeTransformationMatrix(value):
     return tuple([float(v) for v in value])
 
 
+
 def normalizeTransformationOffset(value):
     """
     Normalizes transformation offset.
@@ -982,7 +983,7 @@ def normalizeTransformationSkewAngle(value):
         if abs(v) > 360:
             raise ValueError("Transformation skew angle must be between -360 "
                              "and 360.")
-    return tuple([float(v + 360) if v < 0 else float(v) for v in value])
+    return tuple(float(v + 360) if v < 0 else float(v) for v in value)
 
 
 def normalizeTransformationScale(value):
