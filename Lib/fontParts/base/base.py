@@ -1357,19 +1357,16 @@ class IdentifierMixin:
     def _setIdentifier(self, value: str) -> None:
         """Force a specific identifier onto an object.
 
-        This method is intended for subclasses that allow setting an
-        identifier to a specific value.
+        This method is used internally to force a specific identifier onto an object in certain situations.
 
         :param value: The identifier to set as a :class:`str` or :obj:`None`.
-        :raises NotImplementedError: If the method has not been overridden by a
-            subclass.
 
         .. note::
 
-            Subclasses may override this method.
+            Subclasses that allow setting an identifer may override this method.
 
         """
-        self.raiseNotImplementedError()
+        pass
 
 
 def reference(obj: Callable[[], Any]) -> Callable[[], Any]:
