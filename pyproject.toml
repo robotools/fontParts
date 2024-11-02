@@ -1,12 +1,12 @@
-[project]
-requires-python = ">=3.8"
-
 [build-system]
 requires = ["setuptools>=42", "wheel", "setuptools_scm[toml]>=3.4"]
 
 [tool.setuptools_scm]
 write_to = 'Lib/fontParts/_version.py'
 write_to_template = '__version__ = "{version}"'
+
+[tool.ruff]
+target-version = "py38"
 
 [tool.ruff.format]
 # Enable reformatting of code snippets in docstrings.
