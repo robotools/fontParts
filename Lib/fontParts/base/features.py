@@ -4,7 +4,6 @@ from fontParts.base.deprecated import DeprecatedFeatures, RemovedFeatures
 
 
 class BaseFeatures(BaseObject, DeprecatedFeatures, RemovedFeatures):
-
     copyAttributes = ("text",)
 
     def _reprContents(self):
@@ -31,7 +30,9 @@ class BaseFeatures(BaseObject, DeprecatedFeatures, RemovedFeatures):
 
     def _set_font(self, font):
         if self._font is not None and self._font() != font:
-            raise AssertionError("font for features already set and is not same as font")
+            raise AssertionError(
+                "font for features already set and is not same as font"
+            )
         if font is not None:
             font = reference(font)
         self._font = font
@@ -47,7 +48,7 @@ class BaseFeatures(BaseObject, DeprecatedFeatures, RemovedFeatures):
         <http://www.adobe.com/devnet/opentype/afdko/topic_feature_file_syntax.html>`_
         text representing the features.
         It must be a :ref:`type-string`.
-        """
+        """,
     )
 
     def _get_base_text(self):

@@ -4,7 +4,6 @@ from fontParts.fontshell.base import RBaseObject
 
 
 class RFeatures(RBaseObject, BaseFeatures):
-
     wrapClass = defcon.Features
 
     def _get_text(self):

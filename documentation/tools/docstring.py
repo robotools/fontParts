@@ -61,7 +61,7 @@ from typing import (
     Optional,
     Set,
     Tuple,
-    Union
+    Union,
 )
 
 from abc import ABC, abstractmethod
@@ -78,81 +78,57 @@ OptionalCallable = Optional[Callable]
 GetterSetterType = Tuple[OptionalCallable, OptionalCallable]
 ParsedAnnotation = Union[str, Tuple[str, List[Any]]]
 
-NORMALIZATION_MODULE = 'normalizers'
-DEPRECATION_ID = 'This method is deprecated.'
-INDENT = ' ' * 4
+NORMALIZATION_MODULE = "normalizers"
+DEPRECATION_ID = "This method is deprecated."
+INDENT = " " * 4
 LINE_LENGTH = 72
 
 FORMAT_STRINGS: Dict[str, str] = {
-    'implementationNote': (
-        "This is the environment implementation of {baseObject}."
-    ),
-    'getterImplementationNote': (
+    "implementationNote": ("This is the environment implementation of {baseObject}."),
+    "getterImplementationNote": (
         "This is the environment implementation of the {baseObject} property getter."
     ),
-    'setterImplementationNote': (
+    "setterImplementationNote": (
         "This is the environment implementation of the {baseObject} property setter."
     ),
-    'deprecated': (
-        "This method is deprecated. Use {replacement} instead."
-    ),
-    'mayOverride': (
-        "Subclasses may override this method."
-    ),
-    'mustOverride': (
-        "Subclasses must override this method."
-    ),
-    'parameter': (
-        ":param {parameterName}: Description of {typeString}."
-    ),
-    'normalizer': (
-        " The value will have been normalized with :func:`{normalizer}`."
-    ),
-    'default': (
-        " Defaults to {value}."
-    ),
-    'raises': (
-        ":raises {exception}: If {condition}."
-    ),
-    'exception': (
-        "description"
-    ),
-    'notImplementedError': (
-        "the method has not been overridden by a subclass"
-    ),
-    'return': (
-        ":return: {typeString}."
-    ),
-    'setterValue': (
-        "The value must be {typeString}."
-    ),
+    "deprecated": ("This method is deprecated. Use {replacement} instead."),
+    "mayOverride": ("Subclasses may override this method."),
+    "mustOverride": ("Subclasses must override this method."),
+    "parameter": (":param {parameterName}: Description of {typeString}."),
+    "normalizer": (" The value will have been normalized with :func:`{normalizer}`."),
+    "default": (" Defaults to {value}."),
+    "raises": (":raises {exception}: If {condition}."),
+    "exception": ("description"),
+    "notImplementedError": ("the method has not been overridden by a subclass"),
+    "return": (":return: {typeString}."),
+    "setterValue": ("The value must be {typeString}."),
 }
 
 
 ROLE_PREFIXES: Dict[str, str] = {
-    'function': ':func:',
-    'method': ':meth:',
-    'property': ':attr:',
-    'attribute': ':attr:',
-    'NoneType': ':obj:',
-    'None': ':obj:',
-    'True': ':obj:',
-    'False': ':obj:',
-    'list': ':class:',
-    'tuple': ':class:',
-    'dict': ':class:`',
-    'int': ':class:',
-    'float': ':class:',
-    'str': ':class:',
+    "function": ":func:",
+    "method": ":meth:",
+    "property": ":attr:",
+    "attribute": ":attr:",
+    "NoneType": ":obj:",
+    "None": ":obj:",
+    "True": ":obj:",
+    "False": ":obj:",
+    "list": ":class:",
+    "tuple": ":class:",
+    "dict": ":class:`",
+    "int": ":class:",
+    "float": ":class:",
+    "str": ":class:",
 }
 
 DIRECTIVES: Dict[str, str] = {
-    'deprecated': '.. deprecated::',
-    'note': '.. note::',
-    'important': '.. important::',
-    'seealso': '.. seealso::',
-    'tip': '.. tip::',
-    'todo': '.. todo::'
+    "deprecated": ".. deprecated::",
+    "note": ".. note::",
+    "important": ".. important::",
+    "seealso": ".. seealso::",
+    "tip": ".. tip::",
+    "todo": ".. todo::",
 }
 
 
@@ -197,15 +173,13 @@ class DynamicPropertyMixin(ABC):
             return {}
 
         typeHints = {}
-        getterHints = get_type_hints(
-            self.getterObject, globalns=self.globalNamespace
-        )
-        typeHints['value'] = getterHints.get('return', None)
+        getterHints = get_type_hints(self.getterObject, globalns=self.globalNamespace)
+        typeHints["value"] = getterHints.get("return", None)
         if self.setterObject:
             setterHints = get_type_hints(
                 self.setterObject, globalns=self.globalNamespace
             )
-            typeHints['return'] = setterHints.get('value', None)
+            typeHints["return"] = setterHints.get("value", None)
         return typeHints
 
     def _formatValue(self, value: Any) -> str:
@@ -220,24 +194,24 @@ class DynamicPropertyMixin(ABC):
     def dynamicPropertyObject(self) -> Optional[dynamicProperty]:
         """Get the current object's associated dynamicProperty."""
         if self.isGetter or self.isSetter:
-            dynamicPropertyName = self.dynamicPropertyQualname.split('.')[1]
+            dynamicPropertyName = self.dynamicPropertyQualname.split(".")[1]
             return getattr(self.containingClass, dynamicPropertyName)
         return None
 
     @property
     def isGetter(self) -> bool:
         """Check if the current object is a getter."""
-        return '_get_' in self.objectName
+        return "_get_" in self.objectName
 
     @property
     def isSetter(self) -> bool:
         """Check if the current object is a setter."""
-        return '_set_' in self.objectName
+        return "_set_" in self.objectName
 
     @property
     def dynamicPropertyQualname(self) -> str:
         """Get the qualified name of the dynamic property."""
-        return re.sub(r'_base|_get_|_set_', '', self.objectName)
+        return re.sub(r"_base|_get_|_set_", "", self.objectName)
 
     @property
     def getterObject(self) -> OptionalCallable:
@@ -309,14 +283,14 @@ class DynamicPropertyMixin(ABC):
         """Generate the description string for the setter value."""
         signature = self._mergeSignatures()
         if not signature or not self.setterObject:
-            return ''
+            return ""
 
         for name in signature.parameters:
-            if name == 'self':
+            if name == "self":
                 continue
 
             typeString = self._createTypeString(name)
-            formatString = FORMAT_STRINGS['setterValue'].format(
+            formatString = FORMAT_STRINGS["setterValue"].format(
                 parameterName=name, typeString=typeString
             )
 
@@ -324,14 +298,14 @@ class DynamicPropertyMixin(ABC):
             normalizerDict = self._getNormalizers(source)
             if normalizerDict and name in normalizerDict:
                 normalizer = normalizerDict[name]
-                formatString += FORMAT_STRINGS['normalizer'].format(
+                formatString += FORMAT_STRINGS["normalizer"].format(
                     normalizer=normalizer
                 )
 
-            defaults = self._getSignatureInfo().get('defaults')
+            defaults = self._getSignatureInfo().get("defaults")
             if defaults and name in defaults:
                 value = self._formatValue(defaults[name])
-                formatString += FORMAT_STRINGS['default'].format(value=value)
+                formatString += FORMAT_STRINGS["default"].format(value=value)
 
         wrapped = textwrap.fill(formatString, LINE_LENGTH, subsequent_indent=INDENT)
         return wrapped
@@ -340,21 +314,19 @@ class DynamicPropertyMixin(ABC):
     def implementationNote(self) -> str:
         """Generate an implementation note for the dynamic property."""
         if not self.publicQualname:
-            return ''
+            return ""
 
         role = self._assignRole(self.publicQualname)
         if self.isGetter:
-            formatString = FORMAT_STRINGS['getterImplementationNote'].format(
+            formatString = FORMAT_STRINGS["getterImplementationNote"].format(
                 baseObject=role
             )
         elif self.isSetter:
-            formatString = FORMAT_STRINGS['setterImplementationNote'].format(
+            formatString = FORMAT_STRINGS["setterImplementationNote"].format(
                 baseObject=role
             )
         else:
-            formatString = FORMAT_STRINGS['implementationNote'].format(
-                baseObject=role
-            )
+            formatString = FORMAT_STRINGS["implementationNote"].format(baseObject=role)
         return textwrap.fill(formatString, LINE_LENGTH)
 
 
@@ -377,17 +349,19 @@ class CodeAnalyzer(ast.NodeVisitor):
 
     """
 
-    def __init__(self, normalizationModule: str = 'normalizers'):
+    def __init__(self, normalizationModule: str = "normalizers"):
         self.exceptions: Set[str] = set()
         self.normalizers: Dict[str, str] = {}
         self.normalizationModule = normalizationModule
 
     def _extractNormalizer(self, node: ast.Call) -> Optional[str]:
         """Extract the normalizer function."""
-        if (isinstance(node.func, ast.Attribute)
+        if (
+            isinstance(node.func, ast.Attribute)
             and isinstance(node.func.value, ast.Name)
-                and node.func.value.id == self.normalizationModule):
-            return f'{self.normalizationModule}.{node.func.attr}'
+            and node.func.value.id == self.normalizationModule
+        ):
+            return f"{self.normalizationModule}.{node.func.attr}"
         return None
 
     def visit_Raise(self, node: ast.Raise) -> None:
@@ -403,9 +377,8 @@ class CodeAnalyzer(ast.NodeVisitor):
 
     def visit_Call(self, node: ast.Call) -> None:
         """Analyze function calls."""
-        if (hasattr(node.func, 'attr')
-                and node.func.attr == 'raiseNotImplementedError'):
-            self.exceptions.add('NotImplementedError')
+        if hasattr(node.func, "attr") and node.func.attr == "raiseNotImplementedError":
+            self.exceptions.add("NotImplementedError")
 
         normalizer = self._extractNormalizer(node)
         if normalizer and node.args and isinstance(node.args[0], ast.Name):
@@ -418,11 +391,11 @@ class CodeAnalyzer(ast.NodeVisitor):
         if isinstance(node.value, ast.Call):
             normalizer = self._extractNormalizer(node.value)
             if normalizer and isinstance(node.value.args[0], ast.Name):
-                self.normalizers['return'] = normalizer
+                self.normalizers["return"] = normalizer
         elif isinstance(node.value, ast.Name):
             returnValue = node.value.id
             if returnValue in self.normalizers:
-                self.normalizers['return'] = self.normalizers[returnValue]
+                self.normalizers["return"] = self.normalizers[returnValue]
 
         self.generic_visit(node)
 
@@ -452,14 +425,16 @@ class Docstring(DynamicPropertyMixin):
 
     """
 
-    def __init__(self,
-                 obj: Any,
-                 containingClass: Optional[Any] = None,
-                 summary: Optional[str] = None,
-                 description: Optional[str] = None,
-                 examples: Optional[str] = None,
-                 preserveVariadics: bool = True,
-                 globalNamespace: Optional[dict] = None):
+    def __init__(
+        self,
+        obj: Any,
+        containingClass: Optional[Any] = None,
+        summary: Optional[str] = None,
+        description: Optional[str] = None,
+        examples: Optional[str] = None,
+        preserveVariadics: bool = True,
+        globalNamespace: Optional[dict] = None,
+    ):
         self._obj = obj
         self._containingClass = containingClass
         self._summary = summary
@@ -480,9 +455,9 @@ class Docstring(DynamicPropertyMixin):
         from collections import defaultdict
 
         result: defaultdict[str, Union[dict, ParsedAnnotation]] = defaultdict(dict)
-        result['annotations'] = self._extractParameterAnnotations()
-        result['defaults'] = self._extractDefaultValues()
-        result['return'] = self._extractReturnAnnotation()
+        result["annotations"] = self._extractParameterAnnotations()
+        result["defaults"] = self._extractDefaultValues()
+        result["return"] = self._extractReturnAnnotation()
 
         return dict(result)
 
@@ -492,7 +467,7 @@ class Docstring(DynamicPropertyMixin):
         hints = self._getTypeHints()
         signature = self._getSignature()
         for name, param in signature.parameters.items():
-            if name in {'self', 'cls'}:
+            if name in {"self", "cls"}:
                 continue
 
             annotation = hints.get(name, param.annotation)
@@ -506,7 +481,7 @@ class Docstring(DynamicPropertyMixin):
         signature = self._getSignature()
 
         if signature:
-            returnAnnotation = hints.get('return', signature.return_annotation)
+            returnAnnotation = hints.get("return", signature.return_annotation)
             return self._parseTypeAnnotation(returnAnnotation)
         return None
 
@@ -515,7 +490,7 @@ class Docstring(DynamicPropertyMixin):
         defaults = {}
         signature = self._getSignature()
         for name, param in signature.parameters.items():
-            if name in {'self', 'cls'}:
+            if name in {"self", "cls"}:
                 continue
             if param.default is not inspect.Signature.empty:
                 defaults[name] = param.default
@@ -554,33 +529,31 @@ class Docstring(DynamicPropertyMixin):
         def _typeToString(annotation: Any) -> str:
             if isinstance(annotation, tuple):
                 container, elements = annotation[0], annotation[1]
-                if container == 'typing.Union':
+                if container == "typing.Union":
                     return " or ".join([_typeToString(e) for e in elements])
                 return (
                     f"{self._assignRole(container)} of "
                     f"{', '.join([_typeToString(e) for e in elements])} "
                     f"items"
                 )
-            elif annotation.startswith('Optional[') and annotation.endswith(']'):
-                elements = [annotation[9:-1], 'None']
+            elif annotation.startswith("Optional[") and annotation.endswith("]"):
+                elements = [annotation[9:-1], "None"]
                 return " or ".join([_typeToString(e) for e in elements])
             return self._assignRole(annotation)
 
         return _typeToString(annotation)
 
-    def _parseTypeAnnotation(self,
-                             annotation: Any
-                             ) -> ParsedAnnotation:
+    def _parseTypeAnnotation(self, annotation: Any) -> ParsedAnnotation:
         # Parses the type annotation of a parameter or return type.
         # builtins
         try:
-            if hasattr(annotation, '__name__'):
+            if hasattr(annotation, "__name__"):
                 return annotation.__name__
 
             origin = get_origin(annotation)
 
             if origin is not None:
-                if hasattr(origin, '__name__'):
+                if hasattr(origin, "__name__"):
                     containerName = origin.__name__
                 else:
                     containerName = str(origin)
@@ -600,67 +573,63 @@ class Docstring(DynamicPropertyMixin):
 
     def _getSignature(self) -> Optional[inspect.Signature]:
         # Select signature getter based on object type.
-        if (not isinstance(self.obj, type)
-                and self.objectName == 'dynamicProperty'):
+        if not isinstance(self.obj, type) and self.objectName == "dynamicProperty":
             return self._mergeSignatures()
         return inspect.signature(self.obj)
 
     def _getTypeHints(self) -> Dict[str, Any]:
         # Select type hint getter based on object type.
-        if self.objectName == 'dynamicProperty':
+        if self.objectName == "dynamicProperty":
             return self._mergeTypeHints()
         return get_type_hints(self.obj, globalns=self.globalNamespace)
 
     def _assignRole(self, objectName: str) -> str:
         # Assign a role to an object based on its type.
 
-        if objectName == 'NoneType':
-            return ':obj:`None`'
+        if objectName == "NoneType":
+            return ":obj:`None`"
 
         def removePrefix(string: str, prefix: str) -> str:
             # Remove a specified prefix from a string.
             if string and string.startswith(prefix):
-                return string[len(prefix):]
+                return string[len(prefix) :]
             return string
 
         def getMemberRole(objectName: str) -> str:
             # Determine the role of a class member (method, function, etc.).
-            className, memberName = objectName.split('.', 1)
+            className, memberName = objectName.split(".", 1)
             obj = self.globalNamespace.get(className)
             member = getattr(obj, memberName, None)
             typeName = type(obj).__name__
 
             if callable(member):
                 if isinstance(member, type(lambda: None)):
-                    typeName = 'method'
+                    typeName = "method"
                 else:
-                    typeName = 'function'
+                    typeName = "function"
             elif isinstance(member, property):
-                typeName = 'property'
+                typeName = "property"
             else:
-                typeName = 'attribute'
-            return ROLE_PREFIXES.get(typeName, '')
+                typeName = "attribute"
+            return ROLE_PREFIXES.get(typeName, "")
 
-        objectName = removePrefix(objectName, 'typing.')
+        objectName = removePrefix(objectName, "typing.")
         if self.isQualified(objectName):
             prefix = getMemberRole(objectName)
         else:
-            prefix = ROLE_PREFIXES.get(objectName, '')
-        return (f'{prefix}`{objectName}`'
-                if prefix else f':class:`{objectName}`')
+            prefix = ROLE_PREFIXES.get(objectName, "")
+        return f"{prefix}`{objectName}`" if prefix else f":class:`{objectName}`"
 
     def _resolveSource(self) -> str:
         # Resolves the source based on object type.
         if self.dynamicPropertyObject:
             if self.isGetter:
                 obj = Docstring(
-                    self.dynamicPropertyObject,
-                    containingClass=self.containingClass
+                    self.dynamicPropertyObject, containingClass=self.containingClass
                 ).getterObject
             elif self.isSetter:
                 obj = Docstring(
-                    self.dynamicPropertyObject,
-                    containingClass=self.containingClass
+                    self.dynamicPropertyObject, containingClass=self.containingClass
                 ).setterObject
         elif self.isPrivate:
             obj = self.publicObject
@@ -677,7 +646,7 @@ class Docstring(DynamicPropertyMixin):
             :obj:`False` otherwise.
 
         """
-        return objectName and '.' in objectName and objectName[0].isupper()
+        return objectName and "." in objectName and objectName[0].isupper()
 
     # ------------------
     # Docstring Elements
@@ -695,34 +664,34 @@ class Docstring(DynamicPropertyMixin):
 
         """
         if self.isPrivate and self.publicQualname:
-            _, publicName = self.publicQualname.split('.')
+            _, publicName = self.publicQualname.split(".")
             try:
                 publicObject = getattr(self.containingClass, publicName)
-                summary = publicObject.__doc__.split('\n')[0]
+                summary = publicObject.__doc__.split("\n")[0]
             except AttributeError:
-                summary = 'Summary line'
+                summary = "Summary line"
             if self.isGetter:
-                summary = summary.replace('Get or set', 'Get')
+                summary = summary.replace("Get or set", "Get")
             elif self.isSetter:
-                summary = summary.replace('Get or set', 'Set')
-            return summary or 'Summary line'
+                summary = summary.replace("Get or set", "Set")
+            return summary or "Summary line"
 
         if self._summary and len(self._summary) > LINE_LENGTH:
             logging.warning(
                 "The provided 'summary' value is longer than %s characters.",
-                LINE_LENGTH
+                LINE_LENGTH,
             )
 
-        return self._summary or 'Summary line'
+        return self._summary or "Summary line"
 
     @property
     def deprecationNotice(self) -> str:
         """Provide a formatted deprecation notice if object is deprecated."""
         objectDocstring = inspect.getdoc(self.obj)
         if not objectDocstring:
-            return ''
+            return ""
 
-        pattern = re.compile('`(.*)`')
+        pattern = re.compile("`(.*)`")
 
         for line in objectDocstring.splitlines():
             if DEPRECATION_ID not in line:
@@ -734,12 +703,13 @@ class Docstring(DynamicPropertyMixin):
 
             replacementName = replacementMatch.group(1)
             assignedReplacement = self._assignRole(replacementName)
-            formatString = FORMAT_STRINGS['deprecated'].format(
-                replacement=assignedReplacement)
+            formatString = FORMAT_STRINGS["deprecated"].format(
+                replacement=assignedReplacement
+            )
             directive = f"{DIRECTIVES['deprecated']}\n\n{INDENT}{formatString}"
             return directive
 
-        return ''
+        return ""
 
     @property
     def description(self) -> str:
@@ -749,31 +719,34 @@ class Docstring(DynamicPropertyMixin):
         description.
 
         """
-        description = textwrap.fill(self._description or 'Description', LINE_LENGTH)
+        description = textwrap.fill(self._description or "Description", LINE_LENGTH)
         if self.isPrivate:
-            return "\n\n".join([description, self.implementationNote]
-                               if self.implementationNote else [description])
+            return "\n\n".join(
+                [description, self.implementationNote]
+                if self.implementationNote
+                else [description]
+            )
         return description
 
     @property
     def paramSection(self) -> str:
         """Get the parameter section of the docstring."""
-        if not isinstance(self.obj, type) and self.objectName == 'dynamicProperty':
+        if not isinstance(self.obj, type) and self.objectName == "dynamicProperty":
             return self.setterValueDescription
 
         lines = []
         signature = inspect.signature(self.obj)
         for name, param in signature.parameters.items():
-            if name == 'self':
+            if name == "self":
                 continue
 
             typeString = self._createTypeString(name)
 
             # Handle variadics.
-            if str(param).startswith('*') and self.preserveVariadics:
+            if str(param).startswith("*") and self.preserveVariadics:
                 name = f"\\{str(param)}"
 
-            formatString = FORMAT_STRINGS['parameter'].format(
+            formatString = FORMAT_STRINGS["parameter"].format(
                 parameterName=name, typeString=typeString
             )
 
@@ -782,35 +755,35 @@ class Docstring(DynamicPropertyMixin):
                 normalizerDict = self._getNormalizers(source)
                 if normalizerDict and name in normalizerDict:
                     normalizer = normalizerDict[name]
-                    formatString += FORMAT_STRINGS['normalizer'].format(
+                    formatString += FORMAT_STRINGS["normalizer"].format(
                         normalizer=normalizer
                     )
 
-            defaults = self._getSignatureInfo().get('defaults')
+            defaults = self._getSignatureInfo().get("defaults")
             if defaults and name in defaults:
                 value = self._formatValue(defaults[name])
-                formatString += FORMAT_STRINGS['default'].format(value=value)
+                formatString += FORMAT_STRINGS["default"].format(value=value)
 
             wrapped = textwrap.fill(formatString, LINE_LENGTH, subsequent_indent=INDENT)
             lines.append(wrapped)
-        return '\n'.join(lines) or ''
+        return "\n".join(lines) or ""
 
     @property
     def returnSection(self) -> str:
         """Get the return section of the docstring."""
         returnValue = self._extractReturnAnnotation()
-        if returnValue in ['NoneType', 'None']:
-            return ''
+        if returnValue in ["NoneType", "None"]:
+            return ""
 
         typeString = self._createTypeString()
-        formatString = FORMAT_STRINGS['return'].format(typeString=typeString)
+        formatString = FORMAT_STRINGS["return"].format(typeString=typeString)
 
         if self.isPrivate:
             source = self._resolveSource()
             normalizerDict = self._getNormalizers(source)
-            if normalizerDict and 'return' in normalizerDict:
-                normalizer = normalizerDict['return']
-                formatString += FORMAT_STRINGS['normalizer'].format(
+            if normalizerDict and "return" in normalizerDict:
+                normalizer = normalizerDict["return"]
+                formatString += FORMAT_STRINGS["normalizer"].format(
                     normalizer=normalizer
                 )
 
@@ -819,36 +792,32 @@ class Docstring(DynamicPropertyMixin):
     @property
     def raisesSection(self) -> str:
         """Get the raises section of the docstring."""
-        if self.objectName == 'dynamicProperty':
-            return ''
+        if self.objectName == "dynamicProperty":
+            return ""
 
         exceptions = self._getRaisedExceptions()
         lines = []
         for exc in exceptions:
-            condition = FORMAT_STRINGS['exception']
-            if exc == 'NotImplementedError':
-                condition = FORMAT_STRINGS['notImplementedError']
-            formatString = FORMAT_STRINGS['raises'].format(
+            condition = FORMAT_STRINGS["exception"]
+            if exc == "NotImplementedError":
+                condition = FORMAT_STRINGS["notImplementedError"]
+            formatString = FORMAT_STRINGS["raises"].format(
                 exception=exc, condition=condition
             )
             wrapped = textwrap.fill(formatString, LINE_LENGTH, subsequent_indent=INDENT)
             lines.append(wrapped)
 
-        return '\n'.join(lines) or ''
+        return "\n".join(lines) or ""
 
     @property
     def overrideNotice(self) -> str:
         """Get an override notice based on the override value."""
         if self.overrideValue == 0:
-            return ''
-        delimiter = '\n\n' + INDENT
+            return ""
+        delimiter = "\n\n" + INDENT
         if self.overrideValue == 1:
-            return (DIRECTIVES['note']
-                    + delimiter
-                    + FORMAT_STRINGS['mayOverride'])
-        return (DIRECTIVES['important']
-                + delimiter
-                + FORMAT_STRINGS['mustOverride'])
+            return DIRECTIVES["note"] + delimiter + FORMAT_STRINGS["mayOverride"]
+        return DIRECTIVES["important"] + delimiter + FORMAT_STRINGS["mustOverride"]
 
     @property
     def examples(self) -> str:
@@ -856,13 +825,13 @@ class Docstring(DynamicPropertyMixin):
         found = []
         docstring = inspect.getdoc(self.obj)
         if not docstring:
-            return ''
+            return ""
 
-        for element in docstring.split('\n\n'):
-            if element.strip().startswith('>>>'):
+        for element in docstring.split("\n\n"):
+            if element.strip().startswith(">>>"):
                 found.append(element)
-        delimiter = '\n\n'
-        return f"Example::{delimiter}{delimiter.join(found)}" if found else ''
+        delimiter = "\n\n"
+        return f"Example::{delimiter}{delimiter.join(found)}" if found else ""
 
     # ----------------
     # Other properties
@@ -882,7 +851,7 @@ class Docstring(DynamicPropertyMixin):
     def publicObject(self):
         """Get the public equivalen of the object."""
         try:
-            return getattr(self.containingClass, self.publicQualname.split('.')[-1])
+            return getattr(self.containingClass, self.publicQualname.split(".")[-1])
         except AttributeError:
             return self.obj
 
@@ -912,8 +881,8 @@ class Docstring(DynamicPropertyMixin):
         """Check if the object is private (starts with an underscore)."""
         objectName = self.objectName
         if self.isQualified(objectName):
-            _, objectName = objectName.split('.')
-        return objectName.startswith('_')
+            _, objectName = objectName.split(".")
+        return objectName.startswith("_")
 
     @property
     def isBase(self) -> bool:
@@ -931,15 +900,16 @@ class Docstring(DynamicPropertyMixin):
         exists in the containing class and returns the formatted name.
 
         """
+
         def getNamespace(objectName: str) -> str:
             # Get the name of the object's namespace (i.e., the part of the
             # qualname before the last dot) from `objectName` or `containingClass`.
-            if '.' in objectName:
-                segments = objectName.split('.')
-                return '.'.join(segments[:-1])
+            if "." in objectName:
+                segments = objectName.split(".")
+                return ".".join(segments[:-1])
             if self.containingClass:
                 return self.containingClass.__class__.__qualname__
-            return ''
+            return ""
 
         def objectExists(publicMemberName: str) -> bool:
             # Check if an object exists within a class.
@@ -947,19 +917,22 @@ class Docstring(DynamicPropertyMixin):
                 self.containingClass, publicMemberName
             )
 
-        if self.dynamicPropertyObject.__class__.__name__ == 'dynamicProperty':
+        if self.dynamicPropertyObject.__class__.__name__ == "dynamicProperty":
             return self.dynamicPropertyQualname
 
         namespace = getNamespace(self.objectName)
-        memberName = (self.objectName.split('.')[-1]
-                      if '.' in self.objectName else self.objectName)
+        memberName = (
+            self.objectName.split(".")[-1]
+            if "." in self.objectName
+            else self.objectName
+        )
         publicMemberName = memberName[1:] if self.isPrivate else memberName
         if not objectExists(publicMemberName):
             magicMemberName = f"__{publicMemberName.lower()}__"
             if not objectExists(magicMemberName):
                 raise ValueError(f"Cannot find public member for '{memberName}'.")
             publicMemberName = magicMemberName
-        return '.'.join([namespace, publicMemberName])
+        return ".".join([namespace, publicMemberName])
 
     @property
     def overrideValue(self) -> int:
@@ -978,9 +951,7 @@ class Docstring(DynamicPropertyMixin):
         return 0
 
 
-def insertDocstring(obj: Any,
-                    newDocstring: str,
-                    preserveVariadics: bool = True) -> str:
+def insertDocstring(obj: Any, newDocstring: str, preserveVariadics: bool = True) -> str:
     """Insert the generated docstring into the source code of the object.
 
     :param obj: The object whose docstring will be modified.
@@ -994,20 +965,18 @@ def insertDocstring(obj: Any,
         source = inspect.getsource(obj)
         sourceLines = source.splitlines()
         match = re.match(r"(\s*)", sourceLines[0])
-        indent = match.group(1) if match else ''
+        indent = match.group(1) if match else ""
 
         # Format the docstring with correct indentation.
         formattedDocstring = textwrap.indent(newDocstring.strip(), indent * 2)
 
         # Remove the leading triple quotes  and ensure
         # the correct placement of closing triple quotes.
-        formattedDocstring = (
-            f'"""{formattedDocstring[3:].strip()}\n\n{indent * 2}"""'
-        )
+        formattedDocstring = f'"""{formattedDocstring[3:].strip()}\n\n{indent * 2}"""'
 
         # Handle variadics.
-        if '\\*' in formattedDocstring and preserveVariadics:
-            formattedDocstring = f'r{formattedDocstring}'
+        if "\\*" in formattedDocstring and preserveVariadics:
+            formattedDocstring = f"r{formattedDocstring}"
 
         # Replace existing docstring or insert a new one,
         if obj.__doc__:
@@ -1016,28 +985,31 @@ def insertDocstring(obj: Any,
             )
         else:
             signatureEnd = next(
-                i for i, line in enumerate(sourceLines)
-                if line.strip().endswith(':')
+                i for i, line in enumerate(sourceLines) if line.strip().endswith(":")
             )
             updatedSourceCode = (
-                '\n'.join(sourceLines[:signatureEnd + 1])
-                + f'\n{indent}{formattedDocstring}\n'
-                + '\n'.join(sourceLines[signatureEnd + 1:])
+                "\n".join(sourceLines[: signatureEnd + 1])
+                + f"\n{indent}{formattedDocstring}\n"
+                + "\n".join(sourceLines[signatureEnd + 1 :])
             )
 
         return updatedSourceCode
     except TypeError as exc:
-        raise TypeError(f"The source of a {obj.__class__.__name__} "
-                        "instance can not be inspected.") from exc
+        raise TypeError(
+            f"The source of a {obj.__class__.__name__} "
+            "instance can not be inspected."
+        ) from exc
 
 
-def generateDocstring(obj: Any,
-                      summary: Optional[str] = None,
-                      description: Optional[str] = None,
-                      examples: Optional[str] = None,
-                      preserveVariadics: bool = True,
-                      globalNamespace: Optional[dict] = None,
-                      containingClass: Optional[Any] = None) -> str:
+def generateDocstring(
+    obj: Any,
+    summary: Optional[str] = None,
+    description: Optional[str] = None,
+    examples: Optional[str] = None,
+    preserveVariadics: bool = True,
+    globalNamespace: Optional[dict] = None,
+    containingClass: Optional[Any] = None,
+) -> str:
     """Generate a docstring for the object.
 
     Creates a docstring with sections including summary, description,
@@ -1062,7 +1034,7 @@ def generateDocstring(obj: Any,
         description=description,
         examples=examples,
         preserveVariadics=preserveVariadics,
-        globalNamespace=globalNamespace
+        globalNamespace=globalNamespace,
     )
 
     preliminarySections = [
@@ -1077,12 +1049,9 @@ def generateDocstring(obj: Any,
         docstring.raisesSection,
     ]
 
-    conclusiveSections = [
-        docstring.overrideNotice,
-        docstring.examples
-    ]
+    conclusiveSections = [docstring.overrideNotice, docstring.examples]
 
-    preliminaryContent = '\n\n'.join(filter(None, preliminarySections))
-    middleContent = '\n'.join(filter(None, middleSections))
-    conclusiveContent = '\n\n'.join(filter(None, conclusiveSections))
+    preliminaryContent = "\n\n".join(filter(None, preliminarySections))
+    middleContent = "\n".join(filter(None, middleSections))
+    conclusiveContent = "\n\n".join(filter(None, conclusiveSections))
     return f"{preliminaryContent}\n\n{middleContent}\n\n{conclusiveContent}"
