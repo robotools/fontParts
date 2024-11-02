@@ -3,7 +3,6 @@ import collections
 
 
 class TestLayer(unittest.TestCase):
-
     # ------
     # Glyphs
     # ------
@@ -16,10 +15,7 @@ class TestLayer(unittest.TestCase):
 
     def test_len(self):
         layer = self.getLayer_glyphs()
-        self.assertEqual(
-            len(layer),
-            4
-        )
+        self.assertEqual(len(layer), 4)
 
     def _testInsertGlyph(self, setGlyphName=True):
         layer, _ = self.objectGenerator("layer")
@@ -34,10 +30,7 @@ class TestLayer(unittest.TestCase):
             glyph.name = "test"
         layer["test"] = glyph
         self.assertTrue("test" in layer)
-        self.assertEqual(
-            layer["test"].bounds,
-            glyph.bounds
-        )
+        self.assertEqual(layer["test"].bounds, glyph.bounds)
 
     def test_set_glyph(self):
         self._testInsertGlyph(setGlyphName=True)
@@ -47,10 +40,7 @@ class TestLayer(unittest.TestCase):
 
     def test_get_glyph_in_font(self):
         layer = self.getLayer_glyphs()
-        self.assertEqual(
-            layer["A"].name,
-            "A"
-        )
+        self.assertEqual(layer["A"].name, "A")
 
     def test_get_glyph_not_in_font(self):
         layer = self.getLayer_glyphs()
@@ -63,41 +53,27 @@ class TestLayer(unittest.TestCase):
 
     def test_hash_object_self(self):
         layer_one = self.getLayer_glyphs()
-        self.assertEqual(
-            hash(layer_one),
-            hash(layer_one)
-        )
+        self.assertEqual(hash(layer_one), hash(layer_one))
 
     def test_hash_object_other(self):
         layer_one = self.getLayer_glyphs()
         layer_two = self.getLayer_glyphs()
-        self.assertNotEqual(
-            hash(layer_one),
-            hash(layer_two)
-        )
+        self.assertNotEqual(hash(layer_one), hash(layer_two))
 
     def test_hash_object_self_variable_assignment(self):
         layer_one = self.getLayer_glyphs()
         a = layer_one
-        self.assertEqual(
-            hash(layer_one),
-            hash(a)
-        )
+        self.assertEqual(hash(layer_one), hash(a))
 
     def test_hash_object_other_variable_assignment(self):
         layer_one = self.getLayer_glyphs()
         layer_two = self.getLayer_glyphs()
         a = layer_one
-        self.assertNotEqual(
-            hash(layer_two),
-            hash(a)
-        )
+        self.assertNotEqual(hash(layer_two), hash(a))
 
     def test_is_hashable(self):
         layer_one = self.getLayer_glyphs()
-        self.assertTrue(
-            isinstance(layer_one, collections.abc.Hashable)
-        )
+        self.assertTrue(isinstance(layer_one, collections.abc.Hashable))
 
     # --------
     # Equality
@@ -105,35 +81,23 @@ class TestLayer(unittest.TestCase):
 
     def test_object_equal_self(self):
         layer_one = self.getLayer_glyphs()
-        self.assertEqual(
-            layer_one,
-            layer_one
-        )
+        self.assertEqual(layer_one, layer_one)
 
     def test_object_not_equal_other(self):
         layer_one = self.getLayer_glyphs()
         layer_two = self.getLayer_glyphs()
-        self.assertNotEqual(
-            layer_one,
-            layer_two
-        )
+        self.assertNotEqual(layer_one, layer_two)
 
     def test_object_equal_self_variable_assignment(self):
         layer_one = self.getLayer_glyphs()
         a = layer_one
-        self.assertEqual(
-            layer_one,
-            a
-        )
+        self.assertEqual(layer_one, a)
 
     def test_object_not_equal_self_variable_assignment(self):
         layer_one = self.getLayer_glyphs()
         layer_two = self.getLayer_glyphs()
         a = layer_one
-        self.assertNotEqual(
-            layer_two,
-            a
-        )
+        self.assertNotEqual(layer_two, a)
 
     # ---------
     # Selection
@@ -146,10 +110,7 @@ class TestLayer(unittest.TestCase):
         except NotImplementedError:
             return
         layer.selected = True
-        self.assertEqual(
-            layer.selected,
-            True
-        )
+        self.assertEqual(layer.selected, True)
 
     def test_selected_false(self):
         layer = self.getLayer_glyphs()
@@ -157,10 +118,7 @@ class TestLayer(unittest.TestCase):
             layer.selected = False
         except NotImplementedError:
             return
-        self.assertEqual(
-            layer.selected,
-            False
-        )
+        self.assertEqual(layer.selected, False)
 
     # Glyphs
 
@@ -170,10 +128,7 @@ class TestLayer(unittest.TestCase):
             layer.selected = False
         except NotImplementedError:
             return
-        self.assertEqual(
-            layer.selectedGlyphs,
-            ()
-        )
+        self.assertEqual(layer.selectedGlyphs, ())
 
     def test_selectedGlyphs_setSubObject(self):
         layer = self.getLayer_glyphs()
@@ -187,7 +142,7 @@ class TestLayer(unittest.TestCase):
         glyph2.selected = True
         self.assertEqual(
             tuple(sorted(layer.selectedGlyphs, key=lambda glyph: glyph.name)),
-            (glyph1, glyph2)
+            (glyph1, glyph2),
         )
 
     def test_selectedGlyphs_setFilledList(self):
@@ -201,7 +156,7 @@ class TestLayer(unittest.TestCase):
         layer.selectedGlyphs = [glyph3, glyph4]
         self.assertEqual(
             tuple(sorted(layer.selectedGlyphs, key=lambda glyph: glyph.name)),
-            (glyph3, glyph4)
+            (glyph3, glyph4),
         )
 
     def test_selectedGlyphs_setEmptyList(self):
@@ -213,10 +168,7 @@ class TestLayer(unittest.TestCase):
         glyph1 = layer["A"]
         glyph1.selected = True
         layer.selectedGlyphs = []
-        self.assertEqual(
-            layer.selectedGlyphs,
-            ()
-        )
+        self.assertEqual(layer.selectedGlyphs, ())
 
     # Glyph Names
 
@@ -226,10 +178,7 @@ class TestLayer(unittest.TestCase):
             layer.selected = False
         except NotImplementedError:
             return
-        self.assertEqual(
-            layer.selectedGlyphs,
-            ()
-        )
+        self.assertEqual(layer.selectedGlyphs, ())
 
     def test_selectedGlyphNames_setSubObject(self):
         layer = self.getLayer_glyphs()
@@ -241,10 +190,7 @@ class TestLayer(unittest.TestCase):
         glyph2 = layer["B"]
         glyph1.selected = True
         glyph2.selected = True
-        self.assertEqual(
-            tuple(sorted(layer.selectedGlyphNames)),
-            ("A", "B")
-        )
+        self.assertEqual(tuple(sorted(layer.selectedGlyphNames)), ("A", "B"))
 
     def test_selectedGlyphNames_setFilledList(self):
         layer = self.getLayer_glyphs()
@@ -253,10 +199,7 @@ class TestLayer(unittest.TestCase):
         except NotImplementedError:
             return
         layer.selectedGlyphNames = ["C", "D"]
-        self.assertEqual(
-            tuple(sorted(layer.selectedGlyphNames)),
-            ("C", "D")
-        )
+        self.assertEqual(tuple(sorted(layer.selectedGlyphNames)), ("C", "D"))
 
     def test_selectedGlyphNames_setEmptyList(self):
         layer = self.getLayer_glyphs()
@@ -267,7 +210,4 @@ class TestLayer(unittest.TestCase):
         glyph1 = layer["A"]
         glyph1.selected = True
         layer.selectedGlyphNames = []
-        self.assertEqual(
-            layer.selectedGlyphNames,
-            ()
-        )
+        self.assertEqual(layer.selectedGlyphNames, ())

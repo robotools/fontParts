@@ -4,7 +4,6 @@ from fontParts.fontshell.base import RBaseObject
 
 
 class RGroups(RBaseObject, BaseGroups):
-
     wrapClass = defcon.Groups
 
     def _get_side1KerningGroups(self):

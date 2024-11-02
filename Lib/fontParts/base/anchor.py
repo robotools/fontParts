@@ -1,8 +1,14 @@
 from fontTools.misc import transform
 from fontParts.base import normalizers
 from fontParts.base.base import (
-    BaseObject, TransformationMixin, InterpolationMixin, SelectionMixin,
-    PointPositionMixin, IdentifierMixin, dynamicProperty, reference
+    BaseObject,
+    TransformationMixin,
+    InterpolationMixin,
+    SelectionMixin,
+    PointPositionMixin,
+    IdentifierMixin,
+    dynamicProperty,
+    reference,
 )
 from fontParts.base.compatibility import AnchorCompatibilityReporter
 from fontParts.base.color import Color
@@ -10,16 +16,15 @@ from fontParts.base.deprecated import DeprecatedAnchor, RemovedAnchor
 
 
 class BaseAnchor(
-                 BaseObject,
-                 TransformationMixin,
-                 DeprecatedAnchor,
-                 RemovedAnchor,
-                 PointPositionMixin,
-                 InterpolationMixin,
-                 SelectionMixin,
-                 IdentifierMixin
-                 ):
-
+    BaseObject,
+    TransformationMixin,
+    DeprecatedAnchor,
+    RemovedAnchor,
+    PointPositionMixin,
+    InterpolationMixin,
+    SelectionMixin,
+    IdentifierMixin,
+):
     """
     An anchor object. This object is almost always
     created with :meth:`BaseGlyph.appendAnchor`.
@@ -42,12 +47,7 @@ class BaseAnchor(
     # Copy
     # ----
 
-    copyAttributes = (
-        "x",
-        "y",
-        "name",
-        "color"
-    )
+    copyAttributes = ("x", "y", "name", "color")
 
     # -------
     # Parents
@@ -104,7 +104,7 @@ class BaseAnchor(
             >>> anchor.x
             100
             >>> anchor.x = 101
-        """
+        """,
     )
 
     def _get_base_x(self):
@@ -147,7 +147,7 @@ class BaseAnchor(
             >>> anchor.y
             100
             >>> anchor.y = 101
-        """
+        """,
     )
 
     def _get_base_y(self):
@@ -194,7 +194,7 @@ class BaseAnchor(
 
             >>> anchor.index
             0
-        """
+        """,
     )
 
     def _get_base_index(self):
@@ -225,7 +225,7 @@ class BaseAnchor(
             >>> anchor.name
             'my anchor'
             >>> anchor.name = None
-        """
+        """,
     )
 
     def _get_base_name(self):
@@ -272,7 +272,7 @@ class BaseAnchor(
             >>> anchor.color
             None
             >>> anchor.color = (1, 0, 0, 0.5)
-        """
+        """,
     )
 
     def _get_base_color(self):

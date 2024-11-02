@@ -4,7 +4,6 @@ from fontParts.fontshell.base import RBaseObject
 
 
 class RAnchor(RBaseObject, BaseAnchor):
-
     wrapClass = defcon.Anchor
 
     def _init(self, wrap=None):

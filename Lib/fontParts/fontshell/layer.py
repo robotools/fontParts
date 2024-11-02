@@ -6,7 +6,6 @@ from fontParts.fontshell.glyph import RGlyph
 
 
 class RLayer(RBaseObject, BaseLayer):
-
     wrapClass = defcon.Layer
     libClass = RLib
     glyphClass = RGlyph
