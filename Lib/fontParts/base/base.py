@@ -130,14 +130,14 @@ class dynamicProperty:
             # via the class instead of an instance
             if obj is None:
                 return self
-            raise FontPartsError("no getter for %r" % self.name)
+            raise FontPartsError(f"no getter for {self.name!r}")
 
     def __set__(self, obj: Any, value: Any) -> None:
         setter = getattr(obj, self.setterName, None)
         if setter is not None:
             setter(value)
         else:
-            raise FontPartsError("no setter for %r" % self.name)
+            raise FontPartsError(f"no setter for {self.name!r}")
 
 
 def interpolate(
@@ -351,9 +351,7 @@ class BaseObject:
 
         """
         raise NotImplementedError(
-            "The {className} subclass does not implement this method.".format(
-                className=self.__class__.__name__
-            )
+            f"The {self.__class__.__name__} subclass does not implement this method."
         )
 
     # ---------------------
@@ -1099,9 +1097,7 @@ class InterpolationMixin:
         """
         if not isinstance(other, cls):
             raise TypeError(
-                """Compatibility between an instance of %r and an \
-                instance of %r can not be checked."""
-                % (cls.__name__, other.__class__.__name__)
+                f"""Compatibility between an instance of {cls.__name__!r} and an                 instance of {other.__class__.__name__!r} can not be checked."""
             )
         reporter = self.compatibilityReporterClass(self, other)
         self._isCompatible(other, reporter)
@@ -1397,7 +1393,7 @@ class FuzzyNumber:
         self.threshold = threshold
 
     def __repr__(self) -> str:
-        return "[%f %f]" % (self.value, self.threshold)
+        return f"[{self.value:f} {self.threshold:f}]"
 
     def __lt__(self, other: Union[FuzzyNumber, IntFloatType]) -> bool:
         if hasattr(other, "value"):

@@ -61,10 +61,10 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
 
     def _reprContents(self) -> List[str]:
         contents: List[str] = [
-            "'%s %s'" % (self.info.familyName, self.info.styleName),
+            f"'{self.info.familyName} {self.info.styleName}'",
         ]
         if self.path is not None:
-            contents.append("path=%r" % self.path)
+            contents.append(f"path={self.path!r}")
         return contents
 
     # ----
@@ -458,7 +458,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
             valid = self._isValidGenerateEnvironmentOption(key)
             if not valid:
                 warnings.warn(
-                    "The %s argument is not supported " "in this environment." % key,
+                    f"The {key} argument is not supported in this environment.",
                     UserWarning,
                 )
             env[key] = value
@@ -1120,7 +1120,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         """
         name = normalizers.normalizeLayerName(name)
         if name not in self.layerOrder:
-            raise ValueError("No layer with the name '%s' exists." % name)
+            raise ValueError(f"No layer with the name '{name}' exists.")
         layer = self._getLayer(name)
         self._setFontInLayer(layer)
         return layer
@@ -1148,7 +1148,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         for layer in self.layers:
             if layer.name == name:
                 return layer
-        raise ValueError("No layer with the name '%s' exists." % name)
+        raise ValueError(f"No layer with the name '{name}' exists.")
 
     # new
 
@@ -1224,7 +1224,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         """
         name = normalizers.normalizeLayerName(name)
         if name not in self.layerOrder:
-            raise ValueError("No layer with the name '%s' exists." % name)
+            raise ValueError(f"No layer with the name '{name}' exists.")
         self._removeLayer(name)
 
     def _removeLayer(self, name: str, **kwargs: Any) -> None:
@@ -1328,12 +1328,10 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         layerOrder = self.layerOrder
         layerName = normalizers.normalizeLayerName(layerName)
         if layerName not in layerOrder:
-            raise ValueError("No layer with the name '%s' exists." % layerName)
+            raise ValueError(f"No layer with the name '{layerName}' exists.")
         newLayerName = normalizers.normalizeLayerName(newLayerName)
         if newLayerName in layerOrder:
-            raise ValueError(
-                "A layer with the name '%s' already exists." % newLayerName
-            )
+            raise ValueError(f"A layer with the name '{newLayerName}' already exists.")
         newLayer = self._duplicateLayer(layerName, newLayerName)
         newLayer = normalizers.normalizeLayer(newLayer)
         return newLayer
@@ -1384,10 +1382,10 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         layerOrder = self.layerOrder
         layerName = normalizers.normalizeLayerName(layerName)
         if layerName not in layerOrder:
-            raise ValueError("No layer with the name '%s' exists." % layerName)
+            raise ValueError(f"No layer with the name '{layerName}' exists.")
         otherLayerName = normalizers.normalizeLayerName(otherLayerName)
         if otherLayerName not in layerOrder:
-            raise ValueError("No layer with the name '%s' exists." % otherLayerName)
+            raise ValueError(f"No layer with the name '{otherLayerName}' exists.")
         self._swapLayerNames(layerName, otherLayerName)
 
     def _swapLayerNames(self, layerName: str, otherLayerName: str) -> None:
@@ -1749,7 +1747,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
     def _getitem__guidelines(self, index: int) -> BaseGuideline:
         index = normalizers.normalizeIndex(index)
         if index >= self._len__guidelines():
-            raise ValueError("No guideline located at index %d." % index)
+            raise ValueError(f"No guideline located at index {index}.")
         guideline = self._getGuideline(index)
         self._setFontInGuideline(guideline)
         return guideline
@@ -1896,7 +1894,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
             index = self._getGuidelineIndex(guideline)
         index = normalizers.normalizeIndex(index)
         if index >= self._len__guidelines():
-            raise ValueError("No guideline located at index %d." % index)
+            raise ValueError(f"No guideline located at index {index}.")
         self._removeGuideline(index)
 
     def _removeGuideline(self, index: int, **kwargs: Any) -> None:
@@ -1981,19 +1979,11 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         factor = normalizers.normalizeInterpolationFactor(factor)
         if not isinstance(minFont, BaseFont):
             raise TypeError(
-                (
-                    "Interpolation to an instance of %r can not be "
-                    "performed from an instance of %r."
-                )
-                % (self.__class__.__name__, minFont.__class__.__name__)
+                f"Interpolation to an instance of {self.__class__.__name__!r} can not be performed from an instance of {minFont.__class__.__name__!r}."
             )
         if not isinstance(maxFont, BaseFont):
             raise TypeError(
-                (
-                    "Interpolation to an instance of %r can not be "
-                    "performed from an instance of %r."
-                )
-                % (self.__class__.__name__, maxFont.__class__.__name__)
+                f"Interpolation to an instance of {self.__class__.__name__!r} can not be performed from an instance of {maxFont.__class__.__name__!r}."
             )
         round = normalizers.normalizeBoolean(round)
         suppressError = normalizers.normalizeBoolean(suppressError)
