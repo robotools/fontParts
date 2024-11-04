@@ -35,12 +35,12 @@ class BaseAnchor(
 
     def _reprContents(self):
         contents = [
-            ("({x}, {y})".format(x=self.x, y=self.y)),
+            f"({self.x}, {self.y})",
         ]
         if self.name is not None:
-            contents.append("name='%s'" % self.name)
+            contents.append(f"name='{self.name}'")
         if self.color:
-            contents.append("color=%r" % str(self.color))
+            contents.append(f"color={self.color!r}")
         return contents
 
     # ----

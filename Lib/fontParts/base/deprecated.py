@@ -16,21 +16,21 @@ class RemovedError(Exception):
 class RemovedBase(object):
     def setParent(self, parent):
         objName = self.__class__.__name__.replace("Removed", "")
-        raise RemovedError("'%s.setParent()'" % objName)
+        raise RemovedError(f"'{objName}.setParent()'")
 
 
 class DeprecatedBase(object):
     def update(self):
         objName = self.__class__.__name__.replace("Deprecated", "")
         warnings.warn(
-            "'%s.update': use %s.changed()" % (objName, objName), DeprecationWarning
+            f"'{objName}.update': use {objName}.changed()", DeprecationWarning
         )
         self.changed()
 
     def setChanged(self):
         objName = self.__class__.__name__.replace("Deprecated", "")
         warnings.warn(
-            "'%s.setChanged': use %s.changed()" % (objName, objName), DeprecationWarning
+            f"'{objName}.setChanged': use {objName}.changed()", DeprecationWarning
         )
         self.changed()
 
@@ -43,22 +43,20 @@ class DeprecatedBase(object):
 class DeprecatedTransformation(object):
     def move(self, *args, **kwargs):
         objName = self.__class__.__name__.replace("Deprecated", "")
-        warnings.warn(
-            "'%s.move()': use %s.moveBy()" % (objName, objName), DeprecationWarning
-        )
+        warnings.warn(f"'{objName}.move()': use {objName}.moveBy()", DeprecationWarning)
         self.moveBy(*args, **kwargs)
 
     def translate(self, *args, **kwargs):
         objName = self.__class__.__name__.replace("Deprecated", "")
         warnings.warn(
-            "'%s.translate()': use %s.moveBy()" % (objName, objName), DeprecationWarning
+            f"'{objName}.translate()': use {objName}.moveBy()", DeprecationWarning
         )
         self.moveBy(*args, **kwargs)
 
     def scale(self, *args, **kwargs):
         objName = self.__class__.__name__.replace("Deprecated", "")
         warnings.warn(
-            "'%s.scale()': use %s.scaleBy()" % (objName, objName), DeprecationWarning
+            f"'{objName}.scale()': use {objName}.scaleBy()", DeprecationWarning
         )
         if "center" in kwargs:
             kwargs["origin"] = kwargs["center"]
@@ -68,7 +66,7 @@ class DeprecatedTransformation(object):
     def rotate(self, *args, **kwargs):
         objName = self.__class__.__name__.replace("Deprecated", "")
         warnings.warn(
-            "'%s.rotate()': use %s.rotateBy()" % (objName, objName), DeprecationWarning
+            f"'{objName}.rotate()': use {objName}.rotateBy()", DeprecationWarning
         )
         if "offset" in kwargs:
             kwargs["origin"] = kwargs["offset"]
@@ -78,16 +76,14 @@ class DeprecatedTransformation(object):
     def transform(self, *args, **kwargs):
         objName = self.__class__.__name__.replace("Deprecated", "")
         warnings.warn(
-            "'%s.transform()': use %s.transformBy()" % (objName, objName),
+            f"'{objName}.transform()': use {objName}.transformBy()",
             DeprecationWarning,
         )
         self.transformBy(*args, **kwargs)
 
     def skew(self, *args, **kwargs):
         objName = self.__class__.__name__.replace("Deprecated", "")
-        warnings.warn(
-            "'%s.skew()': use %s.skewBy()" % (objName, objName), DeprecationWarning
-        )
+        warnings.warn(f"'{objName}.skew()': use {objName}.skewBy()", DeprecationWarning)
         if "offset" in kwargs:
             kwargs["origin"] = kwargs["offset"]
             del kwargs["offset"]

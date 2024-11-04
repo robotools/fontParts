@@ -31,7 +31,7 @@ class TestContour(unittest.TestCase):
         idFound = False
         for i in value:
             self.assertIsInstance(i, str)
-            if i == "identifier='%r'" % contour.identifier:
+            if i == f"identifier='{contour.identifier!r}'":
                 idFound = True
         self.assertTrue(idFound)
 
@@ -46,7 +46,7 @@ class TestContour(unittest.TestCase):
         glyphFound = False
         for i in value:
             self.assertIsInstance(i, str)
-            if i == "identifier='%r'" % contour.identifier:
+            if i == f"identifier='{contour.identifier!r}'":
                 idFound = True
             if i == "in glyph":
                 glyphFound = True

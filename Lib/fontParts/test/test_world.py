@@ -19,7 +19,7 @@ class TestFontList(unittest.TestCase):
             font = self.getFont()
             setattr(font.info, attr, value)
             if attr != "familyName":
-                font.info.familyName = "%s %s" % (attr, repr(value))
+                font.info.familyName = f"{attr} {repr(value)}"
             fonts.append(font)
         return fonts
 
@@ -28,7 +28,7 @@ class TestFontList(unittest.TestCase):
 
     def getFont_sortBy_monospaceGlyphs(self):
         font = self.getFont()
-        font.info.familyName = "monospace %s" % str(id(font))
+        font.info.familyName = f"monospace {str(id(font))}"
         glyph1 = font.newGlyph("a")
         glyph1.width = 100
         glyph2 = font.newGlyph("b")
@@ -37,7 +37,7 @@ class TestFontList(unittest.TestCase):
 
     def getFont_sortBy_proportionalGlyphs(self):
         font = self.getFont()
-        font.info.familyName = "proportional %s" % str(id(font))
+        font.info.familyName = f"proportional {str(id(font))}"
         glyph1 = font.newGlyph("a")
         glyph1.width = 100
         glyph2 = font.newGlyph("b")
@@ -180,7 +180,7 @@ class TestFontList(unittest.TestCase):
     def getFont_withGlyphCount(self, count):
         font = self.getFont()
         for i in range(count):
-            font.newGlyph("glyph%d" % i)
+            font.newGlyph(f"glyph{i}")
         font.info.familyName = str(count)
         return font
 

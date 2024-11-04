@@ -51,13 +51,13 @@ class BasePoint(
 
     def _reprContents(self) -> list[str]:
         contents = [
-            "%s" % self.type,
-            ("({x}, {y})".format(x=self.x, y=self.y)),
+            f"{self.type}",
+            f"({self.x}, {self.y})",
         ]
         if self.name is not None:
-            contents.append("name='%s'" % self.name)
+            contents.append(f"name='{self.name}'")
         if self.smooth:
-            contents.append("smooth=%r" % self.smooth)
+            contents.append(f"smooth={self.smooth!r}")
         return contents
 
     # -------

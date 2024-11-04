@@ -387,7 +387,7 @@ class AutosummaryMethodList(Autosummary):
             _, obj, _, _ = import_by_name(name, prefixes=prefixes)
             methodNames.extend(
                 [
-                    "%s.%s" % (name, method)
+                    f"{name}.{method}"
                     for method in dir(obj)
                     if not method.startswith("_")
                 ]
@@ -431,14 +431,9 @@ class AutosummaryMethodList(Autosummary):
         for name, sig, summary, real_name in items:
             qualifier = "obj"
             if "nosignatures" not in self.options:
-                col1 = ":%s:`%s <%s>`\ %s" % (
-                    qualifier,
-                    name,
-                    real_name,
-                    rst.escape(sig),
-                )
+                col1 = f":{qualifier}:`{name} <{real_name}>`\\ {rst.escape(sig)}"
             else:
-                col1 = ":%s:`%s <%s>`" % (qualifier, name, real_name)
+                col1 = f":{qualifier}:`{name} <{real_name}>`"
             col2 = summary
             if hidesummary:
                 append_row(col1)
