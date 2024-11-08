@@ -335,7 +335,7 @@ class BaseObject:
             if isinstance(selfValue, BaseObject):
                 selfValue.copyData(sourceValue)
             else:
-                setattr(self, attr, sourceValue)
+                setattr(self, attr, deepcopy(sourceValue))
 
     # ----------
     # Exceptions

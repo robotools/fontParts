@@ -95,6 +95,18 @@ class TestInfo(unittest.TestCase):
         self.assertEqual(info1.familyName, "test2")
         self.assertEqual(info1.unitsPerEm, 2000)
 
+    # ----
+    # Copy
+    # ----
+    def test_copy(self):
+        info1 = self.getInfo_generic()
+        info1.postscriptBlueValues = [-10, 0, 50, 60]
+
+        info2 = info1.copy()
+        info2.postscriptBlueValues[0] = -2
+
+        self.assertNotEqual(info1.postscriptBlueValues, info2.postscriptBlueValues)
+
     # -------------
     # Interpolation
     # -------------
