@@ -11,7 +11,6 @@ build/*
 dist/*
 .eggs/
 .vscode
-*-venv/
 
 documentation/build/*
 documentation/.sass-cache/*
