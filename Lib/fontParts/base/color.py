@@ -4,7 +4,9 @@ from typing import Union, List
 from fontParts.base.base import BaseObject
 from fontParts.base.normalizers import normalizeColor
 from fontParts.base.annotations import (
-    IntFloatType, QuadrupleType, QuadrupleCollectionType
+    IntFloatType,
+    QuadrupleType,
+    QuadrupleCollectionType,
 )
 
 
@@ -16,16 +18,16 @@ class Color(BaseObject, tuple):
 
     """
 
-    def __new__(cls,
-                *args: Union[IntFloatType, QuadrupleCollectionType[IntFloatType]]
-                ) -> Color:
+    def __new__(
+        cls, *args: Union[IntFloatType, QuadrupleCollectionType[IntFloatType]]
+    ) -> Color:
         value = tuple(args[0]) if len(args) == 1 else args
         normalizedValue = normalizeColor(value)
 
         return super().__new__(cls, normalizedValue)
 
     def _reprContents(self) -> List[str]:
-        componentNames = ['r', 'g', 'b', 'a']
+        componentNames = ["r", "g", "b", "a"]
         return [f"{name}={getattr(self, name)}" for name in componentNames]
 
     @property
