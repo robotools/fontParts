@@ -8,7 +8,7 @@ from fontParts.base.annotations import (
 )
 
 
-class Color(BaseObject, tuple):
+class Color(tuple):
     """Represent a color object following the :ref:`type-color`.
 
     This class takes either individual RGBA component values or a :class:`list`
@@ -24,9 +24,9 @@ class Color(BaseObject, tuple):
 
         return super().__new__(cls, normalizedValue)
 
-    def _reprContents(self) -> List[str]:
-        componentNames = ['r', 'g', 'b', 'a']
-        return [f"{name}={getattr(self, name)}" for name in componentNames]
+    def __repr__(self):
+        return (f"<{__class__.__name__} r={self.r}, g={self.g}, "
+                f"b={self.b}, a={self.a} at {id(self)}>")
 
     @property
     def r(self) -> IntFloatType:
