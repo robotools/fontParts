@@ -1,3 +1,6 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING, Any, Generator, List, Optional, Tuple, Union
+
 from fontParts.base.errors import FontPartsError
 from fontParts.base.base import (
     BaseObject,
@@ -10,6 +13,18 @@ from fontParts.base.base import (
 from fontParts.base import normalizers
 from fontParts.base.deprecated import DeprecatedSegment, RemovedSegment
 from fontParts.base.compatibility import SegmentCompatibilityReporter
+from fontParts.base.annotations import (
+    CollectionType,
+    SextupleCollectionType,
+    IntFloatType
+)
+
+if TYPE_CHECKING:
+    from fontParts.base.point import BasePoint
+    from fontParts.base.contour import BaseContour
+    from fontParts.base.glyph import BaseGlyph
+    from fontParts.base.layer import BaseLayer
+    from fontParts.base.font import BaseFont
 
 
 class BaseSegment(
@@ -20,12 +35,12 @@ class BaseSegment(
     DeprecatedSegment,
     RemovedSegment,
 ):
-    def _setPoints(self, points):
+    def _setPoints(self, points: CollectionType[BasePoint]) -> None:
         if hasattr(self, "_points"):
             raise AssertionError("segment has points")
         self._points = points
 
-    def _reprContents(self):
+    def _reprContents(self) -> List[str]:
         contents = [
             f"{self.type}",
         ]
@@ -44,16 +59,16 @@ class BaseSegment(
 
     # Contour
 
-    _contour = None
+    _contour: Optional[BaseContour] = None
 
-    contour = dynamicProperty("contour", "The segment's parent contour.")
+    contour: dynamicProperty = dynamicProperty("contour", "The segment's parent contour.")
 
-    def _get_contour(self):
+    def _get_contour(self) -> Optional[BaseContour]:
         if self._contour is None:
             return None
         return self._contour()
 
-    def _set_contour(self, contour):
+    def _set_contour(self, contour: Optional[BaseContour]) -> None:
         if self._contour is not None:
             raise AssertionError("contour for segment already set")
         if contour is not None:
@@ -62,27 +77,27 @@ class BaseSegment(
 
     # Glyph
 
-    glyph = dynamicProperty("glyph", "The segment's parent glyph.")
+    glyph: dynamicProperty = dynamicProperty("glyph", "The segment's parent glyph.")
 
-    def _get_glyph(self):
+    def _get_glyph(self) -> Optional[BaseGlyph]:
         if self._contour is None:
             return None
         return self.contour.glyph
 
     # Layer
 
-    layer = dynamicProperty("layer", "The segment's parent layer.")
+    layer: dynamicProperty = dynamicProperty("layer", "The segment's parent layer.")
 
-    def _get_layer(self):
+    def _get_layer(self) -> Optional[BaseLayer]:
         if self._contour is None:
             return None
         return self.glyph.layer
 
     # Font
 
-    font = dynamicProperty("font", "The segment's parent font.")
+    font: dynamicProperty = dynamicProperty("font", "The segment's parent font.")
 
-    def _get_font(self):
+    def _get_font(self) -> Optional[BaseFont]:
         if self._contour is None:
             return None
         return self.glyph.font
@@ -91,7 +106,7 @@ class BaseSegment(
     # Equality
     # --------
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
         """
         The :meth:`BaseObject.__eq__` method can't be used here
         because the :class:`BaseContour` implementation contructs
@@ -110,7 +125,7 @@ class BaseSegment(
     # Identification
     # --------------
 
-    index = dynamicProperty(
+    index: dynamicProperty = dynamicProperty(
         "base_index",
         (
             "The index of the segment within the ordered "
@@ -118,14 +133,14 @@ class BaseSegment(
         ),
     )
 
-    def _get_base_index(self):
+    def _get_base_index(self) -> Optional[int]:
         if self.contour is None:
             return None
         value = self._get_index()
-        value = normalizers.normalizeIndex(value)
-        return value
+        normalizedValue = normalizers.normalizeIndex(value)
+        return normalizedValue
 
-    def _get_index(self):
+    def _get_index(self) -> int:
         """
         Subclasses may override this method.
         """
@@ -137,21 +152,21 @@ class BaseSegment(
     # Attributes
     # ----------
 
-    type = dynamicProperty(
+    type: dynamicProperty = dynamicProperty(
         "base_type",
         ("The segment type. The possible types are " "move, line, curve, qcurve."),
     )
 
-    def _get_base_type(self):
+    def _get_base_type(self) -> str:
         value = self._get_type()
         value = normalizers.normalizeSegmentType(value)
         return value
 
-    def _set_base_type(self, value):
+    def _set_base_type(self, value: str) -> None:
         value = normalizers.normalizeSegmentType(value)
         self._set_type(value)
 
-    def _get_type(self):
+    def _get_type(self) -> str:
         """
         Subclasses may override this method.
         """
@@ -160,7 +175,7 @@ class BaseSegment(
             return "qcurve"
         return onCurve.type
 
-    def _set_type(self, newType):
+    def _set_type(self, newType: str) -> None:
         """
         Subclasses may override this method.
         """
@@ -200,20 +215,20 @@ class BaseSegment(
             self._setPoints((off1, off2, on))
         self.onCurve.type = newType
 
-    smooth = dynamicProperty(
+    smooth: dynamicProperty = dynamicProperty(
         "base_smooth", ("Boolean indicating if the segment is " "smooth or not.")
     )
 
-    def _get_base_smooth(self):
+    def _get_base_smooth(self) -> bool:
         value = self._get_smooth()
         value = normalizers.normalizeBoolean(value)
         return value
 
-    def _set_base_smooth(self, value):
+    def _set_base_smooth(self, value: bool) -> None:
         value = normalizers.normalizeBoolean(value)
         self._set_smooth(value)
 
-    def _get_smooth(self):
+    def _get_smooth(self) -> bool:
         """
         Subclasses may override this method.
         """
@@ -222,7 +237,7 @@ class BaseSegment(
             return True
         return onCurve.smooth
 
-    def _set_smooth(self, value):
+    def _set_smooth(self, value: bool) -> None:
         """
         Subclasses may override this method.
         """
@@ -234,10 +249,10 @@ class BaseSegment(
     # Points
     # ------
 
-    def __getitem__(self, index):
+    def __getitem__(self, index: int) -> BasePoint:
         return self._getItem(index)
 
-    def _getItem(self, index):
+    def _getItem(self, index: int) -> BasePoint:
         """
         Subclasses may override this method.
         """
@@ -246,7 +261,7 @@ class BaseSegment(
     def __iter__(self):
         return self._iterPoints()
 
-    def _iterPoints(self, **kwargs):
+    def _iterPoints(self, **kwargs: Any) -> Generator[BasePoint]:
         """
         Subclasses may override this method.
         """
@@ -258,34 +273,34 @@ class BaseSegment(
             count -= 1
             index += 1
 
-    def __len__(self):
+    def __len__(self) -> int:
         return self._len()
 
-    def _len(self, **kwargs):
+    def _len(self, **kwargs: Any) -> int:
         """
         Subclasses may override this method.
         """
         return len(self.points)
 
-    points = dynamicProperty("base_points", "A list of points in the segment.")
+    points: dynamicProperty = dynamicProperty("base_points", "A list of points in the segment.")
 
-    def _get_base_points(self):
-        return tuple(self._get_points())
+    def _get_base_points(self) -> Tuple[BasePoint, ...]:
+        return self._get_points()
 
-    def _get_points(self):
+    def _get_points(self) -> Tuple[BasePoint, ...]:
         """
         Subclasses may override this method.
         """
         if not hasattr(self, "_points"):
-            return tuple()
+            return ()
         return tuple(self._points)
 
-    onCurve = dynamicProperty("base_onCurve", "The on curve point in the segment.")
+    onCurve: dynamicProperty = dynamicProperty("base_onCurve", "The on curve point in the segment.")
 
-    def _get_base_onCurve(self):
+    def _get_base_onCurve(self) -> Optional[BasePoint]:
         return self._get_onCurve()
 
-    def _get_onCurve(self):
+    def _get_onCurve(self) -> Optional[BasePoint]:
         """
         Subclasses may override this method.
         """
@@ -294,15 +309,15 @@ class BaseSegment(
             return None
         return value
 
-    offCurve = dynamicProperty("base_offCurve", "The off curve points in the segment.")
+    offCurve: dynamicProperty = dynamicProperty("base_offCurve", "The off curve points in the segment.")
 
-    def _get_base_offCurve(self):
+    def _get_base_offCurve(self) -> Tuple[BasePoint, ...]:
         """
         Subclasses may override this method.
         """
         return self._get_offCurve()
 
-    def _get_offCurve(self):
+    def _get_offCurve(self) -> Tuple[BasePoint, ...]:
         """
         Subclasses may override this method.
         """
@@ -314,7 +329,9 @@ class BaseSegment(
     # Transformation
     # --------------
 
-    def _transformBy(self, matrix, **kwargs):
+    def _transformBy(self,
+                     matrix: SextupleCollectionType[IntFloatType],
+                     **kwargs: Any):
         """
         Subclasses may override this method.
         """
@@ -327,7 +344,7 @@ class BaseSegment(
 
     compatibilityReporterClass = SegmentCompatibilityReporter
 
-    def isCompatible(self, other):
+    def isCompatible(self, other: BaseSegment) -> Tuple[bool, str]:
         """
         Evaluate interpolation compatibility with **other**. ::
 
@@ -346,7 +363,9 @@ class BaseSegment(
         """
         return super(BaseSegment, self).isCompatible(other, BaseSegment)
 
-    def _isCompatible(self, other, reporter):
+    def _isCompatible(self,
+                      other: BaseSegment,
+                      reporter: SegmentCompatibilityReporter) -> None:
         """
         This is the environment implementation of
         :meth:`BaseSegment.isCompatible`.
@@ -366,7 +385,7 @@ class BaseSegment(
     # Misc
     # ----
 
-    def round(self):
+    def round(self) -> None:
         """
         Round coordinates in all points.
         """
