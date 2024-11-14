@@ -16,7 +16,7 @@ from fontParts.base.compatibility import SegmentCompatibilityReporter
 from fontParts.base.annotations import (
     CollectionType,
     SextupleCollectionType,
-    IntFloatType
+    IntFloatType,
 )
 
 if TYPE_CHECKING:
@@ -61,7 +61,9 @@ class BaseSegment(
 
     _contour: Optional[BaseContour] = None
 
-    contour: dynamicProperty = dynamicProperty("contour", "The segment's parent contour.")
+    contour: dynamicProperty = dynamicProperty(
+        "contour", "The segment's parent contour."
+    )
 
     def _get_contour(self) -> Optional[BaseContour]:
         if self._contour is None:
@@ -282,7 +284,9 @@ class BaseSegment(
         """
         return len(self.points)
 
-    points: dynamicProperty = dynamicProperty("base_points", "A list of points in the segment.")
+    points: dynamicProperty = dynamicProperty(
+        "base_points", "A list of points in the segment."
+    )
 
     def _get_base_points(self) -> Tuple[BasePoint, ...]:
         return self._get_points()
@@ -295,7 +299,9 @@ class BaseSegment(
             return ()
         return tuple(self._points)
 
-    onCurve: dynamicProperty = dynamicProperty("base_onCurve", "The on curve point in the segment.")
+    onCurve: dynamicProperty = dynamicProperty(
+        "base_onCurve", "The on curve point in the segment."
+    )
 
     def _get_base_onCurve(self) -> Optional[BasePoint]:
         return self._get_onCurve()
@@ -309,7 +315,9 @@ class BaseSegment(
             return None
         return value
 
-    offCurve: dynamicProperty = dynamicProperty("base_offCurve", "The off curve points in the segment.")
+    offCurve: dynamicProperty = dynamicProperty(
+        "base_offCurve", "The off curve points in the segment."
+    )
 
     def _get_base_offCurve(self) -> Tuple[BasePoint, ...]:
         """
@@ -329,9 +337,7 @@ class BaseSegment(
     # Transformation
     # --------------
 
-    def _transformBy(self,
-                     matrix: SextupleCollectionType[IntFloatType],
-                     **kwargs: Any):
+    def _transformBy(self, matrix: SextupleCollectionType[IntFloatType], **kwargs: Any):
         """
         Subclasses may override this method.
         """
@@ -363,9 +369,9 @@ class BaseSegment(
         """
         return super(BaseSegment, self).isCompatible(other, BaseSegment)
 
-    def _isCompatible(self,
-                      other: BaseSegment,
-                      reporter: SegmentCompatibilityReporter) -> None:
+    def _isCompatible(
+        self, other: BaseSegment, reporter: SegmentCompatibilityReporter
+    ) -> None:
         """
         This is the environment implementation of
         :meth:`BaseSegment.isCompatible`.
