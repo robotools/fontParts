@@ -16,7 +16,7 @@ from fontParts.base.compatibility import SegmentCompatibilityReporter
 from fontParts.base.annotations import (
     CollectionType,
     SextupleCollectionType,
-    IntFloatType,
+    IntFloatType
 )
 
 if TYPE_CHECKING:
@@ -76,7 +76,7 @@ class BaseSegment(
 
             >>> contour = segment.contour
 
-        """,
+        """
     )
 
     def _get_contour(self) -> Optional[BaseContour]:
@@ -108,8 +108,7 @@ class BaseSegment(
 
             >>> glyph = segment.glyph
 
-        """,
-    )
+        """)
 
     def _get_glyph(self) -> Optional[BaseGlyph]:
         if self._contour is None:
@@ -131,7 +130,7 @@ class BaseSegment(
 
             >>> layer = segment.layer
 
-        """,
+        """
     )
 
     def _get_layer(self) -> Optional[BaseLayer]:
@@ -154,8 +153,7 @@ class BaseSegment(
 
             >>> font = segment.font
 
-        """,
-    )
+        """,)
 
     def _get_font(self) -> Optional[BaseFont]:
         if self._contour is None:
@@ -194,6 +192,7 @@ class BaseSegment(
 
     index: dynamicProperty = dynamicProperty(
         "base_index",
+
         """Get the index of the segment.
 
         This property is read-only.
@@ -207,7 +206,7 @@ class BaseSegment(
             >>> segment.index
             0
 
-        """,
+        """
     )
 
     def _get_base_index(self) -> Optional[int]:
@@ -258,7 +257,7 @@ class BaseSegment(
 
         :return: A :class:`str` representing the type of the segment.
 
-        """,
+        """
     )
 
     def _get_base_type(self) -> str:
@@ -354,7 +353,7 @@ class BaseSegment(
             False
             >>> segment.smooth = True
 
-        """,
+        """
     )
 
     def _get_base_smooth(self) -> bool:
@@ -498,7 +497,7 @@ class BaseSegment(
 
         :return: A :class:`tuple` of :class`BasePoints`.
 
-        """,
+        """
     )
 
     def _get_base_points(self) -> Tuple[BasePoint, ...]:
@@ -529,7 +528,7 @@ class BaseSegment(
 
         :return: An on-curve :class:`BasePoint` instance or :obj:`None`.
 
-        """,
+        """
     )
 
     def _get_base_onCurve(self) -> Optional[BasePoint]:
@@ -561,7 +560,7 @@ class BaseSegment(
 
         :return: An off-curve :class:`BasePoint` instance or :obj:`None`.
 
-        """,
+        """
     )
 
     def _get_base_offCurve(self) -> Tuple[BasePoint, ...]:
@@ -588,7 +587,9 @@ class BaseSegment(
     # Transformation
     # --------------
 
-    def _transformBy(self, matrix: SextupleCollectionType[IntFloatType], **kwargs: Any):
+    def _transformBy(self,
+                     matrix: SextupleCollectionType[IntFloatType],
+                     **kwargs: Any):
         r"""Transform the native object according to the given matrix.
 
         This is the environment implementation of :meth:`TransformationMixin.transformBy`.
@@ -638,9 +639,9 @@ class BaseSegment(
         """
         return super(BaseSegment, self).isCompatible(other, BaseSegment)
 
-    def _isCompatible(
-        self, other: BaseSegment, reporter: SegmentCompatibilityReporter
-    ) -> None:
+    def _isCompatible(self,
+                      other: BaseSegment,
+                      reporter: SegmentCompatibilityReporter) -> None:
         """Evaluate interpolation compatibility with another native segment.
 
         This is the environment implementation of :meth:`BaseSegment.isCompatible`.
