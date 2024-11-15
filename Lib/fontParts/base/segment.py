@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, Generator, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, Generator, List, Optional, Tuple
 
 from fontParts.base.errors import FontPartsError
 from fontParts.base.base import (
@@ -51,7 +51,7 @@ class BaseSegment(
     # this class should not be used in hashable
     # collections since it is dynamically generated.
 
-    __hash__ = None
+    __hash__ = None  # type: ignore[assignment]
 
     # -------
     # Parents
