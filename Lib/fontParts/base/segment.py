@@ -438,7 +438,7 @@ class BaseSegment(
     def __iter__(self):
         """Return an iterator over the points in the segment.
 
-        :returns: An iterator over the :class:`BasePoint` instances belonging to
+        :return: An iterator over the :class:`BasePoint` instances belonging to
             the segment.
 
         """
@@ -449,7 +449,7 @@ class BaseSegment(
 
         This is the environment implementation of :meth:`BaseSegment.__iter__`.
 
-        :returns: An iterator over the :class:`BasePoint` instances belonging to
+        :return: An iterator over the :class:`BasePoint` instances belonging to
             the segment.
 
         .. note::
