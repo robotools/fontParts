@@ -1,11 +1,9 @@
 from __future__ import annotations
-from typing import Union, List
+from typing import Union
 
-from fontParts.base.base import BaseObject
 from fontParts.base.normalizers import normalizeColor
 from fontParts.base.annotations import (
     IntFloatType,
-    QuadrupleType,
     QuadrupleCollectionType,
 )
 
@@ -21,8 +19,8 @@ class Color(tuple):
     def __new__(
         cls, *args: Union[IntFloatType, QuadrupleCollectionType[IntFloatType]]
     ) -> Color:
-        value = tuple(args[0]) if len(args) == 1 else args
-        normalizedValue = normalizeColor(value)
+        value = args[0] if len(args) == 1 else args
+        normalizedValue = normalizeColor(value)  # type: ignore[arg-type]
 
         return super().__new__(cls, normalizedValue)
 
