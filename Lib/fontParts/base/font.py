@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 from typing import TYPE_CHECKING, Any, Generic, List, Optional, Tuple, Type, Union
 
+from fontTools import ufoLib
 from fontParts.base.errors import FontPartsError
 from fontParts.base.base import dynamicProperty, InterpolationMixin
 from fontParts.base.layer import _BaseGlyphVendor
@@ -12,6 +13,7 @@ from fontParts.base.deprecated import DeprecatedFont, RemovedFont
 from fontParts.base.annotations import (
     CharacterMappingType,
     CollectionType,
+    IntFloatType,
     QuadrupleCollectionType,
     PairCollectionType,
     TransformationType,
@@ -1566,7 +1568,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         """,
     )
 
-    def _get_base_glyphOrder(self) -> Tuple[str]:
+    def _get_base_glyphOrder(self) -> Tuple[str, ...]:
         value = self._get_glyphOrder()
         value = normalizers.normalizeGlyphOrder(value)
         return value
@@ -1575,7 +1577,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         value = normalizers.normalizeGlyphOrder(value)
         self._set_glyphOrder(value)
 
-    def _get_glyphOrder(self) -> Tuple[str]:
+    def _get_glyphOrder(self) -> Tuple[str, ...]:
         r"""Get the order of the glyphs in the native font.
 
         This is the environment implementation of the
@@ -1745,10 +1747,10 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         self.raiseNotImplementedError()
 
     def _getitem__guidelines(self, index: int) -> BaseGuideline:
-        index = normalizers.normalizeIndex(index)
-        if index >= self._len__guidelines():
-            raise ValueError(f"No guideline located at index {index}.")
-        guideline = self._getGuideline(index)
+        normalizedIndex = normalizers.normalizeIndex(index)
+        if normalizedIndex is None or normalizedIndex >= self._len__guidelines():
+            raise ValueError(f"No guideline located at index {normalizedIndex}.")
+        guideline = self._getGuideline(normalizedIndex)
         self._setFontInGuideline(guideline)
         return guideline
 
@@ -1778,7 +1780,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
     def appendGuideline(
         self,
         position: Optional[PairCollectionType[IntFloatType]] = None,
-        angle: Optional[float] = None,
+        angle: Optional[IntFloatType] = None,
         name: Optional[str] = None,
         color: Optional[QuadrupleCollectionType[IntFloatType]] = None,
         guideline: Optional[BaseGuideline] = None,
@@ -1829,8 +1831,10 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
                 )
                 if normalizedGuideline.identifier not in existing:
                     identifier = normalizedGuideline.identifier
-        position = normalizers.normalizeCoordinateTuple(position)
-        angle = normalizers.normalizeRotationAngle(angle)
+        if position is not None:
+            position = normalizers.normalizeCoordinateTuple(position)
+        if angle is not None:
+            angle = normalizers.normalizeRotationAngle(angle)
         if name is not None:
             name = normalizers.normalizeGuidelineName(name)
         if color is not None:
@@ -1848,7 +1852,6 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         angle: Optional[float],
         name: Optional[str],
         color: Optional[QuadrupleCollectionType[IntFloatType]],
-        guideline: Optional[BaseGuideline],
         **kwargs,
     ) -> BaseGuideline:
         r"""Append a new guideline to the native font.
@@ -1892,10 +1895,13 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
             index = guideline
         else:
             index = self._getGuidelineIndex(guideline)
-        index = normalizers.normalizeIndex(index)
-        if index >= self._len__guidelines():
-            raise ValueError(f"No guideline located at index {index}.")
-        self._removeGuideline(index)
+        normalizedIndex = normalizers.normalizeIndex(index)
+        # Avoid mypy conflict with normalizeIndex -> Optional[int]
+        if normalizedIndex is None:
+            return
+        if normalizedIndex >= self._len__guidelines():
+            raise ValueError(f"No guideline located at index {normalizedIndex}.")
+        self._removeGuideline(normalizedIndex)
 
     def _removeGuideline(self, index: int, **kwargs: Any) -> None:
         """Remove the guideline at the specified index.
@@ -2366,8 +2372,8 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         "base_selectedGuidelines",
         """Get or set the selected guidelines in the font.
 
-        :param value: The :class:`list` of :class:`BaseGuideline` instances
-            to select.
+        :param value: The :class:`list` of either :class:`BaseGuideline` instances
+            to select or their corresponding indexes.
         :return: A :class:`tuple` of currently selected :class:`BaseGuideline`
             instances.
 
@@ -2411,17 +2417,24 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         """
         return self._getSelectedSubObjects(self.guidelines)
 
-    def _set_base_selectedGuidelines(self, value: List[BaseGuideline]) -> None:
+    def _set_base_selectedGuidelines(self,
+                                     value: List[Union[BaseGuideline, int]]) -> None:
         normalized = []
-        for i in value:
-            if isinstance(i, int):
-                i = normalizers.normalizeIndex(i)
+        for guideline in value:
+            normalizedGuideline: Union[BaseGuideline, int]
+            if isinstance(guideline, int):
+                normalizedIndex = normalizers.normalizeIndex(guideline)
+                # Avoid mypy conflict with normalizeIndex -> Optional[int]
+                if normalizedIndex is None:
+                    continue
+                normalizedGuideline = normalizedIndex
             else:
-                i = normalizers.normalizeGuideline(i)
-            normalized.append(i)
+                normalizedGuideline = normalizers.normalizeGuideline(guideline)
+
+            normalized.append(normalizedGuideline)
         self._set_selectedGuidelines(normalized)
 
-    def _set_selectedGuidelines(self, value: List[BaseGuideline]) -> None:
+    def _set_selectedGuidelines(self, value: List[Union[BaseGuideline, int]]) -> None:
         """Set the selected guidelines in the native font.
 
         This is the environment implementation of
