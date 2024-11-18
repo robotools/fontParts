@@ -1864,9 +1864,6 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         :param angle: The angle for the guideline as a :class:`float`.
         :param name: The name for the guideline as a :class:`str`.
         :param color: The color for the guideline as a :ref:`type-color`.
-        :param guideline: The :class:`BaseGuideline` subclass instance from
-            which to copy values. If `position`, `angle`, `name`, or `color`
-            are specified, those values will be used instead.
         :param \**kwargs: Additional keyword arguments.
         :return: The newly appended instance of
             the :class:`BaseGuideline` subclass.
