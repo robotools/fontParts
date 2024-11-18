@@ -2417,8 +2417,9 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         """
         return self._getSelectedSubObjects(self.guidelines)
 
-    def _set_base_selectedGuidelines(self,
-                                     value: List[Union[BaseGuideline, int]]) -> None:
+    def _set_base_selectedGuidelines(
+        self, value: List[Union[BaseGuideline, int]]
+    ) -> None:
         normalized = []
         for guideline in value:
             normalizedGuideline: Union[BaseGuideline, int]
