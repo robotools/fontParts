@@ -4,6 +4,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any, Optional, Tuple, Type, Union
 from collections import Counter
 from fontTools.misc.fixedTools import otRound
+from pathlib import Path
 
 from fontParts.base.annotations import (
     T,
@@ -1138,17 +1139,23 @@ def normalizeGlyphNote(value: str) -> str:
 # File Path
 
 
-def normalizeFilePath(value: str) -> str:
+def normalizeFilePath(value: Union[str, Path]) -> str:
     """Normalize a file path.
 
-    :param value: The file path to normalize as a :class:`str`.
+    Relative paths are resolved automatically.
+
+    :param value: The file path to normalize as a :class:`str` or :class:`pathlib.Path`.
     :return: A :class:`str` representing the noramlized file path.
     :raises TypeError if `value` is not a :class:`str`.
 
     """
-    if not isinstance(value, str):
-        raise TypeError(f"File paths must be strings, not {type(value).__name__}.")
-    return value
+    if not isinstance(value, (str, Path)):
+        raise TypeError(
+            f"File paths must be strings or Path, not {type(value).__name__}."
+        )
+    if isinstance(value, Path) or value.startswith('.'):
+        return str(Path(value).resolve())
+    return str(value)
 
 
 # Interpolation
