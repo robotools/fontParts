@@ -559,8 +559,10 @@ class BaseGlyph(
 
     def _set_base_leftMargin(self, value: IntFloatType) -> None:
         normalizedValue = normalizers.normalizeGlyphLeftMargin(value)
-        if normalizedValue is not None:
-            self._set_leftMargin(normalizedValue)
+        # Avoid mypy conflict with normalizeGlyphLeftMargin -> Optional[IntFloat]
+        if normalizedValue is None:
+            raise TypeError("The value for bottomMargin cannot be None.")
+        self._set_leftMargin(normalizedValue)
 
     def _get_leftMargin(self) -> Optional[IntFloatType]:
         """Get the native glyph's left margin.
@@ -625,8 +627,10 @@ class BaseGlyph(
 
     def _set_base_rightMargin(self, value: IntFloatType) -> None:
         normalizedValue = normalizers.normalizeGlyphRightMargin(value)
-        if normalizedValue is not None:
-            self._set_rightMargin(value)
+        # Avoid mypy conflict with normalizeGlyphRightMargin -> Optional[IntFloat]
+        if normalizedValue is None:
+            raise TypeError("The value for bottomMargin cannot be None.")
+        self._set_rightMargin(normalizedValue)
 
     def _get_rightMargin(self) -> Optional[IntFloatType]:
         """Get the native glyph's right margin.
@@ -756,8 +760,10 @@ class BaseGlyph(
 
     def _set_base_bottomMargin(self, value: IntFloatType) -> None:
         normalizedValue = normalizers.normalizeGlyphBottomMargin(value)
-        if normalizedValue is not None:
-            self._set_bottomMargin(value)
+        # Avoid mypy conflict with normalizeGlyphBottomMargin -> Optional[IntFloat]
+        if normalizedValue is None:
+            raise TypeError("The value for bottomMargin cannot be None.")
+        self._set_bottomMargin(normalizedValue)
 
     def _get_bottomMargin(self) -> Optional[IntFloatType]:
         """Get the native glyph's bottom margin.
@@ -821,8 +827,10 @@ class BaseGlyph(
 
     def _set_base_topMargin(self, value: IntFloatType) -> None:
         normalizedValue = normalizers.normalizeGlyphTopMargin(value)
-        if normalizedValue is not None:
-            self._set_topMargin(value)
+        # Avoid mypy conflict with normalizeGlyphTopMargin -> Optional[IntFloat]
+        if normalizedValue is None:
+            raise TypeError("The value for bottomMargin cannot be None.")
+        self._set_topMargin(normalizedValue)
 
     def _get_topMargin(self) -> Optional[IntFloatType]:
         """Get the native glyph's top margin.
