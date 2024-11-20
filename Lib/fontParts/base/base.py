@@ -337,7 +337,6 @@ class BaseObject:
             else:
                 setattr(self, attr, deepcopy(sourceValue))
 
-
     # ----------
     # Exceptions
     # ----------
@@ -1365,7 +1364,6 @@ class IdentifierMixin:
 
         """
         pass
-
 
 
 def reference(obj: Callable[[], Any]) -> Callable[[], Any]:
