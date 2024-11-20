@@ -1146,7 +1146,7 @@ def normalizeFilePath(value: Union[str, Path]) -> str:
 
     :param value: The file path to normalize as a :class:`str` or :class:`pathlib.Path`.
     :return: A :class:`str` representing the noramlized file path.
-    :raises TypeError if `value` is not a :class:`str`.
+    :raises TypeError if `value` is not a :class:`str` or :class:`pathlib.Path`.
 
     """
     if not isinstance(value, (str, Path)):
