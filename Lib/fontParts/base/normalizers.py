@@ -1153,7 +1153,7 @@ def normalizeFilePath(value: Union[str, Path]) -> str:
         raise TypeError(
             f"File paths must be strings or Path, not {type(value).__name__}."
         )
-    if isinstance(value, Path) or value.startswith('.'):
+    if isinstance(value, Path) or value.startswith("."):
         return str(Path(value).resolve())
     return str(value)
 
