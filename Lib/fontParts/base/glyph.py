@@ -561,7 +561,7 @@ class BaseGlyph(
         normalizedValue = normalizers.normalizeGlyphLeftMargin(value)
         # Avoid mypy conflict with normalizeGlyphLeftMargin -> Optional[IntFloat]
         if normalizedValue is None:
-            raise TypeError("The value for bottomMargin cannot be None.")
+            raise TypeError("The value for leftMargin cannot be None.")
         self._set_leftMargin(normalizedValue)
 
     def _get_leftMargin(self) -> Optional[IntFloatType]:
@@ -629,7 +629,7 @@ class BaseGlyph(
         normalizedValue = normalizers.normalizeGlyphRightMargin(value)
         # Avoid mypy conflict with normalizeGlyphRightMargin -> Optional[IntFloat]
         if normalizedValue is None:
-            raise TypeError("The value for bottomMargin cannot be None.")
+            raise TypeError("The value for rightMargin cannot be None.")
         self._set_rightMargin(normalizedValue)
 
     def _get_rightMargin(self) -> Optional[IntFloatType]:
@@ -829,7 +829,7 @@ class BaseGlyph(
         normalizedValue = normalizers.normalizeGlyphTopMargin(value)
         # Avoid mypy conflict with normalizeGlyphTopMargin -> Optional[IntFloat]
         if normalizedValue is None:
-            raise TypeError("The value for bottomMargin cannot be None.")
+            raise TypeError("The value for topMargin cannot be None.")
         self._set_topMargin(normalizedValue)
 
     def _get_topMargin(self) -> Optional[IntFloatType]:
