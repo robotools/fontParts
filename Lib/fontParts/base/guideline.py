@@ -8,7 +8,7 @@ from fontParts.base.base import (
     PointPositionMixin,
     IdentifierMixin,
     dynamicProperty,
-    reference
+    reference,
 )
 from fontParts.base import normalizers
 from fontParts.base.compatibility import GuidelineCompatibilityReporter
@@ -17,16 +17,15 @@ from fontParts.base.deprecated import DeprecatedGuideline, RemovedGuideline
 
 
 class BaseGuideline(
-                    BaseObject,
-                    TransformationMixin,
-                    DeprecatedGuideline,
-                    RemovedGuideline,
-                    PointPositionMixin,
-                    InterpolationMixin,
-                    IdentifierMixin,
-                    SelectionMixin
-                    ):
-
+    BaseObject,
+    TransformationMixin,
+    DeprecatedGuideline,
+    RemovedGuideline,
+    PointPositionMixin,
+    InterpolationMixin,
+    IdentifierMixin,
+    SelectionMixin,
+):
     """
     A guideline object. This object is almost always
     created with :meth:`BaseGlyph.appendGuideline`.
@@ -35,20 +34,14 @@ class BaseGuideline(
         >>> guideline = RGuideline()
     """
 
-    copyAttributes = (
-        "x",
-        "y",
-        "angle",
-        "name",
-        "color"
-    )
+    copyAttributes = ("x", "y", "angle", "name", "color")
 
     def _reprContents(self):
         contents = []
         if self.name is not None:
-            contents.append("'%s'" % self.name)
+            contents.append(f"'{self.name}'")
         if self.layer is not None:
-            contents.append("('%s')" % self.layer.name)
+            contents.append(f"('{self.layer.name}')")
         return contents
 
     # -------
@@ -121,7 +114,7 @@ class BaseGuideline(
             >>> guideline.x
             100
             >>> guideline.x = 101
-        """
+        """,
     )
 
     def _get_base_x(self):
@@ -169,7 +162,7 @@ class BaseGuideline(
             >>> guideline.y
             100
             >>> guideline.y = 101
-        """
+        """,
     )
 
     def _get_base_y(self):
@@ -223,7 +216,7 @@ class BaseGuideline(
             >>> guideline.angle
             45.0
             >>> guideline.angle = 90
-        """
+        """,
     )
 
     def _get_base_angle(self):
@@ -288,7 +281,7 @@ class BaseGuideline(
 
             >>> guideline.index
             0
-        """
+        """,
     )
 
     def _get_base_index(self):
@@ -323,7 +316,7 @@ class BaseGuideline(
             >>> guideline.name
             'my guideline'
             >>> guideline.name = None
-        """
+        """,
     )
 
     def _get_base_name(self):
@@ -372,7 +365,7 @@ class BaseGuideline(
             >>> guideline.color
             None
             >>> guideline.color = (1, 0, 0, 0.5)
-        """
+        """,
     )
 
     def _get_base_color(self):

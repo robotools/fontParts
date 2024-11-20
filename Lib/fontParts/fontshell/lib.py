@@ -4,7 +4,6 @@ from fontParts.fontshell.base import RBaseObject
 
 
 class RLib(RBaseObject, BaseLib):
-
     wrapClass = defcon.Lib
 
     def _items(self):

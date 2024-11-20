@@ -2,9 +2,13 @@ name: Tests
 
 on:
   push:
-    branches: [master]
+    branches:
+    - master
+    - v1
   pull_request:
-    branches: [master]
+    branches: 
+    - master
+    - v1
   workflow_dispatch:
     inputs:
       reason:
@@ -44,11 +48,13 @@ jobs:
     - name: Run Tox
       run: tox -e py-cov
     - name: Produce coverage files
+      if: github.ref_name == 'master'
       run: |
         coverage combine
         coverage xml
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v4
+      if: github.ref_name == 'master'
       with:
         file: coverage.xml
         flags: unittests

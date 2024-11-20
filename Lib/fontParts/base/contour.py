@@ -6,7 +6,7 @@ from fontParts.base.base import (
     SelectionMixin,
     IdentifierMixin,
     dynamicProperty,
-    reference
+    reference,
 )
 from fontParts.base import normalizers
 from fontParts.base.compatibility import ContourCompatibilityReporter
@@ -15,22 +15,21 @@ from fontParts.base.deprecated import DeprecatedContour, RemovedContour
 
 
 class BaseContour(
-        BaseObject,
-        TransformationMixin,
-        InterpolationMixin,
-        SelectionMixin,
-        IdentifierMixin,
-        DeprecatedContour,
-        RemovedContour
-     ):
-
+    BaseObject,
+    TransformationMixin,
+    InterpolationMixin,
+    SelectionMixin,
+    IdentifierMixin,
+    DeprecatedContour,
+    RemovedContour,
+):
     segmentClass = None
     bPointClass = None
 
     def _reprContents(self):
         contents = []
         if self.identifier is not None:
-            contents.append("identifier='%r'" % self.identifier)
+            contents.append(f"identifier='{self.identifier!r}'")
         if self.glyph is not None:
             contents.append("in glyph")
             contents += self.glyph._reprContents()
@@ -51,8 +50,7 @@ class BaseContour(
 
     _glyph = None
 
-    glyph = dynamicProperty("glyph",
-                            "The contour's parent :class:`BaseGlyph`.")
+    glyph = dynamicProperty("glyph", "The contour's parent :class:`BaseGlyph`.")
 
     def _get_glyph(self):
         if self._glyph is None:
@@ -100,7 +98,7 @@ class BaseContour(
             >>> contour.index = 0
 
         The value will always be a :ref:`type-int`.
-        """
+        """,
     )
 
     def _get_base_index(self):
@@ -176,6 +174,7 @@ class BaseContour(
         Subclasses may override this method.
         """
         from fontTools.ufoLib.pointPen import PointToSegmentPen
+
         adapter = PointToSegmentPen(pen)
         self.drawPoints(adapter)
 
@@ -204,12 +203,20 @@ class BaseContour(
             if typ == "offcurve":
                 typ = None
             try:
-                pen.addPoint(pt=(point.x, point.y), segmentType=typ,
-                             smooth=point.smooth, name=point.name,
-                             identifier=point.identifier)
+                pen.addPoint(
+                    pt=(point.x, point.y),
+                    segmentType=typ,
+                    smooth=point.smooth,
+                    name=point.name,
+                    identifier=point.identifier,
+                )
             except TypeError:
-                pen.addPoint(pt=(point.x, point.y), segmentType=typ,
-                             smooth=point.smooth, name=point.name)
+                pen.addPoint(
+                    pt=(point.x, point.y),
+                    segmentType=typ,
+                    smooth=point.smooth,
+                    name=point.name,
+                )
         pen.endPath()
 
     # ------------------
@@ -316,8 +323,7 @@ class BaseContour(
     # Open
     # ----
 
-    open = dynamicProperty("base_open",
-                           "Boolean indicating if the contour is open.")
+    open = dynamicProperty("base_open", "Boolean indicating if the contour is open.")
 
     def _get_base_open(self):
         value = self._get_open()
@@ -334,9 +340,10 @@ class BaseContour(
     # Direction
     # ---------
 
-    clockwise = dynamicProperty("base_clockwise",
-                                ("Boolean indicating if the contour's "
-                                 "winding direction is clockwise."))
+    clockwise = dynamicProperty(
+        "base_clockwise",
+        ("Boolean indicating if the contour's " "winding direction is clockwise."),
+    )
 
     def _get_base_clockwise(self):
         value = self._get_clockwise()
@@ -393,6 +400,7 @@ class BaseContour(
         Subclasses may override this method.
         """
         from fontTools.pens.pointInsidePen import PointInsidePen
+
         pen = PointInsidePen(glyphSet=None, testPoint=point, evenOdd=False)
         self.draw(pen)
         return pen.getResult()
@@ -419,9 +427,9 @@ class BaseContour(
     # Bounds and Area
     # ---------------
 
-    bounds = dynamicProperty("bounds",
-                             ("The bounds of the contour: "
-                              "(xMin, yMin, xMax, yMax) or None."))
+    bounds = dynamicProperty(
+        "bounds", ("The bounds of the contour: " "(xMin, yMin, xMax, yMax) or None.")
+    )
 
     def _get_base_bounds(self):
         value = self._get_bounds()
@@ -434,13 +442,14 @@ class BaseContour(
         Subclasses may override this method.
         """
         from fontTools.pens.boundsPen import BoundsPen
+
         pen = BoundsPen(self.layer)
         self.draw(pen)
         return pen.bounds
 
-    area = dynamicProperty("area",
-                           ("The area of the contour: "
-                            "A positive number or None."))
+    area = dynamicProperty(
+        "area", ("The area of the contour: " "A positive number or None.")
+    )
 
     def _get_base_area(self):
         value = self._get_area()
@@ -453,6 +462,7 @@ class BaseContour(
         Subclasses may override this method.
         """
         from fontTools.pens.areaPen import AreaPen
+
         pen = AreaPen(self.layer)
         self.draw(pen)
         return abs(pen.value)
@@ -556,8 +566,9 @@ class BaseContour(
         """
         Subclasses may override this method.
         """
-        self._insertSegment(len(self), type=type, points=points,
-                            smooth=smooth, **kwargs)
+        self._insertSegment(
+            len(self), type=type, points=points, smooth=smooth, **kwargs
+        )
 
     def insertSegment(self, index, type=None, points=None, smooth=False, segment=None):
         """
@@ -577,11 +588,11 @@ class BaseContour(
             pts.append(pt)
         points = pts
         smooth = normalizers.normalizeBoolean(smooth)
-        self._insertSegment(index=index, type=type,
-                            points=points, smooth=smooth)
+        self._insertSegment(index=index, type=type, points=points, smooth=smooth)
 
-    def _insertSegment(self, index=None, type=None, points=None,
-                       smooth=False, **kwargs):
+    def _insertSegment(
+        self, index=None, type=None, points=None, smooth=False, **kwargs
+    ):
         """
         Subclasses may override this method.
         """
@@ -608,7 +619,7 @@ class BaseContour(
             segment = self.segments.index(segment)
         segment = normalizers.normalizeIndex(segment)
         if segment >= self._len__segments():
-            raise ValueError("No segment located at index %d." % segment)
+            raise ValueError(f"No segment located at index {segment}.")
         preserveCurve = normalizers.normalizeBoolean(preserveCurve)
         self._removeSegment(segment, preserveCurve)
 
@@ -640,7 +651,9 @@ class BaseContour(
         if segmentIndex == 0:
             return
         if segmentIndex >= len(segments):
-            raise ValueError(("The contour does not contain a segment at index %d" % segmentIndex))
+            raise ValueError(
+                (f"The contour does not contain a segment at index {segmentIndex}")
+            )
         self._setStartSegment(segmentIndex)
 
     def _setStartSegment(self, segmentIndex, **kwargs):
@@ -673,7 +686,9 @@ class BaseContour(
             bPoints.append(bPoint)
         return tuple(bPoints)
 
-    def appendBPoint(self, type=None, anchor=None, bcpIn=None, bcpOut=None, bPoint=None):
+    def appendBPoint(
+        self, type=None, anchor=None, bcpIn=None, bcpOut=None, bPoint=None
+    ):
         """
         Append a bPoint to the contour.
         """
@@ -700,15 +715,11 @@ class BaseContour(
         """
         Subclasses may override this method.
         """
-        self.insertBPoint(
-            len(self.bPoints),
-            type,
-            anchor,
-            bcpIn=bcpIn,
-            bcpOut=bcpOut
-        )
+        self.insertBPoint(len(self.bPoints), type, anchor, bcpIn=bcpIn, bcpOut=bcpOut)
 
-    def insertBPoint(self, index, type=None, anchor=None, bcpIn=None, bcpOut=None, bPoint=None):
+    def insertBPoint(
+        self, index, type=None, anchor=None, bcpIn=None, bcpOut=None, bPoint=None
+    ):
         """
         Insert a bPoint at index in the contour.
         """
@@ -730,8 +741,9 @@ class BaseContour(
         if bcpOut is None:
             bcpOut = (0, 0)
         bcpOut = normalizers.normalizeCoordinateTuple(bcpOut)
-        self._insertBPoint(index=index, type=type, anchor=anchor,
-                           bcpIn=bcpIn, bcpOut=bcpOut)
+        self._insertBPoint(
+            index=index, type=type, anchor=anchor, bcpIn=bcpIn, bcpOut=bcpOut
+        )
 
     def _insertBPoint(self, index, type, anchor, bcpIn, bcpOut, **kwargs):
         """
@@ -740,8 +752,7 @@ class BaseContour(
         # insert a simple line segment at the given anchor
         # look it up as a bPoint and change the bcpIn and bcpOut there
         # this avoids code duplication
-        self._insertSegment(index=index, type="line",
-                            points=[anchor], smooth=False)
+        self._insertSegment(index=index, type="line", points=[anchor], smooth=False)
         bPoints = self.bPoints
         index += 1
         if index >= len(bPoints):
@@ -762,7 +773,7 @@ class BaseContour(
             bPoint = bPoint.index
         bPoint = normalizers.normalizeIndex(bPoint)
         if bPoint >= self._len__points():
-            raise ValueError("No bPoint located at index %d." % bPoint)
+            raise ValueError(f"No bPoint located at index {bPoint}.")
         self._removeBPoint(bPoint)
 
     def _removeBPoint(self, index, **kwargs):
@@ -801,8 +812,7 @@ class BaseContour(
         """
         Subclasses may override this method.
         """
-        return tuple([self._getitem__points(i)
-                     for i in range(self._len__points())])
+        return tuple(self._getitem__points(i) for i in range(self._len__points()))
 
     def _len__points(self):
         return self._lenPoints()
@@ -819,7 +829,7 @@ class BaseContour(
     def _getitem__points(self, index):
         index = normalizers.normalizeIndex(index)
         if index >= self._len__points():
-            raise ValueError("No point located at index %d." % index)
+            raise ValueError(f"No point located at index {index}.")
         point = self._getPoint(index)
         self._setContourInPoint(point)
         return point
@@ -840,7 +850,15 @@ class BaseContour(
                 return i
         raise FontPartsError("The point could not be found.")
 
-    def appendPoint(self, position=None, type="line", smooth=False, name=None, identifier=None, point=None):
+    def appendPoint(
+        self,
+        position=None,
+        type="line",
+        smooth=False,
+        name=None,
+        identifier=None,
+        point=None,
+    ):
         """
         Append a point to the contour.
         """
@@ -859,10 +877,19 @@ class BaseContour(
             type=type,
             smooth=smooth,
             name=name,
-            identifier=identifier
+            identifier=identifier,
         )
 
-    def insertPoint(self, index, position=None, type="line", smooth=False, name=None, identifier=None, point=None):
+    def insertPoint(
+        self,
+        index,
+        position=None,
+        type="line",
+        smooth=False,
+        name=None,
+        identifier=None,
+        point=None,
+    ):
         """
         Insert a point into the contour.
         """
@@ -889,11 +916,19 @@ class BaseContour(
             type=type,
             smooth=smooth,
             name=name,
-            identifier=identifier
+            identifier=identifier,
         )
 
-    def _insertPoint(self, index, position, type="line",
-                     smooth=False, name=None, identifier=None, **kwargs):
+    def _insertPoint(
+        self,
+        index,
+        position,
+        type="line",
+        smooth=False,
+        name=None,
+        identifier=None,
+        **kwargs,
+    ):
         """
         position will be a valid position (x, y).
         type will be a valid type.
@@ -918,7 +953,7 @@ class BaseContour(
             point = self.points.index(point)
         point = normalizers.normalizeIndex(point)
         if point >= self._len__points():
-            raise ValueError("No point located at index %d." % point)
+            raise ValueError(f"No point located at index {point}.")
         preserveCurve = normalizers.normalizeBoolean(preserveCurve)
         self._removePoint(point, preserveCurve)
 
@@ -945,7 +980,9 @@ class BaseContour(
         if pointIndex == 0:
             return
         if pointIndex >= len(points):
-            raise ValueError(("The contour does not contain a point at index %d" % pointIndex))
+            raise ValueError(
+                (f"The contour does not contain a point at index {pointIndex}")
+            )
         self._setStartPoint(pointIndex)
 
     def _setStartPoint(self, pointIndex, **kwargs):
@@ -964,7 +1001,7 @@ class BaseContour(
                 type=point.type,
                 smooth=point.smooth,
                 name=point.name,
-                identifier=point.identifier
+                identifier=point.identifier,
             )
 
     # ---------
@@ -990,12 +1027,14 @@ class BaseContour(
         Setting also supports segment indexes:
 
             >>> contour.selectedSegments = [0, 2]
-        """
+        """,
     )
 
     def _get_base_selectedSegments(self):
-        selected = tuple([normalizers.normalizeSegment(segment)
-                         for segment in self._get_selectedSegments()])
+        selected = tuple(
+            normalizers.normalizeSegment(segment)
+            for segment in self._get_selectedSegments()
+        )
         return selected
 
     def _get_selectedSegments(self):
@@ -1039,12 +1078,13 @@ class BaseContour(
         Setting also supports point indexes:
 
             >>> contour.selectedPoints = [0, 2]
-        """
+        """,
     )
 
     def _get_base_selectedPoints(self):
-        selected = tuple([normalizers.normalizePoint(point)
-                         for point in self._get_selectedPoints()])
+        selected = tuple(
+            normalizers.normalizePoint(point) for point in self._get_selectedPoints()
+        )
         return selected
 
     def _get_selectedPoints(self):
@@ -1088,12 +1128,14 @@ class BaseContour(
         Setting also supports bPoint indexes:
 
             >>> contour.selectedBPoints = [0, 2]
-        """
+        """,
     )
 
     def _get_base_selectedBPoints(self):
-        selected = tuple([normalizers.normalizeBPoint(bPoint)
-                         for bPoint in self._get_selectedBPoints()])
+        selected = tuple(
+            normalizers.normalizeBPoint(bPoint)
+            for bPoint in self._get_selectedBPoints()
+        )
         return selected
 
     def _get_selectedBPoints(self):

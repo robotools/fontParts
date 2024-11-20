@@ -9,31 +9,27 @@ from fontParts.base.base import (
     SelectionMixin,
     IdentifierMixin,
     dynamicProperty,
-    reference
+    reference,
 )
 from fontParts.base.compatibility import ComponentCompatibilityReporter
 from fontParts.base.deprecated import DeprecatedComponent, RemovedComponent
 
 
 class BaseComponent(
-                    BaseObject,
-                    TransformationMixin,
-                    InterpolationMixin,
-                    SelectionMixin,
-                    IdentifierMixin,
-                    DeprecatedComponent,
-                    RemovedComponent
-                    ):
-
-    copyAttributes = (
-        "baseGlyph",
-        "transformation"
-    )
+    BaseObject,
+    TransformationMixin,
+    InterpolationMixin,
+    SelectionMixin,
+    IdentifierMixin,
+    DeprecatedComponent,
+    RemovedComponent,
+):
+    copyAttributes = ("baseGlyph", "transformation")
 
     def _reprContents(self):
         contents = [
-            "baseGlyph='%s'" % self.baseGlyph,
-            "offset='({x}, {y})'".format(x=self.offset[0], y=self.offset[1]),
+            f"baseGlyph='{self.baseGlyph}'",
+            f"offset='({self.offset[0]}, {self.offset[1]})'",
         ]
         if self.glyph is not None:
             contents.append("in glyph")
@@ -86,8 +82,9 @@ class BaseComponent(
 
     # baseGlyph
 
-    baseGlyph = dynamicProperty("base_baseGlyph",
-                                "The name of the glyph the component references.")
+    baseGlyph = dynamicProperty(
+        "base_baseGlyph", "The name of the glyph the component references."
+    )
 
     def _get_base_baseGlyph(self):
         value = self._get_baseGlyph()
@@ -117,8 +114,9 @@ class BaseComponent(
 
     # transformation
 
-    transformation = dynamicProperty("base_transformation",
-                                     "The component's transformation matrix.")
+    transformation = dynamicProperty(
+        "base_transformation", "The component's transformation matrix."
+    )
 
     def _get_base_transformation(self):
         value = self._get_transformation()
@@ -203,9 +201,13 @@ class BaseComponent(
 
     # index
 
-    index = dynamicProperty("base_index",
-                            ("The index of the component within the "
-                             "ordered list of the parent glyph's components."))
+    index = dynamicProperty(
+        "base_index",
+        (
+            "The index of the component within the "
+            "ordered list of the parent glyph's components."
+        ),
+    )
 
     def _get_base_index(self):
         glyph = self.glyph
@@ -255,6 +257,7 @@ class BaseComponent(
         Subclasses may override this method.
         """
         from fontTools.ufoLib.pointPen import PointToSegmentPen
+
         adapter = PointToSegmentPen(pen)
         self.drawPoints(adapter)
 
@@ -273,8 +276,12 @@ class BaseComponent(
         # point pens that have not been upgraded
         # to point pen protocol 2.
         try:
-            pen.addComponent(self.baseGlyph, self.transformation,
-                             identifier=self.identifier, **kwargs)
+            pen.addComponent(
+                self.baseGlyph,
+                self.transformation,
+                identifier=self.identifier,
+                **kwargs,
+            )
         except TypeError:
             pen.addComponent(self.baseGlyph, self.transformation, **kwargs)
 
@@ -379,13 +386,15 @@ class BaseComponent(
         Subclasses may override this method.
         """
         from fontTools.pens.pointInsidePen import PointInsidePen
+
         pen = PointInsidePen(glyphSet=self.layer, testPoint=point, evenOdd=False)
         self.draw(pen)
         return pen.getResult()
 
-    bounds = dynamicProperty("base_bounds",
-                             ("The bounds of the component: "
-                              "(xMin, yMin, xMax, yMax) or None."))
+    bounds = dynamicProperty(
+        "base_bounds",
+        ("The bounds of the component: " "(xMin, yMin, xMax, yMax) or None."),
+    )
 
     def _get_base_bounds(self):
         value = self._get_bounds()
@@ -398,6 +407,7 @@ class BaseComponent(
         Subclasses may override this method.
         """
         from fontTools.pens.boundsPen import BoundsPen
+
         pen = BoundsPen(self.layer)
         self.draw(pen)
         return pen.bounds

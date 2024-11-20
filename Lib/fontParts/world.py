@@ -1,6 +1,7 @@
 import os
 import glob
 
+
 def OpenFonts(directory=None, showInterface=True, fileExtensions=None):
     """
     Open all fonts with the given **fileExtensions** located in
@@ -24,6 +25,7 @@ def OpenFonts(directory=None, showInterface=True, fileExtensions=None):
         fonts = OpenFonts(showInterface=False)
     """
     from fontParts.ui import GetFileOrFolder
+
     if fileExtensions is None:
         fileExtensions = dispatcher["OpenFontsFileExtensions"]
     if isinstance(directory, str):
@@ -84,8 +86,9 @@ def NewFont(familyName=None, styleName=None, showInterface=True):
         font = NewFont(familyName="My Family", styleName="My Style")
         font = NewFont(showInterface=False)
     """
-    return dispatcher["NewFont"](familyName=familyName, styleName=styleName,
-                                 showInterface=showInterface)
+    return dispatcher["NewFont"](
+        familyName=familyName, styleName=styleName, showInterface=showInterface
+    )
 
 
 def CurrentFont():
@@ -304,6 +307,7 @@ def RGlyph():
 # Font List
 # ---------
 
+
 def FontList(fonts=None):
     """
     Get a list with font specific methods.
@@ -323,7 +327,6 @@ def FontList(fonts=None):
 
 
 class BaseFontList(list):
-
     # Sort
 
     def sortBy(self, sortOptions, reverse=False):
@@ -416,6 +419,7 @@ class BaseFontList(list):
             >>> fonts.sortBy("magic")
         """
         from types import FunctionType
+
         valueGetters = dict(
             familyName=_sortValue_familyName,
             styleName=_sortValue_styleName,
@@ -424,7 +428,7 @@ class BaseFontList(list):
             widthValue=_sortValue_widthValue,
             weightValue=_sortValue_weightValue,
             isProportional=_sortValue_isProportional,
-            isMonospace=_sortValue_isMonospace
+            isMonospace=_sortValue_isMonospace,
         )
         if isinstance(sortOptions, str) or isinstance(sortOptions, FunctionType):
             sortOptions = [sortOptions]
@@ -439,7 +443,7 @@ class BaseFontList(list):
                 "widthValue",
                 "weightValue",
                 "styleName",
-                "isRoman"
+                "isRoman",
             ]
         sorter = []
         for originalIndex, font in enumerate(self):
@@ -452,7 +456,7 @@ class BaseFontList(list):
                 elif hasattr(font.info, valueName):
                     value = getattr(font.info, valueName)
                 else:
-                    raise ValueError("Unknown sort option: %s" % repr(valueName))
+                    raise ValueError(f"Unknown sort option: {repr(valueName)}")
                 sortable.append(value)
             sortable.append(originalIndex)
             sortable.append(font)
@@ -510,7 +514,9 @@ class BaseFontList(list):
         Get a list of fonts that match ``familyName`` and ``styleName``.
         This will return an instance of :class:`BaseFontList`.
         """
-        return self.getFontsByFontInfoAttribute(("familyName", familyName), ("styleName", styleName))
+        return self.getFontsByFontInfoAttribute(
+            ("familyName", familyName), ("styleName", styleName)
+        )
 
 
 def _sortValue_familyName(font):
@@ -612,8 +618,8 @@ def _sortValue_isMonospace(font):
 # Dispatcher
 # ----------
 
-class _EnvironmentDispatcher(object):
 
+class _EnvironmentDispatcher(object):
     def __init__(self, registryItems):
         self._registry = {item: None for item in registryItems}
 
@@ -627,37 +633,38 @@ class _EnvironmentDispatcher(object):
         return func
 
 
-dispatcher = _EnvironmentDispatcher([
-    "OpenFontsFileExtensions",
-    "OpenFont",
-    "NewFont",
-    "AllFonts",
-    "CurrentFont",
-    "CurrentGlyph",
-    "CurrentLayer",
-    "CurrentContours",
-    "CurrentSegments",
-    "CurrentPoints",
-    "CurrentComponents",
-    "CurrentAnchors",
-    "CurrentGuidelines",
-    "FontList",
-    "RFont",
-    "RLayer",
-    "RGlyph",
-    "RContour",
-    "RPoint",
-    "RAnchor",
-    "RComponent",
-    "RGuideline",
-    "RImage",
-    "RInfo",
-    "RFeatures",
-    "RGroups",
-    "RKerning",
-    "RLib",
-
-])
+dispatcher = _EnvironmentDispatcher(
+    [
+        "OpenFontsFileExtensions",
+        "OpenFont",
+        "NewFont",
+        "AllFonts",
+        "CurrentFont",
+        "CurrentGlyph",
+        "CurrentLayer",
+        "CurrentContours",
+        "CurrentSegments",
+        "CurrentPoints",
+        "CurrentComponents",
+        "CurrentAnchors",
+        "CurrentGuidelines",
+        "FontList",
+        "RFont",
+        "RLayer",
+        "RGlyph",
+        "RContour",
+        "RPoint",
+        "RAnchor",
+        "RComponent",
+        "RGuideline",
+        "RImage",
+        "RInfo",
+        "RFeatures",
+        "RGroups",
+        "RKerning",
+        "RLib",
+    ]
+)
 
 # Register the default functions.
 

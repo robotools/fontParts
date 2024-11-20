@@ -5,7 +5,7 @@ from fontParts.base.base import (
     PointPositionMixin,
     SelectionMixin,
     dynamicProperty,
-    reference
+    reference,
 )
 from fontParts.base import normalizers
 from fontParts.base.color import Color
@@ -13,26 +13,21 @@ from fontParts.base.deprecated import DeprecatedImage, RemovedImage
 
 
 class BaseImage(
-                BaseObject,
-                TransformationMixin,
-                PointPositionMixin,
-                SelectionMixin,
-                DeprecatedImage,
-                RemovedImage
-                ):
-
-    copyAttributes = (
-        "transformation",
-        "color",
-        "data"
-    )
+    BaseObject,
+    TransformationMixin,
+    PointPositionMixin,
+    SelectionMixin,
+    DeprecatedImage,
+    RemovedImage,
+):
+    copyAttributes = ("transformation", "color", "data")
 
     def _reprContents(self):
         contents = [
-            "offset='({x}, {y})'".format(x=self.offset[0], y=self.offset[1]),
+            f"offset='({self.offset[0]}, {self.offset[1]})'",
         ]
         if self.color:
-            contents.append("color=%r" % str(self.color))
+            contents.append(f"color={self.color!r}")
         if self.glyph is not None:
             contents.append("in glyph")
             contents += self.glyph._reprContents()
@@ -104,7 +99,7 @@ class BaseImage(
             >>> image.transformation
             (1, 0, 0, 1, 0, 0)
             >>> image.transformation = (2, 0, 0, 2, 100, -50)
-        """
+        """,
     )
 
     def _get_base_transformation(self):
@@ -139,7 +134,7 @@ class BaseImage(
             >>> image.offset
             (0, 0)
             >>> image.offset = (100, -50)
-        """
+        """,
     )
 
     def _get_base_offset(self):
@@ -177,7 +172,7 @@ class BaseImage(
             >>> image.scale
             (1, 1)
             >>> image.scale = (2, 2)
-        """
+        """,
     )
 
     def _get_base_scale(self):
@@ -215,7 +210,7 @@ class BaseImage(
             >>> image.color
             None
             >>> image.color = (1, 0, 0, 0.5)
-        """
+        """,
     )
 
     def _get_base_color(self):
@@ -253,7 +248,7 @@ class BaseImage(
         """
         The image's raw byte data. The possible
         formats are defined by each environment.
-        """
+        """,
     )
 
     def _get_base_data(self):

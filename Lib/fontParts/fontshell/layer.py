@@ -6,7 +6,6 @@ from fontParts.fontshell.glyph import RGlyph
 
 
 class RLayer(RBaseObject, BaseLayer):
-
     wrapClass = defcon.Layer
     libClass = RLib
     glyphClass = RGlyph
@@ -74,7 +73,9 @@ class RLayer(RBaseObject, BaseLayer):
     # -------
 
     def _getReverseComponentMapping(self):
-        return self.naked().componentReferences
+        mapping = self.naked().componentReferences
+        return {k: tuple(v) for k, v in mapping.items()}
 
     def _getCharacterMapping(self):
-        return self.naked().unicodeData
+        mapping = self.naked().unicodeData
+        return {k: tuple(v) for k, v in mapping.items()}

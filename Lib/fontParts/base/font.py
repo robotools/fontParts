@@ -1,4 +1,8 @@
+# pylint: disable=C0103, W0613
+from __future__ import annotations
 import os
+from typing import TYPE_CHECKING, Any, Generic, List, Optional, Tuple, Type, Union
+
 from fontTools import ufoLib
 from fontParts.base.errors import FontPartsError
 from fontParts.base.base import dynamicProperty, InterpolationMixin
@@ -6,50 +10,70 @@ from fontParts.base.layer import _BaseGlyphVendor
 from fontParts.base import normalizers
 from fontParts.base.compatibility import FontCompatibilityReporter
 from fontParts.base.deprecated import DeprecatedFont, RemovedFont
+from fontParts.base.annotations import (
+    CharacterMappingType,
+    CollectionType,
+    IntFloatType,
+    QuadrupleCollectionType,
+    PairCollectionType,
+    TransformationType,
+    KerningDictType,
+    ReverseComponentMappingType,
+)
+
+if TYPE_CHECKING:
+    from fontParts.base.info import BaseInfo
+    from fontParts.base.groups import BaseGroups
+    from fontParts.base.kerning import BaseKerning
+    from fontParts.base.features import BaseFeatures
+    from fontParts.base.lib import BaseLib
+    from fontParts.base.layer import BaseLayer
+    from fontParts.base.glyph import BaseGlyph
+    from fontParts.base.guideline import BaseGuideline
 
 
-class BaseFont(
-               _BaseGlyphVendor,
-               InterpolationMixin,
-               DeprecatedFont,
-               RemovedFont
-               ):
+class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont):
+    """Represent the basis for a font object.
+
+    Instances of this class are almost always created with one of the
+    font functions in :ref:`fontParts.world`.
+
+    This class will be instantiated in different ways depending on
+    the value type of the `pathOrObject` parameter.
+
+    :param pathOrObject: The source for initializing the font.
+        If :obj:`None`, a new, empty font will be created. If
+        a :class:`str` representing the path to an existing file,
+        the class will open and read the file at this path. If an
+        instance of the environment's unwrapped native font object,
+        it will be wrapped with FontParts. Defaults to :obj:`None`.
+    :param showInterface: Whether to display the graphical
+        interface. Defaults to :obj:`True`.
 
     """
-    A font object. This object is almost always
-    created with one of the font functions in
-    :ref:`fontparts-world`.
-    """
 
-    def __init__(self, pathOrObject=None, showInterface=True):
-        """
-        When constructing a font, the object can be created
-        in a new file, from an existing file or from a native
-        object. This is defined with the **pathOrObjectArgument**.
-        If **pathOrObject** is a string, the string must represent
-        an existing file. If **pathOrObject** is an instance of the
-        environment's unwrapped native font object, wrap it with
-        FontParts. If **pathOrObject** is None, create a new,
-        empty font. If **showInterface** is ``False``, the font
-        should be created without graphical interface. The default
-        for **showInterface** is ``True``.
-        """
-        super(BaseFont, self).__init__(pathOrObject=pathOrObject,
-                                       showInterface=showInterface)
+    def __init__(
+        self,
+        pathOrObject: Optional[Union[str, "BaseFont"]] = None,
+        showInterface: bool = True,
+    ) -> None:
+        super(BaseFont, self).__init__(
+            pathOrObject=pathOrObject, showInterface=showInterface
+        )
 
-    def _reprContents(self):
-        contents = [
-            "'%s %s'" % (self.info.familyName, self.info.styleName),
+    def _reprContents(self) -> List[str]:
+        contents: List[str] = [
+            f"'{self.info.familyName} {self.info.styleName}'",
         ]
         if self.path is not None:
-            contents.append("path=%r" % self.path)
+            contents.append(f"path={self.path!r}")
         return contents
 
     # ----
     # Copy
     # ----
 
-    copyAttributes = (
+    copyAttributes: Tuple[str, ...] = (
         "info",
         "groups",
         "kerning",
@@ -57,35 +81,49 @@ class BaseFont(
         "lib",
         "layerOrder",
         "defaultLayerName",
-        "glyphOrder"
+        "glyphOrder",
     )
 
-    def copy(self):
-        """
-        Copy the font into a new font. ::
-
-            >>> copiedFont = font.copy()
+    def copy(self) -> BaseFont:
+        """Copy data from the the current font into a new font.
 
         This will copy:
 
-        * info
-        * groups
-        * kerning
-        * features
-        * lib
-        * layers
-        * layerOrder
-        * defaultLayerName
-        * glyphOrder
-        * guidelines
+        - :attr:`~BaseFont.info`
+        - :attr:`~BaseFont.groups`
+        - :attr:`~BaseFont.kerning`
+        - :attr:`~BaseFont.features`
+        - :attr:`~BaseFont.lib`
+        - :attr:`~BaseFont.layers`
+        - :attr:`~BaseFont.layerOrder`
+        - :attr:`~BaseFont.defaultLayerName`
+        - :attr:`~BaseFont.glyphOrder`
+        - :attr:`~BaseFont.guidelines`
+
+        :return: A new :class:`BaseFont` instance with the same
+            attributes as the current instance.
+
+        Example::
+
+            >>> copiedFont = font.copy()
+
         """
         return super(BaseFont, self).copy()
 
-    def copyData(self, source):
-        """
-        Copy data from **source** into this font.
-        Refer to :meth:`BaseFont.copy` for a list
-        of values that will be copied.
+    def copyData(self, source: BaseFont) -> None:
+        """Copy data from another font instance.
+
+        Refer to :meth:`BaseFont.copy` for a list of values that will be
+        copied.
+
+        :param source: The source :class:`BaseFont` instance from which
+            to copy data.
+
+        Example::
+
+            >>> sourceFont = MyFont('path/to/source.ufo')
+            >>> font.copyData(sourceFont)
+
         """
         # set the default layer name
         self.defaultLayer.name = source.defaultLayerName
@@ -105,190 +143,257 @@ class BaseFont(
 
     # Initialize
 
-    def _init(self, pathOrObject=None, showInterface=True, **kwargs):
-        """
-        Initialize this object. This should wrap a native font
-        object based on the values for **pathOrObject**:
+    def _init(
+        self,
+        pathOrObject: Optional[Union[str, BaseFont]],
+        showInterface: bool,
+        **kwargs: Any,
+    ) -> None:
+        r"""Initialize the native font object.
 
-        +--------------------+---------------------------------------------------+
-        | None               | Create a new font.                                |
-        +--------------------+---------------------------------------------------+
-        | string             | Open the font file located at the given location. |
-        +--------------------+---------------------------------------------------+
-        | native font object | Wrap the given object.                            |
-        +--------------------+---------------------------------------------------+
+        This method is the environment implementation
+        of :meth:`BaseFont.__init__`. It will wrap a native font
+        object based on the value type of the `pathOrObject` parameter.
 
-        If **showInterface** is ``False``, the font should be
-        created without graphical interface.
+        :param pathOrObject: The source for initializing the font. Options are:
 
-        Subclasses must override this method.
+            +--------------------+---------------------------------------------------+
+            | Type               | Description                                       |
+            +--------------------+---------------------------------------------------+
+            | :obj:`None`        | Create a new font.                                |
+            | :class:`str`       | Open the font file located at the given location. |
+            | native font object | Wrap the given object.                            |
+            +--------------------+---------------------------------------------------+
+
+        :param showInterface: Whether to display the graphical
+            interface.
+        :param \**kwargs: Additional keyword arguments.
+        :raises NotImplementedError: If the method has not been
+            overridden by a subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
     # path
 
-    path = dynamicProperty(
+    path: dynamicProperty = dynamicProperty(
         "base_path",
-        """
-        The path to the file this object represents. ::
+        """Get the path to the font file.
 
-            >>> print font.path
+        This property is read-only.
+
+        :return: A :class:`str` defining the location of the file
+            or :obj:`None` to indicate that the font does not have a
+            file representation.
+
+        Example::
+
+            >>> print(font.path)
             "/path/to/my/font.ufo"
-        """
+
+        """,
     )
 
-    def _get_base_path(self):
-        path = self._get_path()
+    def _get_base_path(self) -> Optional[str]:
+        path: Optional[str] = self._get_path()
         if path is not None:
             path = normalizers.normalizeFilePath(path)
         return path
 
-    def _get_path(self, **kwargs):
-        """
-        This is the environment implementation of
-        :attr:`BaseFont.path`.
+    def _get_path(self, **kwargs: Any) -> Optional[str]:
+        r"""Get the path to the native font file.
 
-        This must return a :ref:`type-string` defining the
-        location of the file or ``None`` indicating that the
-        font does not have a file representation. If the
-        returned value is not ``None`` it will be normalized
-        with :func:`normalizers.normalizeFilePath`.
+        This method is the environment implementation
+        of :attr:`BaseFont.path`.
 
-        Subclasses must override this method.
+        :param \**kwargs: Additional keyword arguments.
+        :return: A :class:`str` defining the location of the file
+            or :obj:`None` to indicate that the font does not have a
+            file representation. If the value is not :obj:`None` it will
+            be normalized with :func:`normalizers.normalizeFilePath`.
+        :raises NotImplementedError: If the method has not been
+            overridden by a subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
     # save
 
-    def save(self, path=None, showProgress=False, formatVersion=None, fileStructure=None):
-        """
-        Save the font to **path**.
+    def save(
+        self,
+        path: Optional[str] = None,
+        showProgress: bool = False,
+        formatVersion: Optional[int] = None,
+        fileStructure: Optional[str] = None,
+    ) -> None:
+        """Save the font to the specified path.
+
+        :param path: The path to which the font should be saved.
+            If :obj:`None`, the font is saved to its original location.
+            The file type is inferred from the file extension of the
+            path. If no extension is given, the environment may use a
+            default format. Defaults to :obj:`None`.
+        :param showProgress: Whether to display a progress bar during
+            the operation. Environments may or may not implement this
+            behavior. Defaults to :obj:`False`.
+        :param formatVersion: The format version to use when saving the
+            file. For example, a `formatVersion` of 2 will save the file
+            in UFO 2 format. If :obj:`None`, the original format version
+            will be preserved, or the latest version supported by the
+            environment will be used if no original version exists.
+            Defaults to :obj:`None`.
+        :param fileStructure: The file structure for saving UFO formats.
+            Can be :obj:`None`, which uses the existing file structure
+            or the default structure for unsaved fonts; ``'package'``,
+            which is the default structure; or ``'zip'``, which saves
+            the font as a ``.ufoz`` file. Defaults to :obj:`None`.
+
+        :raises IOError: If no file location is given in either the
+            `path` parameter or the :attr:`BaseFont.path` attribute.
+
+        .. note::
+
+            Environments may define their own rules regarding when a
+            file should be saved to its original location versus a new
+            location. For example, a font opened from a compiled
+            OpenType font may not be saved back into the original
+            OpenType file.
+
+        Example::
 
             >>> font.save()
             >>> font.save("/path/to/my/font-2.ufo")
 
-        If **path** is None, use the font's original location.
-        The file type must be inferred from the file extension
-        of the given path. If no file extension is given, the
-        environment may fall back to the format of its choice.
-        **showProgress** indicates if a progress indicator should
-        be displayed during the operation. Environments may or may
-        not implement this behavior. **formatVersion** indicates
-        the format version that should be used for writing the given
-        file type. For example, if 2 is given for formatVersion
-        and the file type being written if UFO, the file is to
-        be written in UFO 2 format. This value is not limited
-        to UFO format versions. If no format version is given,
-        the original format version of the file should be preserved.
-        If there is no original format version it is implied that
-        the format version is the latest version for the file
-        type as supported by the environment. **fileStructure** indicates
-        the file structure of the written ufo. The **fileStructure** can
-        either be None, 'zip' or 'package', None will use the existing file
-        strucure or the default one for unsaved font. 'package' is the default
-        file structure and 'zip' will save the font to .ufoz.
-
-        .. note::
-
-           Environments may define their own rules governing when
-           a file should be saved into its original location and
-           when it should not. For example, a font opened from a
-           compiled OpenType font may not be written back into
-           the original OpenType font.
         """
         if path is None and self.path is None:
-            raise IOError(("The font cannot be saved because no file "
-                           "location has been given."))
+            raise IOError(
+                ("The font cannot be saved because no file " "location has been given.")
+            )
         if path is not None:
             path = normalizers.normalizeFilePath(path)
         showProgress = bool(showProgress)
         if formatVersion is not None:
-            formatVersion = normalizers.normalizeFileFormatVersion(
-                formatVersion)
+            formatVersion = normalizers.normalizeFileFormatVersion(formatVersion)
         if fileStructure is not None:
             fileStructure = normalizers.normalizeFileStructure(fileStructure)
-        self._save(path=path, showProgress=showProgress,
-                   formatVersion=formatVersion, fileStructure=fileStructure)
+        self._save(
+            path=path,
+            showProgress=showProgress,
+            formatVersion=formatVersion,
+            fileStructure=fileStructure,
+        )
 
-    def _save(self, path=None, showProgress=False,
-              formatVersion=None, fileStructure=None, **kwargs):
-        """
-        This is the environment implementation of
-        :meth:`BaseFont.save`. **path** will be a
-        :ref:`type-string` or ``None``. If **path**
-        is not ``None``, the value will have been
-        normalized with :func:`normalizers.normalizeFilePath`.
-        **showProgress** will be a ``bool`` indicating if
-        the environment should display a progress bar
-        during the operation. Environments are not *required*
-        to display a progress bar even if **showProgess**
-        is ``True``. **formatVersion** will be :ref:`type-int-float`
-        or ``None`` indicating the file format version
-        to write the data into. It will have been normalized
-        with :func:`normalizers.normalizeFileFormatVersion`.
+    def _save(
+        self,
+        path: Optional[str],
+        showProgress: bool,
+        formatVersion: Optional[float],
+        fileStructure: Optional[str],
+        **kwargs: Any,
+    ) -> None:
+        r"""Save the native font to the specified path.
 
-        Subclasses must override this method.
+        This is the environment implementation of :meth:`BaseFont.save`.
+
+        :param path: The file path to save the data to. If not :obj:`None`, the value
+            will have been normalized with :func:`normalizers.normalizeFilePath`.
+        :param showProgress: Whether to display a progress bar during the
+            operation. Environments are not required to display a progress bar
+            even if value is :obj:`True`.
+        :param formatVersion: The file format version to write the data into.
+            If not :obj:`None`, the value will have been normalized
+            with :func:`normalizers.normalizeFileFormatVersion`.
+        :param fileStructure: The file structure to use.
+        :param \**kwargs: Additional keyword arguments.
+        :raises NotImplementedError: If the method has not been
+            overridden by a subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
     # close
 
-    def close(self, save=False):
-        """
-        Close the font.
+    def close(self, save: bool = False) -> None:
+        """Close the font.
+
+        :param save: Whether to save the font before closing.
+            Defaults to :obj:`False`
+
+        Example::
 
             >>> font.close()
+            >>> font.close(save=True)
 
-        **save** is a boolean indicating if the font
-        should be saved prior to closing. If **save**
-        is ``True``, the :meth:`BaseFont.save` method
-        will be called. The default is ``False``.
         """
         if save:
             self.save()
         self._close()
 
-    def _close(self, **kwargs):
-        """
-        This is the environment implementation of
-        :meth:`BaseFont.close`.
+    def _close(self, **kwargs: Any) -> None:
+        r"""Close the native font.
 
-        Subclasses must override this method.
+        This is the environment implementation
+        of :meth:`BaseFont.close`.
+
+        :param \**kwargs: Additional keyword arguments.
+        :raises NotImplementedError: If the method has not been
+            overridden by a subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
     # generate
 
     @staticmethod
-    def generateFormatToExtension(format, fallbackFormat):
-        """
-        +--------------+--------------------------------------------------------------------+
-        | mactype1     | Mac Type 1 font (generates suitcase  and LWFN file)                |
-        +--------------+--------------------------------------------------------------------+
-        | macttf       | Mac TrueType font (generates suitcase)                             |
-        +--------------+--------------------------------------------------------------------+
-        | macttdfont   | Mac TrueType font (generates suitcase with resources in data fork) |
-        +--------------+--------------------------------------------------------------------+
-        | otfcff       | PS OpenType (CFF-based) font (OTF)                                 |
-        +--------------+--------------------------------------------------------------------+
-        | otfttf       | PC TrueType/TT OpenType font (TTF)                                 |
-        +--------------+--------------------------------------------------------------------+
-        | pctype1      | PC Type 1 font (binary/PFB)                                        |
-        +--------------+--------------------------------------------------------------------+
-        | pcmm         | PC MultipleMaster font (PFB)                                       |
-        +--------------+--------------------------------------------------------------------+
-        | pctype1ascii | PC Type 1 font (ASCII/PFA)                                         |
-        +--------------+--------------------------------------------------------------------+
-        | pcmmascii    | PC MultipleMaster font (ASCII/PFA)                                 |
-        +--------------+--------------------------------------------------------------------+
-        | ufo1         | UFO format version 1                                               |
-        +--------------+--------------------------------------------------------------------+
-        | ufo2         | UFO format version 2                                               |
-        +--------------+--------------------------------------------------------------------+
-        | ufo3         | UFO format version 3                                               |
-        +--------------+--------------------------------------------------------------------+
-        | unixascii    | UNIX ASCII font (ASCII/PFA)                                        |
-        +--------------+--------------------------------------------------------------------+
+    def generateFormatToExtension(format: str, fallbackFormat: str) -> str:
+        """Return the file extension for the given format identifier.
+
+        This method maps format identifiers to file extensions. If the
+        provided `format` is not in the map, the method returns the
+        `fallbackFormat`.
+
+        :param format: The format identifier to map to a file extension. Options are:
+
+        +--------------------+-------------------------------------------------------+
+        | Format             | Description                                           |
+        +--------------------+-------------------------------------------------------+
+        | ``'mactype1'``     | Mac Type 1 font (generates suitcase  and LWFN file)   |
+        | ``'macttf'``       | Mac TrueType font (generates suitcase)                |
+        | ``'macttdfont'``   | Mac TrueType font (generates suitcase with data fork) |
+        | ``'otfcff'``       | PS OpenType (CFF-based) font (OTF)                    |
+        | ``'otfttf'``       | PC TrueType/TT OpenType font (TTF)                    |
+        | ``'pctype1'``      | PC Type 1 font (binary/PFB)                           |
+        | ``'pcmm'``         | PC MultipleMaster font (PFB)                          |
+        | ``'pctype1ascii'`` | PC Type 1 font (ASCII/PFA)                            |
+        | ``'pcmmascii'``    | PC MultipleMaster font (ASCII/PFA)                    |
+        | ``'ufo1'``         | UFO format version 1                                  |
+        | ``'ufo2'``         | UFO format version 2                                  |
+        | ``'ufo3'``         | UFO format version 3                                  |
+        | ``'unixascii'``    | UNIX ASCII font (ASCII/PFA)                           |
+        +--------------------+-------------------------------------------------------+
+
+        :param fallbackFormat: The extension to return if `format` is
+            unrecognized.
+        :return: The corresponding file extension for the `format`
+            identifier or the `fallbackFormat` if the format is
+            unrecognized.
+
         """
         formatToExtension = dict(
             # mactype1=None,
@@ -307,36 +412,45 @@ class BaseFont(
         )
         return formatToExtension.get(format, fallbackFormat)
 
-    def generate(self, format, path=None, **environmentOptions):
-        """
-        Generate the font to another format.
+    def generate(
+        self, format: str, path: Optional[str] = None, **environmentOptions: Any
+    ) -> None:
+        r"""Generate the font in another format.
+
+        This method converts the font to the specified format and saves
+        it to the specified path. Standard format identifiers can be
+        found in :attr:`BaseFont.generateFormatToExtension`.
+
+        Environments may support additional keyword arguments in this
+        method. For example, if the tool allows decomposing components
+        during generation, this can be specified with an additional
+        keyword argument.
+
+        :param format: The file format identifier for the output.
+        :param path: The location to save the generated file. If not
+            provided, the file will be saved in the same directory as
+            the source font, with the current file name and the
+            appropriate suffix for the format. If a directory is
+            specified, the file will be saved with the current file
+            name and the appropriate suffix for the format. If a file
+            already exists at that location, it will be overwritten.
+        :param \**environmentOptions: Additional keyword arguments for
+            environment-specific options.
+        :raises ValueError: If `format` is not defined.
+        :raises TypeError: If `format` is not a :class:`str`.
+        :raises UserWarning: If an unsupported environment option is
+            passed.
+        :raises IOError: If the output path is not defined and the
+            source font does not have a path.
+
+        Example::
 
             >>> font.generate("otfcff")
             >>> font.generate("otfcff", "/path/to/my/font.otf")
 
-        **format** defines the file format to output.
-        Standard format identifiers can be found in :attr:`BaseFont.generateFormatToExtension`:
-
-
-        Environments are not required to support all of these
-        and environments may define their own format types.
-        **path** defines the location where the new file should
-        be created. If a file already exists at that location,
-        it will be overwritten by the new file. If **path** defines
-        a directory, the file will be output as the current
-        file name, with the appropriate suffix for the format,
-        into the given directory. If no **path** is given, the
-        file will be output into the same directory as the source
-        font with the file named with the current file name,
-        with the appropriate suffix for the format.
-
-        Environments may allow unique keyword arguments in this
-        method. For example, if a tool allows decomposing components
-        during a generate routine it may allow this:
-
-            >>> font.generate("otfcff", "/p/f.otf", decompose=True)
         """
         import warnings
+
         if format is None:
             raise ValueError("The format must be defined when generating.")
         elif not isinstance(format, str):
@@ -345,62 +459,91 @@ class BaseFont(
         for key, value in environmentOptions.items():
             valid = self._isValidGenerateEnvironmentOption(key)
             if not valid:
-                warnings.warn("The %s argument is not supported "
-                              "in this environment." % key, UserWarning)
+                warnings.warn(
+                    f"The {key} argument is not supported in this environment.",
+                    UserWarning,
+                )
             env[key] = value
         environmentOptions = env
         ext = self.generateFormatToExtension(format, "." + format)
         if path is None and self.path is None:
-            raise IOError(("The file cannot be generated because an "
-                           "output path was not defined."))
+            raise IOError(
+                (
+                    "The file cannot be generated because an "
+                    "output path was not defined."
+                )
+            )
         elif path is None:
             path = os.path.splitext(self.path)[0]
             path += ext
         elif os.path.isdir(path):
             if self.path is None:
-                raise IOError(("The file cannot be generated because "
-                               "the file does not have a path."))
+                raise IOError(
+                    (
+                        "The file cannot be generated because "
+                        "the file does not have a path."
+                    )
+                )
             fileName = os.path.basename(self.path)
             fileName += ext
             path = os.path.join(path, fileName)
         path = normalizers.normalizeFilePath(path)
         return self._generate(
-            format=format,
-            path=path,
-            environmentOptions=environmentOptions
+            format=format, path=path, environmentOptions=environmentOptions
         )
 
     @staticmethod
-    def _isValidGenerateEnvironmentOption(name):
-        """
-        Any unknown keyword arguments given to :meth:`BaseFont.generate`
-        will be passed to this method. **name** will be the name
-        used for the argument. Environments may evaluate if **name**
-        is a supported option. If it is, they must return `True` if
-        it is not, they must return `False`.
+    def _isValidGenerateEnvironmentOption(name: str) -> bool:
+        """Validate if the environment option is supported.
 
-        Subclasses may override this method.
+        Any unknown keyword arguments given to :meth:`BaseFont.generate`
+        are passed to this method. `name` is the name used for the
+        argument. Environments may evaluate if `name` is a supported
+        option.
+
+        :param name: The name of the environment option to validate.
+        :return: :obj:`True` if the environment option is supported,
+            otherwise :obj:`False`.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         return False
 
-    def _generate(self, format, path, environmentOptions, **kwargs):
-        """
-        This is the environment implementation of
-        :meth:`BaseFont.generate`. **format** will be a
-        :ref:`type-string` defining the output format.
-        Refer to the :meth:`BaseFont.generate` documentation
-        for the standard format identifiers. If the value
-        given for **format** is not supported by the environment,
-        the environment must raise :exc:`FontPartsError`.
-        **path** will be a :ref:`type-string` defining the
-        location where the file should be created. It
-        will have been normalized with :func:`normalizers.normalizeFilePath`.
-        **environmentOptions** will be a dictionary of names
-        validated with :meth:`BaseFont._isValidGenerateEnvironmentOption`
-        nd the given values. These values will not have been passed
-        through any normalization functions.
+    def _generate(
+        self,
+        format: str,
+        path: Optional[str],
+        environmentOptions: dict,
+        **kwargs: object,
+    ) -> None:
+        """Generate the native font in another format.
 
-        Subclasses must override this method.
+        This is the environment implementation
+        of :meth:`BaseFont.generate`. Refer to
+        the :attr:`BaseFont.generateFormatToExtension` documentation
+        for the standard format identifiers.
+
+        :param format: The output format identifier. If the value given
+            for `format` is not supported by the environment,
+            the environment must raise :exc:`FontPartsError`.
+        :param path: The location where the generated file should be
+            saved. The value will have been normalized
+            with :func:`normalizers.normalizeFilePath`.
+        :param environmentOptions: A dictionary of environment-specific
+            options. These options are validated
+            with :meth:`BaseFont._isValidGenerateEnvironmentOption` and
+            the given values. These values are not passed through any
+            normalization functions.
+        :raises NotImplementedError: If the method has not been
+            overridden by a subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
@@ -410,97 +553,145 @@ class BaseFont(
 
     # info
 
-    info = dynamicProperty(
+    info: dynamicProperty = dynamicProperty(
         "base_info",
-        """
-        The font's :class:`BaseInfo` object.
+        """Get the font's info object.
+
+        This property is read-only.
+
+        :return: An instance of the :class:`BaseInfo` class.
+
+        Example::
 
             >>> font.info.familyName
             "My Family"
-        """
+
+        """,
     )
 
-    def _get_base_info(self):
-        info = self._get_info()
+    def _get_base_info(self) -> BaseInfo:
+        info: BaseInfo = self._get_info()
         info.font = self
         return info
 
-    def _get_info(self):
-        """
-        This is the environment implementation of
-        :attr:`BaseFont.info`. This must return an
-        instance of a :class:`BaseInfo` subclass.
+    def _get_info(self) -> BaseInfo:
+        """Get the native font's info object.
 
-        Subclasses must override this method.
+        This is the environment implementation of :attr:`BaseFont.info`.
+
+        :return: An instance of a :class:`BaseInfo` subclass.
+        :raises NotImplementedError: If the method has not been
+            overridden by a subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
     # groups
 
-    groups = dynamicProperty(
+    groups: dynamicProperty = dynamicProperty(
         "base_groups",
-        """
-        The font's :class:`BaseGroups` object.
+        """Get the font's groups object.
+
+        This property is read-only.
+
+        :return: An instance of the :class:`BaseGroups` class.
+
+        Example::
 
             >>> font.groups["myGroup"]
             ["A", "B", "C"]
-        """
+
+        """,
     )
 
-    def _get_base_groups(self):
-        groups = self._get_groups()
+    def _get_base_groups(self) -> BaseGroups:
+        groups: BaseGroups = self._get_groups()
         groups.font = self
         return groups
 
-    def _get_groups(self):
-        """
-        This is the environment implementation of
-        :attr:`BaseFont.groups`. This must return
-        an instance of a :class:`BaseGroups` subclass.
+    def _get_groups(self) -> BaseGroups:
+        """Get the native font's groups object.
 
-        Subclasses must override this method.
+        This is the environment implementation
+        of :attr:`BaseFont.groups`.
+
+        :return: an instance of a :class:`BaseGroups` subclass.
+        :raises NotImplementedError: If the method has not been
+            overridden by a subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
     # kerning
 
-    kerning = dynamicProperty(
+    kerning: dynamicProperty = dynamicProperty(
         "base_kerning",
-        """
-        The font's :class:`BaseKerning` object.
+        """Get the font's kerning object.
+
+        This property is read-only.
+
+        :return: An instance of the :class:`BaseKerning` class.
+
+        Example::
 
             >>> font.kerning["A", "B"]
             -100
-        """
+
+        """,
     )
 
-    def _get_base_kerning(self):
-        kerning = self._get_kerning()
+    def _get_base_kerning(self) -> BaseKerning:
+        kerning: BaseKerning = self._get_kerning()
         kerning.font = self
         return kerning
 
-    def _get_kerning(self):
-        """
-        This is the environment implementation of
-        :attr:`BaseFont.kerning`. This must return
-        an instance of a :class:`BaseKerning` subclass.
+    def _get_kerning(self) -> BaseKerning:
+        """Get the native font's kerning object.
 
-        Subclasses must override this method.
+        This is the environment implementation
+        of :attr:`BaseFont.kerning`.
+
+        :return: An instance of a :class:`BaseKerning` subclass.
+        :raises NotImplementedError: If the method has not been
+            overridden by a subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
-    def getFlatKerning(self):
-        """
-        Get the font's kerning as a flat dictionary.
+    def getFlatKerning(self) -> KerningDictType:
+        """Get the font's kerning as a flat dictionary.
+
+        :return: A :class:`dict` of the font's :class:`BaseKerning` keys
+            mapped to their respective values.
+
         """
         return self._getFlatKerning()
 
-    def _getFlatKerning(self):
-        """
+    def _getFlatKerning(self) -> KerningDictType:
+        """Get the native font's kerning as a flat dictionary.
+
         This is the environment implementation of
         :meth:`BaseFont.getFlatKerning`.
 
-        Subclasses may override this method.
+        :return: A :class:`dict` of the font's :class:`BaseKerning`
+            subclass keys mapped to their respective values.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         kernOrder = {
             (True, True): 0,  # group group
@@ -540,79 +731,126 @@ class BaseFont(
 
     # features
 
-    features = dynamicProperty(
+    features: dynamicProperty = dynamicProperty(
         "base_features",
-        """
-        The font's :class:`BaseFeatures` object.
+        """Get the font's features object.
+
+        This property is read-only.
+
+        :return: An instance of the :class:`BaseFeatures` class.
+
+        Example::
 
             >>> font.features.text
             "include(features/substitutions.fea);"
-        """
+
+        """,
     )
 
-    def _get_base_features(self):
-        features = self._get_features()
+    def _get_base_features(self) -> BaseFeatures:
+        features: BaseFeatures = self._get_features()
         features.font = self
         return features
 
-    def _get_features(self):
-        """
-        This is the environment implementation of
-        :attr:`BaseFont.features`. This must return
-        an instance of a :class:`BaseFeatures` subclass.
+    def _get_features(self) -> BaseFeatures:
+        """Get the native font's features object.
 
-        Subclasses must override this method.
+        This is the environment implementation of
+        :attr:`BaseFont.features`.
+
+        :return: An instance of a :class:`BaseFeatures` subclass.
+        :raises NotImplementedError: If the method has not been
+            overridden by a subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
     # lib
 
-    lib = dynamicProperty(
+    lib: dynamicProperty = dynamicProperty(
         "base_lib",
-        """
-        The font's :class:`BaseLib` object.
+        """Get the font's lib object.
+
+        This property is read-only.
+
+        :return: An instance of the :class:`BaseLib` class.
+
+        Example::
 
             >>> font.lib["org.robofab.hello"]
             "world"
-        """
+
+        """,
     )
 
-    def _get_base_lib(self):
-        lib = self._get_lib()
+    def _get_base_lib(self) -> BaseLib:
+        lib: BaseLib = self._get_lib()
         lib.font = self
         return lib
 
-    def _get_lib(self):
-        """
-        This is the environment implementation of
-        :attr:`BaseFont.lib`. This must return an
-        instance of a :class:`BaseLib` subclass.
+    def _get_lib(self) -> BaseLib:
+        """Get the native font's lib object.
 
-        Subclasses must override this method.
+        This is the environment implementation of :attr:`BaseFont.lib`.
+
+        :return: An instance of a :class:`BaseLib` subclass.
+        :raises NotImplementedError: If the method has not been
+            overridden by a subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
     # tempLib
 
-    tempLib = dynamicProperty(
+    tempLib: dynamicProperty = dynamicProperty(
         "base_tempLib",
-        """
-        The font's :class:`BaseLib` object. ::
+        """Get the font's temporary lib object.
+
+        This property is read-only.
+
+        This property provides access to a temporary instance of
+        the :class:`BaseLib` class, used for storing data that should
+        not be persisted. It is similar to :attr:`BaseFont.lib`, except
+        that its contents will not be saved when calling
+        the :meth:`BaseFont.save` method.
+
+        :return: A temporary instance of the :class:`BaseLib` class.
+
+        Example::
 
             >>> font.tempLib["org.robofab.hello"]
             "world"
-        """
+
+        """,
     )
 
-    def _get_base_tempLib(self):
-        lib = self._get_tempLib()
+    def _get_base_tempLib(self) -> BaseLib:
+        lib: BaseLib = self._get_tempLib()
         lib.font = self
         return lib
 
-    def _get_tempLib(self):
-        """
-        This is the environment implementation of :attr:`BaseLayer.tempLib`.
-        This must return an instance of a :class:`BaseLib` subclass.
+    def _get_tempLib(self) -> BaseLib:
+        """Get the native font's temporary lib object.
+
+        This is the environment implementation
+        of :attr:`BaseFont.tempLib`.
+
+        :return: A temporary instance of a :class:`BaseLib` subclass.
+        :raises NotImplementedError: If the method has not been
+            overridden by a subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
@@ -620,219 +858,316 @@ class BaseFont(
     # Layer Interaction
     # -----------------
 
-    layers = dynamicProperty(
+    layers: dynamicProperty = dynamicProperty(
         "base_layers",
-        """
-        The font's :class:`BaseLayer` objects.
+        """Get the font's layer objects.
+
+        This property is read-only.
+
+        :return: A :class:`tuple` containing instances of
+            the :class:`BaseLayer` class.
+
+        Example::
 
             >>> for layer in font.layers:
             ...     layer.name
             "My Layer 1"
             "My Layer 2"
-        """
+
+        """,
     )
 
-    def _get_base_layers(self):
-        layers = self._get_layers()
+    def _get_base_layers(self) -> Tuple[BaseLayer, ...]:
+        layers: Tuple[BaseLayer, ...] = self._get_layers()
         for layer in layers:
             self._setFontInLayer(layer)
         return tuple(layers)
 
-    def _get_layers(self, **kwargs):
-        """
-        This is the environment implementation of
-        :attr:`BaseFont.layers`. This must return an
-        :ref:`type-immutable-list` containing
-        instances of :class:`BaseLayer` subclasses.
-        The items in the list should be in the order
-        defined by :attr:`BaseFont.layerOrder`.
+    def _get_layers(self, **kwargs: Any) -> Tuple[BaseLayer, ...]:
+        r"""Get the native font's layer objects.
 
-        Subclasses must override this method.
+        This is the environment implementation of
+        :attr:`BaseFont.layers`.
+
+        :param \**kwargs: Additional keyword arguments.
+        :return: A :class:`tuple` containing instances
+            of the :class:`BaseLayer` subclass. The items  should be in
+            the order defined by :attr:`BaseFont.layerOrder`.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
     # order
 
-    layerOrder = dynamicProperty(
+    layerOrder: dynamicProperty = dynamicProperty(
         "base_layerOrder",
-        """
-        A list of layer names indicating order of the layers in the font.
+        """Get or set the order of the layers in the font.
+
+        The value must be a :class:`list` or :class:`tuple` of layer
+        names as :class:`str` reflecting the desired order of the
+        font's :class:`BaseLayer` objects.
+
+        :return: A :class:`tuple` of layer names as :class:`str` in
+            their defined order.
+
+        Example::
 
             >>> font.layerOrder = ["My Layer 2", "My Layer 1"]
             >>> font.layerOrder
-            ["My Layer 2", "My Layer 1"]
-        """
+            ("My Layer 2", "My Layer 1")
+
+        """,
     )
 
-    def _get_base_layerOrder(self):
-        value = self._get_layerOrder()
+    def _get_base_layerOrder(self) -> Tuple[str, ...]:
+        value: CollectionType[str] = self._get_layerOrder()
         value = normalizers.normalizeLayerOrder(value, self)
-        return list(value)
+        return value
 
-    def _set_base_layerOrder(self, value):
+    def _set_base_layerOrder(self, value: CollectionType[str]) -> None:
         value = normalizers.normalizeLayerOrder(value, self)
         self._set_layerOrder(value)
 
-    def _get_layerOrder(self, **kwargs):
-        """
-        This is the environment implementation of
-        :attr:`BaseFont.layerOrder`. This must return an
-        :ref:`type-immutable-list` defining the order of
-        the layers in the font. The contents of the list
-        must be layer names as :ref:`type-string`. The
-        list will be normalized with :func:`normalizers.normalizeLayerOrder`.
+    def _get_layerOrder(self, **kwargs: Any) -> Tuple[str, ...]:
+        r"""Get the order of the layers in the native font.
 
-        Subclasses must override this method.
+        This is the environment implementation of the
+        :attr:`BaseFont.layerOrder` property getter.
+
+        :param \**kwargs: Additional keyword arguments.
+        :return: A :class:`list` of layer names in their defined order.
+            The value will be normalized with :func:`normalizers.normalizeLayerOrder`.
+        :raises NotImplementedError: If the method has not
+            beenoverridden by a subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
-    def _set_layerOrder(self, value, **kwargs):
-        """
-        This is the environment implementation of
-        :attr:`BaseFont.layerOrder`. **value** will
-        be a **list** of :ref:`type-string` representing
-        layer names. The list will have been normalized
-        with :func:`normalizers.normalizeLayerOrder`.
+    def _set_layerOrder(self, value: CollectionType[str], **kwargs: Any) -> None:
+        r"""Set the order of the layers in the native font.
 
-        Subclasses must override this method.
+        This is the environment implementation of the
+        :attr:`BaseFont.layerOrder` property setter.
+
+        :param value: A :class:`list` or :class:`tuple` of layer names
+            reflecting the desired order of the font's :class:`BaseLayer` objects.
+            The value will have been normalized
+            with :func:`normalizers.normalizeLayerOrder`.
+        :param \**kwargs: Additional keyword arguments.
+        :raises NotImplementedError: If the method has not been
+            overridden by a subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
     # default layer
 
-    def _setFontInLayer(self, layer):
+    def _setFontInLayer(self, layer: BaseLayer) -> None:
         if layer.font is None:
             layer.font = self
 
-    defaultLayerName = dynamicProperty(
+    defaultLayerName: dynamicProperty = dynamicProperty(
         "base_defaultLayerName",
-        """
-        The name of the font's default layer.
+        """Get or set the name of the font's default layer.
+
+        The value must be name of the desired default :class`BaseLayer`
+        instance as a :class:`str`.
+
+        :return: The name of the current default :class`BaseLayer`
+            instance.
+
+        Example::
 
             >>> font.defaultLayerName = "My Layer 2"
             >>> font.defaultLayerName
             "My Layer 2"
-        """
+
+        """,
     )
 
-    def _get_base_defaultLayerName(self):
+    def _get_base_defaultLayerName(self) -> str:
         value = self._get_defaultLayerName()
         value = normalizers.normalizeDefaultLayerName(value, self)
         return value
 
-    def _set_base_defaultLayerName(self, value):
+    def _set_base_defaultLayerName(self, value: str) -> None:
         value = normalizers.normalizeDefaultLayerName(value, self)
         self._set_defaultLayerName(value)
 
-    def _get_defaultLayerName(self):
-        """
-        This is the environment implementation of
-        :attr:`BaseFont.defaultLayerName`. Return the
-        name of the default layer as a :ref:`type-string`.
-        The name will be normalized with
-        :func:`normalizers.normalizeDefaultLayerName`.
+    def _get_defaultLayerName(self) -> str:
+        """Get the name of the native font's default layer.
 
-        Subclasses must override this method.
+        This is the environment implementation of
+        :attr:`BaseFont.defaultLayerName` property getter.
+        :return: The name of the current default :class`BaseLayer`
+            subclass instance. The value will be normalized
+            with :func:`normalizers.normalizeDefaultLayerName`.
+        :raises NotImplementedError: If the method has not been
+            overridden by a subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
-    def _set_defaultLayerName(self, value, **kwargs):
-        """
-        This is the environment implementation of
-        :attr:`BaseFont.defaultLayerName`. **value**
-        will be a :ref:`type-string`. It will have
-        been normalized with :func:`normalizers.normalizeDefaultLayerName`.
+    def _set_defaultLayerName(self, value: str, **kwargs: Any) -> None:
+        r"""Set the name of the native font's default layer.
 
-        Subclasses must override this method.
+        This is the environment implementation of
+        :attr:`BaseFont.defaultLayerName` property setter.
+        :param value: The name of the desired default :class`BaseLayer`
+            subclass instance. The name will have been normalized
+            with :func:`normalizers.normalizeDefaultLayerName`.
+        :param \**kwargs: Additional keyword arguments.
+        :raises NotImplementedError: If the method has not been
+            overridden by a subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
-    defaultLayer = dynamicProperty(
+    defaultLayer: dynamicProperty = dynamicProperty(
         "base_defaultLayer",
-        """
-        The font's default layer.
+        """Get or set the font's default layer.
+
+        The value must be the desired default :class:`BaseLayer` instance.
+
+        :return: The current default :class:`BaseLayer` instance.
+
+        Example::
 
             >>> layer = font.defaultLayer
             >>> font.defaultLayer = otherLayer
-        """
+
+        """,
     )
 
-    def _get_defaultLayer(self):
-        layer = self._get_base_defaultLayer()
+    def _get_base_defaultLayer(self) -> BaseLayer:
+        layer: BaseLayer = self._get_defaultLayer()
         layer = normalizers.normalizeLayer(layer)
         return layer
 
-    def _set_defaultLayer(self, layer):
+    def _set_base_defaultLayer(self, layer: BaseLayer) -> None:
         layer = normalizers.normalizeLayer(layer)
-        self._set_base_defaultLayer(layer)
+        self._set_defaultLayer(layer)
 
-    def _get_base_defaultLayer(self):
-        """
-        This is the environment implementation of
-        :attr:`BaseFont.defaultLayer`. Return the
-        default layer as a :class:`BaseLayer` object.
-        The layer will be normalized with
-        :func:`normalizers.normalizeLayer`.
+    def _get_defaultLayer(self) -> BaseLayer:
+        """Get the native font's default layer.
 
-        Subclasses must override this method.
+        This is the environment implementation of the
+        :attr:`BaseFont.defaultLayer` property getter.
+
+        :return: The default :class:`BaseLayer` subclass instance.
+            The value will be normalized with :func:`normalizers.normalizeLayer`.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         name = self.defaultLayerName
         layer = self.getLayer(name)
         return layer
 
-    def _set_base_defaultLayer(self, value):
-        """
-        This is the environment implementation of
-        :attr:`BaseFont.defaultLayer`. **value**
-        will be a :class:`BaseLayer`. It will have
-        been normalized with :func:`normalizers.normalizeLayer`.
+    def _set_defaultLayer(self, value: BaseLayer) -> None:
+        """Set the native font's default layer.
 
-        Subclasses must override this method.
+        This is the environment implementation of the
+        :attr:`BaseFont.defaultLayer` property setter.
+
+        :param value: The desired default :class:`BaseLayer` subclass
+            instance. The value will have been normalized
+            with :func:`normalizers.normalizeLayer`.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.defaultLayerName = value.name
 
     # get
 
-    def getLayer(self, name):
-        """
-        Get the :class:`BaseLayer` with **name**.
+    def getLayer(self, name: str) -> BaseLayer:
+        """Get the named layer from the font.
 
-            >>> layer = font.getLayer("My Layer 2")
+        :param name: The name of the :class:`BaseLayer` instance to
+            retrieve.
+        :return: The specified :class:`Baselayer` instance.
+        :raises ValueError: If no layer with the given `name` exists in
+            the font.
+
+        Example::
+
+            >>> font.getLayer("My Layer 2")
+            <Layer 'My Layer 2' at 0x...>
+
         """
         name = normalizers.normalizeLayerName(name)
         if name not in self.layerOrder:
-            raise ValueError("No layer with the name '%s' exists." % name)
+            raise ValueError(f"No layer with the name '{name}' exists.")
         layer = self._getLayer(name)
         self._setFontInLayer(layer)
         return layer
 
-    def _getLayer(self, name, **kwargs):
-        """
-        This is the environment implementation of
-        :meth:`BaseFont.getLayer`. **name** will
-        be a :ref:`type-string`. It will have been
-        normalized with :func:`normalizers.normalizeLayerName`
-        and it will have been verified as an existing layer.
-        This must return an instance of :class:`BaseLayer`.
+    def _getLayer(self, name: str, **kwargs: Any) -> BaseLayer:
+        r"""Get the named layer from the native font.
 
-        Subclasses may override this method.
+        This is the environment implementation of
+        :meth:`BaseFont.getLayer`.
+
+        :param name: The name of the :class:`BaseLayer` subclass
+            instance to retrieve.
+        :param \**kwargs: Additional keyword arguments.
+        :return: The specified :class:`BaseLayer` subclass instance. The value
+            will have been normalized with :func:`normalizers.normalizeLayerName`
+            and verified as an existing layer.
+        :raises ValueError: If no layer with the given `name` exists in
+            the font.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         for layer in self.layers:
             if layer.name == name:
                 return layer
+        raise ValueError(f"No layer with the name '{name}' exists.")
 
     # new
 
-    def newLayer(self, name, color=None):
-        """
-        Make a new layer with **name** and **color**.
-        **name** must be a :ref:`type-string` and
-        **color** must be a :ref:`type-color` or ``None``.
+    def newLayer(
+        self, name: str, color: Optional[QuadrupleCollectionType[IntFloatType]] = None
+    ) -> BaseLayer:
+        """Create a new layer in the font.
+
+        :param name: The name of the new layer to create.
+        :param color: The color value to assign to the new layer.
+            Defaults to :obj:`None`.
+        :return: A newly created :class:`BaseLayer` instance.
+
+        Example::
 
             >>> layer = font.newLayer("My Layer 3")
 
-        The will return the newly created
-        :class:`BaseLayer`.
         """
         name = normalizers.normalizeLayerName(name)
         if name in self.layerOrder:
@@ -846,88 +1181,122 @@ class BaseFont(
         self._setFontInLayer(layer)
         return layer
 
-    def _newLayer(self, name, color, **kwargs):
-        """
-        This is the environment implementation of
-        :meth:`BaseFont.newLayer`. **name** will be
-        a :ref:`type-string` representing a valid
-        layer name. The value will have been normalized
-        with :func:`normalizers.normalizeLayerName` and
-        **name** will not be the same as the name of
-        an existing layer. **color** will be a
-        :ref:`type-color` or ``None``. If the value
-        is not ``None`` the value will have been
-        normalized with :func:`normalizers.normalizeColor`.
-        This must return an instance of a :class:`BaseLayer`
-        subclass that represents the new layer.
+    def _newLayer(
+        self,
+        name: str,
+        color: Optional[QuadrupleCollectionType[IntFloatType]],
+        **kwargs: Any,
+    ) -> BaseLayer:
+        r"""Create a new layer in the native font.
 
-        Subclasses must override this method.
+        This is the environment implementation of
+        :meth:`BaseFont.newLayer`.
+
+        :param name: The name of the new layer to create. The value must
+            be unique to the font and will have been normalized
+            with :func:`normalizers.normalizeLayerName`.
+        :param color: The color value to assign to the new layer. If the
+            value is not :obj:`None`, it will have been normalized with
+            :func:`normalizers.normalizeColor`.
+        :param \**kwargs: Additional keyword arguments.
+        :return: A newly created :class:`BaseLayer` subclass instance.
+        :raises NotImplementedError: If the method has not been
+            overridden by a subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
     # remove
 
-    def removeLayer(self, name):
-        """
-        Remove the layer with **name** from the font.
+    def removeLayer(self, name: str) -> None:
+        """Remove the specified layer from the font.
+
+        :param name: The name of the layer to remove.
+        :raises ValueError: If no layer with the given `name` exists in
+            the font.
+
+        Example::
 
             >>> font.removeLayer("My Layer 3")
+
         """
         name = normalizers.normalizeLayerName(name)
         if name not in self.layerOrder:
-            raise ValueError("No layer with the name '%s' exists." % name)
+            raise ValueError(f"No layer with the name '{name}' exists.")
         self._removeLayer(name)
 
-    def _removeLayer(self, name, **kwargs):
-        """
-        This is the environment implementation of
-        :meth:`BaseFont.removeLayer`. **name** will
-        be a :ref:`type-string` defining the name
-        of an existing layer. The value will have
-        been normalized with :func:`normalizers.normalizeLayerName`.
+    def _removeLayer(self, name: str, **kwargs: Any) -> None:
+        r"""Remove the specified layer from the native font.
 
-        Subclasses must override this method.
+        This is the environment implementation of
+        :meth:`BaseFont.removeLayer`.
+
+        :param name: The name of the layer to remove. The value will have been
+            normalized with :func:`normalizers.normalizeLayerName`.
+        :param \**kwargs: Additional keyword arguments.
+        :raises NotImplementedError: If the method has not been
+            overridden by a subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
     # insert
 
-    def insertLayer(self, layer, name=None):
-        """
-        Insert **layer** into the font. ::
+    def insertLayer(self, layer: BaseLayer, name: Optional[str] = None) -> BaseLayer:
+        """Insert a specified layer into the font.
+
+        This method will not insert a layer directly, but rather create
+        a new :class:`BaseLayer` instance containing the data from
+        `layer`. The data inserted from `layer` is the same data as
+        documented in :meth:`BaseLayer.copy`.
+
+        :param layer: The :class:`BaseLayer` instance to insert.
+        :param name: The name to assign to the new layer after
+            insertion. If value is :obj:`None`, the origninal name will
+            be used. Defaults to :obj:`None`.
+        :return: The newly inserted :class:`BaseLayer` instance.
+
+        Example::
 
             >>> layer = font.insertLayer(otherLayer, name="layer 2")
 
-        This will not insert the layer directly.
-        Rather, a new layer will be created and the data from
-        **layer** will be copied to to the new layer. **name**
-        indicates the name that should be assigned to the layer
-        after insertion. If **name** is not given, the layer's
-        original name must be used. If the layer does not have
-        a name, an error must be raised. The data that will be
-        inserted from **layer** is the same data as documented
-        in :meth:`BaseLayer.copy`.
         """
         if name is None:
             name = layer.name
-        name = normalizers.normalizeLayerName(name)
-        if name in self:
-            self.removeLayer(name)
-        return self._insertLayer(layer, name=name)
+        normalizedName = normalizers.normalizeLayerName(name)
+        if normalizedName in self:
+            self.removeLayer(normalizedName)
+        return self._insertLayer(layer, name=normalizedName)
 
-    def _insertLayer(self, layer, name, **kwargs):
-        """
+    def _insertLayer(self, layer: BaseLayer, name: str, **kwargs: Any) -> BaseLayer:
+        r"""Insert a specified layer into the native font.
+
         This is the environment implementation of :meth:`BaseFont.insertLayer`.
-        This must return an instance of a :class:`BaseLayer` subclass.
-        **layer** will be a layer object with the attributes necessary
-        for copying as defined in :meth:`BaseLayer.copy` An environment
-        must not insert **layer** directly. Instead the data from **layer**
-        should be copied to a new layer. **name** will be a :ref:`type-string`
-        representing a glyph layer. It will have been normalized with
-        :func:`normalizers.normalizeLayerName`. **name** will have been
-        tested to make sure that no layer with the same name exists in the font.
 
-        Subclasses may override this method.
+        An environment must not insert `layer` directly, but rather copy
+        it's data to a new layer.
+
+        :param layer: A layer object with the attributes  necessary for
+            copying as defined in :meth:`BaseLayer.copy`.
+        :param name: The name to assign to the new layer after
+            insertion. The value will have been normalized
+            with :func:`normalizers.normalizeLayerName` and tested to
+            make sure that it is unique to the font.
+        :param \**kwargs: Additional keyword arguments.
+        :return: The newly inserted :class:`BaseLayer` subclass instance.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         if name != layer.name and layer.name in self.layerOrder:
             layer = layer.copy()
@@ -938,72 +1307,109 @@ class BaseFont(
 
     # duplicate
 
-    def duplicateLayer(self, layerName, newLayerName):
-        """
-        Duplicate the layer with **layerName**, assign
-        **newLayerName** to the new layer and insert the
-        new layer into the font. ::
+    def duplicateLayer(self, layerName: str, newLayerName: str) -> BaseLayer:
+        """Duplicate the specified layer in the font.
+
+        This method creates a new :class:`BaseLayer` instance. It copies
+        data from the layer named `layerName` into this new instance,
+        assigns it the name specified by `newLayerName`, and then
+        inserts the new layer into the font.
+
+        :param layerName: The name of the layer to duplicate.
+        :param newLayerName: The new name to assign to the duplicated
+            layer.
+        :return: The newly duplicated :class:`BaseLayer` instance.
+        :raises ValueError: If no layer with the given `name` exists in
+            the font.
+
+        Example::
 
             >>> layer = font.duplicateLayer("layer 1", "layer 2")
+
         """
         layerOrder = self.layerOrder
         layerName = normalizers.normalizeLayerName(layerName)
         if layerName not in layerOrder:
-            raise ValueError("No layer with the name '%s' exists." % layerName)
+            raise ValueError(f"No layer with the name '{layerName}' exists.")
         newLayerName = normalizers.normalizeLayerName(newLayerName)
         if newLayerName in layerOrder:
-            raise ValueError("A layer with the name '%s' already exists." % newLayerName)
+            raise ValueError(f"A layer with the name '{newLayerName}' already exists.")
         newLayer = self._duplicateLayer(layerName, newLayerName)
         newLayer = normalizers.normalizeLayer(newLayer)
         return newLayer
 
-    def _duplicateLayer(self, layerName, newLayerName):
-        """
-        This is the environment implementation of :meth:`BaseFont.duplicateLayer`.
-        **layerName** will be a :ref:`type-string` representing a valid layer name.
-        The value will have been normalized with :func:`normalizers.normalizeLayerName`
-        and **layerName** will be a layer that exists in the font. **newLayerName**
-        will be a :ref:`type-string` representing a valid layer name. The value will
-        have been normalized with :func:`normalizers.normalizeLayerName` and
-        **newLayerName** will have been tested to make sure that no layer with
-        the same name exists in the font. This must return an instance of a
-        :class:`BaseLayer` subclass.
+    def _duplicateLayer(self, layerName: str, newLayerName: str) -> BaseLayer:
+        """Duplicate the specified layer in the native font.
 
-        Subclasses may override this method.
+        This is the environment implementation
+        of :meth:`BaseFont.duplicateLayer`.
+
+        :param layerName: The name of the layer to duplicate. The value
+            will have been normalized
+            with :func:`normalizers.normalizeLayerName` and tested to
+            make sure that it already exists in the font.
+        :param newLayerName: The new name to assign to the duplicated
+            layer. The value will have been normalized
+            with :func:`normalizers.normalizeLayerName` and tested to
+            make sure that it does not already exist in the font.
+        :return: The newly duplicated :class:`BaseLayer` subclass
+            instance.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         newLayer = self.getLayer(layerName).copy()
         return self.insertLayer(newLayer, newLayerName)
 
-    def swapLayerNames(self, layerName, otherLayerName):
-        """
-        Assign **layerName** to the layer currently named
-        **otherLayerName** and assign the name **otherLayerName**
-        to the layer currently named **layerName**.
+    def swapLayerNames(self, layerName: str, otherLayerName: str) -> None:
+        """Swap the names of two specific layers in the font.
 
-            >>> font.swapLayerNames("before drawing revisions", "after drawing revisions")
+        This method assigns the name `layerName` to the layer currently
+        named `otherLayerName` and assigns the name `otherLayerName` to
+        the layer currently named `layerName`.
+
+        :param layerName: The name of one layer.
+        :param otherNAme: The name of the other layer.
+        :raises ValueError: If no layer with the given `layerName` or
+            `otherLayerName` exists in the font.
+
+        Example::
+
+            >>> font.swapLayerNames("before drawing revisions",
+            ...                     "after drawing revisions")
+
         """
         layerOrder = self.layerOrder
         layerName = normalizers.normalizeLayerName(layerName)
         if layerName not in layerOrder:
-            raise ValueError("No layer with the name '%s' exists." % layerName)
+            raise ValueError(f"No layer with the name '{layerName}' exists.")
         otherLayerName = normalizers.normalizeLayerName(otherLayerName)
         if otherLayerName not in layerOrder:
-            raise ValueError("No layer with the name '%s' exists." % otherLayerName)
-        self._swapLayers(layerName, otherLayerName)
+            raise ValueError(f"No layer with the name '{otherLayerName}' exists.")
+        self._swapLayerNames(layerName, otherLayerName)
 
-    def _swapLayers(self, layerName, otherLayerName):
-        """
-        This is the environment implementation of :meth:`BaseFont.swapLayerNames`.
-        **layerName** will be a :ref:`type-string` representing a valid layer name.
-        The value will have been normalized with :func:`normalizers.normalizeLayerName`
-        and **layerName** will be a layer that exists in the font. **otherLayerName**
-        will be a :ref:`type-string` representing a valid layer name. The value will
-        have been normalized with :func:`normalizers.normalizeLayerName` and
-        **otherLayerName** will be a layer that exists in the font.
+    def _swapLayerNames(self, layerName: str, otherLayerName: str) -> None:
+        """Swap the names of two specific layers in the native font.
 
-        Subclasses may override this method.
+        This is the environment implementation
+        of :meth:`BaseFont.swapLayerNames`.
+
+        Both `layerName` and `otherLayerName` will have been normalized
+        with :func:`normalizers.normalizeLayerName` and tested to make
+        sure they already exist in the font.
+
+        :param layerName: The name of one layer.
+        :param otherName: The name of the other layer.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         import random
+
         layer1 = self.getLayer(layerName)
         layer2 = self.getLayer(otherLayerName)
         # make a temporary name and assign it to
@@ -1015,9 +1421,11 @@ class BaseFont(
             tempLayerName = str(random.randint(4000000, 4999999))
             if tempLayerName not in layerOrder:
                 break
-        if tempLayerName in layerOrder:
-            raise FontPartsError(("Couldn't find a temporary layer name "
-                                  "after 50 tries. Sorry. Please try again."))
+        else:
+            raise FontPartsError(
+                "Couldn't find a temporary layer name after 50 tries. "
+                "Sorry. Please try again."
+            )
         layer1.name = tempLayerName
         # now swap
         layer2.name = layerName
@@ -1029,45 +1437,60 @@ class BaseFont(
 
     # base implementation overrides
 
-    def _getItem(self, name, **kwargs):
-        """
-        This is the environment implementation of
-        :meth:`BaseFont.__getitem__`. **name** will
-        be a :ref:`type-string` defining an existing
-        glyph in the default layer. The value will
-        have been normalized with :func:`normalizers.normalizeGlyphName`.
+    def _getItem(self, name: str, **kwargs: Any) -> BaseGlyph:
+        r"""Get the specified glyph from the native default layer.
 
-        Subclasses may override this method.
+        This is the environment implementation of
+        :meth:`BaseFont.__getitem__`.
+
+        :param name: The name of the glyph to retrieve from the default layer.
+            The value will have been normalized
+            with :func:`normalizers.normalizeGlyphName`.
+        :param \**kwargs: Additional keyword arguments.
+        :return: the specified instance of a :class:`BaseGlyph`
+            subclass.
+
+         .. note::
+
+            Subclasses may override this method.
+
         """
         layer = self.defaultLayer
         return layer[name]
 
-    def _keys(self, **kwargs):
-        """
-        This is the environment implementation of
-        :meth:`BaseFont.keys`. This must return an
-        :ref:`type-immutable-list` of all glyph names
-        in the default layer.
+    def _keys(self, **kwargs: Any) -> Tuple[str, ...]:
+        r"""Get a list of all glyph names in the native default layer.
 
-        Subclasses may override this method.
+        This is the environment implementation of :meth:`BaseFont.keys`.
+
+        :param \**kwargs: Additional keyword arguments.
+        :return: A :class:`tuple` of glyph names as :class:`str`.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         layer = self.defaultLayer
         return layer.keys()
 
-    def _newGlyph(self, name, **kwargs):
-        """
-        This is the environment implementation of
-        :meth:`BaseFont.newGlyph`. **name** will be
-        a :ref:`type-string` representing a valid
-        glyph name. The value will have been tested
-        to make sure that an existing glyph in the
-        default layer does not have an identical name.
-        The value will have been normalized with
-        :func:`normalizers.normalizeGlyphName`. This
-        must return an instance of :class:`BaseGlyph`
-        representing the new glyph.
+    def _newGlyph(self, name: str, **kwargs: Any) -> BaseGlyph:
+        r"""Create a new glyph in the native default layer.
 
-        Subclasses may override this method.
+        This is the environment implementation of :meth:`BaseFont.newGlyph.
+
+        :param name: The name to assign to the new glyph. The value will
+            have been normalized
+            with :func:`normalizers.normalizeGlyphName` and verified as
+            unique within the default layer.
+        :param \**kwargs: Additional keyword arguments.
+        :return: An instance of a :class:`BaseGlyph subclass representing
+            the new glyph.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         layer = self.defaultLayer
         # clear is False here because the base newFont
@@ -1075,36 +1498,48 @@ class BaseFont(
         # handled the clearing as specified by the caller.
         return layer.newGlyph(name, clear=False)
 
-    def _removeGlyph(self, name, **kwargs):
-        """
-        This is the environment implementation of
-        :meth:`BaseFont.removeGlyph`. **name** will
-        be a :ref:`type-string` representing an
-        existing glyph in the default layer. The
-        value will have been normalized with
-        :func:`normalizers.normalizeGlyphName`.
+    def _removeGlyph(self, name: str, **kwargs: Any) -> None:
+        r"""Remove the specified glyph from the default layer.
 
-        Subclasses may override this method.
+        .. deprecated::
+
+            Use :meth:`BaseFont.__delitem__` instead.
+
+        This is the environment implementation of
+        :meth:`BaseFont.removeGlyph`.
+
+        :param name: The name of the glyph to remove. The value will be
+            normalized with :func:`normalizers.normalizeGlyphName`.
+        :param \**kwargs: Additional keyword arguments.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         layer = self.defaultLayer
         layer.removeGlyph(name)
 
-    def __setitem__(self, name, glyph):
-        """
-        Insert **glyph** into the font. ::
+    def __setitem__(self, name: str, glyph: BaseGlyph) -> BaseGlyph:
+        """Insert the specified glyph into the font.
+
+        Example::
 
             >>> glyph = font["A"] = otherGlyph
 
-        This will not insert the glyph directly. Rather, a
-        new glyph will be created and the data from **glyph**
-        will be copied to the new glyph. **name** indicates
-        the name that should be assigned to the glyph after
-        insertion. The data that will be inserted
-        from **glyph** is the same data as documented in
-        :meth:`BaseGlyph.copy`.
+        This will not insert a glyph directly, but rather create
+        a new :class:`BaseGlyph` instance containing the data from
+        `glyph`. The data inserted from `glyph` is the same data as
+        documented in :meth:`BaseGlyph.copy`.
 
-        On a font level **font.glyphOrder** will be preserved
-        if the **name** is already present.
+        On a font level, :attr:`.glyphOrder` will be preserved if
+            the `name` is already present.
+
+        :param name: The name to assign to the new glyph after
+            insertion.
+        :param glyph: The layer :class:`BaseGlyph` instance to insert.
+        :return: The newly inserted :class:`BaseGlyph` instance.
+
         """
         name = normalizers.normalizeGlyphName(name)
         if name in self:
@@ -1115,48 +1550,70 @@ class BaseFont(
 
     # order
 
-    glyphOrder = dynamicProperty(
+    glyphOrder: dynamicProperty = dynamicProperty(
         "base_glyphOrder",
-        """
-        The preferred order of the glyphs in the font.
+        """Get or set the order of the glyphs in the font.
+
+        The value must be a :class:`list` or :class:`tuple` of glyph names
+        reflecting the desired order of the font's :class:`BaseGlyph` objects.
+
+        :return: A :class:`tuple` of glyph names in their defined order.
+
+        Example::
 
             >>> font.glyphOrder
             ["C", "B", "A"]
-            >>> font.glyphOrder = ["A", "B", "C"]
-        """
+            >>> font.glyphOrder = ("A", "B", "C")
+
+        """,
     )
 
-    def _get_base_glyphOrder(self):
+    def _get_base_glyphOrder(self) -> Tuple[str, ...]:
         value = self._get_glyphOrder()
         value = normalizers.normalizeGlyphOrder(value)
         return value
 
-    def _set_base_glyphOrder(self, value):
+    def _set_base_glyphOrder(self, value: CollectionType[str]) -> None:
         value = normalizers.normalizeGlyphOrder(value)
         self._set_glyphOrder(value)
 
-    def _get_glyphOrder(self):
-        """
-        This is the environment implementation of
-        :attr:`BaseFont.glyphOrder`. This must return
-        an :ref:`type-immutable-list` containing glyph
-        names representing the glyph order in the font.
-        The value will be normalized with
-        :func:`normalizers.normalizeGlyphOrder`.
+    def _get_glyphOrder(self) -> Tuple[str, ...]:
+        r"""Get the order of the glyphs in the native font.
 
-        Subclasses must override this method.
+        This is the environment implementation of the
+        :attr:`BaseFont.glyphrOrder` property getter.
+
+        :param \**kwargs: Additional keyword arguments.
+        :return: A :class:`tuple` of layer names in their defined order.
+            The value will be normalized with :func:`normalizers.normalizeGlyphOrder`.
+        :raises NotImplementedError: If the method has not
+            beenoverridden by a subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
-    def _set_glyphOrder(self, value):
-        """
-        This is the environment implementation of
-        :attr:`BaseFont.glyphOrder`. **value** will
-        be a list of :ref:`type-string`. It will
-        have been normalized with
-        :func:`normalizers.normalizeGlyphOrder`.
+    def _set_glyphOrder(self, value: CollectionType[str]) -> None:
+        r"""Set the order of the glyphs in the native font.
 
-        Subclasses must override this method.
+        This is the environment implementation of the
+        :attr:`BaseFont.glyphrOrder` property setter.
+
+        :param value: A :class:`list` of glyph names reflecting the
+            desired order of the font's :class:`BaseGlyph` objects.
+            The value will have been normalized
+            with :func:`normalizers.normalizeGlyphOrder`.
+        :param \**kwargs: Additional keyword arguments.
+        :raises NotImplementedError: If the method has not been
+            overridden by a subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
@@ -1164,29 +1621,34 @@ class BaseFont(
     # Global Operations
     # -----------------
 
-    def round(self):
-        """
-        Round all approriate data to integers.
+    def round(self) -> None:
+        """Round all appropriate font data to integers.
+
+        This method applies only to the glyphs in the default layer
+        of the font. It is the equivalent of calling the :meth:`round`
+        method on:
+
+        - :attr:`info`
+        - :attr:`kerning`
+        - :attr:`defaultLayer`
+        - :attr:`guidelines`
+
+        Example::
 
             >>> font.round()
 
-        This is the equivalent of calling the round method on:
-
-        * info
-        * kerning
-        * the default layer
-        * font-level guidelines
-
-        This applies only to the default layer.
         """
         self._round()
 
-    def _round(self):
-        """
-        This is the environment implementation of
-        :meth:`BaseFont.round`.
+    def _round(self) -> None:
+        """Round all appropriate native font data to integers.
 
-        Subclasses may override this method.
+        This is the environment implementation of :meth:`BaseFont.round`.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         layer = self.defaultLayer
         layer.round()
@@ -1195,25 +1657,30 @@ class BaseFont(
         for guideline in self.guidelines:
             guideline.round()
 
-    def autoUnicodes(self):
-        """
-        Use heuristics to set Unicode values in all glyphs.
+    def autoUnicodes(self) -> None:
+        """Use heuristics to set Unicode values in all font glyphs.
+
+        This method applies only to the glyphs in the default layer
+        of the font. Environments will define their own heuristics for
+        automatically determining values.
+
+        Example::
 
             >>> font.autoUnicodes()
 
-        Environments will define their own heuristics for
-        automatically determining values.
-
-        This applies only to the default layer.
         """
         self._autoUnicodes()
 
-    def _autoUnicodes(self):
-        """
+    def _autoUnicodes(self) -> None:
+        """Use heuristics to set Unicode values in all native font glyphs.
+
         This is the environment implementation of
         :meth:`BaseFont.autoUnicodes`.
 
-        Subclasses may override this method.
+        .. note::
+
+            Subclasses may override this method.
+
         """
         layer = self.defaultLayer
         layer.autoUnicodes()
@@ -1226,174 +1693,250 @@ class BaseFont(
         if guideline.font is None:
             guideline.font = self
 
-    guidelines = dynamicProperty(
+    guidelines: dynamicProperty = dynamicProperty(
         "guidelines",
-        """
-        An :ref:`type-immutable-list` of font-level :class:`BaseGuideline` objects.
+        """Get the font-level guideline objects.
+
+        This property is read-only.
+
+        :return: A :class:`tuple` containing instances of
+            the :class:`BaseGuideline` class.
 
             >>> for guideline in font.guidelines:
             ...     guideline.angle
             0
             45
             90
-        """
+
+        """,
     )
 
-    def _get_guidelines(self):
-        """
+    def _get_guidelines(self) -> Tuple[BaseGuideline, ...]:
+        """Get the native font-level guideline objects.
+
         This is the environment implementation of
-        :attr:`BaseFont.guidelines`. This must
-        return an :ref:`type-immutable-list` of
-        :class:`BaseGuideline` objects.
+        :attr:`BaseFont.guidelines`.
 
-        Subclasses may override this method.
+        :return: A :class:`tuple` containing instances
+            of the :class:`BaseGuideline` subclass.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
-        return tuple([self._getitem__guidelines(i)
-                      for i in range(self._len__guidelines())])
+        return tuple(
+            self._getitem__guidelines(i) for i in range(self._len__guidelines())
+        )
 
-    def _len__guidelines(self):
+    def _len__guidelines(self) -> int:
         return self._lenGuidelines()
 
-    def _lenGuidelines(self, **kwargs):
-        """
-        This must return an integer indicating
-        the number of font-level guidelines
-        in the font.
+    def _lenGuidelines(self, **kwargs: Any) -> int:
+        r"""Return the number of font-level guidelines in the native font.
 
-        Subclasses must override this method.
+        :param \**kwargs: Additional keyword arguments.
+        :return: An :class:`int` indicating the number of font-level
+            :class:`BaseGuideline` subclass instances in the font.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
-    def _getitem__guidelines(self, index):
-        index = normalizers.normalizeIndex(index)
-        if index >= self._len__guidelines():
-            raise ValueError("No guideline located at index %d." % index)
-        guideline = self._getGuideline(index)
+    def _getitem__guidelines(self, index: int) -> BaseGuideline:
+        normalizedIndex = normalizers.normalizeIndex(index)
+        if normalizedIndex is None or normalizedIndex >= self._len__guidelines():
+            raise ValueError(f"No guideline located at index {normalizedIndex}.")
+        guideline = self._getGuideline(normalizedIndex)
         self._setFontInGuideline(guideline)
         return guideline
 
-    def _getGuideline(self, index, **kwargs):
-        """
-        This must return a :class:`BaseGuideline` object.
-        **index** will be a valid **index**.
+    def _getGuideline(self, index: int, **kwargs: Any) -> BaseGuideline:
+        r"""Return the guideline at the given index.
 
-        Subclasses must override this method.
+        :param index: The index of the guideline.
+        :param \**kwargs: Additional keyword arguments.
+
+        :return: An instance of a :class:`BaseGuideline` subclass.
+        :raises NotImplementedError: If the method has not been
+            overridden by a subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
-    def _getGuidelineIndex(self, guideline):
+    def _getGuidelineIndex(self, guideline: BaseGuideline) -> int:
         for i, other in enumerate(self.guidelines):
             if guideline == other:
                 return i
         raise FontPartsError("The guideline could not be found.")
 
-    def appendGuideline(self, position=None, angle=None, name=None, color=None, guideline=None):
-        """
-        Append a new guideline to the font.
+    def appendGuideline(
+        self,
+        position: Optional[PairCollectionType[IntFloatType]] = None,
+        angle: Optional[IntFloatType] = None,
+        name: Optional[str] = None,
+        color: Optional[QuadrupleCollectionType[IntFloatType]] = None,
+        guideline: Optional[BaseGuideline] = None,
+    ) -> BaseGuideline:
+        """Append a new guideline to the font.
+
+        This method will create a new :class:`BaseGuideline` with the
+        provided values. Values may be copied from
+        the specified `guideline` or passed individually to the
+        appropriate parameters.
+
+        :param position: The optional position for the guideline as
+            a :ref:`type-coordinate`. Defaults to :obj:`None`.
+        :param angle: The optional angle for the guideline as
+            a :class:`float`. Defaults to :obj:`None`.
+        :param name: The optional name for the guideline as
+            a :class:`str`. Defaults to :obj:`None`.
+        :param color: The optional color for the guideline as
+            a :ref:`type-color`. Defaults to :obj:`None`.
+        :param guideline: The optional :class:`BaseGuideline` instance
+            from which to copy values. If `position`, `angle`, `name`,
+            or `color` are specified, those values will be used instead.
+            Defaults to :obj:`None`.
+        :return: The newly appended instance of
+            the :class:`BaseGuideline` class.
+
+        Example::
 
             >>> guideline = font.appendGuideline((50, 0), 90)
             >>> guideline = font.appendGuideline((0, 540), 0, name="overshoot",
-            >>> color=(0, 0, 0, 0.2))
+            ... color=(0, 0, 0, 0.2))
 
-        **position** must be a :ref:`type-coordinate`
-        indicating the position of the guideline.
-        **angle** indicates the :ref:`type-angle` of
-        the guideline. **name** indicates the name
-        for the guideline. This must be a :ref:`type-string`
-        or ``None``. **color** indicates the color for
-        the guideline. This must be a :ref:`type-color`
-        or ``None``. This will return the newly created
-        :class:`BaseGuidline` object.
-
-        ``guideline`` may be a :class:`BaseGuideline` object from which
-        attribute values will be copied. If ``position``, ``angle``, ``name``
-        or ``color`` are specified as arguments, those values will be used
-        instead of the values in the given guideline object.
         """
         identifier = None
         if guideline is not None:
-            guideline = normalizers.normalizeGuideline(guideline)
+            normalizedGuideline = normalizers.normalizeGuideline(guideline)
             if position is None:
-                position = guideline.position
+                position = normalizedGuideline.position
             if angle is None:
-                angle = guideline.angle
+                angle = normalizedGuideline.angle
             if name is None:
-                name = guideline.name
+                name = normalizedGuideline.name
             if color is None:
-                color = guideline.color
-            if guideline.identifier is not None:
-                existing = set([g.identifier for g in self.guidelines if g.identifier is not None])
-                if guideline.identifier not in existing:
-                    identifier = guideline.identifier
-        position = normalizers.normalizeCoordinateTuple(position)
-        angle = normalizers.normalizeRotationAngle(angle)
+                color = normalizedGuideline.color
+            if normalizedGuideline.identifier is not None:
+                existing = set(
+                    [g.identifier for g in self.guidelines if g.identifier is not None]
+                )
+                if normalizedGuideline.identifier not in existing:
+                    identifier = normalizedGuideline.identifier
+        if position is not None:
+            position = normalizers.normalizeCoordinateTuple(position)
+        if angle is not None:
+            angle = normalizers.normalizeRotationAngle(angle)
         if name is not None:
             name = normalizers.normalizeGuidelineName(name)
         if color is not None:
             color = normalizers.normalizeColor(color)
         identifier = normalizers.normalizeIdentifier(identifier)
-        guideline = self._appendGuideline(position, angle, name=name, color=color, identifier=identifier)
-        guideline.font = self
-        return guideline
+        newGuideline = self._appendGuideline(
+            position, angle, name=name, color=color, identifier=identifier
+        )
+        newGuideline.font = self
+        return newGuideline
 
-    def _appendGuideline(self, position, angle, name=None, color=None, identifier=None, **kwargs):
-        """
+    def _appendGuideline(
+        self,
+        position: Optional[PairCollectionType[IntFloatType]],
+        angle: Optional[float],
+        name: Optional[str],
+        color: Optional[QuadrupleCollectionType[IntFloatType]],
+        **kwargs,
+    ) -> BaseGuideline:
+        r"""Append a new guideline to the native font.
+
         This is the environment implementation of
-        :meth:`BaseFont.appendGuideline`. **position**
-        will be a valid :ref:`type-coordinate`. **angle**
-        will be a valid angle. **name** will be a valid
-        :ref:`type-string` or ``None``. **color** will
-        be a valid :ref:`type-color` or ``None``.
-        This must return the newly created
-        :class:`BaseGuideline` object.
+        :meth:`BaseFont.appendGuideline`.
 
-        Subclasses may override this method.
+        :param position: The position for the guideline as
+            a :ref:`type-coordinate`.
+        :param angle: The angle for the guideline as a :class:`float`.
+        :param name: The name for the guideline as a :class:`str`.
+        :param color: The color for the guideline as a :ref:`type-color`.
+        :param \**kwargs: Additional keyword arguments.
+        :return: The newly appended instance of
+            the :class:`BaseGuideline` subclass.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         self.raiseNotImplementedError()
 
-    def removeGuideline(self, guideline):
-        """
-        Remove **guideline** from the font.
+    def removeGuideline(self, guideline: Union[int, BaseGuideline]) -> None:
+        """Remove a guideline from the font.
+
+        :param guideline: A :class:`BaseGuideline` object or an integer
+            representing a :attr:`BaseGuideline.index`.
+        :raises: ValueError if no guideline is found at the given `index`.
+
+        Example::
 
             >>> font.removeGuideline(guideline)
             >>> font.removeGuideline(2)
 
-        **guideline** can be a guideline object or
-        an integer representing the guideline index.
         """
         if isinstance(guideline, int):
             index = guideline
         else:
             index = self._getGuidelineIndex(guideline)
-        index = normalizers.normalizeIndex(index)
-        if index >= self._len__guidelines():
-            raise ValueError("No guideline located at index %d." % index)
-        self._removeGuideline(index)
+        normalizedIndex = normalizers.normalizeIndex(index)
+        # Avoid mypy conflict with normalizeIndex -> Optional[int]
+        if normalizedIndex is None:
+            return
+        if normalizedIndex >= self._len__guidelines():
+            raise ValueError(f"No guideline located at index {normalizedIndex}.")
+        self._removeGuideline(normalizedIndex)
 
-    def _removeGuideline(self, index, **kwargs):
-        """
+    def _removeGuideline(self, index: int, **kwargs: Any) -> None:
+        """Remove the guideline at the specified index.
+
         This is the environment implementation of
-        :meth:`BaseFont.removeGuideline`. **index**
-        will be a valid index.
+        :meth:`BaseFont.removeGuideline`.
 
-        Subclasses must override this method.
+        :param index: The index of the guideline to remove.
+        :raises NotImplementedError: If the method has not been overridden
+            by a subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
-    def clearGuidelines(self):
-        """
-        Clear all guidelines.
+    def clearGuidelines(self) -> None:
+        """Clear all guidelines in the font.
+
+        Example::
 
             >>> font.clearGuidelines()
+
         """
         self._clearGuidelines()
 
-    def _clearGuidelines(self):
-        """
+    def _clearGuidelines(self) -> None:
+        """Clear all guidelines in the native font.
+
         This is the environment implementation of
         :meth:`BaseFont.clearGuidelines`.
 
-        Subclasses may override this method.
+        .. note::
+
+            Subclasses may override this method.
+
         """
         for _ in range(self._len__guidelines()):
             self.removeGuideline(-1)
@@ -1402,46 +1945,86 @@ class BaseFont(
     # Interpolation
     # -------------
 
-    def interpolate(self, factor, minFont, maxFont,
-                    round=True, suppressError=True):
-        """
-        Interpolate all possible data in the font.
+    def interpolate(
+        self,
+        factor: TransformationType,
+        minFont: BaseFont,
+        maxFont: BaseFont,
+        round: bool = True,
+        suppressError: bool = True,
+    ) -> None:
+        """Interpolate all possible data in the font.
+
+        The interpolation occurs on a 0 to 1.0 range between `minFont`
+        and `maxFont`, using the specified `factor`.
+
+        :param factor: The interpolation value as a single :class:`int`
+            or :class:`float` or a :class:`tuple` of two :class:`int`
+            or :class:`float` values representing the factors ``(x, y)``.
+        :param minFont: The :class:`BaseFont` instance corresponding to the 0.0
+            position in the interpolation.
+        :param maxFont: The :class:`BaseFont` instance corresponding to the 1.0
+            position in the interpolation.
+        :param round: A :class:`bool` indicating whether the result should
+            be rounded to integers. Defaults to :obj:`True`.
+        :param suppressError: A :class:`bool` indicating whether to ignore
+            incompatible data or raise an error when such
+            incompatibilities are found. Defaults to :obj:`True`.
+        :raises TypeError: If `minFont` or `maxFont` are not instances
+            of :class:`BaseFont`.
+
+        Example::
 
             >>> font.interpolate(0.5, otherFont1, otherFont2)
             >>> font.interpolate((0.5, 2.0), otherFont1, otherFont2, round=False)
 
-        The interpolation occurs on a 0 to 1.0 range where **minFont**
-        is located at 0 and **maxFont** is located at 1.0. **factor**
-        is the interpolation value. It may be less than 0 and greater
-        than 1.0. It may be a :ref:`type-int-float` or a tuple of
-        two :ref:`type-int-float`. If it is a tuple, the first
-        number indicates the x factor and the second number indicates
-        the y factor. **round** indicates if the result should be
-        rounded to integers. **suppressError** indicates if incompatible
-        data should be ignored or if an error should be raised when
-        such incompatibilities are found.
         """
         factor = normalizers.normalizeInterpolationFactor(factor)
         if not isinstance(minFont, BaseFont):
-            raise TypeError(("Interpolation to an instance of %r can not be "
-                             "performed from an instance of %r.")
-                            % (self.__class__.__name__, minFont.__class__.__name__))
+            raise TypeError(
+                f"Interpolation to an instance of {self.__class__.__name__!r} can not be performed from an instance of {minFont.__class__.__name__!r}."
+            )
         if not isinstance(maxFont, BaseFont):
-            raise TypeError(("Interpolation to an instance of %r can not be "
-                             "performed from an instance of %r.")
-                            % (self.__class__.__name__, maxFont.__class__.__name__))
+            raise TypeError(
+                f"Interpolation to an instance of {self.__class__.__name__!r} can not be performed from an instance of {maxFont.__class__.__name__!r}."
+            )
         round = normalizers.normalizeBoolean(round)
         suppressError = normalizers.normalizeBoolean(suppressError)
-        self._interpolate(factor, minFont, maxFont,
-                          round=round, suppressError=suppressError)
+        self._interpolate(
+            factor, minFont, maxFont, round=round, suppressError=suppressError
+        )
 
-    def _interpolate(self, factor, minFont, maxFont,
-                     round=True, suppressError=True):
-        """
-        This is the environment implementation of
-        :meth:`BaseFont.interpolate`.
+    def _interpolate(
+        self,
+        factor: TransformationType,
+        minFont: BaseFont,
+        maxFont: BaseFont,
+        round: bool,
+        suppressError: bool,
+    ) -> None:
+        """Interpolate all possible data in the native font.
 
-        Subclasses may override this method.
+        This is the environment implementation of :meth:`BaseFont.interpolate`.
+
+        :param factor: The interpolation value as a single :class:`int`
+            or :class:`float` or a :class:`tuple of two :class:`int`
+            or :class:`float` values representing the factors ``(x, y)``.
+        :param minFont: The :class:`BaseFont` subclass instance
+            corresponding to the 0.0 position in the interpolation.
+        :param maxFont: The :class:`BaseFont` subclass instance
+            corresponding to the 1.0 position in the interpolation.
+        :param round: A boolean indicating whether the result should
+            be rounded to integers.
+        :param suppressError: A boolean indicating whether to ignore
+            incompatible data or raise an error when such incompatibilities
+            are found.
+        :raises TypeError: If `minFont` or `maxFont` are not instances
+            of :class:`BaseFont`.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         # layers
         for layerName in self.layerOrder:
@@ -1452,25 +2035,43 @@ class BaseFont(
             minLayer = minFont.getLayer(layerName)
             maxLayer = maxFont.getLayer(layerName)
             dstLayer = self.newLayer(layerName)
-            dstLayer.interpolate(factor, minLayer, maxLayer,
-                                 round=round, suppressError=suppressError)
+            dstLayer.interpolate(
+                factor, minLayer, maxLayer, round=round, suppressError=suppressError
+            )
         if self.layerOrder:
             if ufoLib.DEFAULT_LAYER_NAME in self.layerOrder:
                 self.defaultLayer = self.getLayer(ufoLib.DEFAULT_LAYER_NAME)
             else:
                 self.defaultLayer = self.getLayer(self.layerOrder[0])
         # kerning and groups
-        self.kerning.interpolate(factor, minFont.kerning, maxFont.kerning,
-                                 round=round, suppressError=suppressError)
+        self.kerning.interpolate(
+            factor,
+            minFont.kerning,
+            maxFont.kerning,
+            round=round,
+            suppressError=suppressError,
+        )
         # info
-        self.info.interpolate(factor, minFont.info, maxFont.info,
-                              round=round, suppressError=suppressError)
+        self.info.interpolate(
+            factor, minFont.info, maxFont.info, round=round, suppressError=suppressError
+        )
 
     compatibilityReporterClass = FontCompatibilityReporter
 
-    def isCompatible(self, other):
-        """
-        Evaluate interpolation compatibility with **other**.
+    def isCompatible(self, other: BaseFont) -> Tuple[bool, str]:
+        """Evaluate interpolation compatibility with another font.
+
+        This method will return a :class:`bool` indicating if the font is
+        compatible for interpolation with `other`, and a :class:`str`
+        containing compatibility notes.
+
+        :param other: The other :class:`BaseFont` instance to check
+            compatibility with.
+        :return: A :class:`tuple` where the first element is a :class:`bool`
+            indicating compatibility, and the second element is a :class:`str`
+            of compatibility notes.
+
+        Example::
 
             >>> compatible, report = self.isCompatible(otherFont)
             >>> compatible
@@ -1479,18 +2080,24 @@ class BaseFont(
             [Fatal] Glyph: "test1" + "test2"
             [Fatal] Glyph: "test1" contains 1 contours | "test2" contains 2 contours
 
-        This will return a ``bool`` indicating if the font is
-        compatible for interpolation with **other** and a
-        :ref:`type-string` of compatibility notes.
         """
         return super(BaseFont, self).isCompatible(other, BaseFont)
 
-    def _isCompatible(self, other, reporter):
-        """
-        This is the environment implementation of
-        :meth:`BaseFont.isCompatible`.
+    def _isCompatible(
+        self, other: BaseFont, reporter: FontCompatibilityReporter
+    ) -> None:
+        """Evaluate interpolation compatibility with another native font.
 
-        Subclasses may override this method.
+        This is the environment implementation of :meth:`BaseFont.isCompatible`.
+
+        :param other: The other :class:`BaseFont` subclass instance to check
+            compatibility with.
+        :param reporter: An object used to report compatibility issues.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         font1 = self
         font2 = other
@@ -1504,11 +2111,13 @@ class BaseFont(
         if len(guidelines1.difference(guidelines2)) != 0:
             reporter.warning = True
             reporter.guidelinesMissingFromFont2 = list(
-                guidelines1.difference(guidelines2))
+                guidelines1.difference(guidelines2)
+            )
         if len(guidelines2.difference(guidelines1)) != 0:
             reporter.warning = True
             reporter.guidelinesMissingInFont1 = list(
-                guidelines2.difference(guidelines1))
+                guidelines2.difference(guidelines1)
+            )
         # incompatible layers
         layers1 = set(font1.layerOrder)
         layers2 = set(font2.layerOrder)
@@ -1537,42 +2146,81 @@ class BaseFont(
     # mapping
     # -------
 
-    def getReverseComponentMapping(self):
-        """
-        Get a reversed map of component references in the font.
-        {
-        'A' : ['Aacute', 'Aring']
-        'acute' : ['Aacute']
-        'ring' : ['Aring']
-        etc.
-        }
+    def getReverseComponentMapping(self) -> ReverseComponentMappingType:
+        """Get a reversed map of all component references in the font.
+
+        This method creates a :class:`dict` mapping each component glyph
+        name in the font to a :class:`tuple` containing the composite
+        glyph names that include the comoponent.
+
+        :return: A :class:`dict` of component glyph names mapped to
+            tuples of composite glyph names.
+
+        Example::
+
+            >>> mapping = font.getReverseComponentMapping()
+            >>> mapping
+            {'A': ('Aacute', 'Aring'), 'acute': ('Aacute',),
+            'ring': ('Aring',)  , ...}
+
         """
         return self._getReverseComponentMapping()
 
-    def _getReverseComponentMapping(self):
-        """
+    def _getReverseComponentMapping(self) -> ReverseComponentMappingType:
+        """Get a reversed map of all component references in the font.
+
         This is the environment implementation of
         :meth:`BaseFont.getReverseComponentMapping`.
 
-        Subclasses may override this method.
+        .. note::
+
+            Subclasses may override this method.
+
         """
         layer = self.defaultLayer
         return layer.getReverseComponentMapping()
 
-    def getCharacterMapping(self):
-        """
-        Create a dictionary of unicode -> [glyphname, ...] mappings.
-        All glyphs are loaded. Note that one glyph can have multiple unicode values,
-        and a unicode value can have multiple glyphs pointing to it.
+    def getCharacterMapping(self) -> CharacterMappingType:
+        """Get the font's character mapping.
+
+        This method creates a :class:`dict` mapping Unicode values to
+        tuples of glyph names. Each Unicode value corresponds to one or
+        more glyphs, and the glyph names represent these glyphs in the
+        mapping.
+
+        .. note::
+
+            One glyph can have multiple unicode values, and a unicode value can
+            have multiple glyphs pointing to it.
+
+        :return: A :class:`dict` mapping Unicode values to :class:`tuple` of
+            glyph names.
+
+        Example::
+
+            >>> mapping = font.getCharacterMapping()
+            >>> mapping
+            {65: ('A', 'A.alt'), 66: ('B',),
+            67: ('C', 'C.alt', 'C.swash') , ...}
+
         """
         return self._getCharacterMapping()
 
-    def _getCharacterMapping(self):
-        """
+    def _getCharacterMapping(self) -> CharacterMappingType:
+        """Get the native font's character mapping.
+
         This is the environment implementation of
         :meth:`BaseFont.getCharacterMapping`.
 
-        Subclasses may override this method.
+        :return: A :class:`dict` mapping Unicode values to :class:`tuple` of
+            glyph names.
+        :raises NotImplementedError: If the method has not been
+            overridden by a subclass.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         layer = self.defaultLayer
         return layer.getCharacterMapping()
@@ -1583,49 +2231,81 @@ class BaseFont(
 
     # layers
 
-    selectedLayers = dynamicProperty(
+    selectedLayers: dynamicProperty = dynamicProperty(
         "base_selectedLayers",
-        """
-        A list of layers selected in the layer.
+        """Get or set the selected glyph layers in the default font layer.
 
-        Getting selected layer objects:
+        :param value: The :class:`list` of :class:`BaseLayer` instances
+            to select.
+        :return: A :class:`tuple` of currently selected :class:`BaseLayer`
+            instances.
+
+        Getting selected layer objects::
 
             >>> for layer in layer.selectedLayers:
             ...     layer.color = (1, 0, 0, 0.5)
 
-        Setting selected layer objects:
+        Setting selected layer objects::
 
             >>> layer.selectedLayers = someLayers
-        """
+
+        """,
     )
 
-    def _get_base_selectedLayers(self):
-        selected = tuple([normalizers.normalizeLayer(layer) for
-                          layer in self._get_selectedLayers()])
+    def _get_base_selectedLayers(self) -> Tuple[BaseLayer, ...]:
+        selected = tuple(
+            normalizers.normalizeLayer(layer) for layer in self._get_selectedLayers()
+        )
         return selected
 
-    def _get_selectedLayers(self):
-        """
-        Subclasses may override this method.
+    def _get_selectedLayers(self) -> Tuple[BaseLayer, ...]:
+        """Get the selected glyph layers in the native default font layer.
+
+        This is the environment implementation of
+        the :attr:`BaseFont.selectedLayers` property getter.
+
+        :return: A :class:`tuple` of currently selected :class:`BaseLayer`
+            instances. Each value item will be normalized
+            with :func:`normalizers.normalizeLayer`.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         return self._getSelectedSubObjects(self.layers)
 
-    def _set_base_selectedLayers(self, value):
+    def _set_base_selectedLayers(self, value: List[BaseLayer]) -> None:
         normalized = [normalizers.normalizeLayer(layer) for layer in value]
         self._set_selectedLayers(normalized)
 
-    def _set_selectedLayers(self, value):
-        """
-        Subclasses may override this method.
+    def _set_selectedLayers(self, value: List[BaseLayer]) -> None:
+        """Set the selected glyph layers in the native default font layer.
+
+        This is the environment implementation of
+        the :attr:`BaseFont.selectedLayers` property setter.
+
+        :param value: The :class:`list` of :class:`BaseLayer` instances
+            to select. Each value item will have been normalized
+            with :func:`normalizers.normalizeLayer`.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         return self._setSelectedSubObjects(self.layers, value)
 
-    selectedLayerNames = dynamicProperty(
+    selectedLayerNames: dynamicProperty = dynamicProperty(
         "base_selectedLayerNames",
-        """
-        A list of names of layers selected in the layer.
+        """Get or set the selected glyph layer names in the default font layer.
 
-        Getting selected layer names:
+        :param value: The :class:`list` of layer names representing
+            the :class:`BaseLayer` instances to select.
+        :return: A :class:`tuple` of layer names representing the currently
+            selected :class:`BaseLayer` instances.
+
+        Getting selected layer names::
 
             >>> for name in layer.selectedLayerNames:
             ...     print(name)
@@ -1633,77 +2313,138 @@ class BaseFont(
         Setting selected layer names:
 
             >>> layer.selectedLayerNames = ["A", "B", "C"]
-        """
+
+        """,
     )
 
-    def _get_base_selectedLayerNames(self):
-        selected = tuple([normalizers.normalizeLayerName(name) for
-                          name in self._get_selectedLayerNames()])
+    def _get_base_selectedLayerNames(self) -> Tuple[str, ...]:
+        selected = tuple(
+            normalizers.normalizeLayerName(name)
+            for name in self._get_selectedLayerNames()
+        )
         return selected
 
-    def _get_selectedLayerNames(self):
-        """
-        Subclasses may override this method.
-        """
-        selected = [layer.name for layer in self.selectedLayers]
-        return selected
+    def _get_selectedLayerNames(self) -> Tuple[str, ...]:
+        """Get the selected glyph layer names in the native font layer.
 
-    def _set_base_selectedLayerNames(self, value):
+        This is the environment implementation of
+        the :attr:`BaseFont.selectedLayerNames` property getter.
+
+        :return: A :class:`tuple` of layer names representing the currently
+            selected :class:`BaseLayer` instances. Each value item will be
+            normalized with :func:`normalizers.normalizeLayerName`.
+
+        .. note::
+
+            Subclasses may override this method.
+
+        """
+        return tuple(layer.name for layer in self.selectedLayers)
+
+    def _set_base_selectedLayerNames(self, value: List[str]) -> None:
         normalized = [normalizers.normalizeLayerName(name) for name in value]
         self._set_selectedLayerNames(normalized)
 
-    def _set_selectedLayerNames(self, value):
-        """
-        Subclasses may override this method.
+    def _set_selectedLayerNames(self, value: List[str]) -> None:
+        """Set the selected glyph layer names in the native font layer.
+
+        This is the environment implementation of
+        the :attr:`BaseFont.selectedLayerNames` property setter.
+
+        :param value: The :class:`list` of layer names representing
+            the :class:`BaseLayer` instances to select. Each value item will
+            have been normalized with :func:`normalizers.normalizeLayerName`.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         select = [self.layers(name) for name in value]
         self.selectedLayers = select
 
     # guidelines
 
-    selectedGuidelines = dynamicProperty(
+    selectedGuidelines: dynamicProperty = dynamicProperty(
         "base_selectedGuidelines",
-        """
-        A list of guidelines selected in the font.
+        """Get or set the selected guidelines in the font.
 
-        Getting selected guideline objects:
+        :param value: The :class:`list` of either :class:`BaseGuideline` instances
+            to select or their corresponding indexes.
+        :return: A :class:`tuple` of currently selected :class:`BaseGuideline`
+            instances.
+
+        Getting selected guideline objects::
 
             >>> for guideline in font.selectedGuidelines:
             ...     guideline.color = (1, 0, 0, 0.5)
 
-        Setting selected guideline objects:
+        Setting selected guideline objects::
 
             >>> font.selectedGuidelines = someGuidelines
 
-        Setting also supports guideline indexes:
+        Setting also supports guideline indexes::
 
             >>> font.selectedGuidelines = [0, 2]
-        """
+
+        """,
     )
 
-    def _get_base_selectedGuidelines(self):
-        selected = tuple([normalizers.normalizeGuideline(guideline) for
-                          guideline in self._get_selectedGuidelines()])
+    def _get_base_selectedGuidelines(self) -> Tuple[BaseGuideline, ...]:
+        selected = tuple(
+            normalizers.normalizeGuideline(guideline)
+            for guideline in self._get_selectedGuidelines()
+        )
         return selected
 
-    def _get_selectedGuidelines(self):
-        """
-        Subclasses may override this method.
+    def _get_selectedGuidelines(self) -> Tuple[BaseGuideline, ...]:
+        """Get the selected guidelines in the native font.
+
+        This is the environment implementation of
+        the :attr:`BaseFont.selectedGuidelines` property getter.
+
+        :return: A :class:`tuple` of currently selected :class:`BaseGuideline`
+            instances. Each value item will be normalized
+            with :func:`normalizers.normalizeGuideline`.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         return self._getSelectedSubObjects(self.guidelines)
 
-    def _set_base_selectedGuidelines(self, value):
+    def _set_base_selectedGuidelines(
+        self, value: List[Union[BaseGuideline, int]]
+    ) -> None:
         normalized = []
-        for i in value:
-            if isinstance(i, int):
-                i = normalizers.normalizeIndex(i)
+        for guideline in value:
+            normalizedGuideline: Union[BaseGuideline, int]
+            if isinstance(guideline, int):
+                normalizedIndex = normalizers.normalizeIndex(guideline)
+                # Avoid mypy conflict with normalizeIndex -> Optional[int]
+                if normalizedIndex is None:
+                    continue
+                normalizedGuideline = normalizedIndex
             else:
-                i = normalizers.normalizeGuideline(i)
-            normalized.append(i)
+                normalizedGuideline = normalizers.normalizeGuideline(guideline)
+
+            normalized.append(normalizedGuideline)
         self._set_selectedGuidelines(normalized)
 
-    def _set_selectedGuidelines(self, value):
-        """
-        Subclasses may override this method.
+    def _set_selectedGuidelines(self, value: List[Union[BaseGuideline, int]]) -> None:
+        """Set the selected guidelines in the native font.
+
+        This is the environment implementation of
+        the :attr:`BaseFont.selectedGuidelines` property setter.
+
+        :param value: The :class:`list` of :class:`BaseGuideline` instances to
+            select. Each value item will have been normalized
+            with :func:`normalizers.normalizeGuideline`.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         return self._setSelectedSubObjects(self.guidelines, value)
