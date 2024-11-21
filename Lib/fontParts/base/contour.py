@@ -190,7 +190,8 @@ class BaseContour(
         Example::
 
             >>> contour.index
-            0
+            1
+            >>> contour.index = 0
 
         """,
     )
@@ -325,9 +326,6 @@ class BaseContour(
 
         """
         from fontTools.ufoLib.pointPen import PointToSegmentPen
-
-        adapter = PointToSegmentPen(pen)
-        self.drawPoints(adapter)
 
         adapter = PointToSegmentPen(pen)
         self.drawPoints(adapter)
@@ -630,7 +628,7 @@ class BaseContour(
         This is the environment implementation of the :attr:`BaseContour.clockwise`
         property setter.
 
-        :param value: The winding direction to indicate as a :class:`bool`.
+        :param value: The winding direction to specify as a :class:`bool`.
             The value will have been normalized
             with :func:`normalizers.normalizeBoolean`.
 
@@ -720,10 +718,11 @@ class BaseContour(
         :return: :obj:`True` if `otherContour` is inside the filled area of the
             current contour instance, :obj:`False` otherwise.
 
+        Example::
+
             >>> contour.contourInside(otherContour)
             True
 
-        ``contour`` must be a :class:`BaseContour`.
         """
         otherContour = normalizers.normalizeContour(otherContour)
         return self._contourInside(otherContour)
@@ -863,6 +862,11 @@ class BaseContour(
 
         :return: A :class:`tuple` of :class:`BaseSegment` instances.
 
+        Example::
+
+            >>> contour.segments
+            (<BaseSegment curve index='0' at 4573388368>, ...)
+
         """
     )
 
@@ -926,8 +930,8 @@ class BaseContour(
     def __iter__(self) -> Iterator[BaseSegment]:
         """Return an iterator over the segments in the contour.
 
-        :return: An iterator over the :class:`BaseSegment` instances belonging to
-            the contour.
+        :return: An iterator over the :class:`BaseSegment` instances belonging
+            to the contour.
 
         """
         return self._iterSegments()
@@ -971,8 +975,22 @@ class BaseContour(
                       points: Optional[PointCollectionType] = None,
                       smooth: bool = False,
                       segment: Optional[BaseSegment] = None) -> None:
-        """
-        Append a segment to the contour.
+        """Append the given segment to the contour.
+
+        If `type` or `points` are specified, those values will be used instead
+        of the values in the given `segment` object. The specified `smooth`
+        state will be applied if ``segment=None``.
+
+        :param type: An optional :attr:`BaseSegment.type` to be applied to
+            the segment as a :class:`str`. Defaults to :obj:`None`.
+        :param points: The optional :attr:`BaseSegment.points` to be applied to
+            the segment as a :class:`list` or :class:`tuple`
+            of :ref:`type-coordinate` items. Defaults to :obj:`None`.
+        :param smooth: The :attr:`BaseSegment.smooth` state to be applied to the
+            segment as a :class:`bool`. Defaults to :obj:`False`.
+        :param segment:  An optional :class:`BaseSegment` instance from which
+            attribute values will be copied. Defualts to :obj:`None`.
+
         """
         if segment is not None:
             if type is not None:
@@ -990,12 +1008,30 @@ class BaseContour(
         self._appendSegment(type=type, points=points, smooth=smooth)
 
     def _appendSegment(self,
-                       type: Optional[str] = None,
-                       points: Optional[PointCollectionType] = None,
-                       smooth: bool = False,
+                       type: str,
+                       points: PointCollectionType,
+                       smooth: bool,
                        **kwargs: Any) -> None:
-        """
-        Subclasses may override this method.
+        r"""Append the given segment to the native contour.
+
+        This is the environment implementation of :meth:`BaseContour.appendSegment`.
+
+        :param type: The :attr:`BaseSegment.type` to be applied to the segment as
+            a :class:`str`. The value will have been normalized
+            with :func:`normalizers.normalizeSegmentType`.
+        :param points: The :attr:`BaseSegment.points` to be applied to the segment as
+            a :class:`list` or :class:`tuple` of :ref:`type-coordinate` items.
+            The value will have been normalized
+            with :func:`normalizers.normalizeCoordinateTuple`.
+        :param smooth: The :attr:`BaseSegment.smooth` state to be applied to the segment
+            as a :class:`bool`. The value will have been normalized
+            with :func:`normalizers.normalizeBoolean`.
+        :param \**kwargs: Additional keyword arguments.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         self._insertSegment(
             len(self), type=type, points=points, smooth=smooth, **kwargs
@@ -1007,8 +1043,24 @@ class BaseContour(
                       points: Optional[PointCollectionType] = None,
                       smooth: bool = False,
                       segment: Optional[BaseSegment] = None) -> None:
-        """
-        Insert a segment into the contour.
+        """Insert the given segment into the contour.
+
+        If `type` or `points` are specified, those values will be used instead
+        of the values in the given `segment` object. The specified `smooth`
+        state will be applied if ``segment=None``.
+
+        :param index: The :attr:`BaseSegment.index` to be applied to the segment
+            as a :class:`int`.
+        :param type: An optional :attr:`BaseSegment.type` to be applied to the
+            segment as a :class:`str`. Defaults to :obj:`None`.
+        :param points: The optional :attr:`BaseSegment.points` to be applied to
+            the segment as a :class:`list` or :class:`tuple`
+            of :ref:`type-coordinate` items. Defaults to :obj:`None`.
+        :param smooth: The :attr:`BaseSegment.smooth` state to be applied to the
+            segment as a :class:`bool`. Defaults to :obj:`False`.
+        :param segment: An optional :class:`BaseSegment` instance from which
+            attribute values will be copied. Defualts to :obj:`None`.
+
         """
         if segment is not None:
             if type is not None:
@@ -1028,12 +1080,33 @@ class BaseContour(
 
     def _insertSegment(self,
                        index: int,
-                       type: Optional[str],
-                       points: Optional[PointCollectionType],
+                       type: str,
+                       points: PointCollectionType,
                        smooth: bool,
                        **kwargs: Any) -> None:
-        """
-        Subclasses may override this method.
+        r"""Insert the given segment into the native contour.
+
+        This is the environment implementation of :meth:`BaseContour.insertSegment`.
+
+        :param index: The :attr:`BaseSegment.index` to be applied to the segment
+            as a :class:`int`. The value will have been normalized
+            with :func:`normalizers.normalizeIndex`.
+        :param type: The :attr:`BaseSegment.type` to be applied to the segment as
+            a :class:`str`. The value will have been normalized
+            with :func:`normalizers.normalizeSegmentType`.
+        :param points: The :attr:`BaseSegment.points` to be applied to the segment as
+            a :class:`list` or :class:`tuple` of :ref:`type-coordinate` items.
+            The value will have been normalized
+            with :func:`normalizers.normalizeCoordinateTuple`.
+        :param smooth: The :attr:`BaseSegment.smooth` state to be applied to the
+            segment as a :class:`bool`. The value will have been normalized
+            with :func:`normalizers.normalizeBoolean`.
+        :param \**kwargs: Additional keyword arguments.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         onCurve = points[-1]
         offCurve = points[:-1]
@@ -1048,13 +1121,26 @@ class BaseContour(
             self.insertPoint(ptCount, offCurvePoint, type="offcurve")
 
     def removeSegment(self,
-                      segment: Union[int, BaseSegment],
+                      segment: Union[BaseSegment, int],
                       preserveCurve: bool = False) -> None:
-        """
-        Remove segment from the contour.
-        If ``preserveCurve`` is set to ``True`` an attempt
-        will be made to preserve the shape of the curve
-        if the environment supports that functionality.
+        """Remove the given segment from the contour.
+
+        If ``preserveCurve=True``, an attempt will be made to preserve the
+        overall shape of the curve after the segment is removed, provided the
+        environment supports such functionality.
+
+        :param segment: The segment to remove as a :class:`BaseSegment` instance,
+            or an :class:`int` representing the segment's index.
+        :param preserveCurve: A :class:`bool` indicating whether to preserve
+            the curve's shape after the segment is removed. Defaults to :obj:`False`.
+        :raises ValueError: If the segment index is out of range or if the
+            specified segment is not part of the contour.
+
+        Example::
+
+            >>> contour.removeSegment(mySegment)
+            >>> contour.removeSegment(2, preserveCurve=True)
+
         """
         if not isinstance(segment, int):
             segment = self.segments.index(segment)
@@ -1065,20 +1151,43 @@ class BaseContour(
         self._removeSegment(segment, preserveCurve)
 
     def _removeSegment(self, segment: int, preserveCurve: bool, **kwargs: Any) -> None:
-        """
-        segment will be a valid segment index.
-        preserveCurve will be a boolean.
+        r"""Remove the given segment from the native contour.
 
-        Subclasses may override this method.
+        This is the environment implementation of :meth:`BaseContour.removeSegment`.
+
+        :param segment: The segment to remove as an :class:`int` representing
+            the segment's index. The value will have been normalized
+            with :func:`normalizers.normalizeIndex`.
+        :param preserveCurve: A :class:`bool` indicating whether to preserve
+            the curve's shape after the segment is removed. Defaults to :obj:`False`.
+            The value will have been normalized
+            with :func:`normalizers.normalizeBoolean`.
+        :param \**kwargs: Additional keyword arguments.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         segment = self.segments[segment]
         for point in segment.points:
             self.removePoint(point, preserveCurve)
 
-    def setStartSegment(self, segment: Union[int, BaseSegment]) -> None:
-        """
-        Set the first segment on the contour.
-        segment can be a segment object or an index.
+    def setStartSegment(self, segment: Union[BaseSegment, int]) -> None:
+        """Set the first segment in the contour.
+
+        :param segment: The segment to set as the first instance in the contour
+            as a :class:`BaseSegment` instance, or an :class:`int` representing
+            the segment's index.
+        :raises FontPartsError: If the contour is open.
+        :raises ValueError: If the segment index is out of range or if the
+            specified segment is not part of the contour.
+
+        Example::
+
+            >>> contour.setStartSegment(mySegment)
+            >>> contour.setStartSegment(2)
+
         """
         if self.open:
             raise FontPartsError("An open contour can not change the starting segment.")
@@ -1098,8 +1207,18 @@ class BaseContour(
         self._setStartSegment(segmentIndex)
 
     def _setStartSegment(self, segmentIndex: int, **kwargs: Any) -> None:
-        """
-        Subclasses may override this method.
+        r"""Set the first segment in the native contour.
+
+        This is the environment implementation of :meth:`BaseContour.setStartSegment`.
+
+        :param segmentIndex: An :class:`int` representing the index of the
+            segment to be set as the first instance in the contour.
+        :param \**kwargs: Additional keyword arguments.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         # get the previous segment and set
         # its on curve as the first point
@@ -1114,7 +1233,16 @@ class BaseContour(
     # bPoints
     # -------
 
-    bPoints: dynamicProperty = dynamicProperty("bPoints")
+    bPoints: dynamicProperty = dynamicProperty(
+        "bPoints"
+        """Get a list of all bPoints in the contour.
+
+        This property is read-only.
+
+        :return: A :class:`tuple` of :class`BaseBPoints`.
+
+        """,
+    )
 
     def _get_bPoints(self) -> Tuple[BaseBPoint, ...]:
         bPoints = []
@@ -1133,8 +1261,22 @@ class BaseContour(
                      bcpIn: Optional[PairCollectionType[IntFloatType]] = None,
                      bcpOut: Optional[PairCollectionType[IntFloatType]] = None,
                      bPoint: Optional[BaseBPoint] = None) -> None:
-        """
-        Append a bPoint to the contour.
+        """Append the given bPoint to the contour.
+
+        If `type`, `anchor`, `bcpIn` or `bcpOut` are specified, those values
+        will be used instead of the values in the given `segment` object.
+
+        :param type: An optional :attr:`BaseBPoint.type` to be applied to
+            the bPoint as a :class:`str`. Defaults to :obj:`None`.
+        :param anchor: An optional :attr:`BaseBPoint.anchor` to be applied to
+            the bPoint as a :ref:`type-coordinate`. Defaults to :obj:`None`.
+        :param bcpIn: An optional :attr:`BaseBPoint.bcpIn` to be applied to the
+            bPoint as a :ref:`type-coordinate`. Defaults to :obj:`None`.
+        :param bcpOut: An optional :attr:`BaseBPoint.bcpOut` to be applied to the
+            bPoint as a :ref:`type-coordinate`. Defaults to :obj:`None`.
+        :param bPoint: An optional :class:`BaseBPoint` instance from which
+            attribute values will be copied. Defualts to :obj:`None`.
+
         """
         if bPoint is not None:
             if type is None:
@@ -1156,13 +1298,33 @@ class BaseContour(
         self._appendBPoint(type, anchor, bcpIn=bcpIn, bcpOut=bcpOut)
 
     def _appendBPoint(self,
-                      type: Optional[str],
+                      type: str,
                       anchor: PairCollectionType[IntFloatType],
-                      bcpIn: Optional[PairCollectionType[IntFloatType]],
-                      bcpOut: Optional[PairCollectionType[IntFloatType]],
+                      bcpIn: PairCollectionType[IntFloatType],
+                      bcpOut: PairCollectionType[IntFloatType],
                       **kwargs: Any) -> None:
-        """
-        Subclasses may override this method.
+        r"""Append the given bPoint to the native contour.
+
+        This is the environment implementation of :meth:`BaseContour.appendBPoint`.
+
+        :param type: The :attr:`BaseBPoint.type` to be applied to the bPoint as
+            a :class:`str`. The value will have been normalized
+            with :func:`normalizers.normalizeBPointType`.
+        :param anchor: The :attr:`BaseBPoint.anchor` to be applied to the bPoint
+            as a :ref:`type-coordinate`. The value will have been normalized
+            with :func:`normalizers.normalizeCoordinateTuple`.
+        :param bcpIn: The :attr:`BaseBPoint.bcpIn` to be applied to the bPoint
+            as a :ref:`type-coordinate`. The value will have been normalized
+            with :func:`normalizers.normalizeCoordinateTuple`.
+        :param bcpOut: An optional :attr:`BaseBPoint.bcpOut` to be applied to
+            the bPoint as a :ref:`type-coordinate`. The value will have been
+            normalized with :func:`normalizers.normalizeCoordinateTuple`.
+        :param \**kwargs: Additional keyword arguments.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         self.insertBPoint(len(self.bPoints), type, anchor, bcpIn=bcpIn, bcpOut=bcpOut)
 
@@ -1173,8 +1335,24 @@ class BaseContour(
                      bcpIn: Optional[PairCollectionType[IntFloatType]] = None,
                      bcpOut: Optional[PairCollectionType[IntFloatType]] = None,
                      bPoint: Optional[BaseBPoint] = None) -> None:
-        """
-        Insert a bPoint at index in the contour.
+        """Insert the given bPoint into the contour.
+
+        If `type`, `anchor`, `bcpIn` or `bcpOut` are specified, those values
+        will be used instead of the values in the given `segment` object.
+
+        :param index: The :attr:`BaseBPoint.index` to be applied to the bPoint
+            as an :class:`int`.
+        :param type: An optional :attr:`BaseBPoint.type` to be applied to
+            the bPoint as a :class:`str`. Defaults to :obj:`None`.
+        :param anchor: An optional :attr:`BaseBPoint.anchor` to be applied to
+            the bPoint as a :ref:`type-coordinate`. Defaults to :obj:`None`.
+        :param bcpIn: An optional :attr:`BaseBPoint.bcpIn` to be applied to the
+            bPoint as a :ref:`type-coordinate`. Defaults to :obj:`None`.
+        :param bcpOut: An optional :attr:`BaseBPoint.bcpOut` to be applied to the
+            bPoint as a :ref:`type-coordinate`. Defaults to :obj:`None`.
+        :param bPoint: An optional :class:`BaseBPoint` instance from which
+            attribute values will be copied. Defualts to :obj:`None`.
+
         """
         if bPoint is not None:
             if type is None:
@@ -1205,8 +1383,31 @@ class BaseContour(
                       bcpIn: PairCollectionType[IntFloatType],
                       bcpOut: PairCollectionType[IntFloatType],
                       **kwargs: Any) -> None:
-        """
-        Subclasses may override this method.
+        r"""Insert the given bPoint into the native contour.
+
+        This is the environment implementation of :meth:`BaseContour.insertBPoint`.
+
+        :param index: The :attr:`BaseBPoint.index` to be applied to the bPoint
+            as an :class:`int`. The value will have been normalized
+            with :func:`normalizers.normalizeIndex`.
+        :param type: An optional :attr:`BaseBPoint.type` to be applied to
+            the bPoint as a :class:`str`. The value will have been normalized
+            with :func:`normalizers.normalizeBPointType`.
+        :param anchor: The :attr:`BaseBPoint.anchor` to be applied to the bPoint
+            as a :ref:`type-coordinate`. The value will have been normalized
+            with :func:`normalizers.normalizeCoordinateTuple`.
+        :param bcpIn: The :attr:`BaseBPoint.bcpIn` to be applied to the bPoint
+            as a :ref:`type-coordinate`. The value will have been normalized
+            with :func:`normalizers.normalizeCoordinateTuple`.
+        :param bcpOut: An optional :attr:`BaseBPoint.bcpOut` to be applied to
+            the bPoint as a :ref:`type-coordinate`. The value will have been
+            normalized with :func:`normalizers.normalizeCoordinateTuple`.
+        :param \**kwargs: Additional keyword arguments.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         # insert a simple line segment at the given anchor
         # look it up as a bPoint and change the bcpIn and bcpOut there
@@ -1223,10 +1424,19 @@ class BaseContour(
         bPoint.bcpOut = bcpOut
         bPoint.type = type
 
-    def removeBPoint(self, bPoint: Union[int, BaseBPoint]) -> None:
-        """
-        Remove the bpoint from the contour.
-        bpoint can be a point object or an index.
+    def removeBPoint(self, bPoint: Union[BaseBPoint, int]) -> None:
+        """Remove the given bPoint from the contour.
+
+        :param bPoint: The bPoint to remove as a :class:`BaseBPoint` instance,
+            or an :class:`int` representing the bPoint's index.
+        :raises ValueError: If the bPoint index is out of range or if the
+            specified bPoint is not part of the contour.
+
+        Example::
+
+            >>> contour.removeBPoint(myBPoint)
+            >>> contour.removeBPoint(2)
+
         """
         if not isinstance(bPoint, int):
             bPoint = bPoint.index
@@ -1236,10 +1446,19 @@ class BaseContour(
         self._removeBPoint(bPoint)
 
     def _removeBPoint(self, index: int, **kwargs: Any) -> None:
-        """
-        index will be a valid index.
+        r"""Remove the given bPoint from the native contour.
 
-        Subclasses may override this method.
+        This is the environment implementation of :meth:`BaseContour.removeBPoint`.
+
+        :param index: The index representing the :class:`BaseBPoint` subclass
+            instance to remove as an :class:`int. The value will have been
+            normalized with :func:`normalizers.normalizeIndex`.
+        :param \**kwargs: Additional keyword arguments.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         bPoint = self.bPoints[index]
 
@@ -1265,11 +1484,29 @@ class BaseContour(
         if point.contour is None:
             point.contour = self
 
-    points: dynamicProperty = dynamicProperty("points")
+    points: dynamicProperty = dynamicProperty(
+        "points",
+        """Get a list of all points in the contour.
+
+        This property is read-only.
+
+        :return: A :class:`tuple` of :class`BasePoints`.
+
+        """,
+    )
 
     def _get_points(self) -> Tuple[BasePoint, ...]:
-        """
-        Subclasses may override this method.
+        """Get a list of all points in the native contour.
+
+        This is the environment implementation of the :attr:`BaseContour.points`
+        property getter.
+
+        :return: A :class:`tuple` of :class`BasePoint` subclass instances.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         return tuple(self._getitem__points(i) for i in range(self._len__points()))
 
@@ -1277,11 +1514,16 @@ class BaseContour(
         return self._lenPoints()
 
     def _lenPoints(self, **kwargs: Any) -> int:
-        """
-        This must return an integer indicating
-        the number of points in the contour.
+        r"""Return the number of points in the native contour.
 
-        Subclasses must override this method.
+        :param \**kwargs: Additional keyword arguments.
+        :return: An :class:`int` representing the number of :class:`BasePoint`
+            subclass instances belonging to the contour.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
@@ -1294,12 +1536,18 @@ class BaseContour(
         return point
 
     def _getPoint(self, index: int, **kwargs: Any) -> BasePoint:
-        """
-        This must return a wrapped point.
+        r"""Get the given point from the native contour.
 
-        index will be a valid index.
+        :param index: The index representing the :class:`BaseBPoint` subclass
+            instance to retrieve as an :class:`int. The value will have been
+            normalized with :func:`normalizers.normalizeIndex`.
+        :param \**kwargs: Additional keyword arguments.
+        :return: A :class:`BasePoint` subclass instance.
 
-        Subclasses must override this method.
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
@@ -1316,8 +1564,25 @@ class BaseContour(
                     name: Optional[str] = None,
                     identifier: Optional[str] = None,
                     point: Optional[BasePoint] = None) -> None:
-        """
-        Append a point to the contour.
+        """Append the given point to the contour.
+
+        If `position`, `type` or `name` are specified, those values will be used
+        instead of the values in the given `segment` object. The specified
+        `smooth` state will be applied if ``point=None``.
+
+        :param position: An optional position to be applied to the point as
+            a :ref:`type-coordinate`. Defaults to :obj:`None`.
+        :param type: An optional :attr:`BasePoint.type` to be applied to
+            the point as a :class:`str`. Defaults to ``'line'``.
+        :param smooth: The :attr:`BasePoint.smooth` state to be applied to the
+            point as a :class:`bool`. Defaults to :obj:`False`.
+        :param name: An optional :attr:`BasePoint.name` to be applied to the
+            point as a :class:`str`. Defaults to :obj:`None`.
+        :param identifier: An optional :attr:`BasePoint.identifier` to be
+            applied to the point as a :class:`str`. Defaults to :obj:`None`.
+        :param point: An optional :class:`BasePoint` instance from which
+            attribute values will be copied. Defualts to :obj:`None`.
+
         """
         if point is not None:
             if position is None:
@@ -1345,8 +1610,27 @@ class BaseContour(
                     name: Optional[str] = None,
                     identifier: Optional[str] = None,
                     point: Optional[BasePoint] = None) -> None:
-        """
-        Insert a point into the contour.
+        """Insert the given point into the contour.
+
+        If `position`, `type` or `name` are specified, those values will be used
+        instead of the values in the given `segment` object. The specified
+        `smooth` state will be applied if ``point=None``.
+
+        :param index: The :attr:`BasePoint.index` to be applied to the point
+            as an :class:`int`.
+        :param position: An optional position to be applied to the point as
+            a :ref:`type-coordinate`. Defaults to :obj:`None`.
+        :param type: An optional :attr:`BasePoint.type` to be applied to
+            the point as a :class:`str`. Defaults to ``'line'``.
+        :param smooth: The :attr:`BasePoint.smooth` state to be applied to the
+            point as a :class:`bool`. Defaults to :obj:`False`.
+        :param name: An optional :attr:`BasePoint.name` to be applied to the
+            point as a :class:`str`. Defaults to :obj:`None`.
+        :param identifier: An optional :attr:`BasePoint.identifier` to be
+            applied to the point as a :class:`str`. Defaults to :obj:`None`.
+        :param point: An optional :class:`BasePoint` instance from which
+            attribute values will be copied. Defualts to :obj:`None`.
+
         """
         if point is not None:
             if position is None:
@@ -1377,32 +1661,65 @@ class BaseContour(
     def _insertPoint(self,
                      index: int,
                      position: PairCollectionType[IntFloatType],
-                     type: str = "line",
-                     smooth: bool = False,
-                     name: Optional[str] = None,
-                     identifier: Optional[str] = None,
+                     type: str,
+                     smooth: bool,
+                     name: Optional[str],
+                     identifier: Optional[str],
                      **kwargs: Any) -> None:
-        """
-        position will be a valid position (x, y).
-        type will be a valid type.
-        smooth will be a valid boolean.
-        name will be a valid name or None.
-        identifier will be a valid identifier or None.
-        The identifier will not have been tested for uniqueness.
+        r"""Insert the given point into the native contour.
 
-        Subclasses must override this method.
+        This is the environment implementation of :meth:`BaseContour.insertPoint`.
+
+        :param index: The :attr:`BasePoint.index` to be applied to the point
+            as an :class:`int`. The value will have been normalized
+            with :func:`normalizers.normalizeIndex`.
+        :param position: The position to be applied to the point as
+            a :ref:`type-coordinate`. The value will have been normalized with
+            :func:`normalizers.normalizeCoordinateTuple`.
+        :param type: The :attr:`BasePoint.type` to be applied to the point as
+            a :class:`str`. The value will have been normalized
+            with :func:`normalizers.normalizePointType`.
+        :param smooth: The :attr:`BasePoint.smooth` state to be applied to the
+            point as a :class:`bool`. The value will have been normalized
+            with :func:`normalizers.normalizeBoolean`.
+        :param name: An optional :attr:`BasePoint.name` to be applied to the
+            point as a :class:`str`. The value will have been normalized
+            with :func:`normalizers.normalizePointName`
+        :param identifier: An optional :attr:`BasePoint.identifier` to be
+            applied to the point as a :class:`str`. The value will
+            have been normalized with :func:`normalizers.normalizeIdentifier`.
+        :param \**kwargs: Additional keyword arguments.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
     def removePoint(self,
-                    point: Union[int, BasePoint],
+                    point: Union[BasePoint, int],
                     preserveCurve: bool = False) -> None:
-        """
-        Remove the point from the contour.
-        point can be a point object or an index.
-        If ``preserveCurve`` is set to ``True`` an attempt
-        will be made to preserve the shape of the curve
-        if the environment supports that functionality.
+        """Remove the given point from the contour.
+
+        If ``preserveCurve=True``, an attempt will be made to preserve the
+        overall shape of the curve after the segment is removed, provided the
+        environment supports such functionality.
+
+        :param point: The point to remove as a :class:`BasePoint` instance,
+            or an :class:`int` representing the points's index.
+        :param preserveCurve: A :class:`bool` indicating whether to preserve
+            the curve's shape after the point is removed. Defaults to :obj:`False`.
+        :raises ValueError: If the point index is out of range or if the
+            specified point is not part of the contour.
+
+        Example::
+
+            >>> contour.removePoint(myPoint)
+            >>> contour.removePoint(2, preserveCurve=True)
+
         """
         if not isinstance(point, int):
             point = self.points.index(point)
@@ -1416,17 +1733,42 @@ class BaseContour(
                      index: int,
                      preserveCurve: bool,
                      **kwargs: Any) -> None:
-        """
-        index will be a valid index. preserveCurve will be a boolean.
+        r"""Remove the given point from the native contour.
 
-        Subclasses must override this method.
+        This is the environment implementation of :meth:`BaseContour.removePoint`.
+
+        :param index: The index representing the :class:`BasePoint` subclass
+            instance to remove as an :class:`int. The value will have been
+            normalized with :func:`normalizers.normalizeIndex`.
+        :param preserveCurve: A :class:`bool` indicating whether to preserve
+            the curve's shape after the point is removed. The value will have been
+            normalized with :func:`normalizers.normalizeBoolean`.
+        :param \**kwargs: Additional keyword arguments.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
-    def setStartPoint(self, point: Union[int, Any]) -> None:
-        """
-        Set the first point on the contour.
-        point can be a point object or an index.
+    def setStartPoint(self, point: Union[BasePoint, int]) -> None:
+        """Set the first segment in the contour.
+
+        :param segment: The point to set as the first instance in the contour
+            as a :class:`BasePoint` instance, or an :class:`int` representing
+            the point's index.
+        :raises FontPartsError: If the contour is open.
+        :raises ValueError: If the point index is out of range or if the
+            specified point is not part of the contour.
+
+        Example::
+
+            >>> contour.setStartPoint(myPoint)
+            >>> contour.setStartPoint(2)
+
         """
         if self.open:
             raise FontPartsError("An open contour can not change the starting point.")
@@ -1444,8 +1786,18 @@ class BaseContour(
         self._setStartPoint(pointIndex)
 
     def _setStartPoint(self, pointIndex: int, **kwargs: Any) -> None:
-        """
-        Subclasses may override this method.
+        r"""Set the first segment in the native contour.
+
+        This is the environment implementation of :meth:`BaseContour.setStartPoint`.
+
+        :param pointIndex: An :class:`int` representing the index of the point
+            to be set as the first instance in the contour.
+        :param \**kwargs: Additional keyword arguments.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         points = self.points
         points = points[pointIndex:] + points[:pointIndex]
@@ -1470,21 +1822,28 @@ class BaseContour(
 
     selectedSegments: dynamicProperty = dynamicProperty(
         "base_selectedSegments",
-        """
-        A list of segments selected in the contour.
+        """Get or set the selected segments in the contour.
 
-        Getting selected segment objects:
+        The value must be a :class:`tuple` or :class:`list` of
+        either :class:`BaseSegment` instances or :class:`int` values
+        representing segment indexes to select.
+
+        :return: A :class:`tuple` of the currently selected :class:`BaseSegment`
+            instances.
+
+        Getting selected segments::
 
             >>> for segment in contour.selectedSegments:
             ...     segment.move((10, 20))
 
-        Setting selected segment objects:
+        Setting selected segments::
 
             >>> contour.selectedSegments = someSegments
 
-        Setting also supports segment indexes:
+        Setting selection using indexes::
 
             >>> contour.selectedSegments = [0, 2]
+
         """,
     )
 
@@ -1496,12 +1855,24 @@ class BaseContour(
         return selected
 
     def _get_selectedSegments(self) -> Tuple[BaseSegment, ...]:
-        """
-        Subclasses may override this method.
+        """Get the selected segments in the native contour.
+
+        This is the environment implementation of the
+        :attr:`BaseContour.selectedSegments` property getter.
+
+        :return: A :class:`tuple` of the currently selected :class:`BaseSegment`
+            instances.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         return self._getSelectedSubObjects(self.segments)
 
-    def _set_base_selectedSegments(self, value: Tuple[BaseSegment, ...]) -> None:
+    def _set_base_selectedSegments(self,
+                                   value: CollectionType[Union[BaseSegment, int]]
+                                   ) -> None:
         normalized = []
         for i in value:
             if isinstance(i, int):
@@ -1511,9 +1882,24 @@ class BaseContour(
             normalized.append(i)
         self._set_selectedSegments(normalized)
 
-    def _set_selectedSegments(self, value: CollectionType[BaseSegment]) -> None:
-        """
-        Subclasses may override this method.
+    def _set_selectedSegments(self,
+        value: CollectionType[Union[BaseSegment, int]]
+        ) -> None:
+        """Set the selected segments in the native contour.
+
+        This is the environment implementation of the
+        :attr:`BaseContour.selectedSegments` property setter.
+
+        :param value: The segments to select as a :class:`tuple`
+            or :class:`list` of either :class:`BaseContour` instances
+            or :class:`int` values representing segment indexes. Each value item
+            will have been normalized with :func:`normalizers.normalizeSegment`
+            or :func:`normalizers.normalizeSegmentIndex`.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         return self._setSelectedSubObjects(self.segments, value)
 
@@ -1521,21 +1907,28 @@ class BaseContour(
 
     selectedPoints: dynamicProperty = dynamicProperty(
         "base_selectedPoints",
-        """
-        A list of points selected in the contour.
+        """Get or set the selected points in the contour.
 
-        Getting selected point objects:
+        The value must be a :class:`tuple` or :class:`list` of
+        either :class:`BasePoint` instances or :class:`int` values
+        representing point indexes to select.
+
+        :return: A :class:`tuple` of the currently selected :class:`BasePoint`
+            instances.
+
+        Getting selected points::
 
             >>> for point in contour.selectedPoints:
             ...     point.move((10, 20))
 
-        Setting selected point objects:
+        Setting selected points::
 
             >>> contour.selectedPoints = somePoints
 
-        Setting also supports point indexes:
+        Setting selection using indexes::
 
             >>> contour.selectedPoints = [0, 2]
+
         """,
     )
 
@@ -1546,12 +1939,23 @@ class BaseContour(
         return selected
 
     def _get_selectedPoints(self) -> Tuple[BasePoint, ...]:
-        """
-        Subclasses may override this method.
+        """Get the selected points in the native contour.
+
+        This is the environment implementation of
+        the :attr:`BaseContour.selectedPoints` property getter.
+
+        :return: A :class:`tuple` of the currently selected :class:`BasePoint`
+            instances.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         return self._getSelectedSubObjects(self.points)
 
-    def _set_base_selectedPoints(self, value: CollectionType[BasePoint]) -> None:
+    def _set_base_selectedPoints(self,
+        value: CollectionType[Union[BasePoint, int]]) -> None:
         normalized = []
         for i in value:
             if isinstance(i, int):
@@ -1561,9 +1965,20 @@ class BaseContour(
             normalized.append(i)
         self._set_selectedPoints(normalized)
 
-    def _set_selectedPoints(self, value: CollectionType[BasePoint]) -> None:
-        """
-        Subclasses may override this method.
+    def _set_selectedPoints(self, value: CollectionType[Union[BasePoint, int]]) -> None:
+        """Set the selected points in the native contour.
+
+        This is the environment implementation of
+        the :attr:`BaseContour.selectedPoints` property setter.
+
+        :param value: The points to select as a :class:`tuple` or :class:`list`
+            of either :class:`BasePoint` instances or :class:`int` values
+            representing point indexes to select.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         return self._setSelectedSubObjects(self.points, value)
 
@@ -1571,21 +1986,28 @@ class BaseContour(
 
     selectedBPoints: dynamicProperty = dynamicProperty(
         "base_selectedBPoints",
-        """
-        A list of bPoints selected in the contour.
+        """Get or set the selected bPoints in the contour.
 
-        Getting selected bPoint objects:
+        The value must be a :class:`tuple` or :class:`list` of
+        either :class:`BaseBPoint` instances or :class:`int` values
+        representing bPoint indexes to select.
+
+        :return: A :class:`tuple` of the currently selected :class:`BaseBPoint`
+            instances.
+
+        Getting selected bPoints::
 
             >>> for bPoint in contour.selectedBPoints:
             ...     bPoint.move((10, 20))
 
-        Setting selected bPoint objects:
+        Setting selected bPoints::
 
             >>> contour.selectedBPoints = someBPoints
 
-        Setting also supports bPoint indexes:
+        Setting selection using indexes::
 
             >>> contour.selectedBPoints = [0, 2]
+
         """,
     )
 
@@ -1597,12 +2019,23 @@ class BaseContour(
         return selected
 
     def _get_selectedBPoints(self) -> Tuple[BaseBPoint, ...]:
-        """
-        Subclasses may override this method.
+        """Get the selected bPoints in the native contour.
+
+        This is the environment implementation of
+        the :attr:`BaseContour.selectedBPoints` property getter.
+
+        :return: A :class:`tuple` of the currently selected :class:`BaseBPoint`
+            instances.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         return self._getSelectedSubObjects(self.bPoints)
 
-    def _set_base_selectedBPoints(self, value: CollectionType[BaseBPoint]) -> None:
+    def _set_base_selectedBPoints(self,
+        value: CollectionType[Union[BaseBPoint, int]]) -> None:
         normalized = []
         for i in value:
             if isinstance(i, int):
@@ -1612,8 +2045,20 @@ class BaseContour(
             normalized.append(i)
         self._set_selectedBPoints(normalized)
 
-    def _set_selectedBPoints(self, value: CollectionType[BaseBPoint]) -> None:
-        """
-        Subclasses may override this method.
+    def _set_selectedBPoints(self,
+        value: CollectionType[Union[BaseBPoint, int]]) -> None:
+        """Set the selected bPoints in the native contour.
+
+        This is the environment implementation of
+        the :attr:`BaseContour.selectedBPoints` property setter.
+
+        :param value: The bPoints to select as a :class:`tuple` or :class:`list`
+            of either :class:`BaseBPoint` instances or :class:`int` values
+            representing bPoint indexes to select.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         return self._setSelectedSubObjects(self.bPoints, value)
