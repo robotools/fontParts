@@ -1426,7 +1426,7 @@ class TestNormalizers(unittest.TestCase):
             normalizers.normalizeGlyphNote(123)
 
     # normalizeFilePath
-    def test_normalizeFilePath_pathlib_path(self):
+    def test_normalizeFilePath_pathlib_fillPath(self):
         from pathlib import Path
 
         path = Path(os.getcwd(), "Test.ufo")
@@ -1435,16 +1435,24 @@ class TestNormalizers(unittest.TestCase):
         self.assertIsInstance(result, str)
         self.assertEqual(result, os.path.join(os.getcwd(), "Test.ufo"))
 
+    def test_normalizeFilePath_pathlib_simplePath(self):
+        from pathlib import Path
+
+        path = Path("Test.ufo")
+        self.assertIsInstance(path, Path)
+        result = normalizers.normalizeFilePath(path)
+        self.assertIsInstance(result, str)
+        self.assertEqual(result, "Test.ufo")
+
     def test_normalizeFilePath_string(self):
         result = normalizers.normalizeFilePath("A")
         self.assertIsInstance(result, str)
-        print(os.getcwd())
-        self.assertEqual(result, os.path.join(os.getcwd(), "A"))
+        self.assertEqual(result, "A")
 
     def test_normalizeFilePath_emptyString(self):
         result = normalizers.normalizeFilePath("")
         self.assertIsInstance(result, str)
-        self.assertEqual(result, os.getcwd())
+        self.assertEqual(result, "")
 
     def test_normalizeFilePath_notString(self):
         with self.assertRaises(TypeError):
