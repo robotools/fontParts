@@ -35,6 +35,8 @@ class BaseSegment(
     DeprecatedSegment,
     RemovedSegment,
 ):
+    """Represent the basis for a segment object."""
+
     def _setPoints(self, points: CollectionType[BasePoint]) -> None:
         if hasattr(self, "_points"):
             raise AssertionError("segment has points")
