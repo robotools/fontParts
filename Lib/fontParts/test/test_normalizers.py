@@ -1,4 +1,5 @@
 import unittest
+import os
 from fontParts.base import normalizers
 
 
@@ -1425,16 +1426,23 @@ class TestNormalizers(unittest.TestCase):
             normalizers.normalizeGlyphNote(123)
 
     # normalizeFilePath
+    def test_normalizeFilePath_pathlib_path(self):
+        from pathlib import Path
+        path = Path(os.getcwd(), "Test.ufo")
+        self.assertIsInstance(path, Path)
+        result = normalizers.normalizeFilePath(path)
+        self.assertIsInstance(result, str)
+        self.assertEqual(result, os.path.join(os.getcwd(), "Test.ufo"))
 
     def test_normalizeFilePath_string(self):
         result = normalizers.normalizeFilePath("A")
         self.assertIsInstance(result, str)
-        self.assertEqual(result, "A")
+        self.assertEqual(result, os.path.join(os.getcwd(), "A"))
 
     def test_normalizeFilePath_emptyString(self):
         result = normalizers.normalizeFilePath("")
         self.assertIsInstance(result, str)
-        self.assertEqual(result, "")
+        self.assertEqual(result, os.getcwd())
 
     def test_normalizeFilePath_notString(self):
         with self.assertRaises(TypeError):

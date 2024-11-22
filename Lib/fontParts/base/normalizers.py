@@ -1145,7 +1145,7 @@ def normalizeFilePath(value: Union[str, Path]) -> str:
     Relative paths are resolved automatically.
 
     :param value: The file path to normalize as a :class:`str` or :class:`pathlib.Path`.
-    :return: A :class:`str` representing the normalized file path.
+    :return: A :class:`str` representing the normalized full file path.
     :raises TypeError if `value` is not a :class:`str` or :class:`pathlib.Path`.
     :raises FileNotFoundError: If the file path cannot be resolved because it does not exist.
 
