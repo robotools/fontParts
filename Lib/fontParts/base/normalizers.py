@@ -1154,7 +1154,7 @@ def normalizeFilePath(value: Union[str, Path]) -> str:
         raise TypeError(
             f"File paths must be strings or Path objects, not {type(value).__name__}."
         )
-    return str(Path(value).resolve())
+    return str(value)
 
 
 # Interpolation
