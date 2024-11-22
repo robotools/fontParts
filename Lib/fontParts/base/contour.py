@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, Iterator, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, cast, Any, Iterator, List, Optional, Tuple, Union
 
 from fontParts.base.errors import FontPartsError
 from fontParts.base.base import (
@@ -208,13 +208,15 @@ class BaseContour(
         glyph = self.glyph
         if glyph is None:
             raise FontPartsError("The contour does not belong to a glyph.")
-        value = normalizers.normalizeIndex(value)
+        normalizedValue = normalizers.normalizeIndex(value)
+        if normalizedValue is None:
+            return
         contourCount = len(glyph.contours)
-        if value < 0:
-            value = -(value % contourCount)
-        if value >= contourCount:
-            value = contourCount
-        self._set_index(value)
+        if normalizedValue < 0:
+            normalizedValue = -(normalizedValue % contourCount)
+        if normalizedValue >= contourCount:
+            normalizedValue = contourCount
+        self._set_index(normalizedValue)
 
     def _get_index(self) -> Optional[int]:
         """Get the index of the native contour.
@@ -870,7 +872,7 @@ class BaseContour(
         """
     )
 
-    def _get_segments(self) -> Tuple[BaseSegment]:
+    def _get_segments(self) -> Tuple[BaseSegment, ...]:
         """Get the native countour's segments.
 
         This is the environment implementation of the :attr:`BaseContour.segments`
@@ -886,7 +888,7 @@ class BaseContour(
         points = self.points
         if not points:
             return ()
-        segments = [[]]
+        segments: List[List[BasePoint]] = [[]]
         lastWasOffCurve = False
         firstIsMove = points[0].type == "move"
         for point in points:
@@ -908,12 +910,14 @@ class BaseContour(
             segment = segments.pop(0)
             segments.append(segment)
         # wrap into segments
-        wrapped = []
+        wrapped: List[BaseSegment] = []
         for points in segments:
-            s = self.segmentClass()
-            s._setPoints(points)
-            self._setContourInSegment(s)
-            wrapped.append(s)
+            if self.segmentClass is None:
+                raise TypeError("segmentClass cannot be None.")
+            segment = self.segmentClass()
+            segment._setPoints(points)
+            self._setContourInSegment(segment)
+            wrapped.append(segment)
         return tuple(wrapped)
 
     def __getitem__(self, index: int) -> BaseSegment:
@@ -998,14 +1002,15 @@ class BaseContour(
             if points is None:
                 points = [(point.x, point.y) for point in segment.points]
             smooth = segment.smooth
+        if type is None:
+            raise TypeError("Type cannot be None.")
         type = normalizers.normalizeSegmentType(type)
-        pts = []
-        for pt in points:
-            pt = normalizers.normalizeCoordinateTuple(pt)
-            pts.append(pt)
-        points = pts
+        if points is not None:
+            normalizedPoints = [normalizers.normalizeCoordinateTuple(p) for p in points]
+        # Avoid mypy invariant List error.
+        castPoints = cast(PointCollectionType, normalizedPoints)
         smooth = normalizers.normalizeBoolean(smooth)
-        self._appendSegment(type=type, points=points, smooth=smooth)
+        self._appendSegment(type=type, points=castPoints, smooth=smooth)
 
     def _appendSegment(self,
                        type: str,
@@ -1068,15 +1073,20 @@ class BaseContour(
             if points is None:
                 points = [(point.x, point.y) for point in segment.points]
             smooth = segment.smooth
-        index = normalizers.normalizeIndex(index)
+        normalizedIndex = normalizers.normalizeIndex(index)
+        if normalizedIndex is None:
+            raise TypeError("Index cannot be None.")
+        if type is None:
+            raise TypeError("Type cannot be None.")
         type = normalizers.normalizeSegmentType(type)
-        pts = []
-        for pt in points:
-            pt = normalizers.normalizeCoordinateTuple(pt)
-            pts.append(pt)
-        points = pts
+        if points is not None:
+            normalizedPoints = [normalizers.normalizeCoordinateTuple(p) for p in points]
+        # Avoid mypy invariant List error.
+        castPoints = cast(PointCollectionType, normalizedPoints)
         smooth = normalizers.normalizeBoolean(smooth)
-        self._insertSegment(index=index, type=type, points=points, smooth=smooth)
+        self._insertSegment(
+            index=index, type=type, points=castPoints, smooth=smooth
+        )
 
     def _insertSegment(self,
                        index: int,
@@ -1143,19 +1153,21 @@ class BaseContour(
 
         """
         if not isinstance(segment, int):
-            segment = self.segments.index(segment)
-        segment = normalizers.normalizeIndex(segment)
-        if segment >= self._len__segments():
-            raise ValueError(f"No segment located at index {segment}.")
+            index = self.segments.index(segment)
+        normalizedIndex = normalizers.normalizeIndex(index)
+        if normalizedIndex is None:
+            return
+        if normalizedIndex >= self._len__segments():
+            raise ValueError(f"No segment located at index {normalizedIndex}.")
         preserveCurve = normalizers.normalizeBoolean(preserveCurve)
-        self._removeSegment(segment, preserveCurve)
+        self._removeSegment(normalizedIndex, preserveCurve)
 
-    def _removeSegment(self, segment: int, preserveCurve: bool, **kwargs: Any) -> None:
+    def _removeSegment(self, index: int, preserveCurve: bool, **kwargs: Any) -> None:
         r"""Remove the given segment from the native contour.
 
         This is the environment implementation of :meth:`BaseContour.removeSegment`.
 
-        :param segment: The segment to remove as an :class:`int` representing
+        :param index: The segment to remove as an :class:`int` representing
             the segment's index. The value will have been normalized
             with :func:`normalizers.normalizeIndex`.
         :param preserveCurve: A :class:`bool` indicating whether to preserve
@@ -1169,7 +1181,7 @@ class BaseContour(
             Subclasses may override this method.
 
         """
-        segment = self.segments[segment]
+        segment = self.segments[index]
         for point in segment.points:
             self.removePoint(point, preserveCurve)
 
@@ -1245,10 +1257,12 @@ class BaseContour(
     )
 
     def _get_bPoints(self) -> Tuple[BaseBPoint, ...]:
-        bPoints = []
+        bPoints: List[BaseBPoint] = []
         for point in self.points:
             if point.type not in ("move", "line", "curve"):
                 continue
+            if self.bPointClass is None:
+                raise TypeError("bPointClass cannot be None.")
             bPoint = self.bPointClass()
             bPoint.contour = self
             bPoint._setPoint(point)
@@ -1287,7 +1301,11 @@ class BaseContour(
                 bcpIn = bPoint.bcpIn
             if bcpOut is None:
                 bcpOut = bPoint.bcpOut
+        if type is None:
+            raise TypeError("Type cannot be None.")
         type = normalizers.normalizeBPointType(type)
+        if anchor is None:
+            raise TypeError("Anchor cannot be None.")
         anchor = normalizers.normalizeCoordinateTuple(anchor)
         if bcpIn is None:
             bcpIn = (0, 0)
@@ -1363,8 +1381,14 @@ class BaseContour(
                 bcpIn = bPoint.bcpIn
             if bcpOut is None:
                 bcpOut = bPoint.bcpOut
-        index = normalizers.normalizeIndex(index)
+        normalizedIndex = normalizers.normalizeIndex(index)
+        if normalizedIndex is None:
+            raise TypeError("Index cannot be None.")
+        if type is None:
+            raise TypeError("Type cannot be None.")
         type = normalizers.normalizeBPointType(type)
+        if anchor is None:
+            raise TypeError("Anchor cannot be None.")
         anchor = normalizers.normalizeCoordinateTuple(anchor)
         if bcpIn is None:
             bcpIn = (0, 0)
@@ -1373,7 +1397,7 @@ class BaseContour(
             bcpOut = (0, 0)
         bcpOut = normalizers.normalizeCoordinateTuple(bcpOut)
         self._insertBPoint(
-            index=index, type=type, anchor=anchor, bcpIn=bcpIn, bcpOut=bcpOut
+            index=normalizedIndex, type=type, anchor=anchor, bcpIn=bcpIn, bcpOut=bcpOut
         )
 
     def _insertBPoint(self,
@@ -1438,12 +1462,14 @@ class BaseContour(
             >>> contour.removeBPoint(2)
 
         """
-        if not isinstance(bPoint, int):
-            bPoint = bPoint.index
-        bPoint = normalizers.normalizeIndex(bPoint)
-        if bPoint >= self._len__points():
-            raise ValueError(f"No bPoint located at index {bPoint}.")
-        self._removeBPoint(bPoint)
+        index = bPoint.index if not isinstance(bPoint, int) else bPoint
+        normalizedIndex = normalizers.normalizeIndex(index)
+        # Avoid mypy conflict with normalizeIndex -> Optional[int]
+        if normalizedIndex is None:
+            return
+        if normalizedIndex >= self._len__points():
+            raise ValueError(f"No bPoint located at index {normalizedIndex}.")
+        self._removeBPoint(normalizedIndex)
 
     def _removeBPoint(self, index: int, **kwargs: Any) -> None:
         r"""Remove the given bPoint from the native contour.
@@ -1528,10 +1554,10 @@ class BaseContour(
         self.raiseNotImplementedError()
 
     def _getitem__points(self, index: int) -> BasePoint:
-        index = normalizers.normalizeIndex(index)
-        if index >= self._len__points():
-            raise ValueError(f"No point located at index {index}.")
-        point = self._getPoint(index)
+        normalizedIndex = normalizers.normalizeIndex(index)
+        if normalizedIndex is None or normalizedIndex >= self._len__points():
+            raise ValueError(f"No point located at index {normalizedIndex}.")
+        point = self._getPoint(normalizedIndex)
         self._setContourInPoint(point)
         return point
 
@@ -1641,7 +1667,11 @@ class BaseContour(
                 name = point.name
             if identifier is not None:
                 identifier = point.identifier
-        index = normalizers.normalizeIndex(index)
+        normalizedIndex = normalizers.normalizeIndex(index)
+        if normalizedIndex is None:
+            raise TypeError("Index cannot be None.")
+        if position is None:
+            raise TypeError("Position cannot be None.")
         position = normalizers.normalizeCoordinateTuple(position)
         type = normalizers.normalizePointType(type)
         smooth = normalizers.normalizeBoolean(smooth)
@@ -1650,7 +1680,7 @@ class BaseContour(
         if identifier is not None:
             identifier = normalizers.normalizeIdentifier(identifier)
         self._insertPoint(
-            index,
+            normalizedIndex,
             position=position,
             type=type,
             smooth=smooth,
@@ -1721,13 +1751,15 @@ class BaseContour(
             >>> contour.removePoint(2, preserveCurve=True)
 
         """
-        if not isinstance(point, int):
-            point = self.points.index(point)
-        point = normalizers.normalizeIndex(point)
-        if point >= self._len__points():
-            raise ValueError(f"No point located at index {point}.")
+        index = self.points.index(point) if not isinstance(point, int) else point
+        normalizedIndex = normalizers.normalizeIndex(index)
+        # Avoid mypy conflict with normalizeIndex -> Optional[int]
+        if normalizedIndex is None:
+            return
+        if normalizedIndex >= self._len__points():
+            raise ValueError(f"No point located at index {normalizedIndex}.")
         preserveCurve = normalizers.normalizeBoolean(preserveCurve)
-        self._removePoint(point, preserveCurve)
+        self._removePoint(normalizedIndex, preserveCurve)
 
     def _removePoint(self,
                      index: int,
@@ -1861,7 +1893,8 @@ class BaseContour(
         :attr:`BaseContour.selectedSegments` property getter.
 
         :return: A :class:`tuple` of the currently selected :class:`BaseSegment`
-            instances.
+            instances. Each value item will be normalized
+            with :func:`normalizers.normalizeSegment`.
 
         .. note::
 
@@ -1874,17 +1907,22 @@ class BaseContour(
                                    value: CollectionType[Union[BaseSegment, int]]
                                    ) -> None:
         normalized = []
-        for i in value:
-            if isinstance(i, int):
-                i = normalizers.normalizeSegmentIndex(i)
+        for segment in value:
+            normalizedSegment: Union[BaseSegment, int]
+            if isinstance(segment, int):
+                normalizedIndex = normalizers.normalizeIndex(segment)
             else:
-                i = normalizers.normalizeSegment(i)
-            normalized.append(i)
+                normalizedSegment = normalizers.normalizeSegment(segment)
+                # Avoid mypy conflict with normalizeIndex -> Optional[int]
+                if normalizedIndex is None:
+                    continue
+                normalizedSegment = normalizedIndex
+            normalized.append(normalizedSegment)
         self._set_selectedSegments(normalized)
 
     def _set_selectedSegments(self,
-        value: CollectionType[Union[BaseSegment, int]]
-        ) -> None:
+                              value: CollectionType[Union[BaseSegment, int]]
+                              ) -> None:
         """Set the selected segments in the native contour.
 
         This is the environment implementation of the
@@ -1894,7 +1932,7 @@ class BaseContour(
             or :class:`list` of either :class:`BaseContour` instances
             or :class:`int` values representing segment indexes. Each value item
             will have been normalized with :func:`normalizers.normalizeSegment`
-            or :func:`normalizers.normalizeSegmentIndex`.
+            or :func:`normalizers.normalizeIndex`.
 
         .. note::
 
@@ -1945,7 +1983,8 @@ class BaseContour(
         the :attr:`BaseContour.selectedPoints` property getter.
 
         :return: A :class:`tuple` of the currently selected :class:`BasePoint`
-            instances.
+            instances. Each value item will be normalized
+            with :func:`normalizers.normalizePoint`.
 
         .. note::
 
@@ -1955,14 +1994,20 @@ class BaseContour(
         return self._getSelectedSubObjects(self.points)
 
     def _set_base_selectedPoints(self,
-        value: CollectionType[Union[BasePoint, int]]) -> None:
+                                 value: CollectionType[Union[BasePoint, int]]
+                                 ) -> None:
         normalized = []
-        for i in value:
-            if isinstance(i, int):
-                i = normalizers.normalizePointIndex(i)
+        for point in value:
+            normalizedPoint: Union[BasePoint, int]
+            if isinstance(point, int):
+                normalizedIndex = normalizers.normalizeIndex(point)
             else:
-                i = normalizers.normalizePoint(i)
-            normalized.append(i)
+                normalizedPoint = normalizers.normalizePoint(point)
+                # Avoid mypy conflict with normalizeIndex -> Optional[int]
+                if normalizedIndex is None:
+                    continue
+                normalizedPoint = normalizedIndex
+            normalized.append(normalizedPoint)
         self._set_selectedPoints(normalized)
 
     def _set_selectedPoints(self, value: CollectionType[Union[BasePoint, int]]) -> None:
@@ -1973,7 +2018,9 @@ class BaseContour(
 
         :param value: The points to select as a :class:`tuple` or :class:`list`
             of either :class:`BasePoint` instances or :class:`int` values
-            representing point indexes to select.
+            representing point indexes to select. Each value item will have been
+            normalized with :func:`normalizers.normalizePoint`
+            or :func:`normalizers.normalizeIndex`.
 
         .. note::
 
@@ -2025,7 +2072,8 @@ class BaseContour(
         the :attr:`BaseContour.selectedBPoints` property getter.
 
         :return: A :class:`tuple` of the currently selected :class:`BaseBPoint`
-            instances.
+            instances. Each value item will be normalized
+            with :func:`normalizers.normalizeBPoint`.
 
         .. note::
 
@@ -2035,18 +2083,24 @@ class BaseContour(
         return self._getSelectedSubObjects(self.bPoints)
 
     def _set_base_selectedBPoints(self,
-        value: CollectionType[Union[BaseBPoint, int]]) -> None:
+                                  value: CollectionType[Union[BaseBPoint, int]]
+                                  ) -> None:
         normalized = []
-        for i in value:
-            if isinstance(i, int):
-                i = normalizers.normalizeBPointIndex(i)
+        for bPoint in value:
+            normalizedBPoint: Union[BaseBPoint, int]
+            if isinstance(bPoint, int):
+                normalizedIndex = normalizers.normalizeIndex(bPoint)
             else:
-                i = normalizers.normalizeBPoint(i)
-            normalized.append(i)
+                normalizedBPoint = normalizers.normalizeBPoint(bPoint)
+                # Avoid mypy conflict with normalizeIndex -> Optional[int]
+                if normalizedIndex is None:
+                    continue
+                normalizedBPoint = normalizedIndex
+            normalized.append(normalizedBPoint)
         self._set_selectedBPoints(normalized)
 
     def _set_selectedBPoints(self,
-        value: CollectionType[Union[BaseBPoint, int]]) -> None:
+                             value: CollectionType[Union[BaseBPoint, int]]) -> None:
         """Set the selected bPoints in the native contour.
 
         This is the environment implementation of
@@ -2054,7 +2108,9 @@ class BaseContour(
 
         :param value: The bPoints to select as a :class:`tuple` or :class:`list`
             of either :class:`BaseBPoint` instances or :class:`int` values
-            representing bPoint indexes to select.
+            representing bPoint indexes to select. Each value item will have been
+            normalized with :func:`normalizers.normalizeBPoint`
+            or :func:`normalizers.normalizeIndex`.
 
         .. note::
 
