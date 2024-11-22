@@ -1250,7 +1250,16 @@ class BaseContour(
     # bPoints
     # -------
 
-    bPoints: dynamicProperty = dynamicProperty("bPoints")
+    bPoints: dynamicProperty = dynamicProperty(
+        "bPoints",
+        """Get a list of all bPoints in the contour.
+
+        This property is read-only.
+
+        :return: A :class:`tuple` of :class`BaseBPoints`.
+
+        """,
+    )
 
     def _get_bPoints(self) -> Tuple[BaseBPoint, ...]:
         bPoints: List[BaseBPoint] = []
