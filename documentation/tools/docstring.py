@@ -81,7 +81,7 @@ ParsedAnnotation = Union[str, Tuple[str, List[Any]]]
 NORMALIZATION_MODULE = "normalizers"
 DEPRECATION_ID = "This method is deprecated."
 INDENT = " " * 4
-LINE_LENGTH = 72
+LINE_LENGTH = 80
 
 FORMAT_STRINGS: Dict[str, str] = {
     "implementationNote": ("This is the environment implementation of {baseObject}."),
@@ -592,7 +592,7 @@ class Docstring(DynamicPropertyMixin):
         def removePrefix(string: str, prefix: str) -> str:
             # Remove a specified prefix from a string.
             if string and string.startswith(prefix):
-                return string[len(prefix) :]
+                return string[len(prefix):]
             return string
 
         def getMemberRole(objectName: str) -> str:
@@ -989,8 +989,8 @@ def insertDocstring(obj: Any, newDocstring: str, preserveVariadics: bool = True)
             )
             updatedSourceCode = (
                 "\n".join(sourceLines[: signatureEnd + 1])
-                + f"\n{indent}{formattedDocstring}\n"
-                + "\n".join(sourceLines[signatureEnd + 1 :])
+                + f"\n{indent * 2}{formattedDocstring}\n"
+                + "\n".join(sourceLines[signatureEnd + 1:])
             )
 
         return updatedSourceCode
