@@ -592,7 +592,7 @@ class Docstring(DynamicPropertyMixin):
         def removePrefix(string: str, prefix: str) -> str:
             # Remove a specified prefix from a string.
             if string and string.startswith(prefix):
-                return string[len(prefix):]
+                return string[len(prefix) :]
             return string
 
         def getMemberRole(objectName: str) -> str:
@@ -990,7 +990,7 @@ def insertDocstring(obj: Any, newDocstring: str, preserveVariadics: bool = True)
             updatedSourceCode = (
                 "\n".join(sourceLines[: signatureEnd + 1])
                 + f"\n{indent * 2}{formattedDocstring}\n"
-                + "\n".join(sourceLines[signatureEnd + 1:])
+                + "\n".join(sourceLines[signatureEnd + 1 :])
             )
 
         return updatedSourceCode
