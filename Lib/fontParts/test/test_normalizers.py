@@ -1437,6 +1437,7 @@ class TestNormalizers(unittest.TestCase):
     def test_normalizeFilePath_string(self):
         result = normalizers.normalizeFilePath("A")
         self.assertIsInstance(result, str)
+        print(os.getcwd())
         self.assertEqual(result, os.path.join(os.getcwd(), "A"))
 
     def test_normalizeFilePath_emptyString(self):
