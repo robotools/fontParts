@@ -1428,6 +1428,7 @@ class TestNormalizers(unittest.TestCase):
     # normalizeFilePath
     def test_normalizeFilePath_pathlib_path(self):
         from pathlib import Path
+
         path = Path(os.getcwd(), "Test.ufo")
         self.assertIsInstance(path, Path)
         result = normalizers.normalizeFilePath(path)
