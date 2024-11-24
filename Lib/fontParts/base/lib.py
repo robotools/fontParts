@@ -1,6 +1,13 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING, Any, Callable, List, Optional
+
 from fontParts.base.base import BaseDict, dynamicProperty, reference
 from fontParts.base import normalizers
 from fontParts.base.deprecated import DeprecatedLib, RemovedLib
+
+if TYPE_CHECKING:
+    from fontParts.base.glyph import BaseGlyph
+    from fontParts.base.font import BaseFont
 
 
 class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
@@ -19,10 +26,10 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
     value of the ``dict``.
     """
 
-    keyNormalizer = normalizers.normalizeLibKey
-    valueNormalizer = normalizers.normalizeLibValue
+    keyNormalizer: Callable[[str], str] = normalizers.normalizeLibKey
+    valueNormalizer: Callable[[Any], Any] = normalizers.normalizeLibValue
 
-    def _reprContents(self):
+    def _reprContents(self) -> List[str]:
         contents = []
         if self.glyph is not None:
             contents.append("in glyph")
@@ -38,16 +45,16 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
 
     # Glyph
 
-    _glyph = None
+    _glyph: Optional[BaseGlyph] = None
 
-    glyph = dynamicProperty("glyph", "The lib's parent glyph.")
+    glyph: dynamicProperty = dynamicProperty("glyph", "The lib's parent glyph.")
 
-    def _get_glyph(self):
+    def _get_glyph(self) -> Optional[BaseGLyph]:
         if self._glyph is None:
             return None
         return self._glyph()
 
-    def _set_glyph(self, glyph):
+    def _set_glyph(self, glyph: Optional[BaseGlyph]) -> None:
         if self._font is not None:
             raise AssertionError("font for lib already set")
         if self._glyph is not None and self._glyph() != glyph:
@@ -58,18 +65,18 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
 
     # Font
 
-    _font = None
+    _font: Optional[BaseFont] = None
 
-    font = dynamicProperty("font", "The lib's parent font.")
+    font: dynamicProperty = dynamicProperty("font", "The lib's parent font.")
 
-    def _get_font(self):
+    def _get_font(self) -> Optional[BaseFont]:
         if self._font is not None:
             return self._font()
         elif self._glyph is not None:
             return self.glyph.font
         return None
 
-    def _set_font(self, font):
+    def _set_font(self, font: Optional[BaseFont]) -> None:
         if self._font is not None and self._font() != font:
             raise AssertionError("font for lib already set and is not same as font")
         if self._glyph is not None:
@@ -80,9 +87,9 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
 
     # Layer
 
-    layer = dynamicProperty("layer", "The lib's parent layer.")
+    layer: dynamicProperty = dynamicProperty("layer", "The lib's parent layer.")
 
-    def _get_layer(self):
+    def _get_layer(self) -> Optional[Any]:
         if self._glyph is None:
             return None
         return self.glyph.layer
@@ -91,7 +98,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
     # RoboFab Compatibility
     # ---------------------
 
-    def remove(self, key):
+    def remove(self, key: str) -> None:
         """
         Removes a key from the Lib. **key** will be
         a :ref:`type-string` that is the key to
@@ -101,7 +108,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         """
         del self[key]
 
-    def asDict(self):
+    def asDict(self) -> Dict[str, Any]:
         """
         Return the Lib as a ``dict``.
 
@@ -116,7 +123,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
     # Inherited Functions
     # -------------------
 
-    def __contains__(self, key):
+    def __contains__(self, key: str) -> bool:
         """
         Tests to see if a lib name is in the Lib.
         **key** will be a :ref:`type-string`.
@@ -128,7 +135,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         """
         return super(BaseLib, self).__contains__(key)
 
-    def __delitem__(self, key):
+    def __delitem__(self, key: str) -> None:
         """
         Removes **key** from the Lib. **key** is a :ref:`type-string`.::
 
@@ -136,7 +143,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         """
         super(BaseLib, self).__delitem__(key)
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: str) -> Any:
         """
         Returns the contents of the named lib. **key** is a
         :ref:`type-string`.
@@ -155,7 +162,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         """
         return super(BaseLib, self).__getitem__(key)
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[str]:
         """
         Iterates through the Lib, giving the key for each iteration. The
         order that the Lib will iterate though is not fixed nor is it
@@ -169,7 +176,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         """
         return super(BaseLib, self).__iter__()
 
-    def __len__(self):
+    def __len__(self) -> int:
         """
         Returns the number of keys in Lib as an ``int``.::
 
@@ -178,7 +185,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         """
         return super(BaseLib, self).__len__()
 
-    def __setitem__(self, key, items):
+    def __setitem__(self, key: str, items: Any) -> None:
         """
         Sets the **key** to the list of **items**. **key**
         is the lib name as a :ref:`type-string` and **items** is a
@@ -188,7 +195,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         """
         super(BaseLib, self).__setitem__(key, items)
 
-    def clear(self):
+    def clear(self) -> None:
         """
         Removes all keys from Lib,
         resetting the Lib to an empty dictionary. ::
@@ -197,7 +204,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         """
         super(BaseLib, self).clear()
 
-    def get(self, key, default=None):
+    def get(self, key: str, default: Optional[Any] = None) -> Any:
         """
         Returns the contents of the named key.
         **key** is a :ref:`type-string`, and the returned values will
@@ -217,7 +224,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         """
         return super(BaseLib, self).get(key, default)
 
-    def items(self):
+    def items(self) -> List[Tuple[str, Any]]:
         """
         Returns a list of ``tuple`` of each key name and key items.
         Keys are :ref:`type-string` and key members are a ``list``
@@ -229,7 +236,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         """
         return super(BaseLib, self).items()
 
-    def keys(self):
+    def keys(self) -> List[str]:
         """
         Returns a ``list`` of all the key names in Lib. This list will be
         unordered.::
@@ -240,7 +247,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         """
         return super(BaseLib, self).keys()
 
-    def pop(self, key, default=None):
+    def pop(self, key: str, default: Optional[Any] = None) -> Any:
         """
         Removes the **key** from the Lib and returns the ``list`` of
         key members. If no key is found, **default** is returned.
@@ -252,7 +259,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         """
         return super(BaseLib, self).pop(key, default)
 
-    def update(self, otherLib):
+    def update(self, otherLib: Dict[str, Any]) -> None:
         """
         Updates the Lib based on **otherLib**. *otherLib** is a
         ``dict`` of keys. If a key from **otherLib** is in Lib
@@ -265,7 +272,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         """
         super(BaseLib, self).update(otherLib)
 
-    def values(self):
+    def values(self) -> List[Any]:
         """
         Returns a ``list`` of each named key's members. This will be a list
         of lists, the key members will be a ``list`` of :ref:`type-string`.
