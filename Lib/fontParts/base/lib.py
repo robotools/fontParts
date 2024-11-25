@@ -11,19 +11,21 @@ if TYPE_CHECKING:
 
 
 class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
-    """
-    A Lib object. This object normally created as part of a
-    :class:`BaseFont`. An orphan Lib object can be created like this::
+    """Represent the basis for a lib object.
+
+    This object behaves like a Python :class:`dict` object. Most of the
+    dictionary functionality comes from :class:`BaseDict`. Consult that
+    object's documentation for the required environment implementation
+    details.
+
+    :cvar KeyNormalizer: A function to normalize the key of the dictionary.
+    :cvar ValueNormalizer: A function to normalize the value of the dictionary.
+
+    This object normally created as part of a :class:`BaseFont`.
+     An orphan Lib object can be created like this::
 
         >>> lib = RLib()
 
-    This object behaves like a Python dictionary. Most of the dictionary
-    functionality comes from :class:`BaseDict`, look at that object for the
-    required environment implementation details.
-
-    Lib uses :func:`normalizers.normalizeLibKey` to normalize the key of
-    the ``dict``, and :func:`normalizers.normalizeLibValue` to normalize the
-    value of the ``dict``.
     """
 
     keyNormalizer: Callable[[str], str] = normalizers.normalizeLibKey
@@ -47,7 +49,25 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
 
     _glyph: Optional[BaseGlyph] = None
 
-    glyph: dynamicProperty = dynamicProperty("glyph", "The lib's parent glyph.")
+    glyph: dynamicProperty = dynamicProperty(
+        "glyph",
+        """Get or set the lib's parent glyph object.
+
+        The value must be a :class:`BaseGlyph` instance or :obj:`None`.
+
+        :return: The :class:`BaseGlyph` instance containing the lib
+            or :obj:`None`.
+        :raises AssertionError:
+            - If the font for the lib has already been set.
+            - If attempting to set the glyph when it has already been set and is
+              not the same as the provided glyph.
+
+        Example::
+
+            >>> glyph = lib.glyph
+
+        """,
+    )
 
     def _get_glyph(self) -> Optional[BaseGLyph]:
         if self._glyph is None:
@@ -67,7 +87,25 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
 
     _font: Optional[BaseFont] = None
 
-    font: dynamicProperty = dynamicProperty("font", "The lib's parent font.")
+    font: dynamicProperty = dynamicProperty(
+        "font",
+        """Get or set the lib's parent font object.
+
+        The value must be a :class:`BaseFont` instance or :obj:`None`.
+
+        :return: The :class:`BaseFont` instance containing the lib
+            or :obj:`None`.
+        :raises AssertionError:
+            - If attempting to set the font when it has already been set and is
+              not the same as the provided font.
+            - If the glyph for the lib has already been set.
+
+        Example::
+
+            >>> font = lib.font
+
+        """,
+    )
 
     def _get_font(self) -> Optional[BaseFont]:
         if self._font is not None:
@@ -87,7 +125,21 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
 
     # Layer
 
-    layer: dynamicProperty = dynamicProperty("layer", "The lib's parent layer.")
+    layer: dynamicProperty = dynamicProperty(
+        "layer",
+        """Get the lib's parent layer object.
+
+        This property is read-only.
+
+        :return: The :class:`BaseLayer` instance containing the contour
+            or :obj:`None`.
+
+        Example::
+
+            >>> layer = lib.layer
+
+        """,
+    )
 
     def _get_layer(self) -> Optional[Any]:
         if self._glyph is None:
@@ -99,20 +151,34 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
     # ---------------------
 
     def remove(self, key: str) -> None:
-        """
-        Removes a key from the Lib. **key** will be
-        a :ref:`type-string` that is the key to
-        be removed.
+        """Remove the specified key from the Lib.
 
-        This is a backwards compatibility method.
+        :param key: The key to remove as a :class:`str`.
+
+        .. note::
+
+            This is a backwards compatibility method.
+
+        Example::
+
+            >>> font.lib.remove('myKey')
+
         """
         del self[key]
 
     def asDict(self) -> Dict[str, Any]:
-        """
-        Return the Lib as a ``dict``.
+        """Return the lib as a dictionary.
 
-        This is a backwards compatibility method.
+        :return A :class:`dict` reflecting the contents of the lib.
+
+        .. note::
+
+            This is a backwards compatibility method.
+
+        Example::
+
+            >>> font.lib.asDict()
+
         """
         d = {}
         for k, v in self.items():
@@ -124,161 +190,218 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
     # -------------------
 
     def __contains__(self, key: str) -> bool:
-        """
-        Tests to see if a lib name is in the Lib.
-        **key** will be a :ref:`type-string`.
-        This returns a ``bool`` indicating if the **key**
-        is in the Lib. ::
+        """Check if the given key exists in the lib.
+
+        :param key: The key to check for existence as a :class:`str`.
+        :return: :obj:`True` if the `key` exists in the lib :obj:`False` otherwise.
+
+        Example::
 
             >>> "public.glyphOrder" in font.lib
             True
+
         """
         return super(BaseLib, self).__contains__(key)
 
     def __delitem__(self, key: str) -> None:
-        """
-        Removes **key** from the Lib. **key** is a :ref:`type-string`.::
+        """Remove the given key from the lib.
+
+        :param key: The key to remove as a :class:`str`.
+
+        Example::
 
             >>> del font.lib["public.glyphOrder"]
+
         """
         super(BaseLib, self).__delitem__(key)
 
     def __getitem__(self, key: str) -> Any:
-        """
-        Returns the contents of the named lib. **key** is a
-        :ref:`type-string`.
-        The returned value will be a ``list`` of the lib contents.::
+        """Get the value associated with the given key.
+
+        :param key: The key to retrieve the value for.
+        :return: The value associated with the specified key.
+        :raise KeyError: If the specified `key` does not exist.
+
+        Example::
 
             >>> font.lib["public.glyphOrder"]
             ["A", "B", "C"]
 
-        It is important to understand that any changes to the returned lib
-        contents will not be reflected in the Lib object. If one wants to
-        make a change to the lib contents, one should do the following::
+        .. note::
 
-            >>> lib = font.lib["public.glyphOrder"]
-            >>> lib.remove("A")
-            >>> font.lib["public.glyphOrder"] = lib
+            Any changes to the returned lib contents will not be reflected in
+            the Lib object. If one wants to make a change to the lib contents,
+            one should do the following::
+
+                >>> lib = font.lib["public.glyphOrder"]
+                >>> lib.remove("A")
+                >>> font.lib["public.glyphOrder"] = lib
+
         """
         return super(BaseLib, self).__getitem__(key)
 
     def __iter__(self) -> Iterator[str]:
-        """
-        Iterates through the Lib, giving the key for each iteration. The
-        order that the Lib will iterate though is not fixed nor is it
-        ordered.::
+        """Return an iterator over the keys in the lib.
+
+        The iteration order is not fixed.
+
+        Example::
 
             >>> for key in font.lib:
             >>>     print key
             "public.glyphOrder"
             "org.robofab.scripts.SomeData"
             "public.postscriptNames"
+
         """
         return super(BaseLib, self).__iter__()
 
     def __len__(self) -> int:
-        """
-        Returns the number of keys in Lib as an ``int``.::
+        """Returns the number of keys in the lib.
+
+        :return: An :class:`int` representing the number of keys in the lib.
+
+        Example::
 
             >>> len(font.lib)
             5
+
         """
         return super(BaseLib, self).__len__()
 
-    def __setitem__(self, key: str, items: Any) -> None:
-        """
-        Sets the **key** to the list of **items**. **key**
-        is the lib name as a :ref:`type-string` and **items** is a
-        ``list`` of items as :ref:`type-string`.
+    def __setitem__(self, key: str, value: Any) -> None:
+        """Set the value for a given key in the lib.
+
+        :param key: The key to set as a :class:`str`.
+        :param value: The value to set for the given key.
+
+        Example::
 
             >>> font.lib["public.glyphOrder"] = ["A", "B", "C"]
+
         """
-        super(BaseLib, self).__setitem__(key, items)
+        super(BaseLib, self).__setitem__(key, value)
 
     def clear(self) -> None:
-        """
-        Removes all keys from Lib,
-        resetting the Lib to an empty dictionary. ::
+        """Removes all keys from the lib.
+
+        This will reset the lib to an empty dictionary.
+
+        Example::
 
             >>> font.lib.clear()
+
         """
         super(BaseLib, self).clear()
 
     def get(self, key: str, default: Optional[Any] = None) -> Any:
-        """
-        Returns the contents of the named key.
-        **key** is a :ref:`type-string`, and the returned values will
-        either be ``list`` of key contents or ``None`` if no key was
-        found. ::
+        """Get the value for a given key in the lib.
 
-            >>> font.lib["public.glyphOrder"]
+        If the given `key` is not found, The specified `default` will be returned.
+
+        :param key: The key to look up as a :class:`str`.
+        :param default: The default value to return if the key is not found.
+            Defaults to :obj:`None`.
+        :return: The value for the given key, or the default value if the key is
+            not found.
+
+        Example::
+
+            >>> font.lib.get("public.glyphOrder")
             ["A", "B", "C"]
+            >>> font.lib.get("missingKey", default="Default Value")
+            "Default Value"
 
-        It is important to understand that any changes to the returned key
-        contents will not be reflected in the Lib object. If one wants to
-        make a change to the key contents, one should do the following::
+        ..note::
 
-            >>> lib = font.lib["public.glyphOrder"]
-            >>> lib.remove("A")
-            >>> font.lib["public.glyphOrder"] = lib
+            Any changes to the returned key contents will not be reflected in
+            the Lib object. If one wants to make a change to the key contents,
+            one should do the following::
+
+                >>> lib = font.lib.get("public.glyphOrder")
+                >>> lib.remove("A")
+                >>> font.lib["public.glyphOrder"] = lib
+
         """
         return super(BaseLib, self).get(key, default)
 
     def items(self) -> List[Tuple[str, Any]]:
-        """
-        Returns a list of ``tuple`` of each key name and key items.
-        Keys are :ref:`type-string` and key members are a ``list``
-        of :ref:`type-string`. The initial list will be unordered.
+        """Return an unordered list of the lib's items.
+
+        Each item is represented as a :class:`tuple` of key-value pairs, where:
+            - `key` is always a :class:`str`.
+            - `value` may be of any type.
+
+        :return: A :class:`list` of :class:`tuple` items of the form ``(key, value)``.
+
+        Example::
 
             >>> font.lib.items()
             [("public.glyphOrder", ["A", "B", "C"]),
              ("public.postscriptNames", {'be': 'uni0431', 'ze': 'uni0437'})]
+
         """
         return super(BaseLib, self).items()
 
     def keys(self) -> List[str]:
-        """
-        Returns a ``list`` of all the key names in Lib. This list will be
-        unordered.::
+        """Return an unordered list of the lib's keys.
+
+        :return: A :class:`list` of keys as :class:`str`.
+
+        Example::
 
             >>> font.lib.keys()
             ["public.glyphOrder", "org.robofab.scripts.SomeData",
              "public.postscriptNames"]
+
         """
         return super(BaseLib, self).keys()
 
     def pop(self, key: str, default: Optional[Any] = None) -> Any:
-        """
-        Removes the **key** from the Lib and returns the ``list`` of
-        key members. If no key is found, **default** is returned.
-        **key** is a :ref:`type-string`. This must return either
-        **default** or a ``list`` of items as :ref:`type-string`.
+        """Remove the specified key and return its associated value.
+
+        If the `key` does not exist, the `default` value is returned.
+
+        :param key: The key to remove as a :class:`str`.
+        :param default: The optional default value to return if the `key` is not found.
+            Defaults to :obj:`None`.
+        :return: The value associated with the given `key`, or the `default` value
+            if the `key` is not found.
+
+        Example::
 
             >>> font.lib.pop("public.glyphOrder")
             ["A", "B", "C"]
+
         """
         return super(BaseLib, self).pop(key, default)
 
-    def update(self, otherLib: Dict[str, Any]) -> None:
-        """
-        Updates the Lib based on **otherLib**. *otherLib** is a
-        ``dict`` of keys. If a key from **otherLib** is in Lib
-        the key members will be replaced by the key members from
-        **otherLib**. If a key from **otherLib** is not in the Lib,
-        it is added to the Lib. If Lib contain a key name that is not
-        in *otherLib**, it is not changed.
+    def update(self, otherLib: BaseLib) -> None:
+        """Update the current lib instance with key-value pairs from another.
+
+        For each key in `otherLib`:
+            - If the key exists in the current lib, its value is replaced with
+              the value from `otherLib`.
+            - If the key does not exist in the current lib, it is added.
+
+        Keys that exist in the current lib but are not in `otherLib` remain unchanged.
+
+        Example::
 
             >>> font.lib.update(newLib)
+
         """
         super(BaseLib, self).update(otherLib)
 
     def values(self) -> List[Any]:
-        """
-        Returns a ``list`` of each named key's members. This will be a list
-        of lists, the key members will be a ``list`` of :ref:`type-string`.
-        The initial list will be unordered.
+        """Return an unordered list of the lib's values.
+
+        :return: A :class:`list` containing the values in the lib.
+
+        Example::
 
             >>> font.lib.items()
             [["A", "B", "C"], {'be': 'uni0431', 'ze': 'uni0437'}]
+
         """
         return super(BaseLib, self).values()
