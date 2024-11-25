@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, Callable, List, Optional
+from typing import TYPE_CHECKING, Any, Callable, Dict, Iterator, List, Optional, Tuple, TypeVar
 
 from fontParts.base.base import BaseDict, dynamicProperty, reference
 from fontParts.base import normalizers
@@ -69,7 +69,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         """,
     )
 
-    def _get_glyph(self) -> Optional[BaseGLyph]:
+    def _get_glyph(self) -> Optional[BaseGlyph]:
         if self._glyph is None:
             return None
         return self._glyph()
@@ -376,7 +376,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         """
         return super(BaseLib, self).pop(key, default)
 
-    def update(self, otherLib: BaseLib) -> None:
+    def update(self, otherLib: BaseDict) -> None:
         """Update the current lib instance with key-value pairs from another.
 
         For each key in `otherLib`:
@@ -385,6 +385,9 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
             - If the key does not exist in the current lib, it is added.
 
         Keys that exist in the current lib but are not in `otherLib` remain unchanged.
+
+        :param otherLib: An instance of :class:`BaseDict` or its subclass
+            (like :class:`BaseLib`) to update the current lib with.
 
         Example::
 
