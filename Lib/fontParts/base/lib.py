@@ -1,5 +1,15 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, Callable, Dict, Iterator, List, Optional, Tuple, TypeVar
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Dict,
+    Iterator,
+    List,
+    Optional,
+    Tuple,
+    TypeVar,
+)
 
 from fontParts.base.base import BaseDict, dynamicProperty, reference
 from fontParts.base import normalizers
