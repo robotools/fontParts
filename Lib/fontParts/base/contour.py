@@ -423,7 +423,7 @@ class BaseContour(
         self.raiseNotImplementedError()
 
     def round(self) -> None:
-        """Round all point coordinates in the contour to the neares integer.
+        """Round all point coordinates in the contour to the nearest integer.
 
         Example::
 
@@ -433,7 +433,7 @@ class BaseContour(
         self._round()
 
     def _round(self, **kwargs: Any) -> None:
-        r"""Round all point coordinates in the native contour to the neares integer.
+        r"""Round all point coordinates in the native contour to the nearest integer.
 
         This is the environment implementation of :meth:`BaseContour.round`.
 
@@ -633,9 +633,10 @@ class BaseContour(
         This is the environment implementation of the :attr:`BaseContour.clockwise`
         property setter.
 
-        :param value: The winding direction to specify as a :class:`bool`.
-            The value will have been normalized
-            with :func:`normalizers.normalizeBoolean`.
+        :param value: A :class:`bool` indicating the desired winding
+         direction. :obj:`True` sets the direction to clockwise,
+         and :obj:`False` to counter-clockwise. The value will have been
+         normalized with :func:`normalizers.normalizeBoolean`.
 
         .. note::
 
@@ -668,9 +669,9 @@ class BaseContour(
         :raises NotImplementedError: If the method has not been overridden by a
             subclass.
 
-        .. note::
+        .. important::
 
-            Subclasses may override this method.
+            Subclasses must override this method.
 
         """
         self.raiseNotImplementedError()
@@ -744,9 +745,9 @@ class BaseContour(
         :raises NotImplementedError: If the method has not been overridden by a
             subclass.
 
-        .. note::
+        .. important::
 
-            Subclasses may override this method.
+            Subclasses must override this method.
 
         """
         self.raiseNotImplementedError()
@@ -1735,8 +1736,9 @@ class BaseContour(
             point as a :class:`str`. The value will have been normalized
             with :func:`normalizers.normalizePointName`
         :param identifier: An optional :attr:`BasePoint.identifier` to be
-            applied to the point as a :class:`str`. The value will
-            have been normalized with :func:`normalizers.normalizeIdentifier`.
+            applied to the point as a :class:`str`. The value will have been
+            normalized with :func:`normalizers.normalizeIdentifier`, but will
+            not have been tested for uniqueness.
         :param \**kwargs: Additional keyword arguments.
         :raises NotImplementedError: If the method has not been overridden by a
             subclass.
