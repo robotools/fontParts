@@ -304,8 +304,8 @@ def normalizeLibValue(value: LibValueType) -> LibValueType:
     If `value` is a collection (:class:`list`, :class:`tuple`, or :class:`dict`),
     its elements will be normalized recursively.
 
-    :param value: The lib value to normalize. The value (or any item) must not
-        be :obj:`None`.
+    :param value: The lib value to normalize. The value and any value items must
+        be a type compatible with the :mod:`plistlib` module.
     :return: The normalized lib value, of the same type as `value`.
     :raises ValueError: If `value` or any of it's items is :obj:`None`.
 
