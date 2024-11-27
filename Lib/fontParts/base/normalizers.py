@@ -1162,8 +1162,6 @@ def normalizeGlyphNote(value: str) -> str:
 def normalizeFilePath(value: Union[str, Path]) -> str:
     """Normalize a file path.
 
-    Relative paths are resolved automatically.
-
     :param value: The file path to normalize as a :class:`str` or :class:`pathlib.Path`.
     :return: A :class:`str` representing the normalized file path.
     :raises TypeError if `value` is not a :class:`str` or :class:`pathlib.Path`.
@@ -1174,7 +1172,7 @@ def normalizeFilePath(value: Union[str, Path]) -> str:
         raise TypeError(
             f"File paths must be strings or Path objects, not {type(value).__name__}."
         )
-    return str(Path(value).resolve())
+    return str(value)
 
 
 # Interpolation
