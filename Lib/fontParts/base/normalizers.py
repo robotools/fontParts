@@ -18,7 +18,7 @@ from fontParts.base.annotations import (
     SextupleCollectionType,
     IntFloatType,
     TransformationType,
-    LibValueType
+    LibValueType,
 )
 
 if TYPE_CHECKING:
@@ -320,11 +320,13 @@ def normalizeLibValue(value: LibValueType) -> LibValueType:
         dict,
         bytes,
         bytearray,
-        datetime.datetime
+        datetime.datetime,
     )
     if not isinstance(value, acceptedTypes):
-        acceptedTypesStr = (", ".join(t.__name__ for t in acceptedTypes[:-1])
-                            + f" or {acceptedTypes[-1].__name__}")
+        acceptedTypesStr = (
+            ", ".join(t.__name__ for t in acceptedTypes[:-1])
+            + f" or {acceptedTypes[-1].__name__}"
+        )
         raise TypeError(
             f"Lib value must be a plistlib-supported type ({acceptedTypesStr})"
             f", got {type(value).__name__}."
@@ -1047,7 +1049,7 @@ def normalizeBoundingBox(
         if not isinstance(v, (int, float)):
             raise TypeError(
                 f"Bounding box values must be instances of int or float, not {type(v).__name__}."
-        )
+            )
     xMin, yMin, xMax, yMax = value
     if xMin > xMax:
         raise ValueError("Bounding box xMin must be less than or equal to " "xMax.")
@@ -1070,9 +1072,7 @@ def normalizeArea(value: IntFloatType) -> float:
             f"Area must be an instance of int or float, not {type(value).__name__}."
         )
     if value < 0:
-        raise ValueError(
-            f"Area must be a positive int or float, not {repr(value)}."
-        )
+        raise ValueError(f"Area must be a positive int or float, not {repr(value)}.")
     return float(value)
 
 
@@ -1339,9 +1339,9 @@ def normalizeTransformationScale(value: TransformationType) -> PairType[float]:
         return (float(value), float(value))
 
     if not len(value) == 2:
-            raise ValueError(
-                f"Transformation scale tuple must contain two values, not {len(value)}."
-            )
+        raise ValueError(
+            f"Transformation scale tuple must contain two values, not {len(value)}."
+        )
     for v in value:
         if not isinstance(v, (int, float)):
             raise TypeError(
