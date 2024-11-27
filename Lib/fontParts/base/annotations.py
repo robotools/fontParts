@@ -41,7 +41,7 @@ LibValueType = Union[
     Dict[str, "LibValueType"],
     bytes,
     bytearray,
-    datetime.datetime
+    datetime.datetime,
 ]
 
 # Transformation

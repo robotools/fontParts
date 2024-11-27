@@ -40,7 +40,9 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
     """
 
     keyNormalizer: Callable[[str], str] = normalizers.normalizeLibKey
-    valueNormalizer: Callable[[LibValueType], LibValueType] = normalizers.normalizeLibValue
+    valueNormalizer: Callable[[LibValueType], LibValueType] = (
+        normalizers.normalizeLibValue
+    )
 
     def _reprContents(self) -> List[str]:
         contents = []
