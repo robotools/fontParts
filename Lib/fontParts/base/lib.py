@@ -1,13 +1,24 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, Callable, Dict, Iterator, List, Optional, Tuple, TypeVar
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Dict,
+    Iterator,
+    List,
+    Optional,
+    Tuple,
+)
 
 from fontParts.base.base import BaseDict, dynamicProperty, reference
 from fontParts.base import normalizers
 from fontParts.base.deprecated import DeprecatedLib, RemovedLib
+from fontParts.base.annotations import LibValueType
 
 if TYPE_CHECKING:
     from fontParts.base.glyph import BaseGlyph
     from fontParts.base.font import BaseFont
+    from fontparts.base.layer import BaseLayer
 
 
 class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
@@ -29,7 +40,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
     """
 
     keyNormalizer: Callable[[str], str] = normalizers.normalizeLibKey
-    valueNormalizer: Callable[[Any], Any] = normalizers.normalizeLibValue
+    valueNormalizer: Callable[[LibValueType], LibValueType] = normalizers.normalizeLibValue
 
     def _reprContents(self) -> List[str]:
         contents = []
@@ -141,7 +152,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         """,
     )
 
-    def _get_layer(self) -> Optional[Any]:
+    def _get_layer(self) -> Optional[BaseLayer]:
         if self._glyph is None:
             return None
         return self.glyph.layer
@@ -166,7 +177,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         """
         del self[key]
 
-    def asDict(self) -> Dict[str, Any]:
+    def asDict(self) -> Dict[str, LibValueType]:
         """Return the lib as a dictionary.
 
         :return A :class:`dict` reflecting the contents of the lib.
@@ -215,11 +226,11 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         """
         super(BaseLib, self).__delitem__(key)
 
-    def __getitem__(self, key: str) -> Any:
+    def __getitem__(self, key: str) -> LibValueType:
         """Get the value associated with the given key.
 
         :param key: The key to retrieve the value for.
-        :return: The value associated with the specified key.
+        :return: The :ref:`type-lib-value` associated with the specified key.
         :raise KeyError: If the specified `key` does not exist.
 
         Example::
@@ -269,11 +280,11 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         """
         return super(BaseLib, self).__len__()
 
-    def __setitem__(self, key: str, value: Any) -> None:
+    def __setitem__(self, key: str, value: LibValueType) -> None:
         """Set the value for a given key in the lib.
 
         :param key: The key to set as a :class:`str`.
-        :param value: The value to set for the given key.
+        :param value: The :ref:`type-lib-value` to set for the given key.
 
         Example::
 
@@ -294,16 +305,16 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         """
         super(BaseLib, self).clear()
 
-    def get(self, key: str, default: Optional[Any] = None) -> Any:
+    def get(self, key: str, default: Optional[LibValueType] = None) -> LibValueType:
         """Get the value for a given key in the lib.
 
         If the given `key` is not found, The specified `default` will be returned.
 
         :param key: The key to look up as a :class:`str`.
-        :param default: The default value to return if the key is not found.
-            Defaults to :obj:`None`.
-        :return: The value for the given key, or the default value if the key is
-            not found.
+        :param default: The default :ref:`type-lib-value` to return if the key
+            is not found. Defaults to :obj:`None`.
+        :return: The :ref:`type-lib-value` for the given key, or the default
+            value if the key is not found.
 
         Example::
 
@@ -325,12 +336,12 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         """
         return super(BaseLib, self).get(key, default)
 
-    def items(self) -> List[Tuple[str, Any]]:
+    def items(self) -> List[Tuple[str, LibValueType]]:
         """Return an unordered list of the lib's items.
 
         Each item is represented as a :class:`tuple` of key-value pairs, where:
             - `key` is always a :class:`str`.
-            - `value` may be of any type.
+            - `value` is a :ref:`type-lib-value`.
 
         :return: A :class:`list` of :class:`tuple` items of the form ``(key, value)``.
 
@@ -357,16 +368,16 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         """
         return super(BaseLib, self).keys()
 
-    def pop(self, key: str, default: Optional[Any] = None) -> Any:
+    def pop(self, key: str, default: Optional[LibValueType] = None) -> LibValueType:
         """Remove the specified key and return its associated value.
 
         If the `key` does not exist, the `default` value is returned.
 
         :param key: The key to remove as a :class:`str`.
-        :param default: The optional default value to return if the `key` is not found.
-            Defaults to :obj:`None`.
-        :return: The value associated with the given `key`, or the `default` value
-            if the `key` is not found.
+        :param default: The optional default :ref:`type-lib-value` to return if
+            the `key` is not found. Defaults to :obj:`None`.
+        :return: The :ref:`type-lib-value` associated with the given `key`, or
+            the `default` value if the `key` is not found.
 
         Example::
 
@@ -396,10 +407,10 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         """
         super(BaseLib, self).update(otherLib)
 
-    def values(self) -> List[Any]:
+    def values(self) -> List[LibValueType]:
         """Return an unordered list of the lib's values.
 
-        :return: A :class:`list` containing the values in the lib.
+        :return: A :class:`list` containing the :ref:`type-lib-value` items in the lib.
 
         Example::
 

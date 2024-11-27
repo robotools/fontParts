@@ -1,6 +1,7 @@
 # pylint: disable=C0103, C0114
 from __future__ import annotations
 from typing import Dict, List, Protocol, Tuple, TypeVar, Union
+import datetime
 
 from fontTools.pens.basePen import AbstractPen
 from fontTools.pens.pointPen import AbstractPointPen
@@ -30,6 +31,18 @@ ReverseComponentMappingType = Dict[str, Tuple[str, ...]]
 
 # Kerning
 KerningDictType = Dict[PairType[str], PairType[str]]
+
+# Lib
+LibValueType = Union[
+    str,
+    IntFloatType,
+    bool,
+    CollectionType["LibValueType"],
+    Dict[str, "LibValueType"],
+    bytes,
+    bytearray,
+    datetime.datetime
+]
 
 # Transformation
 TransformationType = Union[IntFloatType, List[IntFloatType], PairType[IntFloatType]]
