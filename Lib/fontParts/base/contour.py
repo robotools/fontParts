@@ -276,7 +276,7 @@ class BaseContour(
 
         """
         point = normalizers.normalizePoint(point)
-        return self._getIdentifierforPoint(point)
+        return self._getIdentifierForPoint(point)
 
     def _getIdentifierForPoint(self, point: BasePoint) -> str:
         """Generate and assign a unique identifier to the given native point.
@@ -476,7 +476,7 @@ class BaseContour(
 
     compatibilityReporterClass = ContourCompatibilityReporter
 
-    def isCompatible(self, other: BaseContour) -> tuple[bool, str]:
+    def isCompatible(self, other: BaseContour) -> Tuple[bool, str]:
         """Evaluate interpolation compatibility with another contour.
 
         :param other: The other :class:`BaseContour` instance to check
