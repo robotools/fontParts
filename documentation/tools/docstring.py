@@ -81,7 +81,7 @@ ParsedAnnotation = Union[str, Tuple[str, List[Any]]]
 NORMALIZATION_MODULE = "normalizers"
 DEPRECATION_ID = "This method is deprecated."
 INDENT = " " * 4
-LINE_LENGTH = 72
+LINE_LENGTH = 80
 
 FORMAT_STRINGS: Dict[str, str] = {
     "implementationNote": ("This is the environment implementation of {baseObject}."),
@@ -989,7 +989,7 @@ def insertDocstring(obj: Any, newDocstring: str, preserveVariadics: bool = True)
             )
             updatedSourceCode = (
                 "\n".join(sourceLines[: signatureEnd + 1])
-                + f"\n{indent}{formattedDocstring}\n"
+                + f"\n{indent * 2}{formattedDocstring}\n"
                 + "\n".join(sourceLines[signatureEnd + 1 :])
             )
 

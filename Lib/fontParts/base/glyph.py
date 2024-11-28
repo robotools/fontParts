@@ -559,8 +559,10 @@ class BaseGlyph(
 
     def _set_base_leftMargin(self, value: IntFloatType) -> None:
         normalizedValue = normalizers.normalizeGlyphLeftMargin(value)
-        if normalizedValue is not None:
-            self._set_leftMargin(normalizedValue)
+        # Avoid mypy conflict with normalizeGlyphLeftMargin -> Optional[IntFloat]
+        if normalizedValue is None:
+            raise TypeError("The value for leftMargin cannot be None.")
+        self._set_leftMargin(normalizedValue)
 
     def _get_leftMargin(self) -> Optional[IntFloatType]:
         """Get the native glyph's left margin.
@@ -625,8 +627,10 @@ class BaseGlyph(
 
     def _set_base_rightMargin(self, value: IntFloatType) -> None:
         normalizedValue = normalizers.normalizeGlyphRightMargin(value)
-        if normalizedValue is not None:
-            self._set_rightMargin(normalizedValue)
+        # Avoid mypy conflict with normalizeGlyphRightMargin -> Optional[IntFloat]
+        if normalizedValue is None:
+            raise TypeError("The value for rightMargin cannot be None.")
+        self._set_rightMargin(normalizedValue)
 
     def _get_rightMargin(self) -> Optional[IntFloatType]:
         """Get the native glyph's right margin.
@@ -756,8 +760,10 @@ class BaseGlyph(
 
     def _set_base_bottomMargin(self, value: IntFloatType) -> None:
         normalizedValue = normalizers.normalizeGlyphBottomMargin(value)
-        if normalizedValue is not None:
-            self._set_bottomMargin(normalizedValue)
+        # Avoid mypy conflict with normalizeGlyphBottomMargin -> Optional[IntFloat]
+        if normalizedValue is None:
+            raise TypeError("The value for bottomMargin cannot be None.")
+        self._set_bottomMargin(normalizedValue)
 
     def _get_bottomMargin(self) -> Optional[IntFloatType]:
         """Get the native glyph's bottom margin.
@@ -821,8 +827,10 @@ class BaseGlyph(
 
     def _set_base_topMargin(self, value: IntFloatType) -> None:
         normalizedValue = normalizers.normalizeGlyphTopMargin(value)
-        if normalizedValue is not None:
-            self._set_topMargin(normalizedValue)
+        # Avoid mypy conflict with normalizeGlyphTopMargin -> Optional[IntFloat]
+        if normalizedValue is None:
+            raise TypeError("The value for topMargin cannot be None.")
+        self._set_topMargin(normalizedValue)
 
     def _get_topMargin(self) -> Optional[IntFloatType]:
         """Get the native glyph's top margin.
@@ -1197,7 +1205,6 @@ class BaseGlyph(
 
         :param index: The index of the glyph to return as an :class:`int`.
         :return: An instance of the :class:`BaseContour` class.
-        :raises ValueError: If no contour is located at the given index.
 
         Example::
 
@@ -1303,6 +1310,7 @@ class BaseGlyph(
         else:
             index = self._getContourIndex(contour)
         normalizedIndex = normalizers.normalizeIndex(index)
+        # Avoid mypy conflict with normalizeIndex -> Optional[int]
         if normalizedIndex is None:
             return
         if normalizedIndex >= len(self):
@@ -1524,13 +1532,12 @@ class BaseGlyph(
                 )
                 if normalizedComponent.identifier not in existing:
                     identifier = normalizedComponent.identifier
-        if baseGlyph is None:
-            raise TypeError("Base glyph cannot be None.")
-        normalizedBaseGlyph = normalizers.normalizeGlyphName(baseGlyph)
-        if self.name == normalizedBaseGlyph:
-            raise FontPartsError(
-                "A glyph cannot contain a component referencing itself."
-            )
+        if baseGlyph is not None:
+            normalizedBaseGlyph = normalizers.normalizeGlyphName(baseGlyph)
+            if self.name == normalizedBaseGlyph:
+                raise FontPartsError(
+                    "A glyph cannot contain a component referencing itself."
+                )
         if offset is None:
             offset = (0, 0)
         if scale is None:
@@ -1595,6 +1602,7 @@ class BaseGlyph(
         else:
             index = self._getComponentIndex(component)
         normalizedIndex = normalizers.normalizeIndex(index)
+        # Avoid mypy conflict with normalizeIndex -> Optional[int]
         if normalizedIndex is None:
             return
         if normalizedIndex >= self._len__components():
@@ -1717,7 +1725,7 @@ class BaseGlyph(
     def _getitem__anchors(self, index: int) -> BaseAnchor:
         normalizedIndex = normalizers.normalizeIndex(index)
         if normalizedIndex is None or normalizedIndex >= self._len__anchors():
-            raise ValueError(f"No anchor located at index {index}.")
+            raise ValueError(f"No anchor located at index {normalizedIndex}.")
         anchor = self._getAnchor(normalizedIndex)
         self._setGlyphInAnchor(anchor)
         return anchor
@@ -1774,35 +1782,33 @@ class BaseGlyph(
         """
         identifier = None
         if anchor is not None:
-            normalizedAnchor = normalizers.normalizeAnchor(anchor)
+            anchor = normalizers.normalizeAnchor(anchor)
             if name is None:
-                name = normalizedAnchor.name
+                name = anchor.name
             if position is None:
-                position = normalizedAnchor.position
+                position = anchor.position
             if color is None:
-                color = normalizedAnchor.color
-            if normalizedAnchor.identifier is not None:
+                color = anchor.color
+            if anchor.identifier is not None:
                 existing = {
                     a.identifier for a in self.anchors if a.identifier is not None
                 }
-                if normalizedAnchor.identifier not in existing:
-                    identifier = normalizedAnchor.identifier
-        if name is None:
-            raise TypeError("Name cannot be None.")
-        normalizedName = normalizers.normalizeAnchorName(name)
-        if position is None:
-            raise TypeError("Position cannot be None.")
-        normalizedPosition = normalizers.normalizeCoordinateTuple(position)
-        if color is not None:
-            normalizedColor = normalizers.normalizeColor(color)
+                if anchor.identifier not in existing:
+                    identifier = anchor.identifier
+        if name is not None:
+            name = normalizers.normalizeAnchorName(name)
         else:
-            normalizedColor = None
-        normalizedIdentifier = normalizers.normalizeIdentifier(identifier)
+            raise ValueError("Name can not be None.")
+        if position is not None:
+            position = normalizers.normalizeCoordinateTuple(position)
+        if color is not None:
+            color = normalizers.normalizeColor(color)
+        identifier = normalizers.normalizeIdentifier(identifier)
         return self._appendAnchor(
-            normalizedName,
-            position=normalizedPosition,
-            color=normalizedColor,
-            identifier=normalizedIdentifier,
+            name,
+            position=position,
+            color=color,
+            identifier=identifier,
         )
 
     def _appendAnchor(
@@ -1855,6 +1861,7 @@ class BaseGlyph(
         else:
             index = self._getAnchorIndex(anchor)
         normalizedIndex = normalizers.normalizeIndex(index)
+        # Avoid mypy conflict with normalizeIndex -> Optional[int]
         if normalizedIndex is None:
             return
         if normalizedIndex >= self._len__anchors():
@@ -2024,42 +2031,44 @@ class BaseGlyph(
         """
         identifier: Optional[str] = None
         if guideline is not None:
-            normalizedGuideline = normalizers.normalizeGuideline(guideline)
+            guideline = normalizers.normalizeGuideline(guideline)
             if position is None:
-                position = normalizedGuideline.position
+                position = guideline.position
             if angle is None:
-                angle = normalizedGuideline.angle
+                angle = guideline.angle
             if name is None:
-                name = normalizedGuideline.name
+                name = guideline.name
             if color is None:
-                color = normalizedGuideline.color
-            if normalizedGuideline.identifier is not None:
+                color = guideline.color
+            if guideline.identifier is not None:
                 existing = set(
                     g.identifier for g in self.guidelines if g.identifier is not None
                 )
-                if normalizedGuideline.identifier not in existing:
-                    identifier = normalizedGuideline.identifier
-        if position is None:
-            raise TypeError("Position cannot be None.")
-        normalizedPosition = normalizers.normalizeCoordinateTuple(position)
-        if angle is None:
-            raise TypeError("Angle cannot be None.")
-        normalizedAngle = normalizers.normalizeRotationAngle(angle)
+                if guideline.identifier not in existing:
+                    identifier = guideline.identifier
+        if position is not None:
+            position = normalizers.normalizeCoordinateTuple(position)
+        else:
+            raise ValueError("Position can not be None.")
+        if angle is not None:
+            angle = normalizers.normalizeRotationAngle(angle)
+        else:
+            raise ValueError("Angle can not be None.")
         if name is not None:
-            normalizedName = normalizers.normalizeGuidelineName(name)
+            name = normalizers.normalizeGuidelineName(name)
         else:
-            normalizedName = None
+            name = None
         if color is not None:
-            normalizedColor = normalizers.normalizeColor(color)
+            color = normalizers.normalizeColor(color)
         else:
-            normalizedColor = None
-        normalizedIdentifier = normalizers.normalizeIdentifier(identifier)
+            color = None
+        identifier = normalizers.normalizeIdentifier(identifier)
         newGuideline = self._appendGuideline(
-            normalizedPosition,
-            normalizedAngle,
-            name=normalizedName,
-            color=normalizedColor,
-            identifier=normalizedIdentifier,
+            position,
+            angle,
+            name=name,
+            color=color,
+            identifier=identifier,
         )
         newGuideline.glyph = self
         return newGuideline
@@ -2984,10 +2993,8 @@ class BaseGlyph(
     def _get_base_bounds(self) -> Optional[QuadrupleType[IntFloatType]]:
         value = self._get_bounds()
         if value is not None:
-            normalizedValue = normalizers.normalizeBoundingBox(value)
-        else:
-            normlizedValue = value
-        return normalizedValue
+            value = normalizers.normalizeBoundingBox(value)
+        return value
 
     def _get_bounds(self) -> Optional[QuadrupleType[IntFloatType]]:
         """Get the bounds of the native glyph.
@@ -3016,7 +3023,7 @@ class BaseGlyph(
         This property is read-only.
 
         :return: An :class:`int` or a :class:` float value representing the
-            area of the glyph, or or :obj:`None` if the glyph is empty.
+            area of the glyph, or :obj:`None` if the glyph is empty.
 
         Example::
 
@@ -3186,6 +3193,7 @@ class BaseGlyph(
             >>> glyph.removeLayer("background")
 
         """
+
         layerName = layer.layer.name if isinstance(layer, BaseGlyph) else layer
         normalizedLayerName = normalizers.normalizeLayerName(layerName)
         if self._getLayer(normalizedLayerName).layer.name == normalizedLayerName:
