@@ -4,6 +4,7 @@ from typing import (
     Any,
     Callable,
     Dict,
+    Iterable,
     List,
     NoReturn,
     Optional,
@@ -386,6 +387,67 @@ class BaseObject:
         self.raiseNotImplementedError()
 
 
+class BaseItems:
+    ItemType = Tuple[Any, Any]
+
+    def __init__(self, mapping: BaseDict) -> None:
+        self._mapping = mapping
+
+    def __contains__(self, item: ItemType) -> bool:
+        key, value = item
+        normalizedItem = (
+            self._mapping._normalizeKey(key), self._mapping._normalizeValue(value)
+        )
+        return normalizedItem in self._mapping._normalizeItems()
+
+    def __iter__(self) -> Iterable[ItemType]:
+        return iter(self._mapping._normalizeItems())
+
+    def __len__(self) -> int:
+        return len(self._mapping._normalizeItems())
+
+    def __repr__(self) -> str:
+        return f"{self._mapping.__class__.__name__}_items({list(self)})"
+
+
+class BaseKeys:
+    def __init__(self, mapping: BaseDict) -> None:
+        self._mapping = mapping
+
+    def __contains__(self, key: Any) -> bool:
+        return any(k == key for k, _ in self._mapping._normalizeItems())
+
+    def __iter__(self) -> Iterable[Any]:
+        return (k for k, _ in self._mapping._normalizeItems())
+
+    def __len__(self) -> int:
+        return len(self._mapping._normalizeItems())
+
+    def __repr__(self) -> str:
+        return f"{self._mapping.__class__.__name__}_keys({list(self)})"
+
+    def isdisjoint(self, other: Any) -> bool:
+        # Check if there are no common elements between self and other
+        return not any(k in other for k in self)
+
+
+class BaseValues:
+    def __init__(self, mapping: BaseDict) -> None:
+        self._mapping = mapping
+
+    def __contains__(self, value: Any) -> bool:
+        return any(v == value for _, v in self._mapping._normalizeItems())
+
+    def __iter__(self) -> Iterable[Any]:
+        return (v for _, v in self._mapping._normalizeItems())
+
+    def __len__(self) -> int:
+        return len(self._mapping._normalizeItems())
+
+    def __repr__(self) -> str:
+        return f"{self._mapping.__class__.__name__}_values({list(self)})"
+
+
 class BaseDict(BaseObject):
     """Provide objects with basic dictionary-like functionality.
 
@@ -396,6 +458,16 @@ class BaseDict(BaseObject):
 
     keyNormalizer: Optional[Any] = None
     valueNormalizer: Optional[Any] = None
+
+    def _normalizeKey(self, key: str) -> str:
+        return type(self).keyNormalizer(key) if self.keyNormalizer else key
+
+    def _normalizeValue(self, value: Any) -> Any:
+        return type(self).valueNormalizer(value) if self.valueNormalizer else value
+
+    def _normalizeItems(self):
+        items = self._items()
+        return [(self._normalizeKey(k), self._normalizeValue(v)) for (k, v) in items]
 
     def copyData(self, source: BaseDict) -> None:
         """Copy data from another object instance.
@@ -433,18 +505,15 @@ class BaseDict(BaseObject):
         """
         return len(self.keys())
 
-    def keys(self) -> List[Any]:
+    def keys(self) -> BaseKeys:
         """Return a list of keys in the object.
 
         :return: A :class:`list` of dictionary keys.
 
         """
-        keys = self._keys()
-        if self.keyNormalizer is not None:
-            keys = [self.keyNormalizer.__func__(key) for key in keys]
-        return keys
+        return self._keys()
 
-    def _keys(self) -> List[Any]:
+    def _keys(self) -> BaseKeys:
         """Return a list of keys in the native object.
 
         This is the environment implementation of :meth:`BaseDict.keys`.
@@ -458,23 +527,17 @@ class BaseDict(BaseObject):
             Subclasses may override this method.
 
         """
-        return [k for k, v in self.items()]
+        return BaseKeys(self)
 
-    def items(self) -> List[Tuple[Any, Any]]:
+    def items(self) -> BaseItems:
         """Return a list of key-value pairs in the object.
 
         :return: A :class:`list` of :class:`tuple` items containing key-value pairs.
 
         """
-        items = self._items()
-        if self.keyNormalizer is not None and self.valueNormalizer is not None:
-            items = [
-                (self.keyNormalizer.__func__(key), self.valueNormalizer.__func__(value))
-                for (key, value) in items
-            ]
-        return items
+        return BaseItems(self)
 
-    def _items(self) -> List[Tuple[Any, Any]]:
+    def _items(self) -> BaseItems:
         """Return a list of key-value pairs in the native object.
 
         This is the environment implementation of :meth:`BaseDict.items`.
@@ -492,18 +555,15 @@ class BaseDict(BaseObject):
         """
         self.raiseNotImplementedError()
 
-    def values(self) -> List[Any]:
+    def values(self) -> BaseValues:
         """Return a list of values in the object.
 
         :return: A :class:`list` of dictionary values.
 
         """
-        values = self._values()
-        if self.valueNormalizer is not None:
-            values = [self.valueNormalizer.__func__(value) for value in values]
-        return values
+        return self._values()
 
-    def _values(self) -> List[Any]:
+    def _values(self) -> BaseValues:
         """Return a list of values in the native object.
 
         This is the environment implementation of :meth:`BaseDict.values`.
@@ -517,7 +577,7 @@ class BaseDict(BaseObject):
             Subclasses may override this method.
 
         """
-        return [v for k, v in self.items()]
+        return BaseValues(self)
 
     def __contains__(self, key: Any) -> bool:
         """Check if a key is in the object.
@@ -526,8 +586,7 @@ class BaseDict(BaseObject):
         :return: :obj:`True` if the key is present, :obj:`False` otherwise.
 
         """
-        if self.keyNormalizer is not None:
-            key = self.keyNormalizer.__func__(key)
+        key = self._normalizeKey(key)
         return self._contains(key)
 
     def _contains(self, key: Any) -> bool:
@@ -556,10 +615,8 @@ class BaseDict(BaseObject):
         :param value: The value to set for the given key.
 
         """
-        if self.keyNormalizer is not None:
-            key = self.keyNormalizer.__func__(key)
-        if self.valueNormalizer is not None:
-            value = self.valueNormalizer.__func__(value)
+        key = self._normalizeKey(key)
+        value = self._normalizeValue(value)
         self._setItem(key, value)
 
     def _setItem(self, key: Any, value: Any) -> None:
@@ -589,12 +646,9 @@ class BaseDict(BaseObject):
         :return: The value for the given key.
 
         """
-        if self.keyNormalizer is not None:
-            key = self.keyNormalizer.__func__(key)
+        key = self._normalizeKey(key)
         value = self._getItem(key)
-        if self.valueNormalizer is not None:
-            value = self.valueNormalizer.__func__(value)
-        return value
+        return self._normalizeValue(value)
 
     def _getItem(self, key: Any) -> Any:
         """Get the value for a given key from the native object.
@@ -629,13 +683,11 @@ class BaseDict(BaseObject):
             not found.
 
         """
-        if self.keyNormalizer is not None:
-            key = self.keyNormalizer.__func__(key)
-        if default is not None and self.valueNormalizer is not None:
-            default = self.valueNormalizer.__func__(default)
+        key = self._normalizeKey(key)
+        default = self._normalizeValue(default)
         value = self._get(key, default=default)
-        if value is not default and self.valueNormalizer is not None:
-            value = self.valueNormalizer.__func__(value)
+        if value is not default:
+            value = self._normalizeValue(value)
         return value
 
     def _get(self, key: Any, default: Optional[Any]) -> Any:
@@ -665,8 +717,7 @@ class BaseDict(BaseObject):
         :param key: The key to delete.
 
         """
-        if self.keyNormalizer is not None:
-            key = self.keyNormalizer.__func__(key)
+        key = self._normalizeKey(key)
         self._delItem(key)
 
     def _delItem(self, key: Any) -> None:
@@ -698,14 +749,11 @@ class BaseDict(BaseObject):
             if the key is not found.
 
         """
-        if self.keyNormalizer is not None:
-            key = self.keyNormalizer.__func__(key)
-        if default is not None and self.valueNormalizer is not None:
-            default = self.valueNormalizer.__func__(default)
+        key = self._normalizeKey(key)
+        if default is not None:
+            default = self._normalizeValue(default)
         value = self._pop(key, default=default)
-        if self.valueNormalizer is not None:
-            value = self.valueNormalizer.__func__(value)
-        return value
+        return self._normalizeValue(value)
 
     def _pop(self, key: Any, default: Optional[Any]) -> Any:
         """Remove a key from the native object and return it's value.
@@ -766,13 +814,12 @@ class BaseDict(BaseObject):
 
         """
         otherCopy = deepcopy(other)
-        if self.keyNormalizer is not None and self.valueNormalizer is not None:
-            d = {}
-            for key, value in otherCopy.items():
-                key = self.keyNormalizer.__func__(key)
-                value = self.valueNormalizer.__func__(value)
-                d[key] = value
-            otherCopy = d
+        d = {}
+        for key, value in otherCopy.items():
+            key = self._normalizeKey(key)
+            value = self._normalizeValue(value)
+            d[key] = value
+        otherCopy = d
         self._update(otherCopy)
 
     def _update(self, other: BaseDict) -> None:
