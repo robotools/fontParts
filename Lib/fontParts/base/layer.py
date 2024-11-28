@@ -20,7 +20,7 @@ from fontParts.base.annotations import (
     QuadrupleCollectionType,
     TransformationType,
     ReverseComponentMappingType,
-    IntFloatType
+    IntFloatType,
 )
 
 if TYPE_CHECKING:
