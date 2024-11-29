@@ -2058,7 +2058,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
 
     compatibilityReporterClass = FontCompatibilityReporter
 
-    def isCompatible(self, other: BaseFont) -> Tuple[bool, str]:
+    def isCompatible(self, other: BaseFont) -> Tuple[bool, FontCompatibilityReporter]:
         """Evaluate interpolation compatibility with another font.
 
         This method will return a :class:`bool` indicating if the font is
@@ -2068,8 +2068,8 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         :param other: The other :class:`BaseFont` instance to check
             compatibility with.
         :return: A :class:`tuple` where the first element is a :class:`bool`
-            indicating compatibility, and the second element is a :class:`str`
-            of compatibility notes.
+            indicating compatibility, and the second element is
+            a :class:`fontParts.base.compatibility.FontCompatibilityReporter` instance.
 
         Example::
 
