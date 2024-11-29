@@ -196,12 +196,12 @@ def normalizeKerningKey(value: PairCollectionType[str]) -> PairType[str]:
             )
         if len(v) < 1:
             raise ValueError("Kerning key items must be at least one character long")
-    leftGroup, rightGroup = value
-    if leftGroup.startswith("public.") and not leftGroup.startswith("public.kern1."):
-        raise ValueError("Left Kerning key group must start with " "public.kern1.")
-    if rightGroup.startswith("public.") and not rightGroup.startswith("public.kern2."):
-        raise ValueError("Right Kerning key group must start with " "public.kern2.")
-    return (leftGroup, rightGroup)
+    kern1, kern2 = value
+    if kern1.startswith("public.") and not kern1.startswith("public.kern1."):
+        raise ValueError("Left Kerning key group must start with public.kern1.")
+    if kern2.startswith("public.") and not kern2.startswith("public.kern2."):
+        raise ValueError("Right Kerning key group must start with public.kern2.")
+    return (kern1, kern2)
 
 
 def normalizeKerningValue(value: IntFloatType) -> IntFloatType:
@@ -1296,7 +1296,7 @@ def normalizeTransformationSkewAngle(value: TransformationType) -> PairType[floa
             f"Transformation skew angle must be an int, float, or tuple instances, not {type(value).__name__}."
         )
     if isinstance(value, (int, float)):
-        value = (value, 0.0)
+        value = (float(value), 0.0)
     else:
         if not len(value) == 2:
             raise ValueError(
