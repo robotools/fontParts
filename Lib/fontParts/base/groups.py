@@ -1,6 +1,28 @@
+from __future__ import annotations
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Dict,
+    Iterator,
+    List,
+    Optional,
+    Tuple,
+)
+
 from fontParts.base.base import BaseDict, dynamicProperty, reference
 from fontParts.base import normalizers
 from fontParts.base.deprecated import DeprecatedGroups, RemovedGroups
+from fontParts.base.annotations import CollectionType
+
+if TYPE_CHECKING:
+    from fontParts.base.glyph import BaseGlyph
+    from fontParts.base.font import BaseFont
+    from fontparts.base.layer import BaseLayer
+
+ValueType = Tuple[str, ...]
+GroupsType = Dict[str, ValueType]
+ItemsType = Tuple[str, ValueType]
 
 
 class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
@@ -19,10 +41,10 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
     value of the ``dict``.
     """
 
-    keyNormalizer = normalizers.normalizeGroupKey
-    valueNormalizer = normalizers.normalizeGroupValue
+    keyNormalizer: Callable[[str], str] = normalizers.normalizeGroupKey
+    valueNormalizer: Callable[[CollectionType[str]], Tuple[str, ...]] = normalizers.normalizeGroupValue
 
-    def _reprContents(self):
+    def _reprContents(self) -> List[str]:
         contents = []
         if self.font is not None:
             contents.append("for font")
@@ -39,12 +61,12 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
 
     font = dynamicProperty("font", "The Groups' parent :class:`BaseFont`.")
 
-    def _get_font(self):
+    def _get_font(self) -> Optional[BaseFont]:
         if self._font is None:
             return None
         return self._font()
 
-    def _set_font(self, font):
+    def _set_font(self, font: Optional[BaseFont]) -> None:
         if self._font is not None and self._font != font:
             raise AssertionError("font for groups already set and is not same as font")
         if font is not None:
@@ -55,7 +77,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
     # Searching
     # ---------
 
-    def findGlyph(self, glyphName):
+    def findGlyph(self, glyphName: str) -> List[str]:
         """
         Returns a ``list`` of the group or groups associated with
         **glyphName**.
@@ -67,12 +89,9 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         """
         glyphName = normalizers.normalizeGlyphName(glyphName)
         groupNames = self._findGlyph(glyphName)
-        groupNames = [
-            self.keyNormalizer.__func__(groupName) for groupName in groupNames
-        ]
-        return groupNames
+        return [type(self).keyNormalizer(groupName) for groupName in groupNames]
 
-    def _findGlyph(self, glyphName):
+    def _findGlyph(self, glyphName: str) -> List[str]:
         """
         This is the environment implementation of
         :meth:`BaseGroups.findGlyph`. **glyphName** will be
@@ -90,7 +109,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
     # Kerning Groups
     # --------------
 
-    side1KerningGroups = dynamicProperty(
+    side1KerningGroups: dynamicProperty = dynamicProperty(
         "base_side1KerningGroups",
         """
         All groups marked as potential side 1
@@ -104,7 +123,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         """,
     )
 
-    def _get_base_side1KerningGroups(self):
+    def _get_base_side1KerningGroups(self) -> GroupsType:
         kerningGroups = self._get_side1KerningGroups()
         normalized = {}
         for name, members in kerningGroups.items():
@@ -113,7 +132,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
             normalized[name] = members
         return normalized
 
-    def _get_side1KerningGroups(self):
+    def _get_side1KerningGroups(self) -> GroupsType:
         """
         Subclasses may override this method.
         """
@@ -123,7 +142,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
                 found[name] = contents
         return found
 
-    side2KerningGroups = dynamicProperty(
+    side2KerningGroups: dynamicProperty = dynamicProperty(
         "base_side2KerningGroups",
         """
         All groups marked as potential side 1
@@ -137,7 +156,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         """,
     )
 
-    def _get_base_side2KerningGroups(self):
+    def _get_base_side2KerningGroups(self) -> GroupsType:
         kerningGroups = self._get_side2KerningGroups()
         normalized = {}
         for name, members in kerningGroups.items():
@@ -146,7 +165,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
             normalized[name] = members
         return normalized
 
-    def _get_side2KerningGroups(self):
+    def _get_side2KerningGroups(self) -> GroupsType:
         """
         Subclasses may override this method.
         """
@@ -160,7 +179,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
     # RoboFab Compatibility
     # ---------------------
 
-    def remove(self, groupName):
+    def remove(self, groupName: str) -> None:
         """
         Removes a group from the Groups. **groupName** will be
         a :ref:`type-string` that is the group name to
@@ -170,7 +189,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         """
         del self[groupName]
 
-    def asDict(self):
+    def asDict(self) -> GroupsType:
         """
         Return the Groups as a ``dict``.
 
@@ -185,7 +204,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
     # Inherited Functions
     # -------------------
 
-    def __contains__(self, groupName):
+    def __contains__(self, groupName: str) -> bool:
         """
         Tests to see if a group name is in the Groups.
         **groupName** will be a :ref:`type-string`.
@@ -197,7 +216,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         """
         return super(BaseGroups, self).__contains__(groupName)
 
-    def __delitem__(self, groupName):
+    def __delitem__(self, groupName: str) -> None:
         """
         Removes **groupName** from the Groups. **groupName** is a
         :ref:`type-string`.::
@@ -206,7 +225,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         """
         super(BaseGroups, self).__delitem__(groupName)
 
-    def __getitem__(self, groupName):
+    def __getitem__(self, groupName: str) -> Tuple[str, ...]:
         """
         Returns the contents of the named group. **groupName** is a
         :ref:`type-string`. The returned value will be a
@@ -225,7 +244,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         """
         return super(BaseGroups, self).__getitem__(groupName)
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[str]:
         """
         Iterates through the Groups, giving the key for each iteration. The
         order that the Groups will iterate though is not fixed nor is it
@@ -239,7 +258,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         """
         return super(BaseGroups, self).__iter__()
 
-    def __len__(self):
+    def __len__(self) -> int:
         """
         Returns the number of groups in Groups as an ``int``.::
 
@@ -248,7 +267,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         """
         return super(BaseGroups, self).__len__()
 
-    def __setitem__(self, groupName, glyphNames):
+    def __setitem__(self, groupName: str, glyphNames: CollectionType[str]) -> None:
         """
         Sets the **groupName** to the list of **glyphNames**. **groupName**
         is the group name as a :ref:`type-string` and **glyphNames** is a
@@ -258,7 +277,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         """
         super(BaseGroups, self).__setitem__(groupName, glyphNames)
 
-    def clear(self):
+    def clear(self) -> None:
         """
         Removes all group information from Groups,
         resetting the Groups to an empty dictionary. ::
@@ -267,7 +286,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         """
         super(BaseGroups, self).clear()
 
-    def get(self, groupName, default=None):
+    def get(self, groupName: str, default: Optional[CollectionType[str]] = None) -> Optional[Tuple[str, ...]]:
         """
         Returns the contents of the named group.
         **groupName** is a :ref:`type-string`, and the returned values will
@@ -287,7 +306,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         """
         return super(BaseGroups, self).get(groupName, default)
 
-    def items(self):
+    def items(self) -> List[ItemsType]:
         """
         Returns a list of ``tuple`` of each group name and group members.
         Group names are :ref:`type-string` and group members are a
@@ -299,7 +318,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         """
         return super(BaseGroups, self).items()
 
-    def keys(self):
+    def keys(self) -> List[str]:
         """
         Returns a ``list`` of all the group names in Groups. This list will be
         unordered.::
@@ -309,7 +328,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         """
         return super(BaseGroups, self).keys()
 
-    def pop(self, groupName, default=None):
+    def pop(self, groupName: str, default: Optional[CollectionType[str]]=None) -> Optional[Tuple[str, ...]]:
         """
         Removes the **groupName** from the Groups and returns the list of
         group members. If no group is found, **default** is returned.
@@ -322,7 +341,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         """
         return super(BaseGroups, self).pop(groupName, default)
 
-    def update(self, otherGroups):
+    def update(self, otherGroups: BaseDict) -> None:
         """
         Updates the Groups based on **otherGroups**. *otherGroups** is a
         ``dict`` of groups information. If a group from **otherGroups** is in
@@ -335,7 +354,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         """
         super(BaseGroups, self).update(otherGroups)
 
-    def values(self):
+    def values(self) -> List[ValueType]:
         """
         Returns a ``list`` of each named group's members.
         This will be a list of lists, the group members will be a
