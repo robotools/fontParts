@@ -20,6 +20,7 @@ from fontParts.base.annotations import (
     QuadrupleCollectionType,
     TransformationType,
     ReverseComponentMappingType,
+    IntFloatType,
 )
 
 if TYPE_CHECKING:
@@ -459,7 +460,7 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
         )
         return selected
 
-    def _get_selectedGlyphs(self) -> Tuple[BaseGlyph]:
+    def _get_selectedGlyphs(self) -> Tuple[BaseGlyph, ...]:
         """Get the selected glyphs in the native layer.
 
         This is the environment implementation of
