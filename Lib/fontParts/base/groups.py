@@ -42,7 +42,9 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
     """
 
     keyNormalizer: Callable[[str], str] = normalizers.normalizeGroupKey
-    valueNormalizer: Callable[[CollectionType[str]], Tuple[str, ...]] = normalizers.normalizeGroupValue
+    valueNormalizer: Callable[[CollectionType[str]], Tuple[str, ...]] = (
+        normalizers.normalizeGroupValue
+    )
 
     def _reprContents(self) -> List[str]:
         contents = []
@@ -286,7 +288,9 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         """
         super(BaseGroups, self).clear()
 
-    def get(self, groupName: str, default: Optional[CollectionType[str]] = None) -> Optional[Tuple[str, ...]]:
+    def get(
+        self, groupName: str, default: Optional[CollectionType[str]] = None
+    ) -> Optional[Tuple[str, ...]]:
         """
         Returns the contents of the named group.
         **groupName** is a :ref:`type-string`, and the returned values will
@@ -328,7 +332,9 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         """
         return super(BaseGroups, self).keys()
 
-    def pop(self, groupName: str, default: Optional[CollectionType[str]]=None) -> Optional[Tuple[str, ...]]:
+    def pop(
+        self, groupName: str, default: Optional[CollectionType[str]] = None
+    ) -> Optional[Tuple[str, ...]]:
         """
         Removes the **groupName** from the Groups and returns the list of
         group members. If no group is found, **default** is returned.
