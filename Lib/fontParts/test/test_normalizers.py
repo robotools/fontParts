@@ -268,7 +268,7 @@ class TestNormalizers(unittest.TestCase):
     # normalizeLibValue
 
     def test_normalizeLibValue_invalidNone(self):
-        with self.assertRaises(ValueError):
+        with self.assertRaises(TypeError):
             normalizers.normalizeLibValue(None)
 
     def test_normalizeLibValue_validString(self):
@@ -292,7 +292,7 @@ class TestNormalizers(unittest.TestCase):
         self.assertEqual(result, ("A", "B"))
 
     def test_normalizeLibValue_invalidTupleMember(self):
-        with self.assertRaises(ValueError):
+        with self.assertRaises(TypeError):
             normalizers.normalizeLibValue((1, None))
 
     def test_normalizeLibValue_validList(self):
@@ -301,7 +301,7 @@ class TestNormalizers(unittest.TestCase):
         self.assertEqual(result, ["A", "B"])
 
     def test_normalizeLibValue_invalidListMember(self):
-        with self.assertRaises(ValueError):
+        with self.assertRaises(TypeError):
             normalizers.normalizeLibValue([1, None])
 
     def test_normalizeLibValue_validDict(self):
@@ -314,7 +314,7 @@ class TestNormalizers(unittest.TestCase):
             normalizers.normalizeLibValue({1: 1, "B": 2})
 
     def test_normalizeLibValue_invalidDictValue(self):
-        with self.assertRaises(ValueError):
+        with self.assertRaises(TypeError):
             normalizers.normalizeLibValue({"A": None, "B": 2})
 
     # -----
