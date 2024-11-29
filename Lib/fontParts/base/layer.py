@@ -1075,14 +1075,15 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
 
     compatibilityReporterClass = LayerCompatibilityReporter
 
-    def isCompatible(self, other: BaseLayer) -> tuple[bool, str]:
+    def isCompatible(self, other: BaseLayer) -> Tuple[bool, LayerCompatibilityReporter]:
         """Evaluate interpolation compatibility with another layer.
 
         :param other: The other :class:`BaseLayer` instance to check
             compatibility with.
         :return: A :class:`tuple` where the first element is a :class:`bool`
-            indicating compatibility, and the second element is a :class:`str`
-            of compatibility notes.
+            indicating compatibility, and the second element is
+            a :class:`fontParts.base.compatibility.LayerCompatibilityReporter`
+            instance.
 
         Example::
 
@@ -1098,7 +1099,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
         return super(BaseLayer, self).isCompatible(other, BaseLayer)
 
     def _isCompatible(
-        self, other: BaseLib, reporter: LayerCompatibilityReporter
+        self, other: BaseLayer, reporter: LayerCompatibilityReporter
     ) -> None:
         """Evaluate interpolation compatibility with another native layer.
 
