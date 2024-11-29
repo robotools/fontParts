@@ -397,7 +397,7 @@ class BaseContour(
     def autoStartSegment(self) -> None:
         """Automatically calculate and set the contour's first segment.
 
-        The behavior of this may vary accross environments.
+        The behavior of this may vary across environments.
 
         Example::
 
@@ -415,9 +415,9 @@ class BaseContour(
         :raises NotImplementedError: If the method has not been overridden by a
             subclass.
 
-        .. note::
+        .. important::
 
-            Subclasses may override this method.
+            Subclasses must override this method.
 
         """
         self.raiseNotImplementedError()

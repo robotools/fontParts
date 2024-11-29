@@ -1031,7 +1031,7 @@ class TestDeprecated(unittest.TestCase):
             DeprecationWarning, "Contour._generateIdentifierforPoint()"
         ):
             i = contour._generateIdentifierforPoint(contour[0][0])
-        self.assertEqual(i, contour._getIdentifierforPoint(contour[0][0]))
+        self.assertEqual(i, contour._getIdentifierForPoint(contour[0][0]))
 
     def test_contour_deprecated_generateIdentiferForPoint(self):
         contour = self.getContour_bounds()
