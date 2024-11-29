@@ -396,7 +396,8 @@ class BaseItems:
     def __contains__(self, item: ItemType) -> bool:
         key, value = item
         normalizedItem = (
-            self._mapping._normalizeKey(key), self._mapping._normalizeValue(value)
+            self._mapping._normalizeKey(key),
+            self._mapping._normalizeValue(value),
         )
         return normalizedItem in self._mapping._normalizeItems()
 
