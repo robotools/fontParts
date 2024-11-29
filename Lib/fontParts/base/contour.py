@@ -476,14 +476,17 @@ class BaseContour(
 
     compatibilityReporterClass = ContourCompatibilityReporter
 
-    def isCompatible(self, other: BaseContour) -> Tuple[bool, str]:
+    def isCompatible(
+        self, other: BaseContour
+    ) -> Tuple[bool, ContourCompatibilityReporter]:
         """Evaluate interpolation compatibility with another contour.
 
         :param other: The other :class:`BaseContour` instance to check
             compatibility with.
         :return: A :class:`tuple` where the first element is a :class:`bool`
-            indicating compatibility, and the second element is a :class:`str`
-            of compatibility notes.
+            indicating compatibility, and the second element is
+            a :class:`fontParts.base.compatibility.ContourCompatibilityReporter`
+            instance.
 
         Example::
 

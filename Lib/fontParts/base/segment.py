@@ -613,7 +613,9 @@ class BaseSegment(
 
     compatibilityReporterClass = SegmentCompatibilityReporter
 
-    def isCompatible(self, other: BaseSegment) -> Tuple[bool, str]:
+    def isCompatible(
+        self, other: BaseSegment
+    ) -> Tuple[bool, SegmentCompatibilityReporter]:
         """Evaluate interpolation compatibility with another segment.
 
         This method will return a :class:`bool` indicating if the segment is
@@ -623,8 +625,9 @@ class BaseSegment(
         :param other: The other :class:`BaseSegment` instance to check
             compatibility with.
         :return: A :class:`tuple` where the first element is a :class:`bool`
-            indicating compatibility, and the second element is a :class:`str`
-            of compatibility notes.
+            indicating compatibility, and the second element is
+            a :class:`fontParts.base.compatibility.SegmentCompatibilityReporter`
+            instance.
 
         Example::
 
