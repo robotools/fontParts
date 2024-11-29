@@ -260,9 +260,9 @@ class TestGroups(unittest.TestCase):
         for groupName in groups:
             groups.remove(groupName)
 
-        self.assertEqual(groups.keys(), expected)
+        self.assertEqual(list(groups.keys()), expected)
 
     def test_values(self):
         groups = self.getGroups_generic()
         expected = [("A", "B", "C"), ("x", "y", "z"), (), ("A",)]
-        self.assertEqual(groups.values().sort(), expected.sort())
+        self.assertEqual(list(groups.values()).sort(), expected.sort())

@@ -684,7 +684,7 @@ class BaseDict(BaseObject):
 
         """
         key = self._normalizeKey(key)
-        default = self._normalizeValue(default)
+        default = self._normalizeValue(default) if default is not None else default
         value = self._get(key, default=default)
         if value is not default:
             value = self._normalizeValue(value)
@@ -801,11 +801,8 @@ class BaseDict(BaseObject):
             Subclasses may override this method.
 
         """
-        keys = self.keys()
-        while keys:
-            key = keys[0]
+        for key in self.keys():
             yield key
-            keys = keys[1:]
 
     def update(self, other: BaseDict) -> None:
         """Update the current object instance with key-value pairs from another.
