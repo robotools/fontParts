@@ -196,12 +196,12 @@ def normalizeKerningKey(value: PairCollectionType[str]) -> PairType[str]:
             )
         if len(v) < 1:
             raise ValueError("Kerning key items must be at least one character long")
-    kern1, kern2 = value
-    if kern1.startswith("public.") and not kern1.startswith("public.kern1."):
+    left, right = value
+    if left.startswith("public.") and not left.startswith("public.kern1."):
         raise ValueError("Left Kerning key group must start with public.kern1.")
-    if kern2.startswith("public.") and not kern2.startswith("public.kern2."):
+    if right.startswith("public.") and not right.startswith("public.kern2."):
         raise ValueError("Right Kerning key group must start with public.kern2.")
-    return (kern1, kern2)
+    return (left, right)
 
 
 def normalizeKerningValue(value: IntFloatType) -> IntFloatType:
