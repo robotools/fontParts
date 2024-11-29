@@ -17,7 +17,7 @@ from fontParts.base.annotations import (
     PairType,
     PairCollectionType,
     SextupleCollectionType,
-    IntFloatType
+    IntFloatType,
 )
 
 if TYPE_CHECKING:
