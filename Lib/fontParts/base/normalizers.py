@@ -196,7 +196,6 @@ def normalizeKerningKey(value: PairCollectionType[str]) -> PairType[str]:
             )
         if len(v) < 1:
             raise ValueError("Kerning key items must be at least one character long")
-
     left, right = value
     if left.startswith("public.") and not left.startswith("public.kern1."):
         raise ValueError("Left Kerning key group must start with public.kern1.")
