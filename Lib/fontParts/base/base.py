@@ -388,12 +388,33 @@ class BaseObject:
 
 
 class BaseItems:
+    """Represent the basis for a items view object.
+
+    This class provides a view of the key-value pairs in a mapping, similar to
+    the behavior of Python's :meth:`dict.items` method. The view dynamically
+    reflects any changes made to the parent mapping, ensuring it remains
+    up-to-date.
+
+    This class is intended to be instantiated through the :meth:`BaseDict.items`
+    method.
+
+    :param mapping: The parent :class:`BaseDict` instance whose items are
+        represented by this view.
+
+    """
+
     ItemType = Tuple[Any, Any]
 
     def __init__(self, mapping: BaseDict) -> None:
         self._mapping = mapping
 
     def __contains__(self, item: ItemType) -> bool:
+        """Check if a key-value pair exists in the mapping.
+
+        :param item: The key-value pair to check for existence as a :class:`tuple`.
+        :return: :obj:`True` if the key-value pair exists, :obj:`False` otherwise.
+
+        """
         key, value = item
         normalizedItem = (
             self._mapping._normalizeKey(key),
@@ -402,50 +423,149 @@ class BaseItems:
         return normalizedItem in self._mapping._normalizeItems()
 
     def __iter__(self) -> Iterable[ItemType]:
+        """Return an iterator over the key-value pairs in the mapping.
+
+        This method yields each item one by one, removing it from the list of
+        keys after it is yielded.
+
+        :returns: An iterator over the mapping's key-value pairs.
+
+        """
         return iter(self._mapping._normalizeItems())
 
     def __len__(self) -> int:
+        """Return the number of keys-value pairs in the mapping.
+
+        :return: An :class:`int` representing the number of mapping items.
+
+        """
         return len(self._mapping._normalizeItems())
 
     def __repr__(self) -> str:
+        """Return a string representation of the items view.
+
+        :return: A representation of the keys view as a :class:`str`.
+
+        """
         return f"{self._mapping.__class__.__name__}_items({list(self)})"
 
 
 class BaseKeys:
+    """Represent the basis for a keys view object.
+
+    This class provides a view of the keys in a mapping, similar to the behavior
+    of Python's :meth:`dict.keys` method. The view dynamically reflects any
+    changes made to the parent mapping, ensuring it remains up-to-date.
+
+    This class is intended to be instantiated through the :meth:`BaseDict.keys`
+    method.
+
+    :param mapping: The parent :class:`BaseDict` instance whose keys are
+        represented by this view.
+
+    """
+
     def __init__(self, mapping: BaseDict) -> None:
         self._mapping = mapping
 
     def __contains__(self, key: Any) -> bool:
+        """Check if a key exists in the mapping.
+
+        :param key: The key to check for existence.
+        :return: :obj:`True` if the key exists, :obj:`False` otherwise.
+
+        """
         return any(k == key for k, _ in self._mapping._normalizeItems())
 
     def __iter__(self) -> Iterable[Any]:
+        """Return an iterator over the keys in the mapping.
+
+        This method yields each key one by one, removing it from the list of
+        keys after it is yielded.
+
+        :returns: An iterator over the mapping's keys.
+
+        """
         return (k for k, _ in self._mapping._normalizeItems())
 
     def __len__(self) -> int:
+        """Return the number of keys in the mapping.
+
+        :return: An :class:`int` representing the number of mapping keys.
+
+        """
         return len(self._mapping._normalizeItems())
 
     def __repr__(self) -> str:
+        """Return a string representation of the keys view.
+
+        :return: A representation of the keys view as a :class:`str`.
+
+        """
         return f"{self._mapping.__class__.__name__}_keys({list(self)})"
 
-    def isdisjoint(self, other: Any) -> bool:
-        # Check if there are no common elements between self and other
-        return not any(k in other for k in self)
+    def isdisjoint(self, other: Iterable[Any]) -> bool:
+        """Check if the keys view has no common elements with another iterable.
+
+        :param other: The iterable to compare against.
+        :return: :obj:`True` if there are no common elements, :obj:`False` otherwise.
+
+        """
+        return set(self).isdisjoint(other)
 
 
 class BaseValues:
+    """Represent the basis for a values view object.
+
+    This class provides a view of the values in a mapping, similar to the behavior
+    of Python's :meth:`dict.values` method. The view dynamically reflects any
+    changes made to the parent mapping, ensuring it remains up-to-date.
+
+    This class is intended to be instantiated through the :meth:`BaseDict.values`
+    method.
+
+    :param mapping: The parent :class:`BaseDict` instance whose keys are
+        represented by this view.
+
+    """
+
     def __init__(self, mapping: BaseDict) -> None:
         self._mapping = mapping
 
     def __contains__(self, value: Any) -> bool:
+        """Check if a value exists in the mapping.
+
+        :param value: The value to check for existence.
+        :return: :obj:`True` if the value exists, :obj:`False` otherwise.
+
+        """
         return any(v == value for _, v in self._mapping._normalizeItems())
 
     def __iter__(self) -> Iterable[Any]:
+        """Return an iterator over the values in the mapping.
+
+        This method yields each value one by one, removing it from the list of
+        values after it is yielded.
+
+        :returns: An iterator over the mapping's values.
+
+        """
         return (v for _, v in self._mapping._normalizeItems())
 
     def __len__(self) -> int:
+        """Return the number of values in the mapping.
+
+        :return: An :class:`int` representing the number of mapping values.
+
+        """
         return len(self._mapping._normalizeItems())
 
     def __repr__(self) -> str:
+        """Return a string representation of the values view.
+
+        :return: A representation of the values view as a :class:`str`.
+
+        """
         return f"{self._mapping.__class__.__name__}_values({list(self)})"
 
 
@@ -1142,7 +1262,8 @@ class InterpolationMixin:
         """
         if not isinstance(other, cls):
             raise TypeError(
-                f"""Compatibility between an instance of {cls.__name__!r} and an                 instance of {other.__class__.__name__!r} can not be checked."""
+                f"""Compatibility between an instance of {cls.__name__!r}
+                and an instance of {other.__class__.__name__!r} can not be checked."""
             )
         reporter = self.compatibilityReporterClass(self, other)
         self._isCompatible(other, reporter)
