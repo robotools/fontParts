@@ -1,7 +1,6 @@
 from __future__ import annotations
 from typing import (
     TYPE_CHECKING,
-    Any,
     Callable,
     Dict,
     Iterator,
@@ -16,33 +15,37 @@ from fontParts.base.deprecated import DeprecatedGroups, RemovedGroups
 from fontParts.base.annotations import CollectionType
 
 if TYPE_CHECKING:
-    from fontParts.base.glyph import BaseGlyph
     from fontParts.base.font import BaseFont
-    from fontparts.base.layer import BaseLayer
 
 ValueType = Tuple[str, ...]
 GroupsType = Dict[str, ValueType]
 ItemsType = Tuple[str, ValueType]
 
+# NOTES:
+
+# suggest name change from findGlyph to findGroups or findGlyphGroups
+
 
 class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
-    """
-    A Groups object. This object normally created as part of a
-    :class:`BaseFont`. An orphan Groups object can be created like this::
+    """Represent the basis for a groups object.
+
+    This object behaves like a Python :class:`dict` object. Most of the
+    dictionary functionality comes from :class:`BaseDict`. Consult that
+    object's documentation for the required environment implementation
+    details.
+
+    :cvar keyNormalizer: A function to normalize the key of the dictionary.
+    :cvar valueNormalizer: A function to normalize the value of the dictionary.
+
+    This object is normally created as part of a :class:`BaseFont`.
+    An orphan :class:`BaseGroups` object instance can be created like this::
 
         >>> groups = RGroups()
 
-    This object behaves like a Python dictionary. Most of the dictionary
-    functionality comes from :class:`BaseDict`, look at that object for the
-    required environment implementation details.
-
-    Groups uses :func:`normalizers.normalizeGroupKey` to normalize the key of
-    the ``dict``, and :func:`normalizers.normalizeGroupValue` to normalize the
-    value of the ``dict``.
     """
 
     keyNormalizer: Callable[[str], str] = normalizers.normalizeGroupKey
-    valueNormalizer: Callable[[CollectionType[str]], Tuple[str, ...]] = (
+    valueNormalizer: Callable[[CollectionType[str]], ValueType] = (
         normalizers.normalizeGroupValue
     )
 
@@ -61,7 +64,24 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
 
     _font = None
 
-    font = dynamicProperty("font", "The Groups' parent :class:`BaseFont`.")
+    font: dynamicProperty = dynamicProperty(
+        "font",
+        """Get or set the groups's parent font object.
+
+        The value must be a :class:`BaseFont` instance or :obj:`None`.
+
+        :return: The :class:`BaseFont` instance containing the group
+            or :obj:`None`.
+        :raises AssertionError:
+            - If attempting to set the font when it has already been set and is
+              not the same as the provided font.
+
+        Example::
+
+            >>> font = gorups.font
+
+        """,
+    )
 
     def _get_font(self) -> Optional[BaseFont]:
         if self._font is None:
@@ -70,7 +90,9 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
 
     def _set_font(self, font: Optional[BaseFont]) -> None:
         if self._font is not None and self._font != font:
-            raise AssertionError("font for groups already set and is not same as font")
+            raise AssertionError(
+                "font for groups already set and is not same as font"
+            )
         if font is not None:
             font = reference(font)
         self._font = font
@@ -80,26 +102,36 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
     # ---------
 
     def findGlyph(self, glyphName: str) -> List[str]:
-        """
-        Returns a ``list`` of the group or groups associated with
-        **glyphName**.
-        **glyphName** will be an :ref:`type-string`. If no group is found
-        to contain **glyphName** an empty ``list`` will be returned. ::
+        """Retrieve the groups associated with the given glyph.
+
+        :param glyphName: The name of the glyph to search for as a :class:`str`.
+        :return: A :class:`list` of :class:`str` items.
+
+
+        Example::
 
             >>> font.groups.findGlyph("A")
             ["A_accented"]
+
         """
         glyphName = normalizers.normalizeGlyphName(glyphName)
         groupNames = self._findGlyph(glyphName)
         return [type(self).keyNormalizer(groupName) for groupName in groupNames]
 
     def _findGlyph(self, glyphName: str) -> List[str]:
-        """
-        This is the environment implementation of
-        :meth:`BaseGroups.findGlyph`. **glyphName** will be
-        an :ref:`type-string`.
+        """Retrieve the groups associated with the given native glyph.
 
-        Subclasses may override this method.
+        This is the environment implementation of :meth:`BaseGroups.findGlyph`.
+
+        :param glyphName: The name of the glyph to search for as a :class:`str`.
+            The value will have been normalized
+            with :func:`normalizers.normalizeGlyphName`.
+        :return: A :class:`list` of :class:`str` items.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         found = []
         for key, groupList in self.items():
@@ -113,15 +145,17 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
 
     side1KerningGroups: dynamicProperty = dynamicProperty(
         "base_side1KerningGroups",
-        """
-        All groups marked as potential side 1
-        kerning members.
+        """Get all groups marked as potential side 1 (left) kerning members.
+
+        This property is read-only.
+
+        :return: A :class:`dict` of :class:`str` group names mapped
+            to :class:`tuple` of :class:`str` glyph names.
+
+        Example::
 
             >>> side1Groups = groups.side1KerningGroups
 
-        The value will be a :ref:`dict` with
-        :ref:`string` keys representing group names
-        and :ref:`tuple` contaning glyph names.
         """,
     )
 
@@ -135,8 +169,18 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         return normalized
 
     def _get_side1KerningGroups(self) -> GroupsType:
-        """
-        Subclasses may override this method.
+        """Get all native groups marked as potential side 1 (left) kerning members.
+
+        This is the environment implementation of the
+        :attr:`BaseGroups.side1KerningGroups` property getter.
+
+        :return: A :class:`dict` of :class:`str` group names mapped
+            to :class:`tuple` of :class:`str` glyph names.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         found = {}
         for name, contents in self.items():
@@ -146,15 +190,17 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
 
     side2KerningGroups: dynamicProperty = dynamicProperty(
         "base_side2KerningGroups",
-        """
-        All groups marked as potential side 1
-        kerning members.
+        """Get all groups marked as potential side 2 (right) kerning members.
 
-            >>> side2Groups = groups.side2KerningGroups
+        This property is read-only.
 
-        The value will be a :ref:`dict` with
-        :ref:`string` keys representing group names
-        and :ref:`tuple` contaning glyph names.
+        :return: A :class:`dict` of :class:`str` group names mapped
+            to :class:`tuple` of :class:`str` glyph names.
+
+        Example::
+
+            >>> side1Groups = groups.side1KerningGroups
+
         """,
     )
 
@@ -168,8 +214,18 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         return normalized
 
     def _get_side2KerningGroups(self) -> GroupsType:
-        """
-        Subclasses may override this method.
+        """Get all native groups marked as potential side 2 (right) kerning members.
+
+        This is the environment implementation of the
+        :attr:`BaseGroups.side2KerningGroups` property getter.
+
+        :return: A :class:`dict` of :class:`str` group names mapped
+            to :class:`tuple` of :class:`str` glyph names.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         found = {}
         for name, contents in self.items():
@@ -182,20 +238,34 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
     # ---------------------
 
     def remove(self, groupName: str) -> None:
-        """
-        Removes a group from the Groups. **groupName** will be
-        a :ref:`type-string` that is the group name to
-        be removed.
+        """Remove the given group from the current groups.
 
-        This is a backwards compatibility method.
+        :param: groupName: The name of the group to be removed as a :class:`str`.
+
+        .. note::
+
+            This is a backwards compatibility method.
+
+        Example::
+
+            >>> font.groups.remove("myKey")
+
         """
         del self[groupName]
 
     def asDict(self) -> GroupsType:
-        """
-        Return the Groups as a ``dict``.
+        """Return the groups as a dictionary.
 
-        This is a backwards compatibility method.
+        :return A :class:`dict` reflecting the contents of the current groups.
+
+        .. note::
+
+            This is a backwards compatibility method.
+
+        Example::
+
+            >>> font.groups.asDict()
+
         """
         d = {}
         for k, v in self.items():
@@ -207,167 +277,230 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
     # -------------------
 
     def __contains__(self, groupName: str) -> bool:
-        """
-        Tests to see if a group name is in the Groups.
-        **groupName** will be a :ref:`type-string`.
-        This returns a ``bool`` indicating if the **groupName**
-        is in the Groups. ::
+        """Check if the given key exists in the groups.
+
+        :param groupName: The group name to check for existence as a :class:`str`.
+        :return: :obj:`True` if the `groupName` exists in the
+            groups, :obj:`False` otherwise.
+
+        Example::
 
             >>> "myGroup" in font.groups
             True
+
         """
         return super(BaseGroups, self).__contains__(groupName)
 
     def __delitem__(self, groupName: str) -> None:
-        """
-        Removes **groupName** from the Groups. **groupName** is a
-        :ref:`type-string`.::
+        """Remove the given group from the current groups instance.
+
+        :param groupName: The name of the group to remove as a :class:`str`.
+
+        Example::
 
             >>> del font.groups["myGroup"]
+
         """
         super(BaseGroups, self).__delitem__(groupName)
 
     def __getitem__(self, groupName: str) -> Tuple[str, ...]:
-        """
-        Returns the contents of the named group. **groupName** is a
-        :ref:`type-string`. The returned value will be a
-        :ref:`type-immutable-list` of the group contents.::
+        """Get the contents of the given group.
+
+        :param groupName: The group name to retrieve the value for as a :class:`str`.
+        :return: A :class:`tuple` of :class:`str` glyph names.
+        :raise KeyError: If the specified `groupName` does not exist.
+
+        Example::
 
             >>> font.groups["myGroup"]
             ("A", "B", "C")
 
-        It is important to understand that any changes to the returned group
-        contents will not be reflected in the Groups object. If one wants to
-        make a change to the group contents, one should do the following::
+        .. note::
 
-            >>> group = font.groups["myGroup"]
-            >>> group.remove("A")
-            >>> font.groups["myGroup"] = group
+            Any changes to the returned lib contents will not be reflected in
+            it's :class:`BaseGroups` instance. To make changes to this content,
+            do the following::
+
+                >>> group = font.groups["myGroup"]
+                >>> group.remove("A")
+                >>> font.groups["myGroup"] = group
+
         """
         return super(BaseGroups, self).__getitem__(groupName)
 
     def __iter__(self) -> Iterator[str]:
-        """
-        Iterates through the Groups, giving the key for each iteration. The
-        order that the Groups will iterate though is not fixed nor is it
-        ordered.::
+        """Return an iterator over the group names in the current groups.
+
+        The iteration order is not fixed.
+
+        Example::
 
             >>> for groupName in font.groups:
             >>>     print groupName
             "myGroup"
             "myGroup3"
             "myGroup2"
+
         """
         return super(BaseGroups, self).__iter__()
 
     def __len__(self) -> int:
-        """
-        Returns the number of groups in Groups as an ``int``.::
+        """Return the number of groups in the current groups instance.
+
+        :return: An :class:`int` representing the number of groups in the
+            current groups instance.
+
+        Example::
 
             >>> len(font.groups)
             5
+
         """
         return super(BaseGroups, self).__len__()
 
     def __setitem__(self, groupName: str, glyphNames: CollectionType[str]) -> None:
-        """
-        Sets the **groupName** to the list of **glyphNames**. **groupName**
-        is the group name as a :ref:`type-string` and **glyphNames** is a
-        ``list`` of glyph names as :ref:`type-string`.
+        """Set the glyph names for a given group in the current groups instance.
+
+        :param groupName: The group name to set as a :class:`str`.
+        :param glyphNames: The glyph names to set for the given group as
+            a :class:`list` or :class:`tuple` of :class:`str` items.
+
+        Example::
 
             >>> font.groups["myGroup"] = ["A", "B", "C"]
+
         """
+
         super(BaseGroups, self).__setitem__(groupName, glyphNames)
 
     def clear(self) -> None:
-        """
-        Removes all group information from Groups,
-        resetting the Groups to an empty dictionary. ::
+        """Remove all groups from the current groups instance.
+
+        This will reset the :class:`BaseGroups` instance to an empty dictionary.
+
+        Example::
 
             >>> font.groups.clear()
+
         """
         super(BaseGroups, self).clear()
 
     def get(
         self, groupName: str, default: Optional[CollectionType[str]] = None
     ) -> Optional[Tuple[str, ...]]:
-        """
-        Returns the contents of the named group.
-        **groupName** is a :ref:`type-string`, and the returned values will
-        either be :ref:`type-immutable-list` of group contents or ``None``
-        if no group was found. ::
+        """Get the contents for the given group in the current groups instance.
+
+        If the given `groupName` is not found, The specified `default` will be
+        returned.
+
+        :param groupName: The group name to look up as a :class:`str`.
+        :param default: The optional default value to return if the `groupName`
+            is not found`. The value must be either a class`list` or :class:`tuple`
+            of :class:`str` glyph names, or :obj:`None`. Defaults to :obj:`None`.
+        :return: The contents of the given group as a :class:`tuple`
+            of :class:`str` items, or the `default` value if the group is not found.
+
+        Example::
 
             >>> font.groups["myGroup"]
             ("A", "B", "C")
 
-        It is important to understand that any changes to the returned group
-        contents will not be reflected in the Groups object. If one wants to
-        make a change to the group contents, one should do the following::
+        ..note::
 
-            >>> group = font.groups["myGroup"]
-            >>> group.remove("A")
-            >>> font.groups["myGroup"] = group
+            Any changes to the returned lib contents will not be reflected in
+            it's :class:`BaseGroups` instance. To make changes to this content,
+            do the following::
+
+                >>> group = font.groups["myGroup"]
+                >>> group.remove("A")
+                >>> font.groups["myGroup"] = group
+
         """
         return super(BaseGroups, self).get(groupName, default)
 
     def items(self) -> List[ItemsType]:
-        """
-        Returns a list of ``tuple`` of each group name and group members.
-        Group names are :ref:`type-string` and group members are a
-        :ref:`type-immutable-list` of :ref:`type-string`. The initial
-        list will be unordered.
+        """Return an unordered list of the groups' items.
+
+        Each item is represented as a :class:`tuple` of key-value pairs, where:
+            - `key` is a :class:`str` representing the group name.
+            - `value` is a :class:`tuple` of :class:`str` glyph names.
+
+        :return: A :class:`list` of :class:`tuple` items of the form ``(key, value)``.
+
+        Example::
 
             >>> font.groups.items()
             [("myGroup", ("A", "B", "C"), ("myGroup2", ("D", "E", "F"))]
+
         """
         return super(BaseGroups, self).items()
 
     def keys(self) -> List[str]:
-        """
-        Returns a ``list`` of all the group names in Groups. This list will be
-        unordered.::
+        """Return an unordered list of the groups' keys.
+
+        :return: A :class:`list` of :class:`str` group names.
+
+        Example::
 
             >>> font.groups.keys()
             ["myGroup4", "myGroup1", "myGroup5"]
+
         """
         return super(BaseGroups, self).keys()
 
     def pop(
         self, groupName: str, default: Optional[CollectionType[str]] = None
     ) -> Optional[Tuple[str, ...]]:
-        """
-        Removes the **groupName** from the Groups and returns the list of
-        group members. If no group is found, **default** is returned.
-        **groupName** is a :ref:`type-string`. This must return either
-        **default** or a :ref:`type-immutable-list` of glyph names as
-        :ref:`type-string`.
+        """Remove the specified group and return its associated contents.
+
+        If the `groupName` does not exist, the `default` value is returned.
+
+        :param groupName: The group to remove as a :class:`str`.
+        :param default: The optional default value to return if the `groupName`
+            is not found`. The value must be either a class`list` or :class:`tuple`
+            of :class:`str` glyph names, or :obj:`None`. Defaults to :obj:`None`.
+        :return: The contents of the given group as a :class:`tuple`
+            of :class:`str` items, or the `default` value if the group is not found.
+
+        Example::
 
             >>> font.groups.pop("myGroup")
             ("A", "B", "C")
+
         """
         return super(BaseGroups, self).pop(groupName, default)
 
     def update(self, otherGroups: BaseDict) -> None:
-        """
-        Updates the Groups based on **otherGroups**. *otherGroups** is a
-        ``dict`` of groups information. If a group from **otherGroups** is in
-        Groups, the group members will be replaced by the group members from
-        **otherGroups**. If a group from **otherGroups** is not in the Groups,
-        it is added to the Groups. If Groups contain a group name that is not
-        in *otherGroups**, it is not changed.
+        """Update the current groups instance with key-value pairs from another.
+
+        For each group in `otherGroups`:
+            - If the group exists in the current groups instance, its value is
+              replaced with the value from `otherGroups`.
+            - If the key does not exist in the current groups instance, it is added.
+
+        Keys that exist in the current groups instance but are not in `otherLib`
+        remain unchanged.
+
+        :param otherLib: An instance of :class:`BaseDict` or its subclass
+            (like :class:`BaseGroups`) to update the current groups instance with.
+
+        Example::
 
             >>> font.groups.update(newGroups)
+
         """
         super(BaseGroups, self).update(otherGroups)
 
     def values(self) -> List[ValueType]:
-        """
-        Returns a ``list`` of each named group's members.
-        This will be a list of lists, the group members will be a
-        :ref:`type-immutable-list` of :ref:`type-string`. The initial
-        list will be unordered.
+        """Return an unordered list of the groups' values.
+
+        :return: A :class:`list` of groups as :class:`tuple` items containing
+            their respective glyph names as :class:`str`.
+
+        Example::
 
             >>> font.groups.items()
             [("A", "B", "C"), ("D", "E", "F")]
+
         """
         return super(BaseGroups, self).values()
