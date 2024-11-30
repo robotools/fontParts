@@ -21,10 +21,6 @@ ValueType = Tuple[str, ...]
 GroupsType = Dict[str, ValueType]
 ItemsType = Tuple[str, ValueType]
 
-# NOTES:
-
-# suggest name change from findGlyph to findGroups or findGlyphGroups
-
 
 class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
     """Represent the basis for a groups object.
