@@ -491,7 +491,7 @@ class TestContour(unittest.TestCase):
     def test_segments_empty(self):
         contour, _ = self.objectGenerator("contour")
         segments = contour.segments
-        self.assertEqual(segments, [])
+        self.assertEqual(segments, ())
 
     def test_segment_insert_open(self):
         # at index 0
