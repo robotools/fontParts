@@ -255,14 +255,14 @@ class TestGroups(unittest.TestCase):
 
     def test_iter_remove(self):
         groups = self.getGroups_generic()
-        expected = []
 
         for groupName in groups:
             groups.remove(groupName)
+            self.assertNotIn(groupName, groups)
 
-        self.assertEqual(list(groups.keys()), expected)
+        self.assertFalse(groups)
 
     def test_values(self):
         groups = self.getGroups_generic()
         expected = [("A", "B", "C"), ("x", "y", "z"), (), ("A",)]
-        self.assertEqual(list(groups.values()).sort(), expected.sort())
+        self.assertEqual(sorted(groups.values()), sorted(expected))
