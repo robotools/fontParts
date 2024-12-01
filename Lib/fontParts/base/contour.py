@@ -396,15 +396,6 @@ class BaseContour(
 
     def autoStartSegment(self) -> None:
         """Automatically calculate and set the contour's first segment.
-<<<<<<< HEAD
-
-        The behavior of this may vary accross environments.
-
-        Example::
-
-            >>> contour.autoStartSegment()
-
-=======
 
         The behavior of this may vary across environments.
 
@@ -412,7 +403,6 @@ class BaseContour(
 
             >>> contour.autoStartSegment()
 
->>>>>>> v1
         """
         self._autoStartSegment()
 
@@ -425,25 +415,15 @@ class BaseContour(
         :raises NotImplementedError: If the method has not been overridden by a
             subclass.
 
-<<<<<<< HEAD
-        .. note::
-
-            Subclasses may override this method.
-=======
         .. important::
 
             Subclasses must override this method.
->>>>>>> v1
 
         """
         self.raiseNotImplementedError()
 
     def round(self) -> None:
-<<<<<<< HEAD
-        """Round all point coordinates in the contour to the neares integer.
-=======
         """Round all point coordinates in the contour to the nearest integer.
->>>>>>> v1
 
         Example::
 
@@ -453,11 +433,7 @@ class BaseContour(
         self._round()
 
     def _round(self, **kwargs: Any) -> None:
-<<<<<<< HEAD
-        r"""Round all point coordinates in the native contour to the neares integer.
-=======
         r"""Round all point coordinates in the native contour to the nearest integer.
->>>>>>> v1
 
         This is the environment implementation of :meth:`BaseContour.round`.
 
@@ -500,26 +476,17 @@ class BaseContour(
 
     compatibilityReporterClass = ContourCompatibilityReporter
 
-<<<<<<< HEAD
-    def isCompatible(self, other: BaseContour) -> tuple[bool, str]:
-=======
     def isCompatible(
         self, other: BaseContour
     ) -> Tuple[bool, ContourCompatibilityReporter]:
->>>>>>> v1
         """Evaluate interpolation compatibility with another contour.
 
         :param other: The other :class:`BaseContour` instance to check
             compatibility with.
         :return: A :class:`tuple` where the first element is a :class:`bool`
-<<<<<<< HEAD
-            indicating compatibility, and the second element is a :class:`str`
-            of compatibility notes.
-=======
             indicating compatibility, and the second element is
             a :class:`fontParts.base.compatibility.ContourCompatibilityReporter`
             instance.
->>>>>>> v1
 
         Example::
 
@@ -669,16 +636,10 @@ class BaseContour(
         This is the environment implementation of the :attr:`BaseContour.clockwise`
         property setter.
 
-<<<<<<< HEAD
-        :param value: The winding direction to specify as a :class:`bool`.
-            The value will have been normalized
-            with :func:`normalizers.normalizeBoolean`.
-=======
         :param value: A :class:`bool` indicating the desired winding
          direction. :obj:`True` sets the direction to clockwise,
          and :obj:`False` to counter-clockwise. The value will have been
          normalized with :func:`normalizers.normalizeBoolean`.
->>>>>>> v1
 
         .. note::
 
@@ -711,15 +672,9 @@ class BaseContour(
         :raises NotImplementedError: If the method has not been overridden by a
             subclass.
 
-<<<<<<< HEAD
-        .. note::
-
-            Subclasses may override this method.
-=======
         .. important::
 
             Subclasses must override this method.
->>>>>>> v1
 
         """
         self.raiseNotImplementedError()
@@ -793,15 +748,9 @@ class BaseContour(
         :raises NotImplementedError: If the method has not been overridden by a
             subclass.
 
-<<<<<<< HEAD
-        .. note::
-
-            Subclasses may override this method.
-=======
         .. important::
 
             Subclasses must override this method.
->>>>>>> v1
 
         """
         self.raiseNotImplementedError()
@@ -1790,14 +1739,9 @@ class BaseContour(
             point as a :class:`str`. The value will have been normalized
             with :func:`normalizers.normalizePointName`
         :param identifier: An optional :attr:`BasePoint.identifier` to be
-<<<<<<< HEAD
-            applied to the point as a :class:`str`. The value will
-            have been normalized with :func:`normalizers.normalizeIdentifier`.
-=======
             applied to the point as a :class:`str`. The value will have been
             normalized with :func:`normalizers.normalizeIdentifier`, but will
             not have been tested for uniqueness.
->>>>>>> v1
         :param \**kwargs: Additional keyword arguments.
         :raises NotImplementedError: If the method has not been overridden by a
             subclass.
