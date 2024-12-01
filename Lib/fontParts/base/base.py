@@ -388,7 +388,7 @@ class BaseObject:
 
 
 class BaseItems:
-    """Provide a mapping with an items view object.
+    """Provide the given mapping with an items view object.
 
     This class provides a view of the key-value pairs in a mapping, similar to
     the behavior of Python's :meth:`dict.items` method. The view dynamically
@@ -449,7 +449,7 @@ class BaseItems:
 
 
 class BaseKeys:
-    """Provide a mapping with an keys view object.
+    """Provide the given mapping with a keys view object.
 
     This class provides a view of the keys in a mapping, similar to the behavior
     of Python's :meth:`dict.keys` method. The view dynamically reflects any
@@ -513,7 +513,7 @@ class BaseKeys:
 
 
 class BaseValues:
-    """Provide a mapping with an values view object.
+    """Provide the given mapping with a values view object.
 
     This class provides a view of the values in a mapping, similar to the behavior
     of Python's :meth:`dict.values` method. The view dynamically reflects any
