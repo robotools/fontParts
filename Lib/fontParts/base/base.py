@@ -388,11 +388,11 @@ class BaseObject:
 
 
 class BaseItems:
-    """Represent the basis for a items view object.
+    """Provide a mapping with an items view object.
 
     This class provides a view of the key-value pairs in a mapping, similar to
     the behavior of Python's :meth:`dict.items` method. The view dynamically
-    reflects any changes made to the parent mapping, ensuring it remains
+    reflects any changes made to the parent mapping object, ensuring it remains
     up-to-date.
 
     This class is intended to be instantiated through the :meth:`BaseDict.items`
@@ -403,12 +403,10 @@ class BaseItems:
 
     """
 
-    ItemType = Tuple[Any, Any]
-
     def __init__(self, mapping: BaseDict) -> None:
         self._mapping = mapping
 
-    def __contains__(self, item: ItemType) -> bool:
+    def __contains__(self, item: Tuple[Any, Any]) -> bool:
         """Check if a key-value pair exists in the mapping.
 
         :param item: The key-value pair to check for existence as a :class:`tuple`.
@@ -422,7 +420,7 @@ class BaseItems:
         )
         return normalizedItem in self._mapping._normalizeItems()
 
-    def __iter__(self) -> Iterable[ItemType]:
+    def __iter__(self) -> Iterable[Tuple[Any, Any]]:
         """Return an iterator over the key-value pairs in the mapping.
 
         This method yields each item one by one, removing it from the list of
@@ -451,11 +449,11 @@ class BaseItems:
 
 
 class BaseKeys:
-    """Represent the basis for a keys view object.
+    """Provide a mapping with an keys view object.
 
     This class provides a view of the keys in a mapping, similar to the behavior
     of Python's :meth:`dict.keys` method. The view dynamically reflects any
-    changes made to the parent mapping, ensuring it remains up-to-date.
+    changes made to the parent mapping object, ensuring it remains up-to-date.
 
     This class is intended to be instantiated through the :meth:`BaseDict.keys`
     method.
@@ -515,11 +513,11 @@ class BaseKeys:
 
 
 class BaseValues:
-    """Represent the basis for a values view object.
+    """Provide a mapping with an values view object.
 
     This class provides a view of the values in a mapping, similar to the behavior
     of Python's :meth:`dict.values` method. The view dynamically reflects any
-    changes made to the parent mapping, ensuring it remains up-to-date.
+    changes made to the parent mapping object, ensuring it remains up-to-date.
 
     This class is intended to be instantiated through the :meth:`BaseDict.values`
     method.
@@ -627,21 +625,21 @@ class BaseDict(BaseObject):
         return len(self.keys())
 
     def keys(self) -> BaseKeys:
-        """Return a list of keys in the object.
+        """Return a view of the keys in the object.
 
-        :return: A :class:`list` of dictionary keys.
+        :return: A :class:`BaseKeys` object instance.
 
         """
         return self._keys()
 
     def _keys(self) -> BaseKeys:
-        """Return a list of keys in the native object.
+        """Return a view of the keys in the native object.
 
         This is the environment implementation of :meth:`BaseDict.keys`.
 
-        :return: A :class:`list` of dictionary keys. If
+        :return: A :class:`BaseKeys` object instance. If
             a :cvar:`BaseDict.keyNormalizer` is set, it will be applied to each
-            key in the calling method.
+            key in the returned view.
 
         .. note::
 
@@ -651,21 +649,21 @@ class BaseDict(BaseObject):
         return BaseKeys(self)
 
     def items(self) -> BaseItems:
-        """Return a list of key-value pairs in the object.
+        """Return a view of the key-value pairs in the object.
 
-        :return: A :class:`list` of :class:`tuple` items containing key-value pairs.
+        :return: A :class:`BaseItems` object instance.
 
         """
         return BaseItems(self)
 
     def _items(self) -> BaseItems:
-        """Return a list of key-value pairs in the native object.
+        """Return a view of the key-value pairs in the native object.
 
         This is the environment implementation of :meth:`BaseDict.items`.
 
-        :return: A :class:`list` of :class:`tuple` items containing key-value pairs.
+        :return: A :class:`BaseItems` object instance.
             If both :cvar:`BaseDict.keyNormalizer` and :cvar:`BaseDict.valueNormalizer`
-            are set, they will be applied in the calling method to the keys and values.
+            are set, they will be applied to each key and value in the returned view.
         :raises NotImplementedError: If the method has not been overridden by a
             subclass.
 
@@ -677,21 +675,21 @@ class BaseDict(BaseObject):
         self.raiseNotImplementedError()
 
     def values(self) -> BaseValues:
-        """Return a list of values in the object.
+        """Return a view of the values in the object.
 
-        :return: A :class:`list` of dictionary values.
+        :return: A :class:`BaseValues` object instance.
 
         """
         return self._values()
 
     def _values(self) -> BaseValues:
-        """Return a list of values in the native object.
+        """Return a view of the values in the native object.
 
         This is the environment implementation of :meth:`BaseDict.values`.
 
-        :return: A :class:`list` of dictionary values. If
-         a :cvar:`BaseDict.valueNormalizer` is set, it will be applied in the
-            calling method to each value.
+        :return: A :class:`BaseValues` object instance. If
+            a :cvar:`BaseDict.valueNormalizer` is set, it will be applied to each
+            value in the returned view.
 
         .. note::
 
