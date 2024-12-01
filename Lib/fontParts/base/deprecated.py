@@ -325,7 +325,7 @@ class DeprecatedContour(DeprecatedBase, DeprecatedTransformation):
             ),
             DeprecationWarning,
         )
-        return self._getIdentifierforPoint(point)
+        return self._getIdentifierForPoint(point)
 
     def generateIdentifierforPoint(self, point):
         warnings.warn(
