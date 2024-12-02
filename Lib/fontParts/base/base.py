@@ -17,6 +17,7 @@ from typing import (
 )
 from copy import deepcopy
 import math
+from collections.abc import MutableMapping
 
 from fontTools.misc import transform
 from fontParts.base.errors import FontPartsError
@@ -32,7 +33,7 @@ from fontParts.base.annotations import (
 )
 
 if TYPE_CHECKING:
-    from collections.abc import ItemsView, MutableMapping
+    from collections.abc import ItemsView
 
 BaseObjectType = TypeVar("BaseObjectType", bound="BaseObject")
 
@@ -596,7 +597,7 @@ class BaseDict(BaseObject):
         items = self._items()
         return [(self._normalizeKey(k), self._normalizeValue(v)) for (k, v) in items]
 
-    def copyData(self, source: BaseObject) -> None:
+    def copyData(self, source: BaseObjectType) -> None:
         """Copy data from another object instance.
 
         This method calls the superclass's :meth:`copyData` method and updates
