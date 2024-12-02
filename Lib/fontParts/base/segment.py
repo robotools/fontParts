@@ -35,6 +35,8 @@ class BaseSegment(
     DeprecatedSegment,
     RemovedSegment,
 ):
+    """Represent the basis for a segment object."""
+
     def _setPoints(self, points: CollectionType[BasePoint]) -> None:
         if hasattr(self, "_points"):
             raise AssertionError("segment has points")
@@ -450,8 +452,8 @@ class BaseSegment(
 
         This is the environment implementation of :meth:`BaseSegment.__iter__`.
 
-        :return: An iterator over the :class:`BasePoint` instances belonging to
-            the segment.
+        :return: An iterator over the :class:`BasePoint` subclass instances
+            belonging to the segment.
 
         .. note::
 
@@ -481,7 +483,7 @@ class BaseSegment(
         This is the environment implementation of :meth:`BaseSegment.__len__`.
 
         :return: An :class:`int` representing the number of :class:`BasePoint`
-            instances belonging to the segment.
+            subclass instances belonging to the segment.
 
         .. note::
 
@@ -496,7 +498,7 @@ class BaseSegment(
 
         This attribute is read-only.
 
-        :return: A :class:`tuple` of :class`BasePoints`.
+        :return: A :class:`tuple` of :class`BasePoint` instances.
 
         """,
     )
@@ -611,7 +613,9 @@ class BaseSegment(
 
     compatibilityReporterClass = SegmentCompatibilityReporter
 
-    def isCompatible(self, other: BaseSegment) -> Tuple[bool, str]:
+    def isCompatible(
+        self, other: BaseSegment
+    ) -> Tuple[bool, SegmentCompatibilityReporter]:
         """Evaluate interpolation compatibility with another segment.
 
         This method will return a :class:`bool` indicating if the segment is
@@ -621,8 +625,9 @@ class BaseSegment(
         :param other: The other :class:`BaseSegment` instance to check
             compatibility with.
         :return: A :class:`tuple` where the first element is a :class:`bool`
-            indicating compatibility, and the second element is a :class:`str`
-            of compatibility notes.
+            indicating compatibility, and the second element is
+            a :class:`fontParts.base.compatibility.SegmentCompatibilityReporter`
+            instance.
 
         Example::
 

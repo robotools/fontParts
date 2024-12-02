@@ -476,7 +476,6 @@ class BaseContour(
 
     compatibilityReporterClass = ContourCompatibilityReporter
 
-
     def isCompatible(
         self, other: BaseContour
     ) -> Tuple[bool, ContourCompatibilityReporter]:

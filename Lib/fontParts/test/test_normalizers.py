@@ -1,4 +1,5 @@
 import unittest
+import os
 from fontParts.base import normalizers
 
 
@@ -267,7 +268,7 @@ class TestNormalizers(unittest.TestCase):
     # normalizeLibValue
 
     def test_normalizeLibValue_invalidNone(self):
-        with self.assertRaises(ValueError):
+        with self.assertRaises(TypeError):
             normalizers.normalizeLibValue(None)
 
     def test_normalizeLibValue_validString(self):
@@ -291,7 +292,7 @@ class TestNormalizers(unittest.TestCase):
         self.assertEqual(result, ("A", "B"))
 
     def test_normalizeLibValue_invalidTupleMember(self):
-        with self.assertRaises(ValueError):
+        with self.assertRaises(TypeError):
             normalizers.normalizeLibValue((1, None))
 
     def test_normalizeLibValue_validList(self):
@@ -300,7 +301,7 @@ class TestNormalizers(unittest.TestCase):
         self.assertEqual(result, ["A", "B"])
 
     def test_normalizeLibValue_invalidListMember(self):
-        with self.assertRaises(ValueError):
+        with self.assertRaises(TypeError):
             normalizers.normalizeLibValue([1, None])
 
     def test_normalizeLibValue_validDict(self):
@@ -313,7 +314,7 @@ class TestNormalizers(unittest.TestCase):
             normalizers.normalizeLibValue({1: 1, "B": 2})
 
     def test_normalizeLibValue_invalidDictValue(self):
-        with self.assertRaises(ValueError):
+        with self.assertRaises(TypeError):
             normalizers.normalizeLibValue({"A": None, "B": 2})
 
     # -----
@@ -1425,6 +1426,23 @@ class TestNormalizers(unittest.TestCase):
             normalizers.normalizeGlyphNote(123)
 
     # normalizeFilePath
+    def test_normalizeFilePath_pathlib_fillPath(self):
+        from pathlib import Path
+
+        path = Path(os.getcwd(), "Test.ufo")
+        self.assertIsInstance(path, Path)
+        result = normalizers.normalizeFilePath(path)
+        self.assertIsInstance(result, str)
+        self.assertEqual(result, os.path.join(os.getcwd(), "Test.ufo"))
+
+    def test_normalizeFilePath_pathlib_simplePath(self):
+        from pathlib import Path
+
+        path = Path("Test.ufo")
+        self.assertIsInstance(path, Path)
+        result = normalizers.normalizeFilePath(path)
+        self.assertIsInstance(result, str)
+        self.assertEqual(result, "Test.ufo")
 
     def test_normalizeFilePath_string(self):
         result = normalizers.normalizeFilePath("A")
