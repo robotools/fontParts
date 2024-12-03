@@ -8,6 +8,7 @@ from typing import (
     Optional,
     Tuple,
 )
+from collections.abc import MutableMapping
 
 from fontParts.base.base import BaseDict, dynamicProperty, reference
 from fontParts.base import normalizers
@@ -18,6 +19,9 @@ if TYPE_CHECKING:
     from fontParts.base.glyph import BaseGlyph
     from fontParts.base.font import BaseFont
     from fontparts.base.layer import BaseLayer
+    from fontparts.base import BaseItems
+    from fontparts.base import BaseKeys
+    from fontparts.base import BaseValues
 
 
 class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
@@ -29,7 +33,9 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
     details.
 
     :cvar KeyNormalizer: A function to normalize the key of the dictionary.
+        Defaults to :func:`normalizers.normalizeLibKey`.
     :cvar ValueNormalizer: A function to normalize the value of the dictionary.
+        Defaults to :func:`normalizers.normalizeLibValue`.
 
     This object is normally created as part of a :class:`BaseFont`.
     An orphan :class:`BaseLib` object instance can be created like this::
@@ -337,14 +343,14 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         """
         return super(BaseLib, self).get(key, default)
 
-    def items(self) -> List[Tuple[str, LibValueType]]:
-        """Return an unordered list of the lib's items.
+    def items(self) -> BaseItems[Tuple[str, LibValueType]]:
+        """View the lib's items.
 
         Each item is represented as a :class:`tuple` of key-value pairs, where:
-            - `key` is always a :class:`str`.
+            - `key` is a :class:`str`.
             - `value` is a :ref:`type-lib-value`.
 
-        :return: A :class:`list` of :class:`tuple` items of the form ``(key, value)``.
+        :return: A :ref:`type-view` of the lib's ``(key, value)`` pairs.
 
         Example::
 
@@ -355,10 +361,10 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         """
         return super(BaseLib, self).items()
 
-    def keys(self) -> List[str]:
-        """Return an unordered list of the lib's keys.
+    def keys(self) -> BaseKeys[str]:
+        """view the lib's keys.
 
-        :return: A :class:`list` of keys as :class:`str`.
+        :return: A :ref:`type-view` of :class:`str` items representing the lib's keys.
 
         Example::
 
@@ -368,6 +374,19 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
 
         """
         return super(BaseLib, self).keys()
+
+    def values(self) -> BaseValues[LibValueType]:
+        """View the lib's values.
+
+        :return: A :ref:`type-view` of :ref:`type-lib-value <lib values>`.
+
+        Example::
+
+            >>> font.lib.items()
+            [["A", "B", "C"], {'be': 'uni0431', 'ze': 'uni0437'}]
+
+        """
+        return super(BaseLib, self).values()
 
     def pop(self, key: str, default: Optional[LibValueType] = None) -> LibValueType:
         """Remove the specified key and return its associated value.
@@ -388,7 +407,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         """
         return super(BaseLib, self).pop(key, default)
 
-    def update(self, otherLib: BaseDict) -> None:
+    def update(self, otherLib: MutableMapping[str, LibValueType]) -> None:
         """Update the current lib with key-value pairs from another.
 
         For each key in `otherLib`:
@@ -398,8 +417,8 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
 
         Keys that exist in the current lib but are not in `otherLib` remain unchanged.
 
-        :param otherLib: An instance of :class:`BaseDict` or its subclass
-            (like :class:`BaseLib`) to update the current lib with.
+        :param otherLib: A :class:`MutableMapping` of :class:`str` keys mapped
+            to :ref:`type-lib-value <lib values>` to update the current lib with.
 
         Example::
 
@@ -407,16 +426,3 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
 
         """
         super(BaseLib, self).update(otherLib)
-
-    def values(self) -> List[LibValueType]:
-        """Return an unordered list of the lib's values.
-
-        :return: A :class:`list` containing the :ref:`type-lib-value` items in the lib.
-
-        Example::
-
-            >>> font.lib.items()
-            [["A", "B", "C"], {'be': 'uni0431', 'ze': 'uni0437'}]
-
-        """
-        return super(BaseLib, self).values()
