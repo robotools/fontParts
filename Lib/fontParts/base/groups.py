@@ -176,10 +176,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
 
         This is a backwards compatibility method.
         """
-        d = {}
-        for k, v in self.items():
-            d[k] = v
-        return d
+        return dict(self)
 
     # -------------------
     # Inherited Functions
