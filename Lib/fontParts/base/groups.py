@@ -79,7 +79,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
 
         Example::
 
-            >>> font = gorups.font
+            >>> font = groups.font
 
         """,
     )
@@ -198,7 +198,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
 
         Example::
 
-            >>> side1Groups = groups.side1KerningGroups
+            >>> side2Groups = groups.side2KerningGroups
 
         """,
     )
@@ -325,9 +325,11 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         return super(BaseGroups, self).__getitem__(groupName)
 
     def __iter__(self) -> Iterator[str]:
-        """Return an iterator over the group names in the current groups.
+        """Return an iterator over the keys in the current groups instance.
 
         The iteration order is not fixed.
+
+        :return: An :class:`Iterator` over the :class:`str` keys.
 
         Example::
 
@@ -415,7 +417,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         return super(BaseGroups, self).get(groupName, default)
 
     def items(self) -> BaseItems[Tuple[str, ValueType]]:
-        """View the items in the current groups instance.
+        """Return the items in the current groups instance.
 
         Each item is represented as a :class:`tuple` of key-value pairs, where:
             - `key` is a :class:`str` representing a group name.
@@ -433,7 +435,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         return super(BaseGroups, self).items()
 
     def keys(self) -> BaseKeys:
-        """View the group names (keys) in the current groups instance.
+        """Return the group names (keys) in the current groups instance.
 
         :return: A :ref:`type-view` of :class:`str` items representing the groups' keys.
 
@@ -446,7 +448,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         return super(BaseGroups, self).keys()
 
     def values(self) -> BaseValues:
-        """View the values in the current groups instance.
+        """Return the values in the current groups instance.
 
         :return: A :ref:`type-view` of the groups' values as :class:`tuple`
             items of :class:`str` glyph names.
