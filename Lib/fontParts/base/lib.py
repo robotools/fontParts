@@ -6,7 +6,6 @@ from typing import (
     Iterator,
     List,
     Optional,
-    Tuple,
 )
 from collections.abc import MutableMapping
 
@@ -198,10 +197,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
             >>> font.lib.asDict()
 
         """
-        d = {}
-        for k, v in self.items():
-            d[k] = v
-        return d
+        return dict(self)
 
     # -------------------
     # Inherited Functions
@@ -262,6 +258,8 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         """Return an iterator over the keys in the lib.
 
         The iteration order is not fixed.
+
+        :return: An :class:`Iterator` over the :class:`str` keys.
 
         Example::
 
@@ -343,8 +341,8 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         """
         return super(BaseLib, self).get(key, default)
 
-    def items(self) -> BaseItems[Tuple[str, LibValueType]]:
-        """View the lib's items.
+    def items(self) -> BaseItems[str, LibValueType]:
+        """Return the lib's items.
 
         Each item is represented as a :class:`tuple` of key-value pairs, where:
             - `key` is a :class:`str`.
@@ -362,7 +360,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         return super(BaseLib, self).items()
 
     def keys(self) -> BaseKeys[str]:
-        """view the lib's keys.
+        """Return the lib's keys.
 
         :return: A :ref:`type-view` of :class:`str` items representing the lib's keys.
 
@@ -376,7 +374,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         return super(BaseLib, self).keys()
 
     def values(self) -> BaseValues[LibValueType]:
-        """View the lib's values.
+        """Return the lib's values.
 
         :return: A :ref:`type-view` of :ref:`type-lib-value <lib values>`.
 
