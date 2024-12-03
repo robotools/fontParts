@@ -8,6 +8,7 @@ from typing import (
     Optional,
     Tuple,
 )
+from collections.abc import MutableMapping
 
 from fontParts.base.base import BaseDict, dynamicProperty, reference
 from fontParts.base import normalizers
@@ -16,10 +17,12 @@ from fontParts.base.annotations import CollectionType
 
 if TYPE_CHECKING:
     from fontParts.base.font import BaseFont
+    from fontparts.base import BaseItems
+    from fontparts.base import BaseKeys
+    from fontparts.base import BaseValues
 
 ValueType = Tuple[str, ...]
-GroupsType = Dict[str, ValueType]
-ItemsType = Tuple[str, ValueType]
+GroupsDict = Dict[str, ValueType]
 
 
 class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
@@ -31,7 +34,9 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
     details.
 
     :cvar keyNormalizer: A function to normalize the key of the dictionary.
+        Defaults to :func:`normalizers.normalizeGroupKey`
     :cvar valueNormalizer: A function to normalize the value of the dictionary.
+        Defaults to :func:`Normalizers.noramlizeGroupValue`
 
     This object is normally created as part of a :class:`BaseFont`.
     An orphan :class:`BaseGroups` object instance can be created like this::
@@ -144,7 +149,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         This property is read-only.
 
         :return: A :class:`dict` of :class:`str` group names mapped
-            to :class:`tuple` of :class:`str` glyph names.
+            to a :class:`tuple` of :class:`str` glyph names.
 
         Example::
 
@@ -153,7 +158,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         """,
     )
 
-    def _get_base_side1KerningGroups(self) -> GroupsType:
+    def _get_base_side1KerningGroups(self) -> GroupsDict:
         kerningGroups = self._get_side1KerningGroups()
         normalized = {}
         for name, members in kerningGroups.items():
@@ -162,14 +167,14 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
             normalized[name] = members
         return normalized
 
-    def _get_side1KerningGroups(self) -> GroupsType:
+    def _get_side1KerningGroups(self) -> GroupsDict:
         """Get all native groups marked as potential side 1 (left) kerning members.
 
         This is the environment implementation of the
         :attr:`BaseGroups.side1KerningGroups` property getter.
 
         :return: A :class:`dict` of :class:`str` group names mapped
-            to :class:`tuple` of :class:`str` glyph names.
+            to a :class:`tuple` of :class:`str` glyph names.
 
         .. note::
 
@@ -189,7 +194,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         This property is read-only.
 
         :return: A :class:`dict` of :class:`str` group names mapped
-            to :class:`tuple` of :class:`str` glyph names.
+            to a :class:`tuple` of :class:`str` glyph names.
 
         Example::
 
@@ -198,7 +203,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         """,
     )
 
-    def _get_base_side2KerningGroups(self) -> GroupsType:
+    def _get_base_side2KerningGroups(self) -> GroupsDict:
         kerningGroups = self._get_side2KerningGroups()
         normalized = {}
         for name, members in kerningGroups.items():
@@ -207,14 +212,14 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
             normalized[name] = members
         return normalized
 
-    def _get_side2KerningGroups(self) -> GroupsType:
+    def _get_side2KerningGroups(self) -> GroupsDict:
         """Get all native groups marked as potential side 2 (right) kerning members.
 
         This is the environment implementation of the
         :attr:`BaseGroups.side2KerningGroups` property getter.
 
         :return: A :class:`dict` of :class:`str` group names mapped
-            to :class:`tuple` of :class:`str` glyph names.
+            to a :class:`tuple` of :class:`str` glyph names.
 
         .. note::
 
@@ -247,7 +252,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         """
         del self[groupName]
 
-    def asDict(self) -> GroupsType:
+    def asDict(self) -> GroupsDict:
         """Return the groups as a dictionary.
 
         :return A :class:`dict` reflecting the contents of the current groups.
@@ -409,35 +414,45 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         """
         return super(BaseGroups, self).get(groupName, default)
 
-    def items(self) -> List[ItemsType]:
-        """Return an unordered list of the groups' items.
+    def items(self) -> BaseItems:
+        """View the key-value pairs in the current groups instance.
 
-        Each item is represented as a :class:`tuple` of key-value pairs, where:
-            - `key` is a :class:`str` representing the group name.
-            - `value` is a :class:`tuple` of :class:`str` glyph names.
-
-        :return: A :class:`list` of :class:`tuple` items of the form ``(key, value)``.
+        :return: A :ref:`type-view` of the groups' ``(key, value)`` pairs.
 
         Example::
 
             >>> font.groups.items()
-            [("myGroup", ("A", "B", "C"), ("myGroup2", ("D", "E", "F"))]
+            BaseGroups_items([("myGroup", ("A", "B", "C")),
+            ("myGroup2", ("D", "E", "F")), ...])
 
         """
         return super(BaseGroups, self).items()
 
-    def keys(self) -> List[str]:
-        """Return an unordered list of the groups' keys.
+    def keys(self) -> BaseKeys:
+        """View the keys in the current groups instance.
 
-        :return: A :class:`list` of :class:`str` group names.
+        :return: A :ref:`type-view` of the groups' keys.
 
         Example::
 
             >>> font.groups.keys()
-            ["myGroup4", "myGroup1", "myGroup5"]
+            BaseGroups_keys(["myGroup4", "myGroup1", "myGroup5", ...])
 
         """
         return super(BaseGroups, self).keys()
+
+    def values(self) -> BaseValues:
+        """View the values in the current groups instance.
+
+        :return: A :ref:`type-view` of the groups' values.
+
+        Example::
+
+            >>> font.groups.values()
+            BaseGroups_values([("A", "B", "C"), ("D", "E", "F")]
+
+        """
+        return super(BaseGroups, self).values()
 
     def pop(
         self, groupName: str, default: Optional[CollectionType[str]] = None
@@ -461,7 +476,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         """
         return super(BaseGroups, self).pop(groupName, default)
 
-    def update(self, otherGroups: BaseDict) -> None:
+    def update(self, otherGroups: MutableMapping[str, CollectionType[str]]) -> None:
         """Update the current groups instance with key-value pairs from another.
 
         For each group in `otherGroups`:
@@ -472,8 +487,9 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         Keys that exist in the current groups instance but are not in `otherLib`
         remain unchanged.
 
-        :param otherLib: An instance of :class:`BaseDict` or its subclass
-            (like :class:`BaseGroups`) to update the current groups instance with.
+        :param otherLib: A :class:`MutableMapping` of :class:`str` group names
+            mapped to a :class:`tuple` of :class:`str` glyph names to update the
+            current groups instance with.
 
         Example::
 
@@ -481,17 +497,3 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
 
         """
         super(BaseGroups, self).update(otherGroups)
-
-    def values(self) -> List[ValueType]:
-        """Return an unordered list of the groups' values.
-
-        :return: A :class:`list` of groups as :class:`tuple` items containing
-            their respective glyph names as :class:`str`.
-
-        Example::
-
-            >>> font.groups.items()
-            [("A", "B", "C"), ("D", "E", "F")]
-
-        """
-        return super(BaseGroups, self).values()
