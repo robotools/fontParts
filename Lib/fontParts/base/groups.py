@@ -261,10 +261,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
             >>> font.groups.asDict()
 
         """
-        d = {}
-        for k, v in self.items():
-            d[k] = v
-        return d
+        return dict(self)
 
     # -------------------
     # Inherited Functions

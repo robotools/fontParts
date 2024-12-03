@@ -1,7 +1,6 @@
 from __future__ import annotations
 from typing import (
     TYPE_CHECKING,
-    Any,
     Callable,
     Dict,
     Iterator,
@@ -32,8 +31,8 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
     :cvar KeyNormalizer: A function to normalize the key of the dictionary.
     :cvar ValueNormalizer: A function to normalize the value of the dictionary.
 
-    This object normally created as part of a :class:`BaseFont`.
-     An orphan Lib object can be created like this::
+    This object is normally created as part of a :class:`BaseFont`.
+    An orphan :class:`BaseLib` object instance can be created like this::
 
         >>> lib = RLib()
 
@@ -164,7 +163,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
     # ---------------------
 
     def remove(self, key: str) -> None:
-        """Remove the specified key from the Lib.
+        """Remove the specified key from the lib.
 
         :param key: The key to remove as a :class:`str`.
 
@@ -231,7 +230,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
     def __getitem__(self, key: str) -> LibValueType:
         """Get the value associated with the given key.
 
-        :param key: The key to retrieve the value for.
+        :param key: The key to retrieve the value for as a :class:`str`.
         :return: The :ref:`type-lib-value` associated with the specified key.
         :raise KeyError: If the specified `key` does not exist.
 
@@ -243,8 +242,8 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         .. note::
 
             Any changes to the returned lib contents will not be reflected in
-            the Lib object. If one wants to make a change to the lib contents,
-            one should do the following::
+            it's :class:`BaseLib` instance. To make changes to this content,
+            do the following::
 
                 >>> lib = font.lib["public.glyphOrder"]
                 >>> lib.remove("A")
@@ -270,7 +269,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         return super(BaseLib, self).__iter__()
 
     def __len__(self) -> int:
-        """Returns the number of keys in the lib.
+        """Return the number of keys in the lib.
 
         :return: An :class:`int` representing the number of keys in the lib.
 
@@ -296,9 +295,9 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         super(BaseLib, self).__setitem__(key, value)
 
     def clear(self) -> None:
-        """Removes all keys from the lib.
+        """Remove all keys from the lib.
 
-        This will reset the lib to an empty dictionary.
+        This will reset the :class:`BaseLib` instance to an empty dictionary.
 
         Example::
 
@@ -308,15 +307,15 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         super(BaseLib, self).clear()
 
     def get(self, key: str, default: Optional[LibValueType] = None) -> LibValueType:
-        """Get the value for a given key in the lib.
+        """Get the value for the given key in the lib.
 
         If the given `key` is not found, The specified `default` will be returned.
 
         :param key: The key to look up as a :class:`str`.
-        :param default: The default :ref:`type-lib-value` to return if the key
-            is not found. Defaults to :obj:`None`.
-        :return: The :ref:`type-lib-value` for the given key, or the default
-            value if the key is not found.
+        :param default: The optional default :ref:`type-lib-value` to return if
+            the `key` is not found. Defaults to :obj:`None`.
+        :return: The :ref:`type-lib-value` for the given `key`, or the `default`
+            value if the `key` is not found.
 
         Example::
 
@@ -327,9 +326,9 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
 
         ..note::
 
-            Any changes to the returned key contents will not be reflected in
-            the Lib object. If one wants to make a change to the key contents,
-            one should do the following::
+            Any changes to the returned lib contents will not be reflected in
+            it's :class:`BaseLib` instance. To make changes to this content,
+            do the following::
 
                 >>> lib = font.lib.get("public.glyphOrder")
                 >>> lib.remove("A")
@@ -390,7 +389,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         return super(BaseLib, self).pop(key, default)
 
     def update(self, otherLib: BaseDict) -> None:
-        """Update the current lib instance with key-value pairs from another.
+        """Update the current lib with key-value pairs from another.
 
         For each key in `otherLib`:
             - If the key exists in the current lib, its value is replaced with
