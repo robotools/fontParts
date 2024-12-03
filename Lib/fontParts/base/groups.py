@@ -414,8 +414,12 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         """
         return super(BaseGroups, self).get(groupName, default)
 
-    def items(self) -> BaseItems:
-        """View the key-value pairs in the current groups instance.
+    def items(self) -> BaseItems[Tuple[str, ValueType]]:
+        """View the items in the current groups instance.
+
+        Each item is represented as a :class:`tuple` of key-value pairs, where:
+            - `key` is a :class:`str` representing a group name.
+            - `value` is a :class:`tuple` of :class:`str` glyph names.
 
         :return: A :ref:`type-view` of the groups' ``(key, value)`` pairs.
 
@@ -429,9 +433,9 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         return super(BaseGroups, self).items()
 
     def keys(self) -> BaseKeys:
-        """View the keys in the current groups instance.
+        """View the group names (keys) in the current groups instance.
 
-        :return: A :ref:`type-view` of the groups' keys.
+        :return: A :ref:`type-view` of :class:`str` items representing the groups' keys.
 
         Example::
 
@@ -444,7 +448,8 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
     def values(self) -> BaseValues:
         """View the values in the current groups instance.
 
-        :return: A :ref:`type-view` of the groups' values.
+        :return: A :ref:`type-view` of the groups' values as :class:`tuple`
+            items of :class:`str` glyph names.
 
         Example::
 
