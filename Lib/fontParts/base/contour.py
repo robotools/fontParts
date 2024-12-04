@@ -661,7 +661,7 @@ class BaseContour(
             True
 
         """
-        self._reverseContour()
+        self._reverse()
 
     def _reverse(self, **kwargs) -> None:
         r"""Reverse the direction of the contour.
