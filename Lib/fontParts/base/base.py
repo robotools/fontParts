@@ -1,9 +1,12 @@
 # pylint: disable=C0103, C0114
 from __future__ import annotations
 from typing import (
+    TYPE_CHECKING,
     Any,
     Callable,
     Dict,
+    Iterable,
+    Iterator,
     List,
     NoReturn,
     Optional,
@@ -14,11 +17,13 @@ from typing import (
 )
 from copy import deepcopy
 import math
+from collections.abc import MutableMapping
 
 from fontTools.misc import transform
 from fontParts.base.errors import FontPartsError
 from fontParts.base import normalizers
 from fontParts.base.annotations import (
+    PairType,
     CollectionType,
     PairCollectionType,
     SextupleCollectionType,
@@ -26,6 +31,9 @@ from fontParts.base.annotations import (
     TransformationType,
     InterpolatableType,
 )
+
+if TYPE_CHECKING:
+    from collections.abc import ItemsView
 
 BaseObjectType = TypeVar("BaseObjectType", bound="BaseObject")
 
@@ -320,7 +328,7 @@ class BaseObject:
         copied.copyData(self)
         return copied
 
-    def copyData(self: BaseObjectType, source: BaseObjectType) -> None:
+    def copyData(self, source: BaseObjectType) -> None:
         """Copy data from `source` into the current object.
 
         .. note::
@@ -386,6 +394,186 @@ class BaseObject:
         self.raiseNotImplementedError()
 
 
+class BaseItems:
+    """Provide the given mapping with an items view object.
+
+    This class provides a view of the key-value pairs in a mapping, similar to
+    the behavior of Python's :meth:`dict.items` method. The view dynamically
+    reflects any changes made to the parent mapping object, ensuring it remains
+    up-to-date.
+
+    The normalization method :meth:`_normalizeItems` must be defined by the
+    parent `mapping` class.
+
+    :param mapping: The parent :class:`BaseDict` instance whose items are
+        represented by this view.
+
+    """
+
+    def __init__(self, mapping: BaseDict) -> None:
+        self._mapping = mapping
+
+    def __contains__(self, item: Tuple[str, Any]) -> bool:
+        """Check if a key-value pair exists in the mapping.
+
+        :param item: The key-value pair to check for existence as a :class:`tuple`.
+        :return: :obj:`True` if the key-value pair exists, :obj:`False` otherwise.
+
+        """
+        key, value = item
+        normalizedItem = (
+            self._mapping._normalizeKey(key),
+            self._mapping._normalizeValue(value),
+        )
+        return normalizedItem in self._mapping._normalizeItems()
+
+    def __iter__(self) -> Iterator[Tuple[str, Any]]:
+        """Return an iterator over the key-value pairs in the mapping.
+
+        This method yields each item one by one, removing it from the list of
+        keys after it is yielded.
+
+        :returns: An iterator over the mapping's key-value pairs.
+
+        """
+        return iter(self._mapping._normalizeItems())
+
+    def __len__(self) -> int:
+        """Return the number of keys-value pairs in the mapping.
+
+        :return: An :class:`int` representing the number of mapping items.
+
+        """
+        return len(self._mapping._normalizeItems())
+
+    def __repr__(self) -> str:
+        """Return a string representation of the items view.
+
+        :return: A representation of the keys view as a :class:`str`.
+
+        """
+        return f"{self._mapping.__class__.__name__}_items({list(self)})"
+
+
+class BaseKeys:
+    """Provide the given mapping with a keys view object.
+
+    This class provides a view of the keys in a mapping, similar to the behavior
+    of Python's :meth:`dict.keys` method. The view dynamically reflects any
+    changes made to the parent mapping object, ensuring it remains up-to-date.
+
+    The normalization method :meth:`_normalizeItems` must be defined by the
+    parent `mapping` class.
+
+    :param mapping: The parent :class:`BaseDict` instance whose keys are
+        represented by this view.
+
+    """
+
+    def __init__(self, mapping: BaseDict) -> None:
+        self._mapping = mapping
+
+    def __contains__(self, key: Any) -> bool:
+        """Check if a key exists in the mapping.
+
+        :param key: The key to check for existence.
+        :return: :obj:`True` if the key exists, :obj:`False` otherwise.
+
+        """
+        return any(k == key for k, _ in self._mapping._normalizeItems())
+
+    def __iter__(self) -> Iterator[Any]:
+        """Return an iterator over the keys in the mapping.
+
+        This method yields each key one by one, removing it from the list of
+        keys after it is yielded.
+
+        :returns: An iterator over the mapping's keys.
+
+        """
+        return (k for k, _ in self._mapping._normalizeItems())
+
+    def __len__(self) -> int:
+        """Return the number of keys in the mapping.
+
+        :return: An :class:`int` representing the number of mapping keys.
+
+        """
+        return len(self._mapping._normalizeItems())
+
+    def __repr__(self) -> str:
+        """Return a string representation of the keys view.
+
+        :return: A representation of the keys view as a :class:`str`.
+
+        """
+        return f"{self._mapping.__class__.__name__}_keys({list(self)})"
+
+    def isdisjoint(self, other: Iterable[Any]) -> bool:
+        """Check if the keys view has no common elements with another iterable.
+
+        :param other: The iterable to compare against.
+        :return: :obj:`True` if there are no common elements, :obj:`False` otherwise.
+
+        """
+        return set(self).isdisjoint(other)
+
+
+class BaseValues:
+    """Provide the given mapping with a values view object.
+
+    This class provides a view of the values in a mapping, similar to the behavior
+    of Python's :meth:`dict.values` method. The view dynamically reflects any
+    changes made to the parent mapping object, ensuring it remains up-to-date.
+
+    The normalization method :meth:`_normalizeItems` must be defined by the
+    parent `mapping` class.
+
+    :param mapping: The parent :class:`BaseDict` instance whose keys are
+        represented by this view.
+
+    """
+
+    def __init__(self, mapping: BaseDict) -> None:
+        self._mapping = mapping
+
+    def __contains__(self, value: Any) -> bool:
+        """Check if a value exists in the mapping.
+
+        :param value: The value to check for existence.
+        :return: :obj:`True` if the value exists, :obj:`False` otherwise.
+
+        """
+        return any(v == value for _, v in self._mapping._normalizeItems())
+
+    def __iter__(self) -> Iterator[Any]:
+        """Return an iterator over the values in the mapping.
+
+        This method yields each value one by one, removing it from the list of
+        values after it is yielded.
+
+        :returns: An iterator over the mapping's values.
+
+        """
+        return (v for _, v in self._mapping._normalizeItems())
+
+    def __len__(self) -> int:
+        """Return the number of values in the mapping.
+
+        :return: An :class:`int` representing the number of mapping values.
+
+        """
+        return len(self._mapping._normalizeItems())
+
+    def __repr__(self) -> str:
+        """Return a string representation of the values view.
+
+        :return: A representation of the values view as a :class:`str`.
+
+        """
+        return f"{self._mapping.__class__.__name__}_values({list(self)})"
+
+
 class BaseDict(BaseObject):
     """Provide objects with basic dictionary-like functionality.
 
@@ -394,21 +582,35 @@ class BaseDict(BaseObject):
 
     """
 
-    keyNormalizer: Optional[Any] = None
-    valueNormalizer: Optional[Any] = None
+    keyNormalizer: Optional[Callable[[str], str]] = None
+    valueNormalizer: Optional[Callable[[Any], Any]] = None
 
-    def copyData(self, source: BaseDict) -> None:
+    def _normalizeKey(self, key: str) -> str:
+        keyNormalizer = type(self).keyNormalizer
+        return keyNormalizer(key) if keyNormalizer is not None else key
+
+    def _normalizeValue(self, value: Any) -> Any:
+        valueNormalizer = type(self).valueNormalizer
+        return valueNormalizer(value) if valueNormalizer is not None else value
+
+    def _normalizeItems(self) -> List[Tuple[str, Any]]:
+        items = self._items()
+        return [(self._normalizeKey(k), self._normalizeValue(v)) for (k, v) in items]
+
+    def copyData(self, source: BaseObjectType) -> None:
         """Copy data from another object instance.
 
-        This method calls the superclass's `copyData` method and updates
-        the current dictionary with the contents of the `source`.
+        This method calls the superclass's :meth:`copyData` method and updates
+        the current :class:`BaseDict` instance with the contents of the `source`,
+        provided it qualifies as a :class:`MutableMapping`.
 
-        param source: The source :class:`BaseDict` instance from which
+        param source: The source :class:`BaseObject` instance from which
             to copy data.
 
         """
         super(BaseDict, self).copyData(source)
-        self.update(source)
+        if isinstance(source, MutableMapping):
+            self.update(source)
 
     def __len__(self) -> int:
         """Return the number of items in the object.
@@ -433,55 +635,46 @@ class BaseDict(BaseObject):
         """
         return len(self.keys())
 
-    def keys(self) -> List[Any]:
-        """Return a list of keys in the object.
+    def keys(self) -> BaseKeys:
+        """Return a view of the keys in the object.
 
-        :return: A :class:`list` of dictionary keys.
+        :return: A :class:`BaseKeys` object instance.
 
         """
-        keys = self._keys()
-        if self.keyNormalizer is not None:
-            keys = [self.keyNormalizer.__func__(key) for key in keys]
-        return keys
+        return self._keys()
 
-    def _keys(self) -> List[Any]:
-        """Return a list of keys in the native object.
+    def _keys(self) -> BaseKeys:
+        """Return a view of the keys in the native object.
 
         This is the environment implementation of :meth:`BaseDict.keys`.
 
-        :return: A :class:`list` of dictionary keys. If
+        :return: A :class:`BaseKeys` object instance. If
             a :cvar:`BaseDict.keyNormalizer` is set, it will be applied to each
-            key in the calling method.
+            key in the returned view.
 
         .. note::
 
             Subclasses may override this method.
 
         """
-        return [k for k, v in self.items()]
+        return BaseKeys(self)
 
-    def items(self) -> List[Tuple[Any, Any]]:
-        """Return a list of key-value pairs in the object.
+    def items(self) -> BaseItems:
+        """Return a view of the key-value pairs in the object.
 
-        :return: A :class:`list` of :class:`tuple` items containing key-value pairs.
+        :return: A :class:`BaseItems` object instance.
 
         """
-        items = self._items()
-        if self.keyNormalizer is not None and self.valueNormalizer is not None:
-            items = [
-                (self.keyNormalizer.__func__(key), self.valueNormalizer.__func__(value))
-                for (key, value) in items
-            ]
-        return items
+        return BaseItems(self)
 
-    def _items(self) -> List[Tuple[Any, Any]]:
-        """Return a list of key-value pairs in the native object.
+    def _items(self) -> ItemsView:
+        """Return a view of the key-value pairs in the native object.
 
         This is the environment implementation of :meth:`BaseDict.items`.
 
-        :return: A :class:`list` of :class:`tuple` items containing key-value pairs.
+        :return: A :class:`ItemsView` object instance.
             If both :cvar:`BaseDict.keyNormalizer` and :cvar:`BaseDict.valueNormalizer`
-            are set, they will be applied in the calling method to the keys and values.
+            are set, they will be applied to each key and value in the returned object.
         :raises NotImplementedError: If the method has not been overridden by a
             subclass.
 
@@ -492,32 +685,29 @@ class BaseDict(BaseObject):
         """
         self.raiseNotImplementedError()
 
-    def values(self) -> List[Any]:
-        """Return a list of values in the object.
+    def values(self) -> BaseValues:
+        """Return a view of the values in the object.
 
-        :return: A :class:`list` of dictionary values.
+        :return: A :class:`BaseValues` object instance.
 
         """
-        values = self._values()
-        if self.valueNormalizer is not None:
-            values = [self.valueNormalizer.__func__(value) for value in values]
-        return values
+        return self._values()
 
-    def _values(self) -> List[Any]:
-        """Return a list of values in the native object.
+    def _values(self) -> BaseValues:
+        """Return a view of the values in the native object.
 
         This is the environment implementation of :meth:`BaseDict.values`.
 
-        :return: A :class:`list` of dictionary values. If
-         a :cvar:`BaseDict.valueNormalizer` is set, it will be applied in the
-            calling method to each value.
+        :return: A :class:`BaseValues` object instance. If
+            a :cvar:`BaseDict.valueNormalizer` is set, it will be applied to each
+            value in the returned view.
 
         .. note::
 
             Subclasses may override this method.
 
         """
-        return [v for k, v in self.items()]
+        return BaseValues(self)
 
     def __contains__(self, key: Any) -> bool:
         """Check if a key is in the object.
@@ -526,8 +716,7 @@ class BaseDict(BaseObject):
         :return: :obj:`True` if the key is present, :obj:`False` otherwise.
 
         """
-        if self.keyNormalizer is not None:
-            key = self.keyNormalizer.__func__(key)
+        key = self._normalizeKey(key)
         return self._contains(key)
 
     def _contains(self, key: Any) -> bool:
@@ -556,10 +745,8 @@ class BaseDict(BaseObject):
         :param value: The value to set for the given key.
 
         """
-        if self.keyNormalizer is not None:
-            key = self.keyNormalizer.__func__(key)
-        if self.valueNormalizer is not None:
-            value = self.valueNormalizer.__func__(value)
+        key = self._normalizeKey(key)
+        value = self._normalizeValue(value)
         self._setItem(key, value)
 
     def _setItem(self, key: Any, value: Any) -> None:
@@ -589,12 +776,9 @@ class BaseDict(BaseObject):
         :return: The value for the given key.
 
         """
-        if self.keyNormalizer is not None:
-            key = self.keyNormalizer.__func__(key)
+        key = self._normalizeKey(key)
         value = self._getItem(key)
-        if self.valueNormalizer is not None:
-            value = self.valueNormalizer.__func__(value)
-        return value
+        return self._normalizeValue(value)
 
     def _getItem(self, key: Any) -> Any:
         """Get the value for a given key from the native object.
@@ -629,13 +813,11 @@ class BaseDict(BaseObject):
             not found.
 
         """
-        if self.keyNormalizer is not None:
-            key = self.keyNormalizer.__func__(key)
-        if default is not None and self.valueNormalizer is not None:
-            default = self.valueNormalizer.__func__(default)
+        key = self._normalizeKey(key)
+        default = self._normalizeValue(default) if default is not None else default
         value = self._get(key, default=default)
-        if value is not default and self.valueNormalizer is not None:
-            value = self.valueNormalizer.__func__(value)
+        if value is not default:
+            value = self._normalizeValue(value)
         return value
 
     def _get(self, key: Any, default: Optional[Any]) -> Any:
@@ -665,8 +847,7 @@ class BaseDict(BaseObject):
         :param key: The key to delete.
 
         """
-        if self.keyNormalizer is not None:
-            key = self.keyNormalizer.__func__(key)
+        key = self._normalizeKey(key)
         self._delItem(key)
 
     def _delItem(self, key: Any) -> None:
@@ -698,14 +879,11 @@ class BaseDict(BaseObject):
             if the key is not found.
 
         """
-        if self.keyNormalizer is not None:
-            key = self.keyNormalizer.__func__(key)
-        if default is not None and self.valueNormalizer is not None:
-            default = self.valueNormalizer.__func__(default)
+        key = self._normalizeKey(key)
+        if default is not None:
+            default = self._normalizeValue(default)
         value = self._pop(key, default=default)
-        if self.valueNormalizer is not None:
-            value = self.valueNormalizer.__func__(value)
-        return value
+        return self._normalizeValue(value)
 
     def _pop(self, key: Any, default: Optional[Any]) -> Any:
         """Remove a key from the native object and return it's value.
@@ -730,7 +908,7 @@ class BaseDict(BaseObject):
             del self[key]
         return value
 
-    def __iter__(self) -> Any:
+    def __iter__(self) -> Iterator[Any]:
         """Return an iterator over the keys of the object.
 
         This method yields each key one by one, removing it from the list of
@@ -741,7 +919,7 @@ class BaseDict(BaseObject):
         """
         return self._iter()
 
-    def _iter(self) -> Any:
+    def _iter(self) -> Iterator[Any]:
         """Return an iterator over the keys of the native object.
 
         This is the environment implementation of :meth:`BaseDict.__iter__`.
@@ -753,36 +931,34 @@ class BaseDict(BaseObject):
             Subclasses may override this method.
 
         """
-        keys = self.keys()
-        while keys:
-            key = keys[0]
+        for key in self.keys():
             yield key
-            keys = keys[1:]
 
-    def update(self, other: BaseDict) -> None:
+    def update(self, other: MutableMapping) -> None:
         """Update the current object instance with key-value pairs from another.
 
-        :param other: An object of key-value pairs to update this dictionary with.
+        :param other: A :class:`MutableMapping` of key-value pairs to update
+            this dictionary with.
 
         """
         otherCopy = deepcopy(other)
-        if self.keyNormalizer is not None and self.valueNormalizer is not None:
-            d = {}
-            for key, value in otherCopy.items():
-                key = self.keyNormalizer.__func__(key)
-                value = self.valueNormalizer.__func__(value)
-                d[key] = value
-            otherCopy = d
+        d = {}
+        for key, value in otherCopy.items():
+            key = self._normalizeKey(key)
+            value = self._normalizeValue(value)
+            d[key] = value
+        otherCopy = d
         self._update(otherCopy)
 
-    def _update(self, other: BaseDict) -> None:
+    def _update(self, other: MutableMapping) -> None:
         """Update the current native object instance with key-value pairs from another.
 
         This is the environment implementation of :meth:`BaseDict.update`.
 
-        :param other: An object of key-value pairs to update this dictionary with.
-            If both :cvar:`BaseDict.keyNormalizer` and :cvar:`BaseDict.valueNormalizer`
-            are set, they will have been applied to the keys and values, respectively.
+        :param other: A :class:`MutableMapping` of key-value pairs to update
+            this dictionary with. If both :cvar:`BaseDict.keyNormalizer`
+            and :cvar:`BaseDict.valueNormalizer` are set, they will have been
+            applied to the keys and values, respectively.
 
         .. note::
 
@@ -883,7 +1059,7 @@ class TransformationMixin:
         value = normalizers.normalizeTransformationOffset(value)
         self._moveBy(value)
 
-    def _moveBy(self, value: PairCollectionType[IntFloatType], **kwargs: Any) -> None:
+    def _moveBy(self, value: PairType[IntFloatType], **kwargs: Any) -> None:
         r"""Move the native object according to the given coordinates.
 
         This is the environment implementation of :meth:`BaseObject.moveBy`.
@@ -931,8 +1107,8 @@ class TransformationMixin:
 
     def _scaleBy(
         self,
-        value: TransformationType,
-        origin: Optional[PairCollectionType[IntFloatType]],
+        value: PairType[float],
+        origin: PairType[IntFloatType],
         **kwargs: Any,
     ) -> None:
         r"""Scale the native object according to the given values.
@@ -985,8 +1161,8 @@ class TransformationMixin:
 
     def _rotateBy(
         self,
-        value: IntFloatType,
-        origin: Optional[PairCollectionType[IntFloatType]],
+        value: float,
+        origin: PairType[IntFloatType],
         **kwargs: Any,
     ) -> None:
         r"""Rotate the native object by the specified value.
@@ -1039,8 +1215,8 @@ class TransformationMixin:
 
     def _skewBy(
         self,
-        value: TransformationType,
-        origin: Optional[PairCollectionType[IntFloatType]],
+        value: PairType[float],
+        origin: PairType[IntFloatType],
         **kwargs: Any,
     ) -> None:
         r"""Skew the native object by the given value.
@@ -1097,8 +1273,11 @@ class InterpolationMixin:
         """
         if not isinstance(other, cls):
             raise TypeError(
-                f"""Compatibility between an instance of {cls.__name__!r} and an                 instance of {other.__class__.__name__!r} can not be checked."""
+                f"""Compatibility between an instance of {cls.__name__!r}
+                and an instance of {other.__class__.__name__!r} can not be checked."""
             )
+        if self.compatibilityReporterClass is None:
+            raise ValueError("The compatibility reporter class cannot be None.")
         reporter = self.compatibilityReporterClass(self, other)
         self._isCompatible(other, reporter)
         return not reporter.fatal, reporter
@@ -1155,7 +1334,7 @@ class SelectionMixin:
         value = normalizers.normalizeBoolean(value)
         self._set_selected(value)
 
-    def _get_selected(self) -> bool:
+    def _get_selected(self) -> bool:  # type: ignore[return]
         """Get or the object's selection state.
 
         This is the environment implementation
@@ -1303,7 +1482,7 @@ class IdentifierMixin:
             value = normalizers.normalizeIdentifier(value)
         return value
 
-    def _get_identifier(self) -> Optional[str]:
+    def _get_identifier(self) -> Optional[str]:  # type: ignore[return]
         """Get the native object's unique identifier.
 
         This is the environment implementation of :attr:`IdentifierMixin.identifier`.
@@ -1334,7 +1513,7 @@ class IdentifierMixin:
         """
         return self._getIdentifier()
 
-    def _getIdentifier(self) -> str:
+    def _getIdentifier(self) -> str:  # type: ignore[return]
         """Generate and assign a unique identifier to the native object.
 
         This is the environment implementation of :meth:`IdentifierMixin.getIdentifier`.
