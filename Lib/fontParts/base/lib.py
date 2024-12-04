@@ -310,7 +310,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         """
         super(BaseLib, self).clear()
 
-    def get(self, key: str, default: Optional[LibValueType] = None) -> Optional[LibValueType]:
+    def get(self, key: str, default: Optional[LibValueType] = None) -> LibValueType:
         """Get the value for the given key in the lib.
 
         If the given `key` is not found, The specified `default` will be returned.
@@ -386,7 +386,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         """
         return super(BaseLib, self).values()
 
-    def pop(self, key: str, default: Optional[LibValueType] = None) -> Optional[LibValueType]:
+    def pop(self, key: str, default: Optional[LibValueType] = None) -> LibValueType:
         """Remove the specified key and return its associated value.
 
         If the `key` does not exist, the `default` value is returned.
