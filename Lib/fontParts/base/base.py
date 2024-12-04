@@ -1481,14 +1481,40 @@ class PointPositionMixin(ABC):
     # Abstract members
     # ----------------
 
+    x: dynamicProperty = dynamicProperty("base_x")
+
     @abstractmethod
-    @property
-    def x(self):
+    def _get_base_x(self) -> IntFloatType:
         pass
 
     @abstractmethod
-    @property
-    def y(self):
+    def _set_base_x(self, value: IntFloatType) -> None:
+        pass
+
+    @abstractmethod
+    def _get_x(self) -> IntFloatType:
+        pass
+
+    @abstractmethod
+    def _set_x(self, value: IntFloatType) -> None:
+        pass
+
+    y: dynamicProperty = dynamicProperty("base_y")
+
+    @abstractmethod
+    def _get_base_y(self) -> IntFloatType:
+        pass
+
+    @abstractmethod
+    def _set_base_y(self, value: IntFloatType) -> None:
+        pass
+
+    @abstractmethod
+    def _get_y(self) -> IntFloatType:
+        pass
+
+    @abstractmethod
+    def _set_y(self, value: IntFloatType) -> None:
         pass
 
     @abstractmethod
