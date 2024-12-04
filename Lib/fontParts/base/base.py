@@ -1,10 +1,11 @@
 # pylint: disable=C0103, C0114
 from __future__ import annotations
+from abc import ABC, abstractmethod
 from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
-    Generic,
+    Dict,
     Iterable,
     Iterator,
     List,
@@ -36,8 +37,6 @@ if TYPE_CHECKING:
     from collections.abc import ItemsView
 
 BaseObjectType = TypeVar("BaseObjectType", bound="BaseObject")
-KeyType = TypeVar("KeyType")
-ValueType = TypeVar("ValueType")
 
 # -------
 # Helpers
@@ -396,7 +395,7 @@ class BaseObject:
         self.raiseNotImplementedError()
 
 
-class BaseItems(Generic[KeyType, ValueType]):
+class BaseItems:
     """Provide the given mapping with an items view object.
 
     This class provides a view of the key-value pairs in a mapping, similar to
@@ -412,10 +411,10 @@ class BaseItems(Generic[KeyType, ValueType]):
 
     """
 
-    def __init__(self, mapping: BaseDict[KeyType, ValueType]) -> None:
+    def __init__(self, mapping: BaseDict) -> None:
         self._mapping = mapping
 
-    def __contains__(self, item: Tuple[KeyType, ValueType]) -> bool:
+    def __contains__(self, item: Tuple[str, Any]) -> bool:
         """Check if a key-value pair exists in the mapping.
 
         :param item: The key-value pair to check for existence as a :class:`tuple`.
@@ -429,7 +428,7 @@ class BaseItems(Generic[KeyType, ValueType]):
         )
         return normalizedItem in self._mapping._normalizeItems()
 
-    def __iter__(self) -> Iterator[Tuple[KeyType, ValueType]]:
+    def __iter__(self) -> Iterator[Tuple[str, Any]]:
         """Return an iterator over the key-value pairs in the mapping.
 
         This method yields each item one by one, removing it from the list of
@@ -457,7 +456,7 @@ class BaseItems(Generic[KeyType, ValueType]):
         return f"{self._mapping.__class__.__name__}_items({list(self)})"
 
 
-class BaseKeys(Generic[KeyType]):
+class BaseKeys:
     """Provide the given mapping with a keys view object.
 
     This class provides a view of the keys in a mapping, similar to the behavior
@@ -472,10 +471,10 @@ class BaseKeys(Generic[KeyType]):
 
     """
 
-    def __init__(self, mapping: BaseDict[KeyType, Any]) -> None:
+    def __init__(self, mapping: BaseDict) -> None:
         self._mapping = mapping
 
-    def __contains__(self, key: KeyType) -> bool:
+    def __contains__(self, key: Any) -> bool:
         """Check if a key exists in the mapping.
 
         :param key: The key to check for existence.
@@ -484,7 +483,7 @@ class BaseKeys(Generic[KeyType]):
         """
         return any(k == key for k, _ in self._mapping._normalizeItems())
 
-    def __iter__(self) -> Iterator[KeyType]:
+    def __iter__(self) -> Iterator[Any]:
         """Return an iterator over the keys in the mapping.
 
         This method yields each key one by one, removing it from the list of
@@ -511,7 +510,7 @@ class BaseKeys(Generic[KeyType]):
         """
         return f"{self._mapping.__class__.__name__}_keys({list(self)})"
 
-    def isdisjoint(self, other: Iterable[KeyType]) -> bool:
+    def isdisjoint(self, other: Iterable[Any]) -> bool:
         """Check if the keys view has no common elements with another iterable.
 
         :param other: The iterable to compare against.
@@ -521,7 +520,7 @@ class BaseKeys(Generic[KeyType]):
         return set(self).isdisjoint(other)
 
 
-class BaseValues(Generic[ValueType]):
+class BaseValues:
     """Provide the given mapping with a values view object.
 
     This class provides a view of the values in a mapping, similar to the behavior
@@ -536,10 +535,10 @@ class BaseValues(Generic[ValueType]):
 
     """
 
-    def __init__(self, mapping: BaseDict[Any, ValueType]) -> None:
+    def __init__(self, mapping: BaseDict) -> None:
         self._mapping = mapping
 
-    def __contains__(self, value: ValueType) -> bool:
+    def __contains__(self, value: Any) -> bool:
         """Check if a value exists in the mapping.
 
         :param value: The value to check for existence.
@@ -548,7 +547,7 @@ class BaseValues(Generic[ValueType]):
         """
         return any(v == value for _, v in self._mapping._normalizeItems())
 
-    def __iter__(self) -> Iterator[ValueType]:
+    def __iter__(self) -> Iterator[Any]:
         """Return an iterator over the values in the mapping.
 
         This method yields each value one by one, removing it from the list of
@@ -576,7 +575,7 @@ class BaseValues(Generic[ValueType]):
         return f"{self._mapping.__class__.__name__}_values({list(self)})"
 
 
-class BaseDict(BaseObject, Generic[KeyType, ValueType]):
+class BaseDict(BaseObject):
     """Provide objects with basic dictionary-like functionality.
 
     :cvar keyNormalizer: An optional normalizer function for keys.
@@ -584,18 +583,18 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
 
     """
 
-    keyNormalizer: Optional[Callable[[KeyType], KeyType]] = None
-    valueNormalizer: Optional[Callable[[ValueType], ValueType]] = None
+    keyNormalizer: Optional[Callable[[str], str]] = None
+    valueNormalizer: Optional[Callable[[Any], Any]] = None
 
-    def _normalizeKey(self, key: KeyType) -> KeyType:
+    def _normalizeKey(self, key: str) -> str:
         keyNormalizer = type(self).keyNormalizer
         return keyNormalizer(key) if keyNormalizer is not None else key
 
-    def _normalizeValue(self, value: ValueType) -> ValueType:
+    def _normalizeValue(self, value: Any) -> Any:
         valueNormalizer = type(self).valueNormalizer
         return valueNormalizer(value) if valueNormalizer is not None else value
 
-    def _normalizeItems(self) -> List[Tuple[KeyType, ValueType]]:
+    def _normalizeItems(self) -> List[Tuple[str, Any]]:
         items = self._items()
         return [(self._normalizeKey(k), self._normalizeValue(v)) for (k, v) in items]
 
@@ -637,20 +636,20 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
         """
         return len(self.keys())
 
-    def keys(self) -> BaseKeys[KeyType]:
+    def keys(self) -> BaseKeys:
         """Return a view of the keys in the object.
 
-        :return: A :class:`BaseKeys` object instance of :class:`str` items.
+        :return: A :class:`BaseKeys` object instance.
 
         """
         return self._keys()
 
-    def _keys(self) -> BaseKeys[KeyType]:
+    def _keys(self) -> BaseKeys:
         """Return a view of the keys in the native object.
 
         This is the environment implementation of :meth:`BaseDict.keys`.
 
-        :return: A :class:`BaseKeys` object instance of :class:`str` items. If
+        :return: A :class:`BaseKeys` object instance. If
             a :cvar:`BaseDict.keyNormalizer` is set, it will be applied to each
             key in the returned view.
 
@@ -669,7 +668,7 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
         """
         return BaseItems(self)
 
-    def _items(self) -> ItemsView[KeyType, ValueType]:
+    def _items(self) -> ItemsView:
         """Return a view of the key-value pairs in the native object.
 
         This is the environment implementation of :meth:`BaseDict.items`.
@@ -687,7 +686,7 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
         """
         self.raiseNotImplementedError()
 
-    def values(self) -> BaseValues[ValueType]:
+    def values(self) -> BaseValues:
         """Return a view of the values in the object.
 
         :return: A :class:`BaseValues` object instance.
@@ -695,7 +694,7 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
         """
         return self._values()
 
-    def _values(self) -> BaseValues[ValueType]:
+    def _values(self) -> BaseValues:
         """Return a view of the values in the native object.
 
         This is the environment implementation of :meth:`BaseDict.values`.
@@ -711,7 +710,7 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
         """
         return BaseValues(self)
 
-    def __contains__(self, key: KeyType) -> bool:
+    def __contains__(self, key: Any) -> bool:
         """Check if a key is in the object.
 
         :param key: The key to check for.
@@ -721,7 +720,7 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
         key = self._normalizeKey(key)
         return self._contains(key)
 
-    def _contains(self, key: KeyType) -> bool:
+    def _contains(self, key: Any) -> bool:
         """Check if a key is in the native object.
 
         This is the environment implementation of :meth:`BaseDict.__contains__`.
@@ -740,7 +739,7 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
 
     has_key = __contains__
 
-    def __setitem__(self, key: KeyType, value: ValueType) -> None:
+    def __setitem__(self, key: Any, value: Any) -> None:
         """Set the value for a given key in the object.
 
         :param key: The key to set.
@@ -751,7 +750,7 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
         value = self._normalizeValue(value)
         self._setItem(key, value)
 
-    def _setItem(self, key: KeyType, value: ValueType) -> None:
+    def _setItem(self, key: Any, value: Any) -> None:
         """Set the value for a given key in the native object.
 
         This is the environment implementation of :meth:`BaseDict.__setitem__`.
@@ -771,7 +770,7 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
         """
         self.raiseNotImplementedError()
 
-    def __getitem__(self, key: KeyType) -> ValueType:
+    def __getitem__(self, key: Any) -> Any:
         """Get the value for a given key from the object.
 
         :param key: The key to retrieve the value for.
@@ -782,7 +781,7 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
         value = self._getItem(key)
         return self._normalizeValue(value)
 
-    def _getItem(self, key: KeyType) -> ValueType:
+    def _getItem(self, key: Any) -> Any:
         """Get the value for a given key from the native object.
 
         This is the environment implementation of :meth:`BaseDict.__getitem__`.
@@ -803,7 +802,7 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
         """
         self.raiseNotImplementedError()
 
-    def get(self, key: KeyType, default: Optional[ValueType] = None) -> Optional[ValueType]:
+    def get(self, key: Any, default: Optional[Any] = None) -> Any:
         """Get the value for a given key in the object.
 
         If the given key is not found, The specified `default` will be returned.
@@ -818,11 +817,11 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
         key = self._normalizeKey(key)
         default = self._normalizeValue(default) if default is not None else default
         value = self._get(key, default=default)
-        if value is not None and value is not default:
+        if value is not default:
             value = self._normalizeValue(value)
         return value
 
-    def _get(self, key: KeyType, default: Optional[ValueType]) -> Optional[ValueType]:
+    def _get(self, key: Any, default: Optional[Any]) -> Any:
         """Get the value for a given key in the native object.
 
         This is the environment implementation of :meth:`BaseDict.get`.
@@ -843,7 +842,7 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
             return self[key]
         return default
 
-    def __delitem__(self, key: KeyType) -> None:
+    def __delitem__(self, key: Any) -> None:
         """Delete a key-value pair from the object.
 
         :param key: The key to delete.
@@ -852,7 +851,7 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
         key = self._normalizeKey(key)
         self._delItem(key)
 
-    def _delItem(self, key: KeyType) -> None:
+    def _delItem(self, key: Any) -> None:
         """Delete a key-value pair from the native object.
 
         This is the environment implementation of :meth:`BaseDict.__delitem__`.
@@ -869,7 +868,7 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
         """
         self.raiseNotImplementedError()
 
-    def pop(self, key: KeyType, default: Optional[ValueType] = None) -> Optional[ValueType]:
+    def pop(self, key: Any, default: Optional[Any] = None) -> Any:
         """Remove a key from the object and return it's value.
 
         If the given key is not found, The specified `default` will be returned.
@@ -885,11 +884,9 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
         if default is not None:
             default = self._normalizeValue(default)
         value = self._pop(key, default=default)
-        if value is not None:
-            value = self._normalizeValue(value)
-        return value
+        return self._normalizeValue(value)
 
-    def _pop(self, key: KeyType, default: Optional[ValueType]) -> Optional[ValueType]:
+    def _pop(self, key: Any, default: Optional[Any]) -> Any:
         """Remove a key from the native object and return it's value.
 
         This is the environment implementation of :meth:`BaseDict.pop`.
@@ -912,7 +909,7 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
             del self[key]
         return value
 
-    def __iter__(self) -> Iterator[KeyType]:
+    def __iter__(self) -> Iterator[Any]:
         """Return an iterator over the keys of the object.
 
         This method yields each key one by one, removing it from the list of
@@ -923,7 +920,7 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
         """
         return self._iter()
 
-    def _iter(self) -> Iterator[KeyType]:
+    def _iter(self) -> Iterator[Any]:
         """Return an iterator over the keys of the native object.
 
         This is the environment implementation of :meth:`BaseDict.__iter__`.
@@ -938,7 +935,7 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
         for key in self.keys():
             yield key
 
-    def update(self, other: MutableMapping[KeyType, ValueType]) -> None:
+    def update(self, other: MutableMapping) -> None:
         """Update the current object instance with key-value pairs from another.
 
         :param other: A :class:`MutableMapping` of key-value pairs to update
@@ -954,7 +951,7 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
         otherCopy = d
         self._update(otherCopy)
 
-    def _update(self, other: MutableMapping[KeyType, ValueType]) -> None:
+    def _update(self, other: MutableMapping) -> None:
         """Update the current native object instance with key-value pairs from another.
 
         This is the environment implementation of :meth:`BaseDict.update`.
@@ -990,7 +987,7 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
             del self[key]
 
 
-class TransformationMixin:
+class TransformationMixin(ABC):
     """Provide objects transformation-related functionality."""
 
     # ---------------
@@ -1248,8 +1245,16 @@ class TransformationMixin:
         t = transform.Identity.skew(x=x, y=y)
         self.transformBy(tuple(t), origin=origin, **kwargs)
 
+    # ----------------
+    # Abstract members
+    # ----------------
 
-class InterpolationMixin:
+    @abstractmethod
+    def raiseNotImplementedError(self):
+        pass
+
+
+class InterpolationMixin(ABC):
     """Provide objects with interpolation-related functionality.
 
     :cvar compatibilityReporterClass:  A class used for reporting interpolation
@@ -1303,8 +1308,16 @@ class InterpolationMixin:
         """
         self.raiseNotImplementedError()
 
+    # ----------------
+    # Abstract members
+    # ----------------
 
-class SelectionMixin:
+    @abstractmethod
+    def raiseNotImplementedError(self):
+        pass
+
+
+class SelectionMixin(ABC):
     """Provide objects with selection-related functionality."""
 
     # -------------
@@ -1389,8 +1402,16 @@ class SelectionMixin:
         for obj in subObjects:
             obj.selected = obj in selected
 
+    # ----------------
+    # Abstract members
+    # ----------------
 
-class PointPositionMixin:
+    @abstractmethod
+    def raiseNotImplementedError(self):
+        pass
+
+
+class PointPositionMixin(ABC):
     """Provide objects with the ability to determine point position.
 
     This class adds a `position` attribute as a :class:`dyanmicProperty`, for
@@ -1456,8 +1477,30 @@ class PointPositionMixin:
         dY = y - pY
         self.moveBy((dX, dY))
 
+    # ----------------
+    # Abstract members
+    # ----------------
 
-class IdentifierMixin:
+    @abstractmethod
+    @property
+    def x(self):
+        pass
+
+    @abstractmethod
+    @property
+    def y(self):
+        pass
+
+    @abstractmethod
+    def moveBy(self, value):
+        pass
+
+    @abstractmethod
+    def raiseNotImplementedError(self):
+        pass
+
+
+class IdentifierMixin(ABC):
     """Provide objects with a unique identifier."""
 
     # identifier
@@ -1546,6 +1589,14 @@ class IdentifierMixin:
             Subclasses that allow setting an identifer may override this method.
 
         """
+        pass
+
+    # ----------------
+    # Abstract members
+    # ----------------
+
+    @abstractmethod
+    def raiseNotImplementedError(self):
         pass
 
 
