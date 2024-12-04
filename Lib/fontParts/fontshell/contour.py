@@ -67,7 +67,7 @@ class RContour(RBaseObject, BaseContour):
     def _get_clockwise(self):
         return self.naked().clockwise
 
-    def _reverseContour(self, **kwargs):
+    def _reverse(self, **kwargs):
         self.naked().reverse()
 
     # ------------------------
