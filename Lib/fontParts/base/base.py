@@ -1,6 +1,5 @@
 # pylint: disable=C0103, C0114
 from __future__ import annotations
-from abc import ABC, abstractmethod
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -16,9 +15,9 @@ from typing import (
     TypeVar,
     Union,
 )
-from collections.abc import MutableMapping
 from copy import deepcopy
 import math
+from collections.abc import MutableMapping
 
 from fontTools.misc import transform
 from fontParts.base.errors import FontPartsError
@@ -991,7 +990,7 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
             del self[key]
 
 
-class TransformationMixin(ABC):
+class TransformationMixin:
     """Provide objects transformation-related functionality."""
 
     # ---------------
@@ -1249,16 +1248,8 @@ class TransformationMixin(ABC):
         t = transform.Identity.skew(x=x, y=y)
         self.transformBy(tuple(t), origin=origin, **kwargs)
 
-    # ----------------
-    # Abstract members
-    # ----------------
 
-    @abstractmethod
-    def raiseNotImplementedError(self):
-        pass
-
-
-class InterpolationMixin(ABC):
+class InterpolationMixin:
     """Provide objects with interpolation-related functionality.
 
     :cvar compatibilityReporterClass:  A class used for reporting interpolation
@@ -1312,16 +1303,8 @@ class InterpolationMixin(ABC):
         """
         self.raiseNotImplementedError()
 
-    # ----------------
-    # Abstract members
-    # ----------------
 
-    @abstractmethod
-    def raiseNotImplementedError(self):
-        pass
-
-
-class SelectionMixin(ABC):
+class SelectionMixin:
     """Provide objects with selection-related functionality."""
 
     # -------------
@@ -1406,16 +1389,8 @@ class SelectionMixin(ABC):
         for obj in subObjects:
             obj.selected = obj in selected
 
-    # ----------------
-    # Abstract members
-    # ----------------
 
-    @abstractmethod
-    def raiseNotImplementedError(self):
-        pass
-
-
-class PointPositionMixin(ABC):
+class PointPositionMixin:
     """Provide objects with the ability to determine point position.
 
     This class adds a `position` attribute as a :class:`dyanmicProperty`, for
@@ -1481,30 +1456,8 @@ class PointPositionMixin(ABC):
         dY = y - pY
         self.moveBy((dX, dY))
 
-    # ----------------
-    # Abstract members
-    # ----------------
 
-    @abstractmethod
-    @property
-    def x(self):
-        pass
-
-    @abstractmethod
-    @property
-    def y(self):
-        pass
-
-    @abstractmethod
-    def moveBy(self, value):
-        pass
-
-    @abstractmethod
-    def raiseNotImplementedError(self):
-        pass
-
-
-class IdentifierMixin(ABC):
+class IdentifierMixin:
     """Provide objects with a unique identifier."""
 
     # identifier
@@ -1593,14 +1546,6 @@ class IdentifierMixin(ABC):
             Subclasses that allow setting an identifer may override this method.
 
         """
-        pass
-
-    # ----------------
-    # Abstract members
-    # ----------------
-
-    @abstractmethod
-    def raiseNotImplementedError(self):
         pass
 
 
