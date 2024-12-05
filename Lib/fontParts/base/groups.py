@@ -90,7 +90,9 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
             return None
         return self._font()
 
-    def _set_font(self, font: Optional[Union[BaseFont, Callable[[], BaseFont]]]) -> None:
+    def _set_font(
+        self, font: Optional[Union[BaseFont, Callable[[], BaseFont]]]
+    ) -> None:
         if self._font is not None and self._font != font:
             raise AssertionError("font for groups already set and is not same as font")
         if font is not None:
