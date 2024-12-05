@@ -1631,7 +1631,7 @@ class IdentifierMixin(ABC):
         pass
 
 
-def reference(obj: Callable[[], Any]) -> Callable[[], Any]:
+def reference(obj: Any) -> Callable[[], Any]:
     """
     This code returns a simple function that returns the given object.
     This is a backwards compatibility function that is under review (see issue #749).

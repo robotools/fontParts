@@ -9,6 +9,7 @@ from typing import (
     List,
     Optional,
     Tuple,
+    Union,
 )
 import collections
 
@@ -673,7 +674,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
 
     # Font
 
-    _font = None
+    _font: Optional[Callable[[], BaseFont]] = None
 
     font: dynamicProperty = dynamicProperty(
         "font",
@@ -698,7 +699,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
             return None
         return self._font()
 
-    def _set_font(self, font: Optional[BaseFont]) -> None:
+    def _set_font(self, font: Optional[Union[BaseFont, Callable[[], BaseFont]]]) -> None:
         if self._font is not None:
             raise AssertionError("font for layer already set")
         if font is not None:

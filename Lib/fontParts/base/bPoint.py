@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, List, Optional
+from typing import TYPE_CHECKING, Any, Callable, List, Optional, Union
 from fontTools.misc import transform
 
 from fontParts.base.base import (
@@ -59,7 +59,7 @@ class BaseBPoint(
     # this class should not be used in hashable
     # collections since it is dynamically generated.
 
-    __hash__ = None
+    __hash__ = None  # type: ignore[assignment]
 
     # -------
     # Parents
@@ -126,7 +126,7 @@ class BaseBPoint(
 
     # Contour
 
-    _contour: Optional[BaseContour] = None
+    _contour: Optional[Callable[[], BaseContour]] = None
 
     contour = dynamicProperty(
         "contour",
@@ -151,7 +151,7 @@ class BaseBPoint(
             return None
         return self._contour()
 
-    def _set_contour(self, contour: Optional[BaseContour]) -> None:
+    def _set_contour(self, contour: Optional[Union[BaseContour, Callable[[], BaseContour]]]) -> None:
         if self._contour is not None:
             raise AssertionError("contour for bPoint already set")
         if contour is not None:
