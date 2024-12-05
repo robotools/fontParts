@@ -488,7 +488,7 @@ class BaseContour(
     compatibilityReporterClass = ContourCompatibilityReporter
 
     def isCompatible(
-        self, other: BaseContour
+        self, other: BaseContour, cls=None
     ) -> Tuple[bool, ContourCompatibilityReporter]:
         """Evaluate interpolation compatibility with another contour.
 

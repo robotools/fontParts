@@ -628,7 +628,7 @@ class BaseComponent(
     compatibilityReporterClass = ComponentCompatibilityReporter
 
     def isCompatible(
-        self, other: BaseComponent
+        self, other: BaseComponent, cls=None
     ) -> Tuple[bool, ComponentCompatibilityReporter]:
         """Evaluate interpolation compatibility with another component.
 

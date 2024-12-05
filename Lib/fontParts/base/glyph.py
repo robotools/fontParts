@@ -2795,7 +2795,9 @@ class BaseGlyph(
                 reporter.warning = True
             reporterObject.append(compatibility)
 
-    def isCompatible(self, other: BaseGlyph) -> Tuple[bool, GlyphCompatibilityReporter]:
+    def isCompatible(
+        self, other: BaseGlyph, cls=None
+    ) -> Tuple[bool, GlyphCompatibilityReporter]:
         """Evaluate interpolation compatibility with another glyph.
 
         :param other: The other :class:`BaseGlyph` instance to check
