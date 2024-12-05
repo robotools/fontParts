@@ -1,5 +1,15 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, cast, Any, Iterator, List, Optional, Tuple, Union
+from typing import (
+    TYPE_CHECKING,
+    cast,
+    Any,
+    Iterator,
+    List,
+    Optional,
+    Tuple,
+    TypeVar,
+    Union,
+)
 
 from fontParts.base.errors import FontPartsError
 from fontParts.base.base import (
@@ -32,6 +42,7 @@ if TYPE_CHECKING:
     from fontParts.base.layer import BaseLayer
     from fontParts.base.font import BaseFont
 
+BaseContourType = TypeVar("BaseContourType", bound="BaseContour")
 PointCollectionType = CollectionType[PairCollectionType[IntFloatType]]
 
 
@@ -65,7 +76,7 @@ class BaseContour(
             contents += self.glyph._reprContents()
         return contents
 
-    def copyData(self, source: BaseContour) -> None:
+    def copyData(self, source: BaseContourType) -> None:
         """Copy data from another contour instance.
 
         This will copy the contents of the following attributes from `source`
