@@ -1249,7 +1249,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
         return {k: tuple(v) for k, v in mapping.items()}
 
     # --------------------------
-    # Abstract Members Overrides
+    # Abstract Member Overrides
     # --------------------------
 
     defaultLayer: dynamicProperty = dynamicProperty("base_defaultLayer")
