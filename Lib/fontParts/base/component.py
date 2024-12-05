@@ -1,3 +1,6 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING, cast, Any, Iterator, List, Optional, Tuple, Union
+
 from fontTools.misc import transform
 from fontParts.base import normalizers
 from fontParts.base.errors import FontPartsError
@@ -13,6 +16,24 @@ from fontParts.base.base import (
 )
 from fontParts.base.compatibility import ComponentCompatibilityReporter
 from fontParts.base.deprecated import DeprecatedComponent, RemovedComponent
+from fontParts.base.annotations import (
+    PairType,
+    PairCollectionType,
+    QuadrupleType,
+    SextupleType,
+    SextupleCollectionType,
+    IntFloatType,
+    PenType,
+    PointPenType,
+)
+
+if TYPE_CHECKING:
+    from fontParts.base.point import BasePoint
+    from fontParts.base.bPoint import BaseBPoint
+    from fontParts.base.segment import BaseSegment
+    from fontParts.base.glyph import BaseGlyph
+    from fontParts.base.layer import BaseLayer
+    from fontParts.base.font import BaseFont
 
 
 class BaseComponent(
@@ -24,9 +45,9 @@ class BaseComponent(
     DeprecatedComponent,
     RemovedComponent,
 ):
-    copyAttributes = ("baseGlyph", "transformation")
+    copyAttributes: Tuple[str, str] = ("baseGlyph", "transformation")
 
-    def _reprContents(self):
+    def _reprContents(self) -> List[str]:
         contents = [
             f"baseGlyph='{self.baseGlyph}'",
             f"offset='({self.offset[0]}, {self.offset[1]})'",
@@ -44,14 +65,14 @@ class BaseComponent(
 
     _glyph = None
 
-    glyph = dynamicProperty("glyph", "The component's parent glyph.")
+    glyph: dynamicProperty = dynamicProperty("glyph", "The component's parent glyph.")
 
-    def _get_glyph(self):
+    def _get_glyph(self) -> Optional[BaseGlyph]:
         if self._glyph is None:
             return None
         return self._glyph()
 
-    def _set_glyph(self, glyph):
+    def _set_glyph(self, glyph: Optional[BaseGlyph]) -> None:
         if self._glyph is not None:
             raise AssertionError("glyph for component already set")
         if glyph is not None:
@@ -60,18 +81,18 @@ class BaseComponent(
 
     # Layer
 
-    layer = dynamicProperty("layer", "The component's parent layer.")
+    layer: dynamicProperty = dynamicProperty("layer", "The component's parent layer.")
 
-    def _get_layer(self):
+    def _get_layer(self) -> Optional[BaseLayer]:
         if self._glyph is None:
             return None
         return self.glyph.layer
 
     # Font
 
-    font = dynamicProperty("font", "The component's parent font.")
+    font: dynamicProperty = dynamicProperty("font", "The component's parent font.")
 
-    def _get_font(self):
+    def _get_font(self) -> Optional[BaseFont]:
         if self._glyph is None:
             return None
         return self.glyph.font
@@ -82,31 +103,29 @@ class BaseComponent(
 
     # baseGlyph
 
-    baseGlyph = dynamicProperty(
+    baseGlyph: dynamicProperty = dynamicProperty(
         "base_baseGlyph", "The name of the glyph the component references."
     )
 
-    def _get_base_baseGlyph(self):
+    def _get_base_baseGlyph(self) -> Optional[str]:
         value = self._get_baseGlyph()
         # if the component does not belong to a layer,
         # it is allowed to have None as its baseGlyph
-        if value is None and self.layer is None:
-            pass
-        else:
-            value = normalizers.normalizeGlyphName(value)
-        return value
+        if value is None or self.layer is None:
+            return value
+        return normalizers.normalizeGlyphName(value)
 
-    def _set_base_baseGlyph(self, value):
+    def _set_base_baseGlyph(self, value: str) -> None:
         value = normalizers.normalizeGlyphName(value)
         self._set_baseGlyph(value)
 
-    def _get_baseGlyph(self):
+    def _get_baseGlyph(self) -> Optional[str]:
         """
         Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
-    def _set_baseGlyph(self, value):
+    def _set_baseGlyph(self, value: str) -> None:
         """
         Subclasses must override this method.
         """
@@ -114,26 +133,26 @@ class BaseComponent(
 
     # transformation
 
-    transformation = dynamicProperty(
+    transformation: dynamicProperty = dynamicProperty(
         "base_transformation", "The component's transformation matrix."
     )
 
-    def _get_base_transformation(self):
+    def _get_base_transformation(self) -> SextupleType[float]:
         value = self._get_transformation()
         value = normalizers.normalizeTransformationMatrix(value)
         return value
 
-    def _set_base_transformation(self, value):
+    def _set_base_transformation(self, value: SextupleCollectionType[IntFloatType]) -> None:
         value = normalizers.normalizeTransformationMatrix(value)
         self._set_transformation(value)
 
-    def _get_transformation(self):
+    def _get_transformation(self) -> SextupleType[float]:
         """
         Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
-    def _set_transformation(self, value):
+    def _set_transformation(self, value: SextupleCollectionType[IntFloatType]) -> None:
         """
         Subclasses must override this method.
         """
@@ -141,25 +160,25 @@ class BaseComponent(
 
     # offset
 
-    offset = dynamicProperty("base_offset", "The component's offset.")
+    offset: dynamicProperty = dynamicProperty("base_offset", "The component's offset.")
 
-    def _get_base_offset(self):
+    def _get_base_offset(self) -> PairType[IntFloatType]:
         value = self._get_offset()
         value = normalizers.normalizeTransformationOffset(value)
         return value
 
-    def _set_base_offset(self, value):
+    def _set_base_offset(self, value: PairCollectionType[IntFloatType]) -> None:
         value = normalizers.normalizeTransformationOffset(value)
         self._set_offset(value)
 
-    def _get_offset(self):
+    def _get_offset(self) -> PairType[IntFloatType]:
         """
         Subclasses may override this method.
         """
         sx, sxy, syx, sy, ox, oy = self.transformation
         return ox, oy
 
-    def _set_offset(self, value):
+    def _set_offset(self, value: PairCollectionType[IntFloatType]) -> None:
         """
         Subclasses may override this method.
         """
@@ -169,25 +188,25 @@ class BaseComponent(
 
     # scale
 
-    scale = dynamicProperty("base_scale", "The component's scale.")
+    scale: dynamicProperty = dynamicProperty("base_scale", "The component's scale.")
 
-    def _get_base_scale(self):
+    def _get_base_scale(self) -> PairType[float]:
         value = self._get_scale()
         value = normalizers.normalizeComponentScale(value)
         return value
 
-    def _set_base_scale(self, value):
+    def _set_base_scale(self, value: PairCollectionType[IntFloatType]) -> None:
         value = normalizers.normalizeComponentScale(value)
         self._set_scale(value)
 
-    def _get_scale(self):
+    def _get_scale(self) -> PairType[float]:
         """
         Subclasses may override this method.
         """
         sx, sxy, syx, sy, ox, oy = self.transformation
         return sx, sy
 
-    def _set_scale(self, value):
+    def _set_scale(self, value: PairCollectionType[IntFloatType]) -> None:
         """
         Subclasses may override this method.
         """
@@ -201,7 +220,7 @@ class BaseComponent(
 
     # index
 
-    index = dynamicProperty(
+    index: dynamicProperty = dynamicProperty(
         "base_index",
         (
             "The index of the component within the "
@@ -209,7 +228,7 @@ class BaseComponent(
         ),
     )
 
-    def _get_base_index(self):
+    def _get_base_index(self) -> Optional[int]:
         glyph = self.glyph
         if glyph is None:
             return None
@@ -217,11 +236,13 @@ class BaseComponent(
         value = normalizers.normalizeIndex(value)
         return value
 
-    def _set_base_index(self, value):
+    def _set_base_index(self, value: int) -> None:
         glyph = self.glyph
         if glyph is None:
             raise FontPartsError("The component does not belong to a glyph.")
         value = normalizers.normalizeIndex(value)
+        if value is None:
+            raise ValueError("Value cannot be None.")
         componentCount = len(glyph.components)
         if value < 0:
             value = -(value % componentCount)
@@ -229,14 +250,14 @@ class BaseComponent(
             value = componentCount
         self._set_index(value)
 
-    def _get_index(self):
+    def _get_index(self) -> Optional[int]:
         """
         Subclasses may override this method.
         """
         glyph = self.glyph
         return glyph.components.index(self)
 
-    def _set_index(self, value):
+    def _set_index(self, value: int) -> None:
         """
         Subclasses must override this method.
         """
@@ -246,13 +267,13 @@ class BaseComponent(
     # Pens
     # ----
 
-    def draw(self, pen):
+    def draw(self, pen: PenType) -> None:
         """
         Draw the component with the given Pen.
         """
         self._draw(pen)
 
-    def _draw(self, pen, **kwargs):
+    def _draw(self, pen: PenType, **kwargs: Any) -> None:
         """
         Subclasses may override this method.
         """
@@ -261,13 +282,13 @@ class BaseComponent(
         adapter = PointToSegmentPen(pen)
         self.drawPoints(adapter)
 
-    def drawPoints(self, pen):
+    def drawPoints(self, pen: PointPenType) -> None:
         """
         Draw the contour with the given PointPen.
         """
         self._drawPoints(pen)
 
-    def _drawPoints(self, pen, **kwargs):
+    def _drawPoints(self, pen: PointPenType, **kwargs: Any) -> None:
         """
         Subclasses may override this method.
         """
@@ -289,7 +310,7 @@ class BaseComponent(
     # Transformation
     # --------------
 
-    def _transformBy(self, matrix, **kwargs):
+    def _transformBy(self, matrix: SextupleCollectionType[IntFloatType], **kwargs: Any) -> None:
         """
         Subclasses may override this method.
         """
@@ -301,13 +322,13 @@ class BaseComponent(
     # Normalization
     # -------------
 
-    def round(self):
+    def round(self) -> None:
         """
         Round offset coordinates.
         """
         self._round()
 
-    def _round(self):
+    def _round(self) -> None:
         """
         Subclasses may override this method.
         """
@@ -316,7 +337,7 @@ class BaseComponent(
         y = normalizers.normalizeVisualRounding(y)
         self.offset = (x, y)
 
-    def decompose(self):
+    def decompose(self) -> None:
         """
         Decompose the component.
         """
@@ -325,7 +346,7 @@ class BaseComponent(
             raise FontPartsError("The component does not belong to a glyph.")
         self._decompose()
 
-    def _decompose(self):
+    def _decompose(self) -> None:
         """
         Subclasses must override this method.
         """
@@ -337,7 +358,7 @@ class BaseComponent(
 
     compatibilityReporterClass = ComponentCompatibilityReporter
 
-    def isCompatible(self, other):
+    def isCompatible(self, other: BaseComponent) -> Tuple[bool, ComponentCompatibilityReporter]:
         """
         Evaluate interpolation compatibility with **other**. ::
 
@@ -354,7 +375,7 @@ class BaseComponent(
         """
         return super(BaseComponent, self).isCompatible(other, BaseComponent)
 
-    def _isCompatible(self, other, reporter):
+    def _isCompatible(self, other: BaseComponent, reporter: ComponentCompatibilityReporter) -> None:
         """
         This is the environment implementation of
         :meth:`BaseComponent.isCompatible`.
@@ -364,7 +385,7 @@ class BaseComponent(
         component1 = self
         component2 = other
         # base glyphs
-        if component1.baseName != component2.baseName:
+        if component1.baseGlyph != component2.baseGlyph:
             reporter.baseDifference = True
             reporter.warning = True
 
@@ -372,7 +393,7 @@ class BaseComponent(
     # Data Queries
     # ------------
 
-    def pointInside(self, point):
+    def pointInside(self, point: PairCollectionType[IntFloatType]) -> bool:
         """
         Determine if point is in the black or white of the component.
 
@@ -381,7 +402,7 @@ class BaseComponent(
         point = normalizers.normalizeCoordinateTuple(point)
         return self._pointInside(point)
 
-    def _pointInside(self, point):
+    def _pointInside(self, point: PairCollectionType[IntFloatType]) -> bool:
         """
         Subclasses may override this method.
         """
@@ -391,18 +412,18 @@ class BaseComponent(
         self.draw(pen)
         return pen.getResult()
 
-    bounds = dynamicProperty(
+    bounds: dynamicProperty = dynamicProperty(
         "base_bounds",
         ("The bounds of the component: " "(xMin, yMin, xMax, yMax) or None."),
     )
 
-    def _get_base_bounds(self):
+    def _get_base_bounds(self) -> QuadrupleType[float]:
         value = self._get_bounds()
         if value is not None:
             value = normalizers.normalizeBoundingBox(value)
         return value
 
-    def _get_bounds(self):
+    def _get_bounds(self) -> QuadrupleType[float]:
         """
         Subclasses may override this method.
         """
