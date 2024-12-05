@@ -204,7 +204,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
             path = normalizers.normalizeFilePath(path)
         return path
 
-    def _get_path(self, **kwargs: Any) -> Optional[str]:
+    def _get_path(self, **kwargs: Any) -> Optional[str]:  # type: ignore[return]
         r"""Get the path to the native font file.
 
         This method is the environment implementation
@@ -574,7 +574,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         info.font = self
         return info
 
-    def _get_info(self) -> BaseInfo:
+    def _get_info(self) -> BaseInfo:  # type: ignore[return]
         """Get the native font's info object.
 
         This is the environment implementation of :attr:`BaseFont.info`.
@@ -613,7 +613,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         groups.font = self
         return groups
 
-    def _get_groups(self) -> BaseGroups:
+    def _get_groups(self) -> BaseGroups:  # type: ignore[return]
         """Get the native font's groups object.
 
         This is the environment implementation
@@ -653,7 +653,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         kerning.font = self
         return kerning
 
-    def _get_kerning(self) -> BaseKerning:
+    def _get_kerning(self) -> BaseKerning:  # type: ignore[return]
         """Get the native font's kerning object.
 
         This is the environment implementation
@@ -752,7 +752,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         features.font = self
         return features
 
-    def _get_features(self) -> BaseFeatures:
+    def _get_features(self) -> BaseFeatures:  # type: ignore[return]
         """Get the native font's features object.
 
         This is the environment implementation of
@@ -792,7 +792,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         lib.font = self
         return lib
 
-    def _get_lib(self) -> BaseLib:
+    def _get_lib(self) -> BaseLib:  # type: ignore[return]
         """Get the native font's lib object.
 
         This is the environment implementation of :attr:`BaseFont.lib`.
@@ -837,7 +837,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         lib.font = self
         return lib
 
-    def _get_tempLib(self) -> BaseLib:
+    def _get_tempLib(self) -> BaseLib:  # type: ignore[return]
         """Get the native font's temporary lib object.
 
         This is the environment implementation
@@ -883,7 +883,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
             self._setFontInLayer(layer)
         return tuple(layers)
 
-    def _get_layers(self, **kwargs: Any) -> Tuple[BaseLayer, ...]:
+    def _get_layers(self, **kwargs: Any) -> Tuple[BaseLayer, ...]:  # type: ignore[return]
         r"""Get the native font's layer objects.
 
         This is the environment implementation of
@@ -932,7 +932,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         value = normalizers.normalizeLayerOrder(value, self)
         self._set_layerOrder(value)
 
-    def _get_layerOrder(self, **kwargs: Any) -> Tuple[str, ...]:
+    def _get_layerOrder(self, **kwargs: Any) -> Tuple[str, ...]:  # type: ignore[return]
         r"""Get the order of the layers in the native font.
 
         This is the environment implementation of the
@@ -1006,7 +1006,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         value = normalizers.normalizeDefaultLayerName(value, self)
         self._set_defaultLayerName(value)
 
-    def _get_defaultLayerName(self) -> str:
+    def _get_defaultLayerName(self) -> str:  # type: ignore[return]
         """Get the name of the native font's default layer.
 
         This is the environment implementation of
@@ -1181,7 +1181,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         self._setFontInLayer(layer)
         return layer
 
-    def _newLayer(
+    def _newLayer(  # type: ignore[return]
         self,
         name: str,
         color: Optional[QuadrupleCollectionType[IntFloatType]],
@@ -1577,7 +1577,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         value = normalizers.normalizeGlyphOrder(value)
         self._set_glyphOrder(value)
 
-    def _get_glyphOrder(self) -> Tuple[str, ...]:
+    def _get_glyphOrder(self) -> Tuple[str, ...]:  # type: ignore[return]
         r"""Get the order of the glyphs in the native font.
 
         This is the environment implementation of the
@@ -1732,7 +1732,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
     def _len__guidelines(self) -> int:
         return self._lenGuidelines()
 
-    def _lenGuidelines(self, **kwargs: Any) -> int:
+    def _lenGuidelines(self, **kwargs: Any) -> int:  # type: ignore[return]
         r"""Return the number of font-level guidelines in the native font.
 
         :param \**kwargs: Additional keyword arguments.
@@ -1754,7 +1754,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         self._setFontInGuideline(guideline)
         return guideline
 
-    def _getGuideline(self, index: int, **kwargs: Any) -> BaseGuideline:
+    def _getGuideline(self, index: int, **kwargs: Any) -> BaseGuideline:  # type: ignore[return]
         r"""Return the guideline at the given index.
 
         :param index: The index of the guideline.
@@ -1846,7 +1846,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         newGuideline.font = self
         return newGuideline
 
-    def _appendGuideline(
+    def _appendGuideline(  # type: ignore[return]
         self,
         position: Optional[PairCollectionType[IntFloatType]],
         angle: Optional[float],

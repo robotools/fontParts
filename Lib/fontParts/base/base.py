@@ -189,7 +189,7 @@ def interpolate(
 # ------------
 
 
-class BaseObject:
+class BaseObject(Generic[BaseObjectType]):
     r"""Provide common base functionality to objects.
 
     This class is intended to serve as a foundation for other classes, supplying
@@ -1399,13 +1399,13 @@ class SelectionMixin(ABC):
     # Sub-Objects
     # -----------
     @classmethod
-    def _getSelectedSubObjects(cls, subObjects: CollectionType[Any]) -> Tuple[Any]:
+    def _getSelectedSubObjects(cls, subObjects: Any) -> Tuple[Any]:
         selected = tuple(obj for obj in subObjects if obj.selected)
         return selected
 
     @classmethod
     def _setSelectedSubObjects(
-        cls, subObjects: CollectionType[Any], selected: CollectionType[Any]
+        cls, subObjects: Any, selected: Any
     ) -> None:
         for obj in subObjects:
             obj.selected = obj in selected
