@@ -1,5 +1,15 @@
 from __future__ import annotations
-from typing import (TYPE_CHECKING, cast, Any, Iterator, List, Optional, Tuple, TypeVar, Union)
+from typing import (
+    TYPE_CHECKING,
+    cast,
+    Any,
+    Iterator,
+    List,
+    Optional,
+    Tuple,
+    TypeVar,
+    Union,
+)
 
 from fontParts.base.errors import FontPartsError
 from fontParts.base.base import (
