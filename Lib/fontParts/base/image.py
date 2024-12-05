@@ -2,7 +2,6 @@ from fontTools.misc import transform
 from fontParts.base.base import (
     BaseObject,
     TransformationMixin,
-    PointPositionMixin,
     SelectionMixin,
     dynamicProperty,
     reference,
@@ -15,7 +14,6 @@ from fontParts.base.deprecated import DeprecatedImage, RemovedImage
 class BaseImage(
     BaseObject,
     TransformationMixin,
-    PointPositionMixin,
     SelectionMixin,
     DeprecatedImage,
     RemovedImage,

@@ -1,6 +1,15 @@
 # pylint: disable=C0103, C0302, C0114, W0613
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, Callable, Iterator, List, Optional, Tuple
+from abc import ABC, abstractmethod
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Iterator,
+    List,
+    Optional,
+    Tuple,
+)
 import collections
 
 from fontParts.base.base import (
@@ -29,7 +38,7 @@ if TYPE_CHECKING:
     from fontParts.base.lib import BaseLib
 
 
-class _BaseGlyphVendor(BaseObject, SelectionMixin):
+class _BaseGlyphVendor(BaseObject, SelectionMixin, ABC):
     """Provide common glyph interaction.
 
     This class provides common glyph interaction code to the
@@ -572,6 +581,28 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin):
     # --------------------
 
     has_key: Callable[[_BaseGlyphVendor, str], bool] = __contains__
+
+    # ----------------
+    # Abstract Members
+    # ----------------
+
+    defaultLayer: dynamicProperty = dynamicProperty("base_defaultLayer")
+
+    @abstractmethod
+    def _get_base_defaultLayer(self) -> BaseLayer:
+        pass
+
+    @abstractmethod
+    def _set_base_defaultLayer(self, layer: BaseLayer) -> None:
+        pass
+
+    @abstractmethod
+    def _get_defaultLayer(self) -> BaseLayer:
+        pass
+
+    @abstractmethod
+    def _set_defaultLayer(self, value: BaseLayer) -> None:
+        pass
 
 
 class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLayer):
@@ -1224,3 +1255,21 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
             for code in glyph.unicodes:
                 mapping[code].append(glyph.name)
         return {k: tuple(v) for k, v in mapping.items()}
+
+    # -------------------------
+    # Abstract Member Overrides
+    # -------------------------
+
+    defaultLayer: dynamicProperty = dynamicProperty("base_defaultLayer")
+
+    def _get_base_defaultLayer(self) -> BaseLayer:
+        raise NotImplementedError("BaseLayer does not implement this method.")
+
+    def _set_base_defaultLayer(self, layer: BaseLayer) -> None:
+        raise NotImplementedError("BaseLayer does not implement this method.")
+
+    def _get_defaultLayer(self) -> BaseLayer:
+        raise NotImplementedError("BaseLayer does not implement this method.")
+
+    def _set_defaultLayer(self, value: BaseLayer) -> None:
+        raise NotImplementedError("BaseLayer does not implement this method.")
