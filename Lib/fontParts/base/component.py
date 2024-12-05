@@ -142,7 +142,9 @@ class BaseComponent(
         value = normalizers.normalizeTransformationMatrix(value)
         return value
 
-    def _set_base_transformation(self, value: SextupleCollectionType[IntFloatType]) -> None:
+    def _set_base_transformation(
+        self, value: SextupleCollectionType[IntFloatType]
+    ) -> None:
         value = normalizers.normalizeTransformationMatrix(value)
         self._set_transformation(value)
 
@@ -310,7 +312,9 @@ class BaseComponent(
     # Transformation
     # --------------
 
-    def _transformBy(self, matrix: SextupleCollectionType[IntFloatType], **kwargs: Any) -> None:
+    def _transformBy(
+        self, matrix: SextupleCollectionType[IntFloatType], **kwargs: Any
+    ) -> None:
         """
         Subclasses may override this method.
         """
@@ -358,7 +362,9 @@ class BaseComponent(
 
     compatibilityReporterClass = ComponentCompatibilityReporter
 
-    def isCompatible(self, other: BaseComponent) -> Tuple[bool, ComponentCompatibilityReporter]:
+    def isCompatible(
+        self, other: BaseComponent
+    ) -> Tuple[bool, ComponentCompatibilityReporter]:
         """
         Evaluate interpolation compatibility with **other**. ::
 
@@ -375,7 +381,9 @@ class BaseComponent(
         """
         return super(BaseComponent, self).isCompatible(other, BaseComponent)
 
-    def _isCompatible(self, other: BaseComponent, reporter: ComponentCompatibilityReporter) -> None:
+    def _isCompatible(
+        self, other: BaseComponent, reporter: ComponentCompatibilityReporter
+    ) -> None:
         """
         This is the environment implementation of
         :meth:`BaseComponent.isCompatible`.
