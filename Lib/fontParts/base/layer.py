@@ -7,10 +7,8 @@ from typing import (
     Callable,
     Iterator,
     List,
-    NoReturn,
     Optional,
     Tuple,
-    TypeVar,
 )
 import collections
 
