@@ -151,7 +151,9 @@ class BaseBPoint(
             return None
         return self._contour()
 
-    def _set_contour(self, contour: Optional[Union[BaseContour, Callable[[], BaseContour]]]) -> None:
+    def _set_contour(
+        self, contour: Optional[Union[BaseContour, Callable[[], BaseContour]]]
+    ) -> None:
         if self._contour is not None:
             raise AssertionError("contour for bPoint already set")
         if contour is not None:

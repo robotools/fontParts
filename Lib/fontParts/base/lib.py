@@ -92,7 +92,9 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
             return None
         return self._glyph()
 
-    def _set_glyph(self, glyph: Optional[Union[BaseGlyph, Callable[[], BaseGlyph]]]) -> None:
+    def _set_glyph(
+        self, glyph: Optional[Union[BaseGlyph, Callable[[], BaseGlyph]]]
+    ) -> None:
         if self._font is not None:
             raise AssertionError("font for lib already set")
         if self._glyph is not None and self._glyph() != glyph:
@@ -132,7 +134,9 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
             return self.glyph.font
         return None
 
-    def _set_font(self, font: Optional[Union[BaseFont, Callable[[], BaseFont]]]) -> None:
+    def _set_font(
+        self, font: Optional[Union[BaseFont, Callable[[], BaseFont]]]
+    ) -> None:
         if self._font is not None and self._font() != font:
             raise AssertionError("font for lib already set and is not same as font")
         if self._glyph is not None:

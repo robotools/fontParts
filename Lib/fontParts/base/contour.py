@@ -131,7 +131,9 @@ class BaseContour(
             return None
         return self._glyph()
 
-    def _set_glyph(self, glyph: Optional[Union[BaseGlyph, Callable[[], BaseGlyph]]]) -> None:
+    def _set_glyph(
+        self, glyph: Optional[Union[BaseGlyph, Callable[[], BaseGlyph]]]
+    ) -> None:
         if self._glyph is not None:
             raise AssertionError("glyph for contour already set")
         if glyph is not None:
