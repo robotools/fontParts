@@ -614,7 +614,7 @@ class BaseSegment(
     compatibilityReporterClass = SegmentCompatibilityReporter
 
     def isCompatible(
-        self, other: BaseSegment
+        self, other: BaseSegment, cls=None
     ) -> Tuple[bool, SegmentCompatibilityReporter]:
         """Evaluate interpolation compatibility with another segment.
 

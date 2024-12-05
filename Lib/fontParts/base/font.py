@@ -2058,7 +2058,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
 
     compatibilityReporterClass = FontCompatibilityReporter
 
-    def isCompatible(self, other: BaseFont) -> Tuple[bool, FontCompatibilityReporter]:
+    def isCompatible(self, other: BaseFont, cls=None) -> Tuple[bool, FontCompatibilityReporter]:
         """Evaluate interpolation compatibility with another font.
 
         This method will return a :class:`bool` indicating if the font is

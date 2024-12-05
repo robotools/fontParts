@@ -241,8 +241,7 @@ class BaseObject(Generic[BaseObjectType]):
             contentString = ""
         return f"<{self.__class__.__name__}{contentString} at {id(self)}>"
 
-    @classmethod
-    def _reprContents(cls) -> List[str]:
+    def _reprContents(self) -> List[str]:
         """Provide a list of strings for inclusion in :meth:`BaseObject.__repr__.
 
         :return: A :class:`list` of :class:`str` items.
