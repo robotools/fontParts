@@ -49,6 +49,7 @@ class BaseComponent(
     inserted as part of an outline.
 
     """
+
     copyAttributes: Tuple[str, str] = ("baseGlyph", "transformation")
 
     def _reprContents(self) -> List[str]:
@@ -227,7 +228,7 @@ class BaseComponent(
         :return: A :ref:`type-transformation` value representing the
             transformation matrix of the component.
 
-        """
+        """,
     )
 
     def _get_base_transformation(self) -> SextupleType[float]:
@@ -288,7 +289,7 @@ class BaseComponent(
 
         :return: A :ref:`type-coordinate.` representing the offset of the component.
 
-        """
+        """,
     )
 
     def _get_base_offset(self) -> PairType[IntFloatType]:
@@ -348,7 +349,7 @@ class BaseComponent(
         :return: A :class:`tuple` of two :class:`float` items representing the
             ``(x, y)`` scale of the component.
 
-        """
+        """,
     )
 
     def _get_base_scale(self) -> PairType[float]:
@@ -416,7 +417,7 @@ class BaseComponent(
         :raise FontPartsError: If attempting to set the index while the
             component does not belong to a glyph.
 
-        """
+        """,
     )
 
     def _get_base_index(self) -> Optional[int]:
@@ -740,18 +741,18 @@ class BaseComponent(
     def _get_bounds(self) -> QuadrupleType[float]:
         """Get the bounds of the component.
 
-        This is the environment implementation of the :attr:`BaseComponent.bounds`
-        property getter.
+         This is the environment implementation of the :attr:`BaseComponent.bounds`
+         property getter.
 
-       :return: A :class:`tuple` of four :class:`int` or :class:`float` values
-            in the form ``(x minimum, y minimum, x maximum, y maximum)``
-            representing the bounds of the component, or :obj:`None` if the
-            component is empty. The value will be normalized
-            with :func:`normalizers.normalizeBoundingBox`.
+        :return: A :class:`tuple` of four :class:`int` or :class:`float` values
+             in the form ``(x minimum, y minimum, x maximum, y maximum)``
+             representing the bounds of the component, or :obj:`None` if the
+             component is empty. The value will be normalized
+             with :func:`normalizers.normalizeBoundingBox`.
 
-        .. note::
+         .. note::
 
-            Subclasses may override this method.
+             Subclasses may override this method.
 
         """
         pen = BoundsPen(self.layer)

@@ -1107,7 +1107,9 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
 
     compatibilityReporterClass = LayerCompatibilityReporter
 
-    def isCompatible(self, other: BaseLayer, cls=None) -> Tuple[bool, LayerCompatibilityReporter]:
+    def isCompatible(
+        self, other: BaseLayer, cls=None
+    ) -> Tuple[bool, LayerCompatibilityReporter]:
         """Evaluate interpolation compatibility with another layer.
 
         :param other: The other :class:`BaseLayer` instance to check
