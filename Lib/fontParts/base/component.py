@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, cast, Any, Iterator, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, List, Optional, Tuple
 
 from fontTools.misc import transform
 from fontParts.base import normalizers
@@ -8,7 +8,6 @@ from fontParts.base.base import (
     BaseObject,
     TransformationMixin,
     InterpolationMixin,
-    PointPositionMixin,
     SelectionMixin,
     IdentifierMixin,
     dynamicProperty,
@@ -28,9 +27,6 @@ from fontParts.base.annotations import (
 )
 
 if TYPE_CHECKING:
-    from fontParts.base.point import BasePoint
-    from fontParts.base.bPoint import BaseBPoint
-    from fontParts.base.segment import BaseSegment
     from fontParts.base.glyph import BaseGlyph
     from fontParts.base.layer import BaseLayer
     from fontParts.base.font import BaseFont
