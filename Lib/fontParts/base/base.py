@@ -1404,9 +1404,7 @@ class SelectionMixin(ABC):
         return selected
 
     @classmethod
-    def _setSelectedSubObjects(
-        cls, subObjects: Any, selected: Any
-    ) -> None:
+    def _setSelectedSubObjects(cls, subObjects: Any, selected: Any) -> None:
         for obj in subObjects:
             obj.selected = obj in selected
 
