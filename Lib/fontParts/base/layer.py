@@ -1258,9 +1258,9 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
                 mapping[code].append(glyph.name)
         return {k: tuple(v) for k, v in mapping.items()}
 
-    # --------------------------
+    # -------------------------
     # Abstract Member Overrides
-    # --------------------------
+    # -------------------------
 
     defaultLayer: dynamicProperty = dynamicProperty("base_defaultLayer")
 
