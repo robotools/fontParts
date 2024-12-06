@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, Iterator, Optional, Union, List, Tuple, TypeVar
+from typing import TYPE_CHECKING, Any, Callable, Optional, Union, List, Tuple
 import math
 from fontTools.misc import transform
 from fontParts.base.base import (
@@ -17,27 +17,16 @@ from fontParts.base.compatibility import GuidelineCompatibilityReporter
 from fontParts.base.color import Color
 from fontParts.base.deprecated import DeprecatedGuideline, RemovedGuideline
 from fontParts.base.annotations import (
-    PairType,
     QuadrupleType,
-    CollectionType,
-    PairCollectionType,
     QuadrupleCollectionType,
     SextupleCollectionType,
     IntFloatType,
-    TransformationType,
-    PenType,
-    PointPenType,
 )
 
 if TYPE_CHECKING:
     from fontParts.base.font import BaseFont
-    from fontParts.base.lib import BaseLib
     from fontParts.base.layer import BaseLayer
-    from fontParts.base.guideline import BaseGuideline
-    from fontParts.base.contour import BaseContour
-    from fontParts.base.component import BaseComponent
-    from fontParts.base.anchor import BaseAnchor
-    from fontParts.base.image import BaseImage
+    from fontParts.base.glyph import BaseGlyph
 
 
 class BaseGuideline(
@@ -58,7 +47,7 @@ class BaseGuideline(
         >>> guideline = RGuideline()
     """
 
-    copyAttributes = ("x", "y", "angle", "name", "color")
+    copyAttributes: Tuple[str, ...] = ("x", "y", "angle", "name", "color")
 
     def _reprContents(self) -> List[str]:
         contents = []
@@ -143,21 +132,21 @@ class BaseGuideline(
         """,
     )
 
-    def _get_base_x(self):
+    def _get_base_x(self) -> IntFloatType:
         value = self._get_x()
         if value is None:
             return 0
         value = normalizers.normalizeX(value)
         return value
 
-    def _set_base_x(self, value):
+    def _set_base_x(self, value: IntFloatType) -> None:
         if value is None:
             value = 0
         else:
             value = normalizers.normalizeX(value)
         self._set_x(value)
 
-    def _get_x(self):
+    def _get_x(self) -> IntFloatType:
         """
         This is the environment implementation of
         :attr:`BaseGuideline.x`. This must return an
@@ -167,7 +156,7 @@ class BaseGuideline(
         """
         self.raiseNotImplementedError()
 
-    def _set_x(self, value):
+    def _set_x(self, value: IntFloatType) -> None:
         """
         This is the environment implementation of
         :attr:`BaseGuideline.x`. **value** will be
@@ -191,21 +180,21 @@ class BaseGuideline(
         """,
     )
 
-    def _get_base_y(self):
+    def _get_base_y(self) -> IntFloatType:
         value = self._get_y()
         if value is None:
             return 0
         value = normalizers.normalizeY(value)
         return value
 
-    def _set_base_y(self, value):
+    def _set_base_y(self, value: IntFloatType) -> None:
         if value is None:
             value = 0
         else:
             value = normalizers.normalizeY(value)
         self._set_y(value)
 
-    def _get_y(self):
+    def _get_y(self) -> IntFloatType:
         """
         This is the environment implementation of
         :attr:`BaseGuideline.y`. This must return an
@@ -215,7 +204,7 @@ class BaseGuideline(
         """
         self.raiseNotImplementedError()
 
-    def _set_y(self, value):
+    def _set_y(self, value: IntFloatType) -> None:
         """
         This is the environment implementation of
         :attr:`BaseGuideline.y`. **value** will be
@@ -245,7 +234,7 @@ class BaseGuideline(
         """,
     )
 
-    def _get_base_angle(self):
+    def _get_base_angle(self) -> float:
         value = self._get_angle()
         if value is None:
             if self._get_x() != 0 and self._get_y() != 0:
@@ -259,7 +248,7 @@ class BaseGuideline(
         value = normalizers.normalizeRotationAngle(value)
         return value
 
-    def _set_base_angle(self, value):
+    def _set_base_angle(self, value: IntFloatType) -> None:
         if value is None:
             if self._get_x() != 0 and self._get_y() != 0:
                 value = 0
@@ -272,7 +261,7 @@ class BaseGuideline(
         value = normalizers.normalizeRotationAngle(value)
         self._set_angle(value)
 
-    def _get_angle(self):
+    def _get_angle(self) -> float:
         """
         This is the environment implementation of
         :attr:`BaseGuideline.angle`. This must return an
@@ -282,7 +271,7 @@ class BaseGuideline(
         """
         self.raiseNotImplementedError()
 
-    def _set_angle(self, value):
+    def _set_angle(self, value: IntFloatType) -> None:
         """
         This is the environment implementation of
         :attr:`BaseGuideline.angle`. **value** will be
@@ -310,12 +299,12 @@ class BaseGuideline(
         """,
     )
 
-    def _get_base_index(self):
+    def _get_base_index(self) -> Optional[int]:
         value = self._get_index()
         value = normalizers.normalizeIndex(value)
         return value
 
-    def _get_index(self):
+    def _get_index(self) -> Optional[int]:
         """
         Get the guideline's index.
         This must return an ``int``.
@@ -345,18 +334,18 @@ class BaseGuideline(
         """,
     )
 
-    def _get_base_name(self):
+    def _get_base_name(self) -> Optional[str]:
         value = self._get_name()
         if value is not None:
             value = normalizers.normalizeGuidelineName(value)
         return value
 
-    def _set_base_name(self, value):
+    def _set_base_name(self, value: Optional[str]) -> None:
         if value is not None:
             value = normalizers.normalizeGuidelineName(value)
         self._set_name(value)
 
-    def _get_name(self):
+    def _get_name(self) -> Optional[str]:
         """
         This is the environment implementation of
         :attr:`BaseGuideline.name`. This must return a
@@ -368,7 +357,7 @@ class BaseGuideline(
         """
         self.raiseNotImplementedError()
 
-    def _set_name(self, value):
+    def _set_name(self, value: Optional[str]) -> None:
         """
         This is the environment implementation of
         :attr:`BaseGuideline.name`. **value** will be
@@ -394,19 +383,19 @@ class BaseGuideline(
         """,
     )
 
-    def _get_base_color(self):
+    def _get_base_color(self) -> QuadrupleType[float]:
         value = self._get_color()
         if value is not None:
             value = normalizers.normalizeColor(value)
             value = Color(value)
         return value
 
-    def _set_base_color(self, value):
+    def _set_base_color(self, value: QuadrupleCollectionType[IntFloatType]) -> None:
         if value is not None:
             value = normalizers.normalizeColor(value)
         self._set_color(value)
 
-    def _get_color(self):
+    def _get_color(self) -> QuadrupleType[float]:
         """
         This is the environment implementation of
         :attr:`BaseGuideline.color`. This must return
@@ -418,7 +407,7 @@ class BaseGuideline(
         """
         self.raiseNotImplementedError()
 
-    def _set_color(self, value):
+    def _set_color(self, value: QuadrupleCollectionType[IntFloatType]) -> None:
         """
         This is the environment implementation of
         :attr:`BaseGuideline.color`. **value** will
@@ -434,7 +423,7 @@ class BaseGuideline(
     # Transformation
     # --------------
 
-    def _transformBy(self, matrix, **kwargs):
+    def _transformBy(self, matrix: SextupleCollectionType[IntFloatType], **kwargs: Any) -> None:
         """
         This is the environment implementation of
         :meth:`BaseGuideline.transformBy`.
@@ -463,7 +452,7 @@ class BaseGuideline(
 
     compatibilityReporterClass = GuidelineCompatibilityReporter
 
-    def isCompatible(self, other):
+    def isCompatible(self, other: BaseGuideline, cls=None) -> Tuple[bool, GuidelineCompatibilityReporter]:
         """
         Evaluate interpolation compatibility with **other**. ::
 
@@ -481,7 +470,7 @@ class BaseGuideline(
         """
         return super(BaseGuideline, self).isCompatible(other, BaseGuideline)
 
-    def _isCompatible(self, other, reporter):
+    def _isCompatible(self, other: BaseGuideline, reporter: GuidelineCompatibilityReporter) -> None:
         """
         This is the environment implementation of
         :meth:`BaseGuideline.isCompatible`.
@@ -499,7 +488,7 @@ class BaseGuideline(
     # Normalization
     # -------------
 
-    def round(self):
+    def round(self) -> None:
         """
         Round the guideline's coordinate.
 
@@ -516,7 +505,7 @@ class BaseGuideline(
         """
         self._round()
 
-    def _round(self, **kwargs):
+    def _round(self, **kwargs: Any) -> None:
         """
         This is the environment implementation of
         :meth:`BaseGuideline.round`.
