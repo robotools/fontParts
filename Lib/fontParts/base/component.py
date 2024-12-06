@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, List, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Callable, List, Optional, Tuple, Union
 
 from fontTools.misc import transform
 from fontTools.pens.pointInsidePen import PointInsidePen
@@ -68,7 +68,7 @@ class BaseComponent(
 
     # Glyph
 
-    _glyph = None
+    _glyph: Optional[Callable[[], BaseGlyph]] = None
 
     glyph: dynamicProperty = dynamicProperty(
         "glyph",
@@ -93,7 +93,9 @@ class BaseComponent(
             return None
         return self._glyph()
 
-    def _set_glyph(self, glyph: Optional[BaseGlyph]) -> None:
+    def _set_glyph(
+        self, glyph: Optional[Union[BaseGlyph, Callable[[], BaseGlyph]]]
+    ) -> None:
         if self._glyph is not None:
             raise AssertionError("glyph for component already set")
         if glyph is not None:
@@ -432,9 +434,10 @@ class BaseComponent(
         glyph = self.glyph
         if glyph is None:
             raise FontPartsError("The component does not belong to a glyph.")
-        value = normalizers.normalizeIndex(value)
-        if value is None:
+        index = normalizers.normalizeIndex(value)
+        if index is None:
             return
+        value = index
         componentCount = len(glyph.components)
         if value < 0:
             value = -(value % componentCount)

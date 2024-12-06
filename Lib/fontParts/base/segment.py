@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, Generator, List, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Callable, Generator, List, Optional, Tuple, Union
 
 from fontParts.base.errors import FontPartsError
 from fontParts.base.base import (
@@ -61,7 +61,7 @@ class BaseSegment(
 
     # Contour
 
-    _contour: Optional[BaseContour] = None
+    _contour: Optional[Callable[[], BaseContour]] = None
 
     contour: dynamicProperty = dynamicProperty(
         "contour",
@@ -86,7 +86,9 @@ class BaseSegment(
             return None
         return self._contour()
 
-    def _set_contour(self, contour: Optional[BaseContour]) -> None:
+    def _set_contour(
+        self, contour: Optional[Union[BaseContour, Callable[[], BaseContour]]]
+    ) -> None:
         if self._contour is not None:
             raise AssertionError("contour for segment already set")
         if contour is not None:

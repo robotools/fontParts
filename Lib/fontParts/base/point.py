@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, Optional, Union, Tuple
+from typing import TYPE_CHECKING, Any, Callable, Optional, Union, Tuple
 
 from fontTools.misc import transform
 from fontParts.base.base import (
@@ -66,7 +66,7 @@ class BasePoint(
 
     # Contour
 
-    _contour: Optional[BaseContour] = None
+    _contour: Optional[Callable[[], BaseContour]] = None
 
     contour: dynamicProperty = dynamicProperty(
         "contour",
@@ -91,7 +91,9 @@ class BasePoint(
             return None
         return self._contour()
 
-    def _set_contour(self, contour: Optional[BaseContour]) -> None:
+    def _set_contour(
+        self, contour: Optional[Union[BaseContour, Callable[[], BaseContour]]]
+    ) -> None:
         if self._contour is not None:
             raise AssertionError("contour for point already set")
         if contour is not None:
