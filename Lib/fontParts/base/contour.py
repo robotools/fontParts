@@ -8,6 +8,7 @@ from typing import (
     List,
     Optional,
     Tuple,
+    Type,
     TypeVar,
     Union,
 )
@@ -65,8 +66,8 @@ class BaseContour(
 
     """
 
-    segmentClass = None
-    bPointClass = None
+    segmentClass: Optional[Type[BaseSegment]] = None
+    bPointClass: Optional[Type[BaseBPoint]] = None
 
     def _reprContents(self) -> List[str]:
         contents = []
@@ -909,7 +910,7 @@ class BaseContour(
         points = self.points
         if not points:
             return ()
-        segments: List[List[BasePoint]] = [[]]
+        segments: Union[List[List[BasePoint]]] = [[]]
         lastWasOffCurve = False
         firstIsMove = points[0].type == "move"
         for point in points:
@@ -935,10 +936,10 @@ class BaseContour(
         for points in segments:
             if self.segmentClass is None:
                 raise TypeError("segmentClass cannot be None.")
-            segment = self.segmentClass()
-            segment._setPoints(points)
-            self._setContourInSegment(segment)
-            wrapped.append(segment)
+            pointSegment = self.segmentClass()
+            pointSegment._setPoints(points)
+            self._setContourInSegment(pointSegment)
+            wrapped.append(pointSegment)
         return tuple(wrapped)
 
     def __getitem__(self, index: int) -> BaseSegment:
