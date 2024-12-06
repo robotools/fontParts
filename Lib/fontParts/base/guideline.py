@@ -65,7 +65,9 @@ class BaseGuideline(
 
     _glyph: Optional[Callable[[], BaseGlyph]] = None
 
-    glyph: dynamicProperty = dynamicProperty("glyph", "The guideline's parent :class:`BaseGlyph`.")
+    glyph: dynamicProperty = dynamicProperty(
+        "glyph", "The guideline's parent :class:`BaseGlyph`."
+    )
 
     def _get_glyph(self) -> Optional[BaseGlyph]:
         if self._glyph is None:
@@ -85,7 +87,9 @@ class BaseGuideline(
 
     # Layer
 
-    layer: dynamicProperty = dynamicProperty("layer", "The guideline's parent :class:`BaseLayer`.")
+    layer: dynamicProperty = dynamicProperty(
+        "layer", "The guideline's parent :class:`BaseLayer`."
+    )
 
     def _get_layer(self) -> Optional[BaseLayer]:
         if self._glyph is None:
@@ -96,7 +100,9 @@ class BaseGuideline(
 
     _font: Optional[Callable[[], BaseFont]] = None
 
-    font: dynamicProperty = dynamicProperty("font", "The guideline's parent :class:`BaseFont`.")
+    font: dynamicProperty = dynamicProperty(
+        "font", "The guideline's parent :class:`BaseFont`."
+    )
 
     def _get_font(self) -> Optional[BaseFont]:
         if self._font is not None:
@@ -105,7 +111,9 @@ class BaseGuideline(
             return self.glyph.font
         return None
 
-    def _set_font(self, font: Optional[Union[BaseFont, Callable[[], BaseFont]]]) -> None:
+    def _set_font(
+        self, font: Optional[Union[BaseFont, Callable[[], BaseFont]]]
+    ) -> None:
         if self._font is not None:
             raise AssertionError("font for guideline already set")
         if self._glyph is not None:
