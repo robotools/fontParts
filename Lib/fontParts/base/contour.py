@@ -910,7 +910,7 @@ class BaseContour(
         points = self.points
         if not points:
             return ()
-        segments: Union[List[List[BasePoint]]] = [[]]
+        segments: List[List[BasePoint]] = [[]]
         lastWasOffCurve = False
         firstIsMove = points[0].type == "move"
         for point in points:
