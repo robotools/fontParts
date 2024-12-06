@@ -536,7 +536,7 @@ class BaseGuideline(
         self._set_color(value)
 
     def _get_color(self) -> QuadrupleType[float]:
-        """"Get the native guideline's color.
+        """ "Get the native guideline's color.
 
         This is the environment implementation of the :attr:`BaseGuideline.color`
         property getter.
@@ -555,7 +555,7 @@ class BaseGuideline(
         self.raiseNotImplementedError()
 
     def _set_color(self, value: QuadrupleCollectionType[IntFloatType]) -> None:
-        """"Set the native guideline's color.
+        """ "Set the native guideline's color.
 
         Description
 
@@ -578,7 +578,9 @@ class BaseGuideline(
     # Transformation
     # --------------
 
-    def _transformBy(self, matrix: SextupleCollectionType[IntFloatType], **kwargs: Any) -> None:
+    def _transformBy(
+        self, matrix: SextupleCollectionType[IntFloatType], **kwargs: Any
+    ) -> None:
         r"""Transform the native guideline according to the given matrix.
 
         This is the environment implementation of :meth:`BaseGuideline.transformBy`.
@@ -611,7 +613,9 @@ class BaseGuideline(
 
     compatibilityReporterClass = GuidelineCompatibilityReporter
 
-    def isCompatible(self, other: BaseGuideline, cls=None) -> Tuple[bool, GuidelineCompatibilityReporter]:
+    def isCompatible(
+        self, other: BaseGuideline, cls=None
+    ) -> Tuple[bool, GuidelineCompatibilityReporter]:
         """Evaluate interpolation compatibility with another guideline.
 
         :param other: The other :class:`BaseGuideline` instance to check
@@ -634,7 +638,9 @@ class BaseGuideline(
         """
         return super(BaseGuideline, self).isCompatible(other, BaseGuideline)
 
-    def _isCompatible(self, other: BaseGuideline, reporter: GuidelineCompatibilityReporter) -> None:
+    def _isCompatible(
+        self, other: BaseGuideline, reporter: GuidelineCompatibilityReporter
+    ) -> None:
         """Evaluate interpolation compatibility with another native guideline.
 
         This is the environment implementation of :meth:`BaseGuideline.isCompatible`.
