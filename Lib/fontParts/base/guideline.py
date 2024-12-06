@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING, Any, Iterator, Optional, Union, List, Tuple, TypeVar
 import math
 from fontTools.misc import transform
 from fontParts.base.base import (
@@ -14,6 +16,28 @@ from fontParts.base import normalizers
 from fontParts.base.compatibility import GuidelineCompatibilityReporter
 from fontParts.base.color import Color
 from fontParts.base.deprecated import DeprecatedGuideline, RemovedGuideline
+from fontParts.base.annotations import (
+    PairType,
+    QuadrupleType,
+    CollectionType,
+    PairCollectionType,
+    QuadrupleCollectionType,
+    SextupleCollectionType,
+    IntFloatType,
+    TransformationType,
+    PenType,
+    PointPenType,
+)
+
+if TYPE_CHECKING:
+    from fontParts.base.font import BaseFont
+    from fontParts.base.lib import BaseLib
+    from fontParts.base.layer import BaseLayer
+    from fontParts.base.guideline import BaseGuideline
+    from fontParts.base.contour import BaseContour
+    from fontParts.base.component import BaseComponent
+    from fontParts.base.anchor import BaseAnchor
+    from fontParts.base.image import BaseImage
 
 
 class BaseGuideline(
@@ -36,7 +60,7 @@ class BaseGuideline(
 
     copyAttributes = ("x", "y", "angle", "name", "color")
 
-    def _reprContents(self):
+    def _reprContents(self) -> List[str]:
         contents = []
         if self.name is not None:
             contents.append(f"'{self.name}'")
@@ -50,16 +74,18 @@ class BaseGuideline(
 
     # Glyph
 
-    _glyph = None
+    _glyph: Optional[Callable[[], BaseGlyph]] = None
 
-    glyph = dynamicProperty("glyph", "The guideline's parent :class:`BaseGlyph`.")
+    glyph: dynamicProperty = dynamicProperty("glyph", "The guideline's parent :class:`BaseGlyph`.")
 
-    def _get_glyph(self):
+    def _get_glyph(self) -> Optional[BaseGlyph]:
         if self._glyph is None:
             return None
         return self._glyph()
 
-    def _set_glyph(self, glyph):
+    def _set_glyph(
+        self, glyph: Optional[Union[BaseGlyph, Callable[[], BaseGlyph]]]
+    ) -> None:
         if self._font is not None:
             raise AssertionError("font for guideline already set")
         if self._glyph is not None:
@@ -70,27 +96,27 @@ class BaseGuideline(
 
     # Layer
 
-    layer = dynamicProperty("layer", "The guideline's parent :class:`BaseLayer`.")
+    layer: dynamicProperty = dynamicProperty("layer", "The guideline's parent :class:`BaseLayer`.")
 
-    def _get_layer(self):
+    def _get_layer(self) -> Optional[BaseLayer]:
         if self._glyph is None:
             return None
         return self.glyph.layer
 
     # Font
 
-    _font = None
+    _font: Optional[Callable[[], BaseFont]] = None
 
-    font = dynamicProperty("font", "The guideline's parent :class:`BaseFont`.")
+    font: dynamicProperty = dynamicProperty("font", "The guideline's parent :class:`BaseFont`.")
 
-    def _get_font(self):
+    def _get_font(self) -> Optional[BaseFont]:
         if self._font is not None:
             return self._font()
         elif self._glyph is not None:
             return self.glyph.font
         return None
 
-    def _set_font(self, font):
+    def _set_font(self, font: Optional[Union[BaseFont, Callable[[], BaseFont]]]) -> None:
         if self._font is not None:
             raise AssertionError("font for guideline already set")
         if self._glyph is not None:
@@ -105,7 +131,7 @@ class BaseGuideline(
 
     # x
 
-    x = dynamicProperty(
+    x: dynamicProperty = dynamicProperty(
         "base_x",
         """
         The x coordinate of the guideline.
@@ -153,7 +179,7 @@ class BaseGuideline(
 
     # y
 
-    y = dynamicProperty(
+    y: dynamicProperty = dynamicProperty(
         "base_y",
         """
         The y coordinate of the guideline.
@@ -201,7 +227,7 @@ class BaseGuideline(
 
     # angle
 
-    angle = dynamicProperty(
+    angle: dynamicProperty = dynamicProperty(
         "base_angle",
         """
         The angle of the guideline.
@@ -272,7 +298,7 @@ class BaseGuideline(
 
     # index
 
-    index = dynamicProperty(
+    index: dynamicProperty = dynamicProperty(
         "base_index",
         """
         The index of the guideline within the ordered
@@ -307,7 +333,7 @@ class BaseGuideline(
 
     # name
 
-    name = dynamicProperty(
+    name: dynamicProperty = dynamicProperty(
         "base_name",
         """
         The name of the guideline. This will be a
@@ -356,7 +382,7 @@ class BaseGuideline(
 
     # color
 
-    color = dynamicProperty(
+    color: dynamicProperty = dynamicProperty(
         "base_color",
         """"
         The guideline's color. This will be a
