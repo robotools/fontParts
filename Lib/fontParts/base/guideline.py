@@ -431,7 +431,9 @@ class BaseGuideline(
     # Transformation
     # --------------
 
-    def _transformBy(self, matrix: SextupleCollectionType[IntFloatType], **kwargs: Any) -> None:
+    def _transformBy(
+        self, matrix: SextupleCollectionType[IntFloatType], **kwargs: Any
+    ) -> None:
         """
         This is the environment implementation of
         :meth:`BaseGuideline.transformBy`.
@@ -460,7 +462,9 @@ class BaseGuideline(
 
     compatibilityReporterClass = GuidelineCompatibilityReporter
 
-    def isCompatible(self, other: BaseGuideline, cls=None) -> Tuple[bool, GuidelineCompatibilityReporter]:
+    def isCompatible(
+        self, other: BaseGuideline, cls=None
+    ) -> Tuple[bool, GuidelineCompatibilityReporter]:
         """
         Evaluate interpolation compatibility with **other**. ::
 
@@ -478,7 +482,9 @@ class BaseGuideline(
         """
         return super(BaseGuideline, self).isCompatible(other, BaseGuideline)
 
-    def _isCompatible(self, other: BaseGuideline, reporter: GuidelineCompatibilityReporter) -> None:
+    def _isCompatible(
+        self, other: BaseGuideline, reporter: GuidelineCompatibilityReporter
+    ) -> None:
         """
         This is the environment implementation of
         :meth:`BaseGuideline.isCompatible`.
