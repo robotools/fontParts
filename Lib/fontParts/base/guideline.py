@@ -1,3 +1,5 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING, Any, Callable, Optional, Union, List, Tuple
 import math
 from fontTools.misc import transform
 from fontParts.base.base import (
@@ -14,6 +16,17 @@ from fontParts.base import normalizers
 from fontParts.base.compatibility import GuidelineCompatibilityReporter
 from fontParts.base.color import Color
 from fontParts.base.deprecated import DeprecatedGuideline, RemovedGuideline
+from fontParts.base.annotations import (
+    QuadrupleType,
+    QuadrupleCollectionType,
+    SextupleCollectionType,
+    IntFloatType,
+)
+
+if TYPE_CHECKING:
+    from fontParts.base.font import BaseFont
+    from fontParts.base.layer import BaseLayer
+    from fontParts.base.glyph import BaseGlyph
 
 
 class BaseGuideline(
@@ -26,17 +39,18 @@ class BaseGuideline(
     IdentifierMixin,
     SelectionMixin,
 ):
-    """
-    A guideline object. This object is almost always
-    created with :meth:`BaseGlyph.appendGuideline`.
+    """Represent the basis for a guideline object.
+
+    This object is almost always created with :meth:`BaseGlyph.appendGuideline`.
     An orphan guideline can be created like this::
 
         >>> guideline = RGuideline()
+
     """
 
-    copyAttributes = ("x", "y", "angle", "name", "color")
+    copyAttributes: Tuple[str, ...] = ("x", "y", "angle", "name", "color")
 
-    def _reprContents(self):
+    def _reprContents(self) -> List[str]:
         contents = []
         if self.name is not None:
             contents.append(f"'{self.name}'")
@@ -50,16 +64,34 @@ class BaseGuideline(
 
     # Glyph
 
-    _glyph = None
+    _glyph: Optional[Callable[[], BaseGlyph]] = None
 
-    glyph = dynamicProperty("glyph", "The guideline's parent :class:`BaseGlyph`.")
+    glyph: dynamicProperty = dynamicProperty(
+        "glyph",
+        """Get or set the guideline's parent glyph object.
 
-    def _get_glyph(self):
+        The value must be a :class:`BaseGlyph` instance or :obj:`None`.
+
+        :return: The :class:`BaseGlyph` instance containing the guideline
+            or :obj:`None`.
+        :raises AssertionError: If attempting to set the glyph when it
+            has already been set.
+
+        Example::
+
+            >>> glyph = guideline.glyph
+
+        """,
+    )
+
+    def _get_glyph(self) -> Optional[BaseGlyph]:
         if self._glyph is None:
             return None
         return self._glyph()
 
-    def _set_glyph(self, glyph):
+    def _set_glyph(
+        self, glyph: Optional[Union[BaseGlyph, Callable[[], BaseGlyph]]]
+    ) -> None:
         if self._font is not None:
             raise AssertionError("font for guideline already set")
         if self._glyph is not None:
@@ -70,27 +102,45 @@ class BaseGuideline(
 
     # Layer
 
-    layer = dynamicProperty("layer", "The guideline's parent :class:`BaseLayer`.")
+    layer: dynamicProperty = dynamicProperty(
+        "layer", "The guideline's parent :class:`BaseLayer`."
+    )
 
-    def _get_layer(self):
+    def _get_layer(self) -> Optional[BaseLayer]:
         if self._glyph is None:
             return None
         return self.glyph.layer
 
     # Font
 
-    _font = None
+    _font: Optional[Callable[[], BaseFont]] = None
 
-    font = dynamicProperty("font", "The guideline's parent :class:`BaseFont`.")
+    font: dynamicProperty = dynamicProperty(
+        "font",
+        """Get the guideline's parent font object.
 
-    def _get_font(self):
+        This property is read-only.
+
+        :return: The :class:`BaseFont` instance containing the guideline
+            or :obj:`None`.
+
+        Example::
+
+            >>> font = guideline.font
+
+        """,
+    )
+
+    def _get_font(self) -> Optional[BaseFont]:
         if self._font is not None:
             return self._font()
         elif self._glyph is not None:
             return self.glyph.font
         return None
 
-    def _set_font(self, font):
+    def _set_font(
+        self, font: Optional[Union[BaseFont, Callable[[], BaseFont]]]
+    ) -> None:
         if self._font is not None:
             raise AssertionError("font for guideline already set")
         if self._glyph is not None:
@@ -105,121 +155,172 @@ class BaseGuideline(
 
     # x
 
-    x = dynamicProperty(
+    x: dynamicProperty = dynamicProperty(
         "base_x",
-        """
-        The x coordinate of the guideline.
-        It must be an :ref:`type-int-float`. ::
+        """Get or set the guideline's x-coordinate.
+
+        The value must be an :class:`int` or a :class:`flat`.
+
+        :return: An :class:`int` or a :class:`flat` representing the
+            x-coordinate of the guideline.
+
+        Example::
 
             >>> guideline.x
             100
             >>> guideline.x = 101
+
         """,
     )
 
-    def _get_base_x(self):
+    def _get_base_x(self) -> IntFloatType:
         value = self._get_x()
         if value is None:
             return 0
         value = normalizers.normalizeX(value)
         return value
 
-    def _set_base_x(self, value):
+    def _set_base_x(self, value: IntFloatType) -> None:
         if value is None:
             value = 0
         else:
             value = normalizers.normalizeX(value)
         self._set_x(value)
 
-    def _get_x(self):
-        """
-        This is the environment implementation of
-        :attr:`BaseGuideline.x`. This must return an
-        :ref:`type-int-float`.
+    def _get_x(self) -> IntFloatType:
+        """Get the native guideline's x-coordinate.
 
-        Subclasses must override this method.
+        This is the environment implementation of the :attr:`BaseGuideline.x` property
+        getter.
+
+        :return: An :class:`int` or a :class:`flat` representing the
+            x-coordinate of the guideline. The value will be normalized
+            with :func:`normalizers.normalizeX`.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
-    def _set_x(self, value):
-        """
-        This is the environment implementation of
-        :attr:`BaseGuideline.x`. **value** will be
-        an :ref:`type-int-float`.
+    def _set_x(self, value: IntFloatType) -> None:
+        """Set the native guideline's x-coordinate.
 
-        Subclasses must override this method.
+        This is the environment implementation of the :attr:`BaseGuideline.x` property
+        setter.
+
+        :param value: The x-coordinate to set as an :class:`int` or a :class:`float`.
+            The value will have been normalized with :func:`normalizers.normalizeX`.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
     # y
 
-    y = dynamicProperty(
+    y: dynamicProperty = dynamicProperty(
         "base_y",
-        """
-        The y coordinate of the guideline.
-        It must be an :ref:`type-int-float`. ::
+        """Get or set the guideline's y-coordinate.
+
+        The value must be an :class:`int` or a :class:`flat`.
+
+        :return: An :class:`int` or a :class:`flat` representing the
+            y-coordinate of the guideline.
+
+        Example::
 
             >>> guideline.y
             100
             >>> guideline.y = 101
+
         """,
     )
 
-    def _get_base_y(self):
+    def _get_base_y(self) -> IntFloatType:
         value = self._get_y()
         if value is None:
             return 0
         value = normalizers.normalizeY(value)
         return value
 
-    def _set_base_y(self, value):
+    def _set_base_y(self, value: IntFloatType) -> None:
         if value is None:
             value = 0
         else:
             value = normalizers.normalizeY(value)
         self._set_y(value)
 
-    def _get_y(self):
-        """
-        This is the environment implementation of
-        :attr:`BaseGuideline.y`. This must return an
-        :ref:`type-int-float`.
+    def _get_y(self) -> IntFloatType:
+        """Get the native guideline's y-coordinate.
 
-        Subclasses must override this method.
+        This is the environment implementation of the :attr:`BaseGuideline.y` property
+        getter.
+
+        :return: An :class:`int` or a :class:`flat` representing the
+            y-coordinate of the guideline. The value will be normalized
+            with :func:`normalizers.normalizeY`.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
-    def _set_y(self, value):
-        """
-        This is the environment implementation of
-        :attr:`BaseGuideline.y`. **value** will be
-        an :ref:`type-int-float`.
+    def _set_y(self, value: IntFloatType) -> None:
+        """Set the native guideline's y-coordinate.
 
-        Subclasses must override this method.
+        This is the environment implementation of the :attr:`BaseGuideline.y` property
+        setter.
+
+        :param value: The y-coordinate to set as an :class:`int` or a :class:`float`.
+            The value will have been normalized with :func:`normalizers.normalizeY`.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
     # angle
 
-    angle = dynamicProperty(
+    angle: dynamicProperty = dynamicProperty(
         "base_angle",
-        """
-        The angle of the guideline.
-        It must be an :ref:`type-angle`.
-        Please check how :func:`normalizers.normalizeRotationAngle`
-        handles the angle. There is a special case, when angle is ``None``.
-        If so, when x and y are not 0, the angle will be 0. If x is 0 but y
-        is not, the angle will be 0. If y is 0 and x is not, the
-        angle will be 90. If both x and y are 0, the angle will be 0.
-        ::
+        """Get or set the guideline's angle.
+
+        The value must be :class:`int`, :class:`float` or :obj:`None`.
+        If set to :obj:`None`, the angle is automatically derived based on
+        the guideline's :attr:`x` and :attr:`y` values:
+
+        - If both :attr:`x` and :attr:`y` are 0, the angle defaults to ``0.0``.
+        - If :attr:`x` is 0 and :attr:`y` is not, the angle is ``90.0``.
+        - If :attr:`y` is 0 and :attr:`x` is not, the angle is ``0.0``.
+
+        :return: A :class:`float` representing the angle of the guideline.
+
+        Example::
 
             >>> guideline.angle
             45.0
             >>> guideline.angle = 90
+
         """,
     )
 
-    def _get_base_angle(self):
+    def _get_base_angle(self) -> float:
         value = self._get_angle()
         if value is None:
             if self._get_x() != 0 and self._get_y() != 0:
@@ -233,7 +334,7 @@ class BaseGuideline(
         value = normalizers.normalizeRotationAngle(value)
         return value
 
-    def _set_base_angle(self, value):
+    def _set_base_angle(self, value: Optional[IntFloatType]) -> None:
         if value is None:
             if self._get_x() != 0 and self._get_y() != 0:
                 value = 0
@@ -246,23 +347,41 @@ class BaseGuideline(
         value = normalizers.normalizeRotationAngle(value)
         self._set_angle(value)
 
-    def _get_angle(self):
-        """
-        This is the environment implementation of
-        :attr:`BaseGuideline.angle`. This must return an
-        :ref:`type-angle`.
+    def _get_angle(self) -> Optional[IntFloatType]:
+        """Get the native guideline's angle.
 
-        Subclasses must override this method.
+        This is the environment implementation of the :attr:`BaseGuideline.angle`
+        property getter.
+
+        :return: An :class:`int` or a :class:`float` representing the angle of
+            the guideline, or :obj:`None`. The value will be normalized
+            with :func:`normalizers.normalizeRotationAngle`.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
-    def _set_angle(self, value):
-        """
-        This is the environment implementation of
-        :attr:`BaseGuideline.angle`. **value** will be
-        an :ref:`type-angle`.
+    def _set_angle(self, value: Optional[IntFloatType]) -> None:
+        """Set the native guideline's angle.
 
-        Subclasses must override this method.
+        This is the environment implementation of the :attr:`BaseGuideline.angle`
+        property setter.
+
+        :param value: The angle to set as an :class:`int` or a :class:`float`,
+            or :obj:`None`. The value will have been normalized
+            with :func:`normalizers.normalizeRotationAngle`.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
@@ -272,29 +391,42 @@ class BaseGuideline(
 
     # index
 
-    index = dynamicProperty(
+    index: dynamicProperty = dynamicProperty(
         "base_index",
-        """
-        The index of the guideline within the ordered
-        list of the parent glyph's guidelines. This
-        attribute is read only. ::
+        """Get the guideline's index.
+
+        This property is read-only.
+
+        :return: An :class:`int` representing the index of the guideline within
+            the ordered list of the parent glyph's guidelines.
+
+        Example::
 
             >>> guideline.index
             0
+
         """,
     )
 
-    def _get_base_index(self):
+    def _get_base_index(self) -> Optional[int]:
         value = self._get_index()
         value = normalizers.normalizeIndex(value)
         return value
 
-    def _get_index(self):
-        """
-        Get the guideline's index.
-        This must return an ``int``.
+    def _get_index(self) -> Optional[int]:
+        """Get the native guideline's index.
 
-        Subclasses may override this method.
+        This is the environment implementation of the :attr:`BaseGuideline.index`
+        property getter.
+
+        :return: An :class:`int` representing the index of the guideline within
+            the ordered list of the parent glyph's guidelines. The value will be
+            normalized with :func:`normalizers.normalizeIndex`.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         glyph = self.glyph
         if glyph is not None:
@@ -307,100 +439,138 @@ class BaseGuideline(
 
     # name
 
-    name = dynamicProperty(
+    name: dynamicProperty = dynamicProperty(
         "base_name",
-        """
-        The name of the guideline. This will be a
-        :ref:`type-string` or ``None``.
+        """Get or set the guideline's name.
+
+        The value must be a :class:`str` or :obj: `None`.
+
+        :return: A :class:`str` representing the name of the guideline, or :obj:`None`.
 
             >>> guideline.name
             'my guideline'
             >>> guideline.name = None
+
         """,
     )
 
-    def _get_base_name(self):
+    def _get_base_name(self) -> Optional[str]:
         value = self._get_name()
         if value is not None:
             value = normalizers.normalizeGuidelineName(value)
         return value
 
-    def _set_base_name(self, value):
+    def _set_base_name(self, value: Optional[str]) -> None:
         if value is not None:
             value = normalizers.normalizeGuidelineName(value)
         self._set_name(value)
 
-    def _get_name(self):
-        """
-        This is the environment implementation of
-        :attr:`BaseGuideline.name`. This must return a
-        :ref:`type-string` or ``None``. The returned
-        value will be normalized with
-        :func:`normalizers.normalizeGuidelineName`.
+    def _get_name(self) -> Optional[str]:
+        """Get the native guideline's name.
 
-        Subclasses must override this method.
+        This is the environment implementation of the :attr:`BaseGuideline.name`
+        property getter.
+
+        :return: A :class:`str` representing the name of the guideline,
+            or :obj:`None`. The value will have been normalized
+            with :func:`normalizers.normalizeGuidelineName`.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
-    def _set_name(self, value):
-        """
-        This is the environment implementation of
-        :attr:`BaseGuideline.name`. **value** will be
-        a :ref:`type-string` or ``None``. It will
-        have been normalized with
-        :func:`normalizers.normalizeGuidelineName`.
+    def _set_name(self, value: Optional[str]) -> None:
+        """Set the native guideline's name.
 
-        Subclasses must override this method.
+        This is the environment implementation of the :attr:`BaseGuideline.name`
+        property setter.
+
+        :param value: The name to set as a :class:`str` or :obj:`None`. The
+            value will have been normalized
+            with :func:`normalizers.normalizeGuidelineName`.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
     # color
 
-    color = dynamicProperty(
+    color: dynamicProperty = dynamicProperty(
         "base_color",
-        """"
-        The guideline's color. This will be a
-        :ref:`type-color` or ``None``. ::
+        """"Get or set the guideline's color.
+
+        The value must be a :ref:`type-color` or :obj:`None`.
+
+        :return: A :ref:`type-color` representing the color of the guideline,
+            or :obj:`None`.
+
+        Example::
 
             >>> guideline.color
             None
             >>> guideline.color = (1, 0, 0, 0.5)
+
         """,
     )
 
-    def _get_base_color(self):
+    def _get_base_color(self) -> QuadrupleType[float]:
         value = self._get_color()
         if value is not None:
             value = normalizers.normalizeColor(value)
             value = Color(value)
         return value
 
-    def _set_base_color(self, value):
+    def _set_base_color(self, value: QuadrupleCollectionType[IntFloatType]) -> None:
         if value is not None:
             value = normalizers.normalizeColor(value)
         self._set_color(value)
 
-    def _get_color(self):
-        """
-        This is the environment implementation of
-        :attr:`BaseGuideline.color`. This must return
-        a :ref:`type-color` or ``None``. The
-        returned value will be normalized with
-        :func:`normalizers.normalizeColor`.
+    def _get_color(self) -> QuadrupleType[float]:
+        """ "Get the native guideline's color.
 
-        Subclasses must override this method.
+        This is the environment implementation of the :attr:`BaseGuideline.color`
+        property getter.
+
+        :return: A :ref:`type-color` representing the color of the guideline,
+            or :obj:`None`. The value will be normalized
+         with :func:`normalizers.normalizeColor`.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
-    def _set_color(self, value):
-        """
-        This is the environment implementation of
-        :attr:`BaseGuideline.color`. **value** will
-        be a :ref:`type-color` or ``None``.
-        It will have been normalized with
-        :func:`normalizers.normalizeColor`.
+    def _set_color(self, value: QuadrupleCollectionType[IntFloatType]) -> None:
+        """ "Set the native guideline's color.
 
-        Subclasses must override this method.
+        Description
+
+        This is the environment implementation of the :attr:`BaseGuideline.color`
+        property setter.
+
+        :param value: The :ref:`type-color` to set for the guideline or :obj:`None`.
+            The value will have been normalized with :func:`normalizers.normalizeColor`.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
@@ -408,15 +578,21 @@ class BaseGuideline(
     # Transformation
     # --------------
 
-    def _transformBy(self, matrix, **kwargs):
-        """
-        This is the environment implementation of
-        :meth:`BaseGuideline.transformBy`.
+    def _transformBy(
+        self, matrix: SextupleCollectionType[IntFloatType], **kwargs: Any
+    ) -> None:
+        r"""Transform the native guideline according to the given matrix.
 
-        **matrix** will be a :ref:`type-transformation`.
-        that has been normalized with :func:`normalizers.normalizeTransformationMatrix`.
+        This is the environment implementation of :meth:`BaseGuideline.transformBy`.
 
-        Subclasses may override this method.
+        :param matrix: The :ref:`type-transformation` to apply. The value will
+             be normalized with :func:`normalizers.normalizeTransformationMatrix`.
+        :param \**kwargs: Additional keyword arguments.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         t = transform.Transform(*matrix)
         # coordinates
@@ -437,9 +613,19 @@ class BaseGuideline(
 
     compatibilityReporterClass = GuidelineCompatibilityReporter
 
-    def isCompatible(self, other):
-        """
-        Evaluate interpolation compatibility with **other**. ::
+    def isCompatible(
+        self, other: BaseGuideline, cls=None
+    ) -> Tuple[bool, GuidelineCompatibilityReporter]:
+        """Evaluate interpolation compatibility with another guideline.
+
+        :param other: The other :class:`BaseGuideline` instance to check
+            compatibility with.
+        :return: A :class:`tuple` where the first element is a :class:`bool`
+            indicating compatibility, and the second element is
+            a :class:`fontParts.base.compatibility.GuidelineCompatibilityReporter`
+            instance.
+
+        Example::
 
             >>> compatible, report = self.isCompatible(otherGuideline)
             >>> compatible
@@ -449,18 +635,24 @@ class BaseGuideline(
             [Warning] Guideline: "xheight" has name xheight | "cap_height" has
                                   name cap_height
 
-        This will return a ``bool`` indicating if the guideline is
-        compatible for interpolation with **other** and a
-        :ref:`type-string` of compatibility notes.
         """
         return super(BaseGuideline, self).isCompatible(other, BaseGuideline)
 
-    def _isCompatible(self, other, reporter):
-        """
-        This is the environment implementation of
-        :meth:`BaseGuideline.isCompatible`.
+    def _isCompatible(
+        self, other: BaseGuideline, reporter: GuidelineCompatibilityReporter
+    ) -> None:
+        """Evaluate interpolation compatibility with another native guideline.
 
-        Subclasses may override this method.
+        This is the environment implementation of :meth:`BaseGuideline.isCompatible`.
+
+        :param other: The other :class:`BaseGuideline` instance to check
+            compatibility with.
+        :param reporter: An object used to report compatibility issues.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         guideline1 = self
         guideline2 = other
@@ -473,29 +665,35 @@ class BaseGuideline(
     # Normalization
     # -------------
 
-    def round(self):
-        """
-        Round the guideline's coordinate.
+    def round(self) -> None:
+        """Round the guideline's coordinate.
+
+        This applies to:
+
+        - :attr:`x`
+        - :attr:`y
+
+        It does not apply to :attr:`angle`.
+
+        Example::`
 
             >>> guideline.round()
 
-        This applies to the following:
 
-        * x
-        * y
-
-        It does not apply to
-
-        * angle
         """
         self._round()
 
-    def _round(self, **kwargs):
-        """
-        This is the environment implementation of
-        :meth:`BaseGuideline.round`.
+    def _round(self, **kwargs: Any) -> None:
+        r"""Round the native guideline's coordinate.
 
-        Subclasses may override this method.
+        This is the environment implementation of :meth:`BaseGuideline.round`.
+
+        :param \**kwargs: Additional keyword arguments.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         self.x = normalizers.normalizeVisualRounding(self.x)
         self.y = normalizers.normalizeVisualRounding(self.y)
