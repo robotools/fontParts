@@ -1,5 +1,15 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, Callable, Generic, List, Optional, Tuple, Type, Union
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Generic,
+    List,
+    Optional,
+    Tuple,
+    Type,
+    Union,
+)
 
 from fontTools.ufoLib import fontInfoAttributesVersion3
 from fontTools.ufoLib import validateFontInfoVersion3ValueForAttribute
@@ -26,6 +36,7 @@ if TYPE_CHECKING:
 
 
 # Notes
+
 
 class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
     """Represent the basis for an info object."""
@@ -72,7 +83,9 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
             return None
         return self._font()
 
-    def _set_font(self, font: Optional[Union[BaseFont, Callable[[], BaseFont]]]) -> None:
+    def _set_font(
+        self, font: Optional[Union[BaseFont, Callable[[], BaseFont]]]
+    ) -> None:
         if self._font is not None and self._font != font:
             raise AssertionError("font for info already set and is not same as font")
         if font is not None:
@@ -312,7 +325,7 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
         minInfo: BaseInfo,
         maxInfo: BaseInfo,
         round: bool = True,
-        suppressError: bool = True
+        suppressError: bool = True,
     ) -> None:
         """
         Interpolate all pairs between minInfo and maxInfo.
@@ -351,7 +364,7 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
         minInfo: BaseInfo,
         maxInfo: BaseInfo,
         round: bool = True,
-        suppressError: bool = True
+        suppressError: bool = True,
     ) -> None:
         """
         Subclasses may override this method.
