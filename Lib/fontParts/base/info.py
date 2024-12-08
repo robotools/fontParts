@@ -3,11 +3,8 @@ from typing import (
     TYPE_CHECKING,
     Any,
     Callable,
-    Generic,
     List,
     Optional,
-    Tuple,
-    Type,
     Union,
 )
 
@@ -21,22 +18,14 @@ from fontParts.base import normalizers
 from fontParts.base.errors import FontPartsError
 from fontParts.base.deprecated import DeprecatedInfo, RemovedInfo
 from fontParts.base.annotations import (
-    CharacterMappingType,
-    CollectionType,
-    QuadrupleCollectionType,
     TransformationType,
-    ReverseComponentMappingType,
-    IntFloatType,
 )
 
 if TYPE_CHECKING:
     from fontParts.base.font import BaseFont
-    from fontParts.base.glyph import BaseGlyph
-    from fontParts.base.lib import BaseLib
 
 
 # Notes
-
 
 class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
     """Represent the basis for an info object."""
