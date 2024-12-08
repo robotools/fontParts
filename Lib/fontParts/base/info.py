@@ -27,11 +27,6 @@ if TYPE_CHECKING:
 
 # Notes
 
-# What are the available types for the `value` parameter in `_validateFontInfoAttributeValue`?
-# Where are the magic methods in this class defined? `mypy` throws this error: info.py:107: error: "__hasattr__" undefined in superclass  [misc]
-# What value types is `BaseInfo.__setattr__` supposed to return? `mypy` throws this error: info.py:113: error: "_getAttr" of "BaseInfo" does not return a value (it only ever returns None)  [func-returns-value]
-# Isn't `_fromMathInfo` supposed to return anything? It's missing a return statement, yet its called in the return of the public equivalent.
-
 class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
     """Represent the basis for an info object."""
 
