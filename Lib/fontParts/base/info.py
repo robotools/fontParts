@@ -27,6 +27,7 @@ if TYPE_CHECKING:
 
 # Notes
 
+
 class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
     """Represent the basis for an info object."""
 
