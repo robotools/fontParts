@@ -10,13 +10,14 @@ if TYPE_CHECKING:
 
 
 class BaseFeatures(BaseObject, DeprecatedFeatures, RemovedFeatures):
-    """Represent the basis for a features object. 
-    
-    This class contains the font's `Adobe Font Development Kit for OpenType (AFDKO) 
+    """Represent the basis for a features object.
+
+    This class contains the font's `Adobe Font Development Kit for OpenType (AFDKO)
     <https://github.com/adobe-type-tools/afdko/>`_ feature definitions.
-    
+
     """
-    copyAttributes: Tuple[str]  = ("text",)
+
+    copyAttributes: Tuple[str] = ("text",)
 
     def _reprContents(self) -> List[str]:
         contents = []
@@ -34,8 +35,8 @@ class BaseFeatures(BaseObject, DeprecatedFeatures, RemovedFeatures):
     _font: Optional[BaseFont] = None
 
     font: dynamicProperty = dynamicProperty(
-        "font", 
-    """Get the feature's parent font object.
+        "font",
+        """Get the feature's parent font object.
 
         This property is read-only.
 
@@ -49,7 +50,7 @@ class BaseFeatures(BaseObject, DeprecatedFeatures, RemovedFeatures):
 
             >>> font = features.font
 
-        """
+        """,
     )
 
     def _get_font(self) -> Optional[BaseFont]:
