@@ -1,40 +1,17 @@
-from __future__ import annotations
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Callable,
-    List,
-    Optional,
-    Union,
-)
-
-from fontTools.ufoLib import fontInfoAttributesVersion3
-from fontTools.ufoLib import validateFontInfoVersion3ValueForAttribute
-from fontMath import MathInfo
-from fontMath.mathFunctions import setRoundIntegerFunction
-
 from fontParts.base.base import BaseObject, dynamicProperty, interpolate, reference
 from fontParts.base import normalizers
 from fontParts.base.errors import FontPartsError
 from fontParts.base.deprecated import DeprecatedInfo, RemovedInfo
-from fontParts.base.annotations import (
-    TransformationType,
-)
 
-if TYPE_CHECKING:
-    from fontParts.base.font import BaseFont
-
-
-# Notes
 
 class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
-    """Represent the basis for an info object."""
+    from fontTools.ufoLib import fontInfoAttributesVersion3
 
     fontInfoAttributes = set(fontInfoAttributesVersion3)
     fontInfoAttributes.remove("guidelines")
     copyAttributes = tuple(fontInfoAttributes)
 
-    def _reprContents(self) -> List[str]:
+    def _reprContents(self):
         contents = []
         if self.font is not None:
             contents.append("for font")
@@ -47,34 +24,16 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
 
     # Font
 
-    _font: Optional[Callable[[], BaseFont]] = None
+    _font = None
 
-    font: dynamicProperty = dynamicProperty(
-        "font",
-        """Get  or set the info's parent font object.
+    font = dynamicProperty("font", "The info's parent font.")
 
-        The value must be a :class:`BaseFont` instance or :obj:`None`.
-
-        :return: The :class:`BaseFont` instance containing the info
-            or :obj:`None`.
-        :raises AssertionError: If attempting to set the font when it
-            has already been set.
-
-        Example::
-
-            >>> font = info.font
-
-        """,
-    )
-
-    def _get_font(self) -> Optional[BaseFont]:
+    def _get_font(self):
         if self._font is None:
             return None
         return self._font()
 
-    def _set_font(
-        self, font: Optional[Union[BaseFont, Callable[[], BaseFont]]]
-    ) -> None:
+    def _set_font(self, font):
         if self._font is not None and self._font != font:
             raise AssertionError("font for info already set and is not same as font")
         if font is not None:
@@ -86,7 +45,9 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
     # ----------
 
     @staticmethod
-    def _validateFontInfoAttributeValue(attr: str, value: Any):
+    def _validateFontInfoAttributeValue(attr, value):
+        from fontTools.ufoLib import validateFontInfoVersion3ValueForAttribute
+
         valid = validateFontInfoVersion3ValueForAttribute(attr, value)
         if not valid:
             raise ValueError(f"Invalid value {value} for attribute '{attr}'.")
@@ -98,14 +59,18 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
 
     # has
 
-    def __hasattr__(self, attr: str) -> bool:
+    def __hasattr__(self, attr):
+        from fontTools.ufoLib import fontInfoAttributesVersion3
+
         if attr in fontInfoAttributesVersion3:
             return True
         return super(BaseInfo, self).__hasattr__(attr)
 
     # get
 
-    def __getattribute__(self, attr: str) -> None:
+    def __getattribute__(self, attr):
+        from fontTools.ufoLib import fontInfoAttributesVersion3
+
         if attr != "guidelines" and attr in fontInfoAttributesVersion3:
             value = self._getAttr(attr)
             if value is not None:
@@ -113,7 +78,7 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
             return value
         return super(BaseInfo, self).__getattribute__(attr)
 
-    def _getAttr(self, attr: str) -> None:
+    def _getAttr(self, attr):
         """
         Subclasses may override this method.
 
@@ -121,23 +86,25 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
         it must implement '_get_attributeName' methods
         for all Info methods.
         """
-        methodName = f"_get_{attr}"
-        if not hasattr(self, methodName):
+        meth = f"_get_{attr}"
+        if not hasattr(self, meth):
             raise AttributeError(f"No getter for attribute '{attr}'.")
-        method = getattr(self, methodName)
-        value = method()
+        meth = getattr(self, meth)
+        value = meth()
         return value
 
     # set
 
-    def __setattr__(self, attr: str, value: Any) -> None:
+    def __setattr__(self, attr, value):
+        from fontTools.ufoLib import fontInfoAttributesVersion3
+
         if attr != "guidelines" and attr in fontInfoAttributesVersion3:
             if value is not None:
                 value = self._validateFontInfoAttributeValue(attr, value)
             return self._setAttr(attr, value)
         return super(BaseInfo, self).__setattr__(attr, value)
 
-    def _setAttr(self, attr: str, value: Any) -> None:
+    def _setAttr(self, attr, value):
         """
         Subclasses may override this method.
 
@@ -145,17 +112,17 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
         it must implement '_set_attributeName' methods
         for all Info methods.
         """
-        methodName = f"_set_{attr}"
-        if not hasattr(self, methodName):
+        meth = f"_set_{attr}"
+        if not hasattr(self, meth):
             raise AttributeError(f"No setter for attribute '{attr}'.")
-        method = getattr(self, methodName)
-        method(value)
+        meth = getattr(self, meth)
+        meth(value)
 
     # -------------
     # Normalization
     # -------------
 
-    def round(self) -> None:
+    def round(self):
         """
         Round the following attributes to integers:
 
@@ -210,10 +177,12 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
         """
         self._round()
 
-    def _round(self, **kwargs: Any) -> None:
+    def _round(self, **kwargs):
         """
         Subclasses may override this method.
         """
+        from fontMath.mathFunctions import setRoundIntegerFunction
+
         setRoundIntegerFunction(normalizers.normalizeVisualRounding)
 
         mathInfo = self._toMathInfo(guidelines=False)
@@ -224,14 +193,14 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
     # Updating
     # --------
 
-    def update(self, other: BaseInfo) -> None:
+    def update(self, other):
         """
         Update this object with the values
         from **otherInfo**.
         """
         self._update(other)
 
-    def _update(self, other: BaseInfo) -> None:
+    def _update(self, other):
         """
         Subclasses may override this method.
         """
@@ -247,7 +216,7 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
     # Interpolation
     # -------------
 
-    def toMathInfo(self, guidelines=True) -> MathInfo:
+    def toMathInfo(self, guidelines=True):
         """
         Returns the info as an object that follows the
         `MathGlyph protocol <https://github.com/typesupply/fontMath>`_.
@@ -256,7 +225,7 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
         """
         return self._toMathInfo(guidelines=guidelines)
 
-    def fromMathInfo(self, mathInfo, guidelines=True) -> BaseInfo:
+    def fromMathInfo(self, mathInfo, guidelines=True):
         """
         Replaces the contents of this info object with the contents of ``mathInfo``.
 
@@ -267,10 +236,11 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
         """
         return self._fromMathInfo(mathInfo, guidelines=guidelines)
 
-    def _toMathInfo(self, guidelines=True) -> MathInfo:
+    def _toMathInfo(self, guidelines=True):
         """
         Subclasses may override this method.
         """
+        import fontMath
 
         # A little trickery is needed here because MathInfo
         # handles font level guidelines. Those are not in this
@@ -288,11 +258,11 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
                     color=guideline.color,
                 )
                 self.guidelines.append(d)
-        info = MathInfo(self)
+        info = fontMath.MathInfo(self)
         del self.guidelines
         return info
 
-    def _fromMathInfo(self, mathInfo, guidelines=True) -> None:
+    def _fromMathInfo(self, mathInfo, guidelines=True):
         """
         Subclasses may override this method.
         """
@@ -308,14 +278,7 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
                     # XXX identifier is lost
                 )
 
-    def interpolate(
-        self,
-        factor: TransformationType,
-        minInfo: BaseInfo,
-        maxInfo: BaseInfo,
-        round: bool = True,
-        suppressError: bool = True,
-    ) -> None:
+    def interpolate(self, factor, minInfo, maxInfo, round=True, suppressError=True):
         """
         Interpolate all pairs between minInfo and maxInfo.
         The interpolation occurs on a 0 to 1.0 range where minInfo
@@ -347,17 +310,11 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
             factor, minInfo, maxInfo, round=round, suppressError=suppressError
         )
 
-    def _interpolate(
-        self,
-        factor: TransformationType,
-        minInfo: BaseInfo,
-        maxInfo: BaseInfo,
-        round: bool = True,
-        suppressError: bool = True,
-    ) -> None:
+    def _interpolate(self, factor, minInfo, maxInfo, round=True, suppressError=True):
         """
         Subclasses may override this method.
         """
+        from fontMath.mathFunctions import setRoundIntegerFunction
 
         setRoundIntegerFunction(normalizers.normalizeVisualRounding)
 
@@ -369,5 +326,5 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
                 f"Info from font '{minInfo.font.name}' and font '{maxInfo.font.name}' could not be interpolated."
             )
         if round:
-            result = result.round()  # type: ignore[func-returns-value]
+            result = result.round()
         self._fromMathInfo(result)
