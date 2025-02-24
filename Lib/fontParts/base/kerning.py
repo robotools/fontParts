@@ -7,8 +7,12 @@ from fontParts.base.base import BaseDict, dynamicProperty, interpolate, referenc
 from fontParts.base import normalizers
 from fontParts.base.deprecated import DeprecatedKerning, RemovedKerning
 from fontParts.base.annotations import (
-    IntFloatType, PairType, PairCollectionType, TransformationType
-    )
+    IntFloatType,
+    PairType,
+    PairCollectionType,
+    TransformationType,
+)
+
 if TYPE_CHECKING:
     from fontParts.base.font import BaseFont
     from fontParts.base.base import BaseItems
@@ -51,7 +55,9 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
 
     _font: Optional[BaseFont] = None
 
-    font: dynamicProperty = dynamicProperty("font", "The Kerning's parent :class:`BaseFont`.")
+    font: dynamicProperty = dynamicProperty(
+        "font", "The Kerning's parent :class:`BaseFont`."
+    )
 
     def _get_font(self) -> Optional[BaseFont]:
         if self._font is None:
@@ -134,7 +140,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         minKerning: BaseKerning,
         maxKerning: BaseKerning,
         round: bool = True,
-        suppressError: bool = True
+        suppressError: bool = True,
     ) -> None:
         """
         Interpolates all pairs between two :class:`BaseKerning` objects:
@@ -178,7 +184,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         minKerning: BaseKerning,
         maxKerning: BaseKerning,
         round: bool = True,
-        suppressError: bool = True
+        suppressError: bool = True,
     ) -> None:
         """
         This is the environment implementation of :meth:`BaseKerning.interpolate`.
@@ -217,9 +223,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
 
     @staticmethod
     def _testKerningGroupCompatibility(
-        minKerning: BaseKerning,
-        maxKerning: BaseKerning,
-        suppressError: bool = False
+        minKerning: BaseKerning, maxKerning: BaseKerning, suppressError: bool = False
     ) -> bool:
         minGroups = minKerning.font.groups
         maxGroups = maxKerning.font.groups
@@ -357,9 +361,9 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         """
         super(BaseKerning, self).clear()
 
-    def get(self,
-            pair: PairType[str],
-            default: Optional[IntFloatType] = None) -> Optional[IntFloatType]:
+    def get(
+        self, pair: PairType[str], default: Optional[IntFloatType] = None
+    ) -> Optional[IntFloatType]:
         """
         Returns the value for the kerning pair.
         **pair** is a ``tuple`` of two :ref:`type-string`\s, and the returned
@@ -379,9 +383,9 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         """
         return super(BaseKerning, self).get(pair, default)
 
-    def find(self,
-             pair: PairCollectionType[str],
-             default: Optional[IntFloatType] = None) -> Optional[IntFloatType]:
+    def find(
+        self, pair: PairCollectionType[str], default: Optional[IntFloatType] = None
+    ) -> Optional[IntFloatType]:
         """
         Returns the value for the kerning pair - even if the pair only exists
         implicitly (one or both sides may be members of a kerning group).
@@ -399,9 +403,9 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
             value = normalizers.normalizeKerningValue(value)
         return value
 
-    def _find(self, 
-              pair: PairType[str], 
-              default: Optional[IntFloatType] = None) -> Optional[IntFloatType]:
+    def _find(
+        self, pair: PairType[str], default: Optional[IntFloatType] = None
+    ) -> Optional[IntFloatType]:
         """
         This is the environment implementation of
         :attr:`BaseKerning.find`. This must return an
@@ -425,7 +429,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         """
         return super(BaseKerning, self).items()
 
-    def keys(self)-> BaseKeys[PairType[str]]:
+    def keys(self) -> BaseKeys[PairType[str]]:
         """
         Returns a ``list`` of all the pairs in Kerning. This list will be
         unordered.::
@@ -435,9 +439,9 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         """
         return super(BaseKerning, self).keys()
 
-    def pop(self, 
-            pair: PairType[str], 
-            default: Optional[IntFloatType] = None)-> Optional[IntFloatType]:
+    def pop(
+        self, pair: PairType[str], default: Optional[IntFloatType] = None
+    ) -> Optional[IntFloatType]:
         """
         Removes the **pair** from the Kerning and returns the value as an ``int``.
         If no pair is found, **default** is returned. **pair** is a
@@ -464,7 +468,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         """
         super(BaseKerning, self).update(otherKerning)
 
-    def values(self)-> BaseValues[IntFloatType]:
+    def values(self) -> BaseValues[IntFloatType]:
         """
         Returns a ``list`` of each pair's values, the values will be
         :ref:`type-int-float`\s.
