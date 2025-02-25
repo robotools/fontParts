@@ -20,7 +20,7 @@ from fontParts.base.annotations import (
     SextupleType,
     SextupleCollectionType,
     IntFloatType,
-    TransformationType
+    TransformationType,
 )
 
 if TYPE_CHECKING:
@@ -75,8 +75,7 @@ class BaseImage(
         return self._glyph()
 
     def _set_glyph(
-        self,
-        glyph: Optional[Union[BaseGlyph, Callable[[], BaseGlyph]]]
+        self, glyph: Optional[Union[BaseGlyph, Callable[[], BaseGlyph]]]
     ) -> None:
         if self._glyph is not None:
             raise AssertionError("glyph for image already set")
@@ -86,7 +85,9 @@ class BaseImage(
 
     # Layer
 
-    layer: dynamicProperty = dynamicProperty("layer", "The image's parent :class:`BaseLayer`.")
+    layer: dynamicProperty = dynamicProperty(
+        "layer", "The image's parent :class:`BaseLayer`."
+    )
 
     def _get_layer(self) -> Optional[BaseLayer]:
         if self._glyph is None:
@@ -95,7 +96,9 @@ class BaseImage(
 
     # Font
 
-    font: dynamicProperty = dynamicProperty("font", "The image's parent :class:`BaseFont`.")
+    font: dynamicProperty = dynamicProperty(
+        "font", "The image's parent :class:`BaseFont`."
+    )
 
     def _get_font(self) -> Optional[BaseFont]:
         if self._glyph is None:
@@ -127,8 +130,7 @@ class BaseImage(
         return value
 
     def _set_base_transformation(
-            self,
-            value: SextupleCollectionType[IntFloatType]
+        self, value: SextupleCollectionType[IntFloatType]
     ) -> None:
         value = normalizers.normalizeTransformationMatrix(value)
         self._set_transformation(value)
@@ -243,8 +245,7 @@ class BaseImage(
         return value
 
     def _set_base_color(
-        self,
-        value: Optional[QuadrupleCollectionType[IntFloatType]]
+        self, value: Optional[QuadrupleCollectionType[IntFloatType]]
     ) -> None:
         if value is not None:
             value = normalizers.normalizeColor(value)
@@ -303,9 +304,7 @@ class BaseImage(
     # --------------
 
     def _transformBy(
-            self,
-            matrix: SextupleCollectionType[IntFloatType],
-            **kwargs: Any
+        self, matrix: SextupleCollectionType[IntFloatType], **kwargs: Any
     ) -> None:
         """
         Subclasses may override this method.
