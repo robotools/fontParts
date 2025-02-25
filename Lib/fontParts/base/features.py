@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Tuple, List, Optional
+from typing import TYPE_CHECKING, Callable, Tuple, List, Optional, Union
 
 from fontParts.base.base import BaseObject, dynamicProperty, reference
 from fontParts.base import normalizers
@@ -32,7 +32,7 @@ class BaseFeatures(BaseObject, DeprecatedFeatures, RemovedFeatures):
 
     # Font
 
-    _font: Optional[BaseFont] = None
+    _font: Optional[Callable[[], BaseFont]] = None
 
     font: dynamicProperty = dynamicProperty(
         "font",
@@ -58,7 +58,9 @@ class BaseFeatures(BaseObject, DeprecatedFeatures, RemovedFeatures):
             return None
         return self._font()
 
-    def _set_font(self, font: Optional[BaseFont]) -> None:
+    def _set_font(
+        self, font: Optional[Union[BaseFont, Callable[[], BaseFont]]]
+    ) -> None:
         if self._font is not None and self._font() != font:
             raise AssertionError(
                 "font for features already set and is not same as font"
