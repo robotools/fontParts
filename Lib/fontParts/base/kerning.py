@@ -37,7 +37,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
     :cvar valueNormalizer: A function to normalize the key of the dictionary.
         Defaults to :func:`normalizers.normalizeKerningValue`.
 
-    This object is normally created as part of a :class:`BaseFont`. 
+    This object is normally created as part of a :class:`BaseFont`.
     An orphan :class:`BaseKerning` object instance can be created like this::
 
         >>> groups = RKerning()
@@ -105,9 +105,9 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
     def scaleBy(self, factor: TransformationType) -> None:
         """Scale all kerning values by the specified factor.
 
-        :param factor: The factor by which to scale the kerning. The value may be a 
-            single :class:`int` or :class:`float` or a :class:`tuple` or :class`list` 
-            of two :class:`int` or :class:`float` values representing the factors 
+        :param factor: The factor by which to scale the kerning. The value may be a
+            single :class:`int` or :class:`float` or a :class:`tuple` or :class`list`
+            of two :class:`int` or :class:`float` values representing the factors
             ``(x, y)``. In the latter case, the first value is used to scale the
             kerning values.
 
@@ -125,8 +125,8 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
 
         This is the environment implementation of :meth:`BaseKerning.scaleBy`.
 
-        :param factor: The factor by which to scale the kerning as a :class:`tuple` of 
-            two :class:`int` or :class:`float` values representing the factors 
+        :param factor: The factor by which to scale the kerning as a :class:`tuple` of
+            two :class:`int` or :class:`float` values representing the factors
             ``(x, y)``. The first value is used to scale the kerning values.
 
         .. note::
@@ -146,7 +146,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
     def round(self, multiple: int = 1) -> None:
         """Round the kerning values to the specified increments.
 
-        :param multiple: The increment to which the kerning values should be rounded 
+        :param multiple: The increment to which the kerning values should be rounded
             as an :class:`int`. Defaults to ``1``.
 
         Example::
@@ -165,7 +165,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
 
         This is the environment implementation of :meth:`BaseKerning.round`.
 
-        :param multiple: The increment to which the kerning values should be rounded 
+        :param multiple: The increment to which the kerning values should be rounded
             as an :class:`int`.
 
         .. note::
@@ -197,8 +197,8 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         The kerning data will be replaced by the interpolated kerning.
 
         :param factor: The interpolation value as a single :class:`int`
-            or :class:`float` or a :class:`list` or :class:`tuple` of 
-            two :class:`int` or :class:`float` values representing the 
+            or :class:`float` or a :class:`list` or :class:`tuple` of
+            two :class:`int` or :class:`float` values representing the
             factors ``(x, y)``.
         :param minKerning: The :class:`BaseKerning` instance corresponding to the
             0.0 position in the interpolation.
@@ -245,12 +245,12 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         The kerning data will be replaced by the interpolated kerning.
 
         :param factor: The interpolation value as a single :class:`int`
-            or :class:`float` or a :class:`list` or :class:`tuple` of 
-            two :class:`int` or :class:`float` values representing the 
+            or :class:`float` or a :class:`list` or :class:`tuple` of
+            two :class:`int` or :class:`float` values representing the
             factors ``(x, y)``.
-        :param minKerning: The :class:`BaseKerning` subclass instance corresponding 
+        :param minKerning: The :class:`BaseKerning` subclass instance corresponding
             to the 0.0 position in the interpolation.
-        :param maxKerning: The :class:`BaseKerning` subclass instance corresponding 
+        :param maxKerning: The :class:`BaseKerning` subclass instance corresponding
             to the 1.0 position in the interpolation.
         :param round: A :class:`bool` indicating whether the result should
             be rounded to integers.
@@ -355,9 +355,9 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
     def __contains__(self, pair: PairType[str]) -> bool:
         """Check if the given pair exists in the kerning.
 
-        :param pair: The kerning pair to check for existence as a :class:`tuple` of 
+        :param pair: The kerning pair to check for existence as a :class:`tuple` of
             two :class:`str` values.
-        :return: :obj:`True` if the `groupName` exists in the groups, :obj:`False` 
+        :return: :obj:`True` if the `groupName` exists in the groups, :obj:`False`
             otherwise.
 
         Example::
@@ -471,7 +471,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
 
         :param pair: The pair to get as a :class:`tuple` of two :class:`str` values.
         :param default: The optional default value to return if the `pair` is not found.
-        :return: A :class:`tuple` of two :class:`str` values representing the value for 
+        :return: A :class:`tuple` of two :class:`str` values representing the value for
             the given `pair`, or the `default` value if the `pair` is not found.
 
         Example::
@@ -497,8 +497,8 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
     ) -> Optional[IntFloatType]:
         """Get the value for the given explicit or implicit kerning pair.
 
-        This method will return the value for the given `pair`, even if it only exists 
-        implicitly (one or both sides may be members of a kerning group). If the `pair` 
+        This method will return the value for the given `pair`, even if it only exists
+        implicitly (one or both sides may be members of a kerning group). If the `pair`
         is not found, the specified `default` will be returned.
 
         :param pair: The pair to get as a :class:`tuple` of two :class:`str` values.
@@ -560,7 +560,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
     def keys(self) -> BaseKeys[PairType[str]]:
         """Return the kering's pairs (keys).
 
-        :return: A :ref:`type-view` of the kerning's pairs as :class: `tuple` instances 
+        :return: A :ref:`type-view` of the kerning's pairs as :class: `tuple` instances
             of two :class:`str` values.
 
         Example::
@@ -592,7 +592,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         If the `pair` does not exist, the `default` value is returned.
 
         :param pair: The pair to remove as a :class:`tuple` of two :class:`str` values.
-        :param default: The optional default value to return if the `pair` is not 
+        :param default: The optional default value to return if the `pair` is not
             found`. The value must be an :class:`int`, a :class:`float` or :obj:`None`.
             Defaults to :obj:`None`.
         :return: The value for the given `pair` as an :class:`int` or :class:`float`,
@@ -616,11 +616,11 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
               the value from `otherKerning`.
             - If the pair does not exist in the current kerning, it is added.
 
-        Pairs that exist in the current kerning but are not in `otherLib` remain 
+        Pairs that exist in the current kerning but are not in `otherLib` remain
         unchanged.
 
-        :param otherKerning: A :class:`MutableMapping` of key-value pairs to update the 
-            current lib with. Keys must be a :class:`tuple` of two :class:`str` values. 
+        :param otherKerning: A :class:`MutableMapping` of key-value pairs to update the
+            current lib with. Keys must be a :class:`tuple` of two :class:`str` values.
             Values must be an :class:`int` or a :class:`float`.
 
         Example::
