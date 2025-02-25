@@ -67,7 +67,9 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
             return None
         return self._font()
 
-    def _set_font(self, font: Optional[Union[BaseFont, Callable[[], BaseFont]]]) -> None:
+    def _set_font(
+        self, font: Optional[Union[BaseFont, Callable[[], BaseFont]]]
+    ) -> None:
         if self._font is not None and self._font() != font:
             raise AssertionError("font for kerning already set and is not same as font")
         if font is not None:
@@ -142,7 +144,6 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         factor: TransformationType,
         minKerning: MathKerning,
         maxKerning: MathKerning,
-
         round: bool = True,
         suppressError: bool = True,
     ) -> None:
