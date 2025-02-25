@@ -1,3 +1,6 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING, Any, Callable, Optional, Union
+
 from fontTools.misc import transform
 from fontParts.base.base import (
     BaseObject,
@@ -9,6 +12,21 @@ from fontParts.base.base import (
 from fontParts.base import normalizers
 from fontParts.base.color import Color
 from fontParts.base.deprecated import DeprecatedImage, RemovedImage
+from fontParts.base.annotations import (
+    PairType,
+    PairCollectionType,
+    QuadrupleType,
+    QuadrupleCollectionType,
+    SextupleType,
+    SextupleCollectionType,
+    IntFloatType,
+    TransformationType,
+)
+
+if TYPE_CHECKING:
+    from fontParts.base.glyph import BaseGlyph
+    from fontParts.base.layer import BaseLayer
+    from fontParts.base.font import BaseFont
 
 
 class BaseImage(
@@ -20,7 +38,7 @@ class BaseImage(
 ):
     copyAttributes = ("transformation", "color", "data")
 
-    def _reprContents(self):
+    def _reprContents(self) -> list[str]:
         contents = [
             f"offset='({self.offset[0]}, {self.offset[1]})'",
         ]
@@ -31,7 +49,7 @@ class BaseImage(
             contents += self.glyph._reprContents()
         return contents
 
-    def __bool__(self):
+    def __bool__(self) -> bool:
         if self.data is None:
             return False
         elif len(self.data) == 0:
@@ -47,16 +65,18 @@ class BaseImage(
 
     # Glyph
 
-    _glyph = None
+    _glyph: Optional[Callable[[], BaseGlyph]] = None
 
     glyph = dynamicProperty("glyph", "The image's parent :class:`BaseGlyph`.")
 
-    def _get_glyph(self):
+    def _get_glyph(self) -> Optional[BaseGlyph]:
         if self._glyph is None:
             return None
         return self._glyph()
 
-    def _set_glyph(self, glyph):
+    def _set_glyph(
+        self, glyph: Optional[Union[BaseGlyph, Callable[[], BaseGlyph]]]
+    ) -> None:
         if self._glyph is not None:
             raise AssertionError("glyph for image already set")
         if glyph is not None:
@@ -65,18 +85,22 @@ class BaseImage(
 
     # Layer
 
-    layer = dynamicProperty("layer", "The image's parent :class:`BaseLayer`.")
+    layer: dynamicProperty = dynamicProperty(
+        "layer", "The image's parent :class:`BaseLayer`."
+    )
 
-    def _get_layer(self):
+    def _get_layer(self) -> Optional[BaseLayer]:
         if self._glyph is None:
             return None
         return self.glyph.layer
 
     # Font
 
-    font = dynamicProperty("font", "The image's parent :class:`BaseFont`.")
+    font: dynamicProperty = dynamicProperty(
+        "font", "The image's parent :class:`BaseFont`."
+    )
 
-    def _get_font(self):
+    def _get_font(self) -> Optional[BaseFont]:
         if self._glyph is None:
             return None
         return self.glyph.font
@@ -87,7 +111,7 @@ class BaseImage(
 
     # Transformation
 
-    transformation = dynamicProperty(
+    transformation: dynamicProperty = dynamicProperty(
         "base_transformation",
         """
         The image's :ref:`type-transformation`.
@@ -100,28 +124,30 @@ class BaseImage(
         """,
     )
 
-    def _get_base_transformation(self):
+    def _get_base_transformation(self) -> SextupleType[float]:
         value = self._get_transformation()
         value = normalizers.normalizeTransformationMatrix(value)
         return value
 
-    def _set_base_transformation(self, value):
+    def _set_base_transformation(
+        self, value: SextupleCollectionType[IntFloatType]
+    ) -> None:
         value = normalizers.normalizeTransformationMatrix(value)
         self._set_transformation(value)
 
-    def _get_transformation(self):
+    def _get_transformation(self) -> SextupleCollectionType[IntFloatType]:
         """
         Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
-    def _set_transformation(self, value):
+    def _set_transformation(self, value: SextupleCollectionType[IntFloatType]) -> None:
         """
         Subclasses must override this method.
         """
         self.raiseNotImplementedError()
 
-    offset = dynamicProperty(
+    offset: dynamicProperty = dynamicProperty(
         "base_offset",
         """
         The image's offset. This is a shortcut to the offset
@@ -135,23 +161,23 @@ class BaseImage(
         """,
     )
 
-    def _get_base_offset(self):
+    def _get_base_offset(self) -> PairType[IntFloatType]:
         value = self._get_offset()
         value = normalizers.normalizeTransformationOffset(value)
         return value
 
-    def _set_base_offset(self, value):
+    def _set_base_offset(self, value: PairCollectionType[IntFloatType]) -> None:
         value = normalizers.normalizeTransformationOffset(value)
         self._set_offset(value)
 
-    def _get_offset(self):
+    def _get_offset(self) -> PairCollectionType[IntFloatType]:
         """
         Subclasses may override this method.
         """
         sx, sxy, syx, sy, ox, oy = self.transformation
         return (ox, oy)
 
-    def _set_offset(self, value):
+    def _set_offset(self, value: PairType[IntFloatType]) -> None:
         """
         Subclasses may override this method.
         """
@@ -159,7 +185,7 @@ class BaseImage(
         ox, oy = value
         self.transformation = (sx, sxy, syx, sy, ox, oy)
 
-    scale = dynamicProperty(
+    scale: dynamicProperty = dynamicProperty(
         "base_scale",
         """
         The image's scale. This is a shortcut to the scale
@@ -173,23 +199,23 @@ class BaseImage(
         """,
     )
 
-    def _get_base_scale(self):
+    def _get_base_scale(self) -> PairType[float]:
         value = self._get_scale()
         value = normalizers.normalizeTransformationScale(value)
         return value
 
-    def _set_base_scale(self, value):
+    def _set_base_scale(self, value: TransformationType) -> None:
         value = normalizers.normalizeTransformationScale(value)
         self._set_scale(value)
 
-    def _get_scale(self):
+    def _get_scale(self) -> TransformationType:
         """
         Subclasses may override this method.
         """
         sx, sxy, syx, sy, ox, oy = self.transformation
         return (sx, sy)
 
-    def _set_scale(self, value):
+    def _set_scale(self, value: PairType[float]) -> None:
         """
         Subclasses may override this method.
         """
@@ -199,7 +225,7 @@ class BaseImage(
 
     # Color
 
-    color = dynamicProperty(
+    color: dynamicProperty = dynamicProperty(
         "base_color",
         """
         The image's color. This will be a
@@ -211,19 +237,21 @@ class BaseImage(
         """,
     )
 
-    def _get_base_color(self):
+    def _get_base_color(self) -> Optional[Color]:
         value = self._get_color()
         if value is not None:
             value = normalizers.normalizeColor(value)
             value = Color(value)
         return value
 
-    def _set_base_color(self, value):
+    def _set_base_color(
+        self, value: Optional[QuadrupleCollectionType[IntFloatType]]
+    ) -> None:
         if value is not None:
             value = normalizers.normalizeColor(value)
         self._set_color(value)
 
-    def _get_color(self):
+    def _get_color(self) -> Optional[QuadrupleCollectionType[IntFloatType]]:
         """
         Return the color value as a color tuple or None.
 
@@ -231,7 +259,7 @@ class BaseImage(
         """
         self.raiseNotImplementedError()
 
-    def _set_color(self, value):
+    def _set_color(self, value: Optional[QuadrupleType[float]]) -> None:
         """
         value will be a color tuple or None.
 
@@ -241,7 +269,7 @@ class BaseImage(
 
     # Data
 
-    data = dynamicProperty(
+    data: dynamicProperty = dynamicProperty(
         "data",
         """
         The image's raw byte data. The possible
@@ -249,13 +277,13 @@ class BaseImage(
         """,
     )
 
-    def _get_base_data(self):
+    def _get_base_data(self) -> bytes:
         return self._get_data()
 
-    def _set_base_data(self, value):
+    def _set_base_data(self, value: bytes) -> None:
         self._set_data(value)
 
-    def _get_data(self):
+    def _get_data(self) -> bytes:
         """
         This must return raw byte data.
 
@@ -263,7 +291,7 @@ class BaseImage(
         """
         self.raiseNotImplementedError()
 
-    def _set_data(self, value):
+    def _set_data(self, value: bytes) -> None:
         """
         value will be raw byte data.
 
@@ -275,7 +303,9 @@ class BaseImage(
     # Transformation
     # --------------
 
-    def _transformBy(self, matrix, **kwargs):
+    def _transformBy(
+        self, matrix: SextupleCollectionType[IntFloatType], **kwargs: Any
+    ) -> None:
         """
         Subclasses may override this method.
         """
@@ -287,13 +317,13 @@ class BaseImage(
     # Normalization
     # -------------
 
-    def round(self):
+    def round(self) -> None:
         """
         Round offset coordinates.
         """
         self._round()
 
-    def _round(self):
+    def _round(self) -> None:
         """
         Subclasses may override this method.
         """
