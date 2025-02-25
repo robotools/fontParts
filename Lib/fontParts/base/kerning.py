@@ -1,7 +1,10 @@
 # pylint: disable=C0103, C0114
 from __future__ import annotations
-from typing import TYPE_CHECKING, Dict, Iterator, List, Optional
+from typing import TYPE_CHECKING, Callable, Dict, Iterator, List, Optional, Union
 from collections.abc import MutableMapping
+
+from fontMath import MathKerning
+from fontMath.mathFunctions import setRoundIntegerFunction
 
 from fontParts.base.base import BaseDict, dynamicProperty, interpolate, reference
 from fontParts.base import normalizers
@@ -53,7 +56,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
 
     # Font
 
-    _font: Optional[BaseFont] = None
+    _font: Optional[Callable[[], BaseFont]] = None
 
     font: dynamicProperty = dynamicProperty(
         "font", "The Kerning's parent :class:`BaseFont`."
@@ -64,7 +67,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
             return None
         return self._font()
 
-    def _set_font(self, font: Optional[BaseFont]) -> None:
+    def _set_font(self, font: Optional[Union[BaseFont, Callable[[], BaseFont]]]) -> None:
         if self._font is not None and self._font() != font:
             raise AssertionError("font for kerning already set and is not same as font")
         if font is not None:
@@ -94,9 +97,9 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
 
         Subclasses may override this method.
         """
-        factor = factor[0]
+        horizontalFactor = factor[0]
         for k, v in self.items():
-            v *= factor
+            v *= horizontalFactor
             self[k] = v
 
     # -------------
@@ -137,8 +140,9 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
     def interpolate(
         self,
         factor: TransformationType,
-        minKerning: BaseKerning,
-        maxKerning: BaseKerning,
+        minKerning: MathKerning,
+        maxKerning: MathKerning,
+
         round: bool = True,
         suppressError: bool = True,
     ) -> None:
@@ -199,9 +203,6 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
 
         Subclasses may override this method.
         """
-        import fontMath
-        from fontMath.mathFunctions import setRoundIntegerFunction
-
         setRoundIntegerFunction(normalizers.normalizeVisualRounding)
         kerningGroupCompatibility = self._testKerningGroupCompatibility(
             minKerning, maxKerning, suppressError=suppressError
@@ -209,13 +210,13 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         if not kerningGroupCompatibility:
             self.clear()
         else:
-            minKerning = fontMath.MathKerning(
+            minMathKerning = MathKerning(
                 kerning=minKerning, groups=minKerning.font.groups
             )
-            maxKerning = fontMath.MathKerning(
+            maxMathKerning = MathKerning(
                 kerning=maxKerning, groups=maxKerning.font.groups
             )
-            result = interpolate(minKerning, maxKerning, factor)
+            result = interpolate(minMathKerning, maxMathKerning, factor)
             if round:
                 result.round()
             self.clear()
@@ -261,16 +262,16 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         """
         del self[pair]
 
-    def asDict(self, returnIntegers: bool = True) -> Dict[str, int]:
+    def asDict(self, returnIntegers: bool = True) -> Dict[PairType[str], IntFloatType]:
         """
         Return the Kerning as a ``dict``.
 
         This is a backwards compatibility method.
         """
-        d = {}
-        for k, v in self.items():
-            d[k] = v if not returnIntegers else normalizers.normalizeVisualRounding(v)
-        return d
+        return {
+            k: (v if not returnIntegers else normalizers.normalizeVisualRounding(v))
+            for k, v in self.items()
+        }
 
     # -------------------
     # Inherited Functions
@@ -399,7 +400,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         """
         pair = normalizers.normalizeKerningKey(pair)
         value = self._find(pair, default)
-        if value != default:
+        if value and value != default:
             value = normalizers.normalizeKerningValue(value)
         return value
 
