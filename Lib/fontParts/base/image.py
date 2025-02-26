@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, Callable, Optional, Union
+from typing import TYPE_CHECKING, Any, Callable, Optional, Tuple, Union
 
 from fontTools.misc import transform
 from fontParts.base.base import (
@@ -36,6 +36,8 @@ class BaseImage(
     DeprecatedImage,
     RemovedImage,
 ):
+    """Represent the basis for an image object."""
+
     copyAttributes = ("transformation", "color", "data")
 
     def _reprContents(self) -> list[str]:
@@ -67,7 +69,23 @@ class BaseImage(
 
     _glyph: Optional[Callable[[], BaseGlyph]] = None
 
-    glyph = dynamicProperty("glyph", "The image's parent :class:`BaseGlyph`.")
+    glyph = dynamicProperty(
+        "glyph",
+        """Get or set the image's parent glyph object.
+
+        The value must be a :class:`BaseGlyph` instance or :obj:`None`.
+
+        :return: The :class:`BaseGlyph` instance containing the image
+            or :obj:`None`.
+        :raises AssertionError: If attempting to set the glyph when it
+            has already been set.
+
+        Example::
+
+            >>> glyph = image.glyph
+
+        """,
+    )
 
     def _get_glyph(self) -> Optional[BaseGlyph]:
         if self._glyph is None:
@@ -86,7 +104,19 @@ class BaseImage(
     # Layer
 
     layer: dynamicProperty = dynamicProperty(
-        "layer", "The image's parent :class:`BaseLayer`."
+        "layer",
+        """Get the image's parent layer object.
+
+        This property is read-only.
+
+        :return: The :class:`BaseLayer` instance containing the image
+            or :obj:`None`.
+
+        Example::
+
+            >>> layer = image.layer
+
+        """,
     )
 
     def _get_layer(self) -> Optional[BaseLayer]:
@@ -97,7 +127,19 @@ class BaseImage(
     # Font
 
     font: dynamicProperty = dynamicProperty(
-        "font", "The image's parent :class:`BaseFont`."
+        "font",
+        """Get the image's parent font object.
+
+        This property is read-only.
+
+        :return: The :class:`BaseFont` instance containing the image
+            or :obj:`None`.
+
+        Example::
+
+            >>> font = image.font
+
+        """,
     )
 
     def _get_font(self) -> Optional[BaseFont]:
@@ -113,14 +155,19 @@ class BaseImage(
 
     transformation: dynamicProperty = dynamicProperty(
         "base_transformation",
-        """
-        The image's :ref:`type-transformation`.
-        This defines the image's position, scale,
-        and rotation. ::
+        """Get or set the image's transformation matrix.
+
+        The value must be a :ref:`type-transformation`.
+
+        :return: A :ref:`type-transformation` value representing the
+            transformation matrix of the image.
+
+        Example::
 
             >>> image.transformation
             (1, 0, 0, 1, 0, 0)
             >>> image.transformation = (2, 0, 0, 2, 100, -50)
+            
         """,
     )
 
@@ -136,28 +183,56 @@ class BaseImage(
         self._set_transformation(value)
 
     def _get_transformation(self) -> SextupleCollectionType[IntFloatType]:
-        """
-        Subclasses must override this method.
+        """Get the native image's transformation matrix.
+
+        This is the environment implementation of the
+        :attr:`BaseImage.transformation` property getter.
+
+        :return: A :ref:`type-transformation` value representing the
+            transformation matrix of the image. The value will be
+            normalized with :func:`normalizers.normalizeTransformationMatrix`.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
     def _set_transformation(self, value: SextupleCollectionType[IntFloatType]) -> None:
-        """
-        Subclasses must override this method.
+        """Set the native image's transformation matrix.
+
+        This is the environment implementation of the
+        :attr:`BaseImage.transformation` property setter.
+
+        :param value: The :ref:`type-transformation` to set. The value will have
+            been normalized with :func:`normalizers.normalizeTransformationMatrix`.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
     offset: dynamicProperty = dynamicProperty(
         "base_offset",
-        """
-        The image's offset. This is a shortcut to the offset
-        values in :attr:`transformation`. This must be an
-        iterable containing two :ref:`type-int-float` values
-        defining the x and y values to offset the image by. ::
+        """Get or set the component's offset.
+
+        The value must be a :ref:`type-coordinate.`
+
+        :return: A :ref:`type-coordinate.` representing the offset of the image.
+
+        Example::
 
             >>> image.offset
             (0, 0)
             >>> image.offset = (100, -50)
+
         """,
     )
 
@@ -171,15 +246,36 @@ class BaseImage(
         self._set_offset(value)
 
     def _get_offset(self) -> PairCollectionType[IntFloatType]:
-        """
-        Subclasses may override this method.
+        """Get the native image's offset.
+
+        This is the environment implementation of the :attr:`BaseImage.offset`
+        property getter.
+
+        :return: A :ref:`type-coordinate.` representing the offset of the image.
+            The value will be normalized
+            with :func:`normalizers.normalizeTransformationOffset`.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         sx, sxy, syx, sy, ox, oy = self.transformation
         return (ox, oy)
 
     def _set_offset(self, value: PairType[IntFloatType]) -> None:
-        """
-        Subclasses may override this method.
+        """Set the native image's offset.
+
+        This is the environment implementation of the :attr:`BaseImage.offset`
+        property setter.
+
+        :param value: The offset to set as a :ref:`type-coordinate.`. The value will
+            have been normalized with :func:`normalizers.normalizeTransformationOffset`.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         sx, sxy, syx, sy, ox, oy = self.transformation
         ox, oy = value
@@ -187,15 +283,20 @@ class BaseImage(
 
     scale: dynamicProperty = dynamicProperty(
         "base_scale",
-        """
-        The image's scale. This is a shortcut to the scale
-        values in :attr:`transformation`. This must be an
-        iterable containing two :ref:`type-int-float` values
-        defining the x and y values to scale the image by. ::
+        """Get or set the image's scale.
+
+        The value must be a :class:`list` or :class:`tuple` of two :class:`int`
+        or :class:`float` items representing the ``(x, y)`` scale of the image.
+
+        :return: A :class:`tuple` of two :class:`float` items representing the
+            ``(x, y)`` scale of the image.
+
+        Example::
 
             >>> image.scale
             (1, 1)
             >>> image.scale = (2, 2)
+            
         """,
     )
 
@@ -209,15 +310,38 @@ class BaseImage(
         self._set_scale(value)
 
     def _get_scale(self) -> TransformationType:
-        """
-        Subclasses may override this method.
+        """Get the native image's scale.
+
+        This is the environment implementation of the :attr:`BaseImage.scale`
+        property getter.
+
+        :return: A :class:`tuple` of two :class:`float` items representing the
+            ``(x, y)`` scale of the image. The value will have been normalized
+            with :func:`normalizers.normalizeComponentScale`.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         sx, sxy, syx, sy, ox, oy = self.transformation
         return (sx, sy)
 
     def _set_scale(self, value: PairType[float]) -> None:
-        """
-        Subclasses may override this method.
+        """Set the native image's scale.
+
+        This is the environment implementation of the :attr:`BaseImage.scale`
+        property setter.
+
+        :param value: The scale to set as a :class:`list` or :class:`tuple`
+            of :class:`int` or :class:`float` items representing the ``(x, y)``
+            scale of the image. The value will have been normalized
+            with :func:`normalizers.normalizeComponentScale`.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         sx, sxy, syx, sy, ox, oy = self.transformation
         sx, sy = value
@@ -227,13 +351,19 @@ class BaseImage(
 
     color: dynamicProperty = dynamicProperty(
         "base_color",
-        """
-        The image's color. This will be a
-        :ref:`type-color` or ``None``. ::
+        """Get or set the image's color.
+
+        The value must be a :ref:`type-color` or :obj`None`.
+
+        :return: A :ref:`type-color` representing the color of the image,
+            or :obj:`None`.
+
+        Example::
 
             >>> image.color
             None
             >>> image.color = (1, 0, 0, 0.5)
+
         """,
     )
 
@@ -252,18 +382,39 @@ class BaseImage(
         self._set_color(value)
 
     def _get_color(self) -> Optional[QuadrupleCollectionType[IntFloatType]]:
-        """
-        Return the color value as a color tuple or None.
+        """Get the native image's color.
 
-        Subclasses must override this method.
+        This is the environment implementation of the :attr:`BaseImage.color`
+        property getter.
+
+        :return: A :ref:`type-color` representing the color of the image,
+            or :obj:`None`. The value will be normalized
+         with :func:`normalizers.normalizeColor`.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
     def _set_color(self, value: Optional[QuadrupleType[float]]) -> None:
-        """
-        value will be a color tuple or None.
+        """Set the native image's color.
 
-        Subclasses must override this method.
+        This is the environment implementation of the :attr:`BaseImage.color`
+        property setter.
+
+        :param value: The :ref:`type-color` to set for the image or :obj:`None`.
+            The value will have been normalized with :func:`normalizers.normalizeColor`.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
@@ -271,9 +422,13 @@ class BaseImage(
 
     data: dynamicProperty = dynamicProperty(
         "data",
-        """
-        The image's raw byte data. The possible
-        formats are defined by each environment.
+        """Get or set the image's raw byte data.
+        
+        The possible formats are defined by each environment.
+        The value must be a :class:`bytes` object.
+
+        :return: A :class:`bytes` object representing the raw byte data of the image.
+
         """,
     )
 
@@ -284,18 +439,36 @@ class BaseImage(
         self._set_data(value)
 
     def _get_data(self) -> bytes:
-        """
-        This must return raw byte data.
+        """Get the native image's raw byte data.
 
-        Subclasses must override this method.
+        This is the environment implementation of the :attr:`BaseImage.data`
+        property getter.
+
+        :return: A :class:`bytes` object representing the data of the image. 
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
     def _set_data(self, value: bytes) -> None:
-        """
-        value will be raw byte data.
+        """Set the native image's color.
 
-        Subclasses must override this method.
+        This is the environment implementation of the :attr:`BaseImage.color`
+        property setter.
+
+        :param value: The :class:`bytes` object to set for the image.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
@@ -306,8 +479,17 @@ class BaseImage(
     def _transformBy(
         self, matrix: SextupleCollectionType[IntFloatType], **kwargs: Any
     ) -> None:
-        """
-        Subclasses may override this method.
+        r"""Transform the native image.
+
+        This is the environment implementation of :meth:`BaseImage.transformBy`.
+
+        :param matrix: The transformation to apply as a :ref:`type-transformation`.
+        :param \**kwargs: Additional keyword arguments.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         t = transform.Transform(*matrix)
         transformation = t.transform(self.transformation)
@@ -318,14 +500,24 @@ class BaseImage(
     # -------------
 
     def round(self) -> None:
-        """
-        Round offset coordinates.
+        """Round the images's offset coordinates.
+
+        Example::
+
+            >>> image.round()
+
         """
         self._round()
 
     def _round(self) -> None:
-        """
-        Subclasses may override this method.
+        """Round the native images's offset coordinates.
+
+        This is the environment implementation of :meth:`BaseImage.round`.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         x, y = self.offset
         x = normalizers.normalizeVisualRounding(x)
