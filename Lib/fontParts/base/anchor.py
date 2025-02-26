@@ -39,9 +39,9 @@ class BaseAnchor(
     SelectionMixin,
     IdentifierMixin,
 ):
-    """Represent the basis for an anchor object. 
+    """Represent the basis for an anchor object.
 
-    This object is almost always created with :meth:`BaseGlyph.appendAnchor`. 
+    This object is almost always created with :meth:`BaseGlyph.appendAnchor`.
     An orphan anchor can be created like this::
 
         >>> anchor = RAnchor()
@@ -72,14 +72,18 @@ class BaseAnchor(
 
     _glyph: Optional[Callable[[], BaseGlyph]] = None
 
-    glyph: dynamicProperty = dynamicProperty("glyph", "The anchor's parent :class:`BaseGlyph`.")
+    glyph: dynamicProperty = dynamicProperty(
+        "glyph", "The anchor's parent :class:`BaseGlyph`."
+    )
 
     def _get_glyph(self) -> Optional[BaseGlyph]:
         if self._glyph is None:
             return None
         return self._glyph()
 
-    def _set_glyph(self, glyph: Optional[Union[BaseGlyph, Callable[[], BaseGlyph]]]) -> None:
+    def _set_glyph(
+        self, glyph: Optional[Union[BaseGlyph, Callable[[], BaseGlyph]]]
+    ) -> None:
         if self._glyph is not None:
             raise AssertionError("glyph for anchor already set")
         if glyph is not None:
@@ -88,7 +92,9 @@ class BaseAnchor(
 
     # Layer
 
-    layer: dynamicProperty = dynamicProperty("layer", "The anchor's parent :class:`BaseLayer`.")
+    layer: dynamicProperty = dynamicProperty(
+        "layer", "The anchor's parent :class:`BaseLayer`."
+    )
 
     def _get_layer(self) -> Optional[BaseLayer]:
         if self._glyph is None:
@@ -97,7 +103,9 @@ class BaseAnchor(
 
     # Font
 
-    font: dynamicProperty = dynamicProperty("font", "The anchor's parent :class:`BaseFont`.")
+    font: dynamicProperty = dynamicProperty(
+        "font", "The anchor's parent :class:`BaseFont`."
+    )
 
     def _get_font(self) -> Optional[BaseFont]:
         if self._glyph is None:
@@ -429,7 +437,9 @@ class BaseAnchor(
     # Transformation
     # --------------
 
-    def _transformBy(self, matrix: SextupleCollectionType[IntFloatType], **kwargs: Any) -> None:
+    def _transformBy(
+        self, matrix: SextupleCollectionType[IntFloatType], **kwargs: Any
+    ) -> None:
         r"""Transform the native anchor according to the given matrix.
 
         This is the environment implementation of :meth:`BaseAnchor.transformBy`.
@@ -454,7 +464,9 @@ class BaseAnchor(
 
     compatibilityReporterClass = AnchorCompatibilityReporter
 
-    def isCompatible(self, other: BaseAnchor, cls=None) -> Tuple[bool, AnchorCompatibilityReporter]:
+    def isCompatible(
+        self, other: BaseAnchor, cls=None
+    ) -> Tuple[bool, AnchorCompatibilityReporter]:
         """Evaluate interpolation compatibility with another anchor.
 
         :param other: The other :class:`BaseAnchor` instance to check
@@ -476,7 +488,9 @@ class BaseAnchor(
         """
         return super(BaseAnchor, self).isCompatible(other, BaseAnchor)
 
-    def _isCompatible(self, other: BaseAnchor, reporter: AnchorCompatibilityReporter) -> None:
+    def _isCompatible(
+        self, other: BaseAnchor, reporter: AnchorCompatibilityReporter
+    ) -> None:
         """Evaluate interpolation compatibility with another native anchor.
 
         This is the environment implementation of :meth:`BaseAnchor.isCompatible`.
