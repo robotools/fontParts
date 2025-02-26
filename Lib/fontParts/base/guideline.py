@@ -103,7 +103,19 @@ class BaseGuideline(
     # Layer
 
     layer: dynamicProperty = dynamicProperty(
-        "layer", "The guideline's parent :class:`BaseLayer`."
+        "layer",
+        """Get the guideline's parent layer object.
+
+        This property is read-only.
+
+        :return: The :class:`BaseLayer` instance containing the guideline
+            or :obj:`None`.
+
+        Example::
+
+            >>> layer = guideline.layer
+
+        """,
     )
 
     def _get_layer(self) -> Optional[BaseLayer]:
@@ -366,7 +378,7 @@ class BaseGuideline(
         """
         self.raiseNotImplementedError()
 
-    def _set_angle(self, value: Optional[IntFloatType]) -> None:
+    def _set_angle(self, value: Optional[float]) -> None:
         """Set the native guideline's angle.
 
         This is the environment implementation of the :attr:`BaseGuideline.angle`
@@ -507,7 +519,7 @@ class BaseGuideline(
 
     color: dynamicProperty = dynamicProperty(
         "base_color",
-        """"Get or set the guideline's color.
+        """Get or set the guideline's color.
 
         The value must be a :ref:`type-color` or :obj:`None`.
 
@@ -535,8 +547,8 @@ class BaseGuideline(
             value = normalizers.normalizeColor(value)
         self._set_color(value)
 
-    def _get_color(self) -> QuadrupleType[float]:
-        """ "Get the native guideline's color.
+    def _get_color(self) -> QuadrupleCollectionType[IntFloatType]:
+        """Get the native guideline's color.
 
         This is the environment implementation of the :attr:`BaseGuideline.color`
         property getter.
@@ -554,8 +566,8 @@ class BaseGuideline(
         """
         self.raiseNotImplementedError()
 
-    def _set_color(self, value: QuadrupleCollectionType[IntFloatType]) -> None:
-        """ "Set the native guideline's color.
+    def _set_color(self, value: QuadrupleType[float]) -> None:
+        """Set the native guideline's color.
 
         Description
 
