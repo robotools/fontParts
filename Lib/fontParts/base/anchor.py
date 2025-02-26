@@ -73,7 +73,21 @@ class BaseAnchor(
     _glyph: Optional[Callable[[], BaseGlyph]] = None
 
     glyph: dynamicProperty = dynamicProperty(
-        "glyph", "The anchor's parent :class:`BaseGlyph`."
+        "glyph",
+        """Get or set the anchor's parent glyph object.
+
+        The value must be a :class:`BaseGlyph` instance or :obj:`None`.
+
+        :return: The :class:`BaseGlyph` instance containing the anchor
+            or :obj:`None`.
+        :raises AssertionError: If attempting to set the glyph when it
+            has already been set.
+
+        Example::
+
+            >>> glyph = anchor.glyph
+
+        """,
     )
 
     def _get_glyph(self) -> Optional[BaseGlyph]:
@@ -93,7 +107,19 @@ class BaseAnchor(
     # Layer
 
     layer: dynamicProperty = dynamicProperty(
-        "layer", "The anchor's parent :class:`BaseLayer`."
+        "layer",
+        """Get the anchor's parent layer object.
+
+        This property is read-only.
+
+        :return: The :class:`BaseLayer` instance containing the anchor
+            or :obj:`None`.
+
+        Example::
+
+            >>> layer = anchor.layer
+
+        """,
     )
 
     def _get_layer(self) -> Optional[BaseLayer]:
@@ -104,7 +130,19 @@ class BaseAnchor(
     # Font
 
     font: dynamicProperty = dynamicProperty(
-        "font", "The anchor's parent :class:`BaseFont`."
+        "font",
+        """Get the anchor's parent font object.
+
+        This property is read-only.
+
+        :return: The :class:`BaseFont` instance containing the anchor
+            or :obj:`None`.
+
+        Example::
+
+            >>> font = anchor.font
+
+        """,
     )
 
     def _get_font(self) -> Optional[BaseFont]:
