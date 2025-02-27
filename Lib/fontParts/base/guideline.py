@@ -523,7 +523,7 @@ class BaseGuideline(
 
         The value must be a :ref:`type-color` or :obj:`None`.
 
-        :return: A :ref:`type-color` representing the color of the guideline,
+        :return: A :class:`Color` instance representing the color of the guideline,
             or :obj:`None`.
 
         Example::
@@ -535,10 +535,9 @@ class BaseGuideline(
         """,
     )
 
-    def _get_base_color(self) -> QuadrupleType[float]:
+    def _get_base_color(self) -> Color:
         value = self._get_color()
         if value is not None:
-            value = normalizers.normalizeColor(value)
             value = Color(value)
         return value
 
@@ -554,8 +553,8 @@ class BaseGuideline(
         property getter.
 
         :return: A :ref:`type-color` representing the color of the guideline,
-            or :obj:`None`. The value will be normalized
-         with :func:`normalizers.normalizeColor`.
+            or :obj:`None`. The value will be normalized 
+            with :func:`normalizers.normalizeColor`.
         :raises NotImplementedError: If the method has not been overridden by a
             subclass.
 
@@ -568,8 +567,6 @@ class BaseGuideline(
 
     def _set_color(self, value: QuadrupleType[float]) -> None:
         """Set the native guideline's color.
-
-        Description
 
         This is the environment implementation of the :attr:`BaseGuideline.color`
         property setter.
