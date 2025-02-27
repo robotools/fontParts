@@ -2397,7 +2397,7 @@ class BaseGlyph(
         normalizedOrigin = normalizers.normalizeCoordinateTuple(origin)
         if normalizedOrigin != (0, 0) and (width or height):
             raise FontPartsError(
-                ("The origin must not be set when " "scaling the width or height.")
+                ("The origin must not be set when scaling the width or height.")
             )
         super(BaseGlyph, self).scaleBy(normalizedValue, origin=normalizedOrigin)
         sX, sY = normalizedValue
@@ -3432,9 +3432,7 @@ class BaseGlyph(
         """
         self.raiseNotImplementedError()
 
-    def _set_markColor(
-        self, value: Optional[QuadrupleType[float]]
-    ) -> None:
+    def _set_markColor(self, value: Optional[QuadrupleType[float]]) -> None:
         """Set the glyph's mark color.
 
         This is the environment implementation of
