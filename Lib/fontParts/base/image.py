@@ -355,7 +355,7 @@ class BaseImage(
 
         The value must be a :ref:`type-color` or :obj`None`.
 
-        :return: A :ref:`type-color` representing the color of the image,
+        :return: A :class:`Color` instance representing the color of the image,
             or :obj:`None`.
 
         Example::
@@ -370,7 +370,6 @@ class BaseImage(
     def _get_base_color(self) -> Optional[Color]:
         value = self._get_color()
         if value is not None:
-            value = normalizers.normalizeColor(value)
             value = Color(value)
         return value
 
@@ -389,7 +388,7 @@ class BaseImage(
 
         :return: A :ref:`type-color` representing the color of the image,
             or :obj:`None`. The value will be normalized
-         with :func:`normalizers.normalizeColor`.
+            with :func:`normalizers.normalizeColor`.
         :raises NotImplementedError: If the method has not been overridden by a
             subclass.
 
