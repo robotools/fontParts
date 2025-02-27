@@ -443,7 +443,7 @@ class BaseImage(
         This is the environment implementation of the :attr:`BaseImage.data`
         property getter.
 
-        :return: A :class:`bytes` object representing the data of the image. 
+        :return: A :class:`bytes` object representing the data of the image.
         :raises NotImplementedError: If the method has not been overridden by a
             subclass.
 
