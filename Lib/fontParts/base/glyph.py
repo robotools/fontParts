@@ -3389,7 +3389,7 @@ class BaseGlyph(
         """Get or set the glyph's mark color.
 
         The value must be either a :ref:`type-color` or :obj:`None`.
-        :return: The color value assigned to the glyph, or:obj:`None` if
+        :return: The :class:`Color` instance assigned to the glyph, or :obj:`None` if
             no color has been assigned.
 
         Example::
@@ -3401,12 +3401,11 @@ class BaseGlyph(
         """,
     )
 
-    def _get_base_markColor(self) -> Optional[QuadrupleCollectionType[IntFloatType]]:
+    def _get_base_markColor(self) -> Optional[Color]:
         value = self._get_markColor()
         if value is None:
             return None
-        normalizedValue = normalizers.normalizeColor(value)
-        return Color(normalizedValue)
+        return Color(value)
 
     def _set_base_markColor(
         self, value: Optional[QuadrupleCollectionType[IntFloatType]]
@@ -3434,7 +3433,7 @@ class BaseGlyph(
         self.raiseNotImplementedError()
 
     def _set_markColor(
-        self, value: Optional[QuadrupleCollectionType[IntFloatType]]
+        self, value: Optional[QuadrupleType[float]]
     ) -> None:
         """Set the glyph's mark color.
 
