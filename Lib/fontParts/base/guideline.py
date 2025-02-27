@@ -553,7 +553,7 @@ class BaseGuideline(
         property getter.
 
         :return: A :ref:`type-color` representing the color of the guideline,
-            or :obj:`None`. The value will be normalized 
+            or :obj:`None`. The value will be normalized
             with :func:`normalizers.normalizeColor`.
         :raises NotImplementedError: If the method has not been overridden by a
             subclass.
