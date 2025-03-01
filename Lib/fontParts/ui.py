@@ -9,14 +9,12 @@ if TYPE_CHECKING:
 
 
 def AskString(
-    message: str,
-    value: Optional[str] = None,
-    title: Optional[str] = "FontParts"
+    message: str, value: Optional[str] = None, title: Optional[str] = "FontParts"
 ) -> str:
     """Dispaly a dialog to ask for a string input.
 
     :param message: The message to display in the dialog as a :class:`str`.
-    :param value: The optional default value to display in the input field as 
+    :param value: The optional default value to display in the input field as
         a :class:`str`. Defaults to :obj:`None`.
     :param title: The optional title of the dialog window as a :class:`str`.
         Defaults to ``"FontParts"``.
@@ -31,10 +29,10 @@ def AskString(
 
 
 def AskYesNoCancel(
-        message: str,
-        title: Optional[str] = "FontParts",
-        default: Optional[int] = 0,
-        informativeText: Optional[str] = None
+    message: str,
+    title: Optional[str] = "FontParts",
+    default: Optional[int] = 0,
+    informativeText: Optional[str] = None,
 ) -> str:
     """Display a dialog to ask a yes, no, or cancel question.
 
@@ -45,7 +43,7 @@ def AskYesNoCancel(
         Defaults to ``0``.
     :param informativeText: The optional additional informative text to display in the
         dialog as  a :class:`str`. Defaults to :obj:`None`.
-    :return: A :class:`str` representing the user's response: ``"Yes"``, ``"No"``, or 
+    :return: A :class:`str` representing the user's response: ``"Yes"``, ``"No"``, or
         ``"Cancel"``.
 
     Example::
@@ -59,9 +57,7 @@ def AskYesNoCancel(
 
 
 def FindGlyph(
-        aFont: BaseFont,
-        message: str = "Search for a glyph:",
-        title: str = "FontParts"
+    aFont: BaseFont, message: str = "Search for a glyph:", title: str = "FontParts"
 ) -> str:
     """Display a dialog to search for a glyph within a provided font.
 
@@ -98,9 +94,9 @@ def GetFile(
         Defaults to :obj:`None`.
     :param fileName: The optional file name to start the dialog with as a :class:`str`.
         Defaults to :obj:`None`.
-    :param allowsMultipleSelection: A flag to allow multiple file selection as 
+    :param allowsMultipleSelection: A flag to allow multiple file selection as
         a :class:`bool`. Defaults to :obj:`False`.
-    :param fileTypes: The optional file types to filter the dialog with as 
+    :param fileTypes: The optional file types to filter the dialog with as
         a :class:`str`. Defaults to :obj:`None`.
     :return: A :class:`str` representing the path of the selected file.
 
@@ -141,7 +137,7 @@ def GetFileOrFolder(
         a :class:`bool`. Defaults to :obj:`False`.
     :param fileTypes: The optional file types to filter the dialog with as
         a :class:`str`. Defaults to :obj:`None`.
-    :return: A :class:`str` representing the path of the selected file or folder, 
+    :return: A :class:`str` representing the path of the selected file or folder,
         or a :class:`tuple` of paths if ``allowsMultipleSelection=True``.
 
     Example::
@@ -160,9 +156,10 @@ def GetFileOrFolder(
 
 
 def Message(
-        message: str,
-        title: Optional[str] = "FontParts",
-        informativeText: Optional[str] = None) -> None:
+    message: str,
+    title: Optional[str] = "FontParts",
+    informativeText: Optional[str] = None,
+) -> None:
     """Display a message dialog.
 
     :param message: The message to display in the dialog as a :class:`str`.
@@ -199,9 +196,9 @@ def PutFile(message: Optional[str] = None, fileName: Optional[str] = None) -> st
 
 
 def SearchList(
-        items: CollectionType[str],
-        message: Optional[str] = "Select an item:",
-        title: Optional[str] = "FontParts"
+    items: CollectionType[str],
+    message: Optional[str] = "Select an item:",
+    title: Optional[str] = "FontParts",
 ) -> str:
     """Display a dialog to search a given list.
 
@@ -221,16 +218,17 @@ def SearchList(
 
 
 def SelectFont(
-        message: Optional[str] = "Select a font:",
-        title: Optional[str] = "FontParts",
-        allFonts: Optional[CollectionType[str]] = None) -> str:
+    message: Optional[str] = "Select a font:",
+    title: Optional[str] = "FontParts",
+    allFonts: Optional[CollectionType[str]] = None,
+) -> str:
     """Display a dialog to select a font from all open fonts.
 
     :param message: The optional message to display in the dialog as a :class:`str`.
         Defaults to ``"Select a font:"``.
     :param title: The optional title of the dialog window as a :class:`str`.
         Defaults to ``"FontParts"``.
-    :param allFonts: The optional list of all open fonts as a :class:`list` 
+    :param allFonts: The optional list of all open fonts as a :class:`list`
         of :class:`str`. Defaults to :obj:`None`.
     :return: A :class:`str` representing the selected font.
 
@@ -245,7 +243,7 @@ def SelectFont(
 def SelectGlyph(
     aFont: BaseFont,
     message: Optional[str] = "Select a glyph:",
-    title: Optional[str] = "FontParts"
+    title: Optional[str] = "FontParts",
 ) -> str:
     """Display a dialog to select a glyph from a given font.
 
@@ -265,9 +263,10 @@ def SelectGlyph(
 
 
 def ProgressBar(
-        title: Optional[str] = "RoboFab...",
-        ticks: Optional[int] = None,
-        label: Optional[str] = None) -> None:
+    title: Optional[str] = "RoboFab...",
+    ticks: Optional[int] = None,
+    label: Optional[str] = None,
+) -> None:
     """Display a progress bar dialog.
 
     :param title: The optional title of the dialog window as a :class:`str`.
