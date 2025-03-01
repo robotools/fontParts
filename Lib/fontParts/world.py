@@ -1,8 +1,48 @@
+# pylint: disable=C0103, C0114
+from __future__ import annotations
 import os
 import glob
+from typing import (
+    TYPE_CHECKING, Callable, Dict, Iterable, Optional, Tuple, Union
+)
+from collections.abc import Generator
+from types import FunctionType
+
+from fontParts.base.annotations import T, CollectionType
+
+if TYPE_CHECKING:
+    from fontParts.base.font import BaseFont
+    from fontParts.base.glyph import BaseGlyph
+    from fontParts.base.layer import BaseLayer
+    from fontParts.base.contour import BaseContour
+    from fontParts.base.segment import BaseSegment
+    from fontParts.base.point import BasePoint
+    from fontParts.base.component import BaseComponent
+    from fontParts.base.anchor import BaseAnchor
+    from fontParts.base.guideline import BaseGuideline
+
+SortOptionType = Union[str, Callable, CollectionType[Union[str, Callable]]]
+BaseTypes = Union[
+    "BaseFont",
+    "BaseGlyph",
+    "BaseLayer",
+    "BaseContour",
+    "BaseSegment",
+    "BasePoint",
+    "BaseComponent",
+    "BaseAnchor",
+    "BaseGuideline",
+    "BaseFontList"
+]
+RegistryType = Dict[str, Optional[Callable[[], BaseTypes]]]
+InfoType = Union[str, int, float, bool]
 
 
-def OpenFonts(directory=None, showInterface=True, fileExtensions=None):
+def OpenFonts(
+    directory: Optional[Union[str, CollectionType[str]]] = None,
+        showInterface: bool = True,
+        fileExtensions: Optional[CollectionType[str]] = None
+) -> Generator[BaseFont]:
     """
     Open all fonts with the given **fileExtensions** located in
     **directory**. If **directory** is ``None``, a dialog for
@@ -26,17 +66,20 @@ def OpenFonts(directory=None, showInterface=True, fileExtensions=None):
     """
     from fontParts.ui import GetFileOrFolder
 
+    directories: CollectionType[str]
     if fileExtensions is None:
-        fileExtensions = dispatcher["OpenFontsFileExtensions"]
-    if isinstance(directory, str):
+        fileExtensions = dispatcher["OpenFontsFileExtensions"]()
+    if directory is None:
+        directory = GetFileOrFolder(allowsMultipleSelection=True)
+    elif isinstance(directory, str):
         directories = [directory]
-    elif directory is None:
-        directories = GetFileOrFolder(allowsMultipleSelection=True)
     else:
         directories = directory
     if directories:
         globPatterns = []
         for directory in directories:
+            if not fileExtensions:
+                continue
             if os.path.splitext(directory)[-1] in fileExtensions:
                 globPatterns.append(directory)
             elif not os.path.isdir(directory):
@@ -51,7 +94,7 @@ def OpenFonts(directory=None, showInterface=True, fileExtensions=None):
             yield OpenFont(path, showInterface=showInterface)
 
 
-def OpenFont(path, showInterface=True):
+def OpenFont(path: str, showInterface: bool = True) -> BaseFont:
     """
     Open font located at **path**. If **showInterface**
     is ``False``, the font should be opened without
@@ -68,7 +111,10 @@ def OpenFont(path, showInterface=True):
     return dispatcher["OpenFont"](pathOrObject=path, showInterface=showInterface)
 
 
-def NewFont(familyName=None, styleName=None, showInterface=True):
+def NewFont(
+        familyName: Optional[str] = None,
+        styleName: Optional[str] = None,
+        showInterface: bool = True) -> BaseFont:
     """
     Create a new font. **familyName** will be assigned
     to ``font.info.familyName`` and **styleName**
@@ -91,14 +137,14 @@ def NewFont(familyName=None, styleName=None, showInterface=True):
     )
 
 
-def CurrentFont():
+def CurrentFont() -> BaseFont:
     """
     Get the "current" font.
     """
     return dispatcher["CurrentFont"]()
 
 
-def CurrentGlyph():
+def CurrentGlyph() -> BaseGlyph:
     """
     Get the "current" glyph from :func:`CurrentFont`.
 
@@ -111,7 +157,7 @@ def CurrentGlyph():
     return dispatcher["CurrentGlyph"]()
 
 
-def CurrentLayer():
+def CurrentLayer() -> BaseLayer:
     """
     Get the "current" layer from :func:`CurrentGlyph`.
 
@@ -124,7 +170,7 @@ def CurrentLayer():
     return dispatcher["CurrentLayer"]()
 
 
-def CurrentContours():
+def CurrentContours() -> Tuple[BaseContour, ...]:
     """
     Get the "currently" selected contours from :func:`CurrentGlyph`.
 
@@ -139,14 +185,14 @@ def CurrentContours():
     return dispatcher["CurrentContours"]()
 
 
-def _defaultCurrentContours():
+def _defaultCurrentContours() -> Tuple[BaseContour, ...]:
     glyph = CurrentGlyph()
     if glyph is None:
         return ()
     return glyph.selectedContours
 
 
-def CurrentSegments():
+def CurrentSegments() -> Tuple[BaseSegment, ...]:
     """
     Get the "currently" selected segments from :func:`CurrentContours`.
 
@@ -161,7 +207,7 @@ def CurrentSegments():
     return dispatcher["CurrentSegments"]()
 
 
-def _defaultCurrentSegments():
+def _defaultCurrentSegments() -> Tuple[BaseSegment, ...]:
     glyph = CurrentGlyph()
     if glyph is None:
         return ()
@@ -171,7 +217,7 @@ def _defaultCurrentSegments():
     return tuple(segments)
 
 
-def CurrentPoints():
+def CurrentPoints() -> Tuple[BasePoint, ...]:
     """
     Get the "currently" selected points from :func:`CurrentContours`.
 
@@ -186,7 +232,7 @@ def CurrentPoints():
     return dispatcher["CurrentPoints"]()
 
 
-def _defaultCurrentPoints():
+def _defaultCurrentPoints() -> Tuple[BasePoint, ...]:
     glyph = CurrentGlyph()
     if glyph is None:
         return ()
@@ -196,7 +242,7 @@ def _defaultCurrentPoints():
     return tuple(points)
 
 
-def CurrentComponents():
+def CurrentComponents() -> Tuple[BaseComponent, ...]:
     """
     Get the "currently" selected components from :func:`CurrentGlyph`.
 
@@ -211,14 +257,14 @@ def CurrentComponents():
     return dispatcher["CurrentComponents"]()
 
 
-def _defaultCurrentComponents():
+def _defaultCurrentComponents() -> Tuple[BaseComponent, ...]:
     glyph = CurrentGlyph()
     if glyph is None:
         return ()
     return glyph.selectedComponents
 
 
-def CurrentAnchors():
+def CurrentAnchors() -> Tuple[BaseAnchor, ...]:
     """
     Get the "currently" selected anchors from :func:`CurrentGlyph`.
 
@@ -233,14 +279,14 @@ def CurrentAnchors():
     return dispatcher["CurrentAnchors"]()
 
 
-def _defaultCurrentAnchors():
+def _defaultCurrentAnchors() -> Tuple[BaseAnchor, ...]:
     glyph = CurrentGlyph()
     if glyph is None:
         return ()
     return glyph.selectedAnchors
 
 
-def CurrentGuidelines():
+def CurrentGuidelines() -> Tuple[BaseGuideline, ...]:
     """
     Get the "currently" selected guidelines from :func:`CurrentGlyph`.
     This will include both font level and glyph level guidelines.
@@ -256,7 +302,7 @@ def CurrentGuidelines():
     return dispatcher["CurrentGuidelines"]()
 
 
-def _defaultCurrentGuidelines():
+def _defaultCurrentGuidelines() -> Tuple[BaseGuideline, ...]:
     guidelines = []
     font = CurrentFont()
     if font is not None:
@@ -267,7 +313,7 @@ def _defaultCurrentGuidelines():
     return tuple(guidelines)
 
 
-def AllFonts(sortOptions=None):
+def AllFonts(sortOptions: Optional[CollectionType[str]] = None) -> BaseFontList:
     """
     Get a list of all open fonts. Optionally, provide a
     value for ``sortOptions`` to sort the fonts. See
@@ -295,11 +341,11 @@ def AllFonts(sortOptions=None):
     return fontList
 
 
-def RFont(path=None, showInterface=True):
+def RFont(path: Optional[str] = None, showInterface: bool = True) -> fontshell.RFont:
     return dispatcher["RFont"](pathOrObject=path, showInterface=showInterface)
 
 
-def RGlyph():
+def RGlyph() -> fontshell.RGlyph:
     return dispatcher["RGlyph"]()
 
 
@@ -308,7 +354,7 @@ def RGlyph():
 # ---------
 
 
-def FontList(fonts=None):
+def FontList(fonts: Optional[Iterable[T]] = None):
     """
     Get a list with font specific methods.
 
@@ -329,7 +375,7 @@ def FontList(fonts=None):
 class BaseFontList(list):
     # Sort
 
-    def sortBy(self, sortOptions, reverse=False):
+    def sortBy(self, sortOptions: SortOptionType, reverse: bool = False) -> None:
         """
         Sort ``fonts`` with the ordering preferences defined
         by ``sortBy``. ``sortBy`` must be one of the following:
@@ -418,7 +464,6 @@ class BaseFontList(list):
 
             >>> fonts.sortBy("magic")
         """
-        from types import FunctionType
 
         valueGetters = dict(
             familyName=_sortValue_familyName,
@@ -433,7 +478,7 @@ class BaseFontList(list):
         if isinstance(sortOptions, str) or isinstance(sortOptions, FunctionType):
             sortOptions = [sortOptions]
         if not isinstance(sortOptions, (list, tuple)):
-            raise ValueError("sortOptions must a string, list or function.")
+            raise ValueError("sortOptions must be a string, list or function.")
         if not sortOptions:
             raise ValueError("At least one sort option must be defined.")
         if sortOptions == ["magic"]:
@@ -449,12 +494,14 @@ class BaseFontList(list):
         for originalIndex, font in enumerate(self):
             sortable = []
             for valueName in sortOptions:
+                value = None
                 if isinstance(valueName, FunctionType):
                     value = valueName(font)
-                elif valueName in valueGetters:
-                    value = valueGetters[valueName](font)
-                elif hasattr(font.info, valueName):
-                    value = getattr(font.info, valueName)
+                elif isinstance(valueName, str):
+                    if valueName in valueGetters:
+                        value = valueGetters[valueName](font)
+                    elif hasattr(font.info, valueName):
+                        value = getattr(font.info, valueName)
                 else:
                     raise ValueError(f"Unknown sort option: {repr(valueName)}")
                 sortable.append(value)
@@ -470,7 +517,10 @@ class BaseFontList(list):
 
     # Search
 
-    def getFontsByFontInfoAttribute(self, *attributeValuePairs):
+    def getFontsByFontInfoAttribute(
+            self,
+            *attributeValuePairs: Tuple[str, InfoType]
+    ) -> BaseFontList:
         """
         Get a list of fonts that match the (attribute, value)
         combinations in ``attributeValuePairs``.
@@ -487,7 +537,11 @@ class BaseFontList(list):
             found = self._matchFontInfoAttributes(found, (attr, value))
         return found
 
-    def _matchFontInfoAttributes(self, fonts, attributeValuePair):
+    def _matchFontInfoAttributes(
+            self,
+            fonts: BaseFontList,
+            attributeValuePair: Tuple[str, InfoType]
+    ) -> BaseFontList:
         found = self.__class__()
         attr, value = attributeValuePair
         for font in fonts:
@@ -495,21 +549,25 @@ class BaseFontList(list):
                 found.append(font)
         return found
 
-    def getFontsByFamilyName(self, familyName):
+    def getFontsByFamilyName(self, familyName: str) -> BaseFontList:
         """
         Get a list of fonts that match ``familyName``.
         This will return an instance of :class:`BaseFontList`.
         """
         return self.getFontsByFontInfoAttribute(("familyName", familyName))
 
-    def getFontsByStyleName(self, styleName):
+    def getFontsByStyleName(self, styleName: str) -> BaseFontList:
         """
         Get a list of fonts that match ``styleName``.
         This will return an instance of :class:`BaseFontList`.
         """
         return self.getFontsByFontInfoAttribute(("styleName", styleName))
 
-    def getFontsByFamilyNameStyleName(self, familyName, styleName):
+    def getFontsByFamilyNameStyleName(
+            self,
+            familyName: str,
+            styleName: str
+    ) -> BaseFontList:
         """
         Get a list of fonts that match ``familyName`` and ``styleName``.
         This will return an instance of :class:`BaseFontList`.
@@ -519,7 +577,7 @@ class BaseFontList(list):
         )
 
 
-def _sortValue_familyName(font):
+def _sortValue_familyName(font: BaseFont) -> str:
     """
     Returns font.info.familyName.
     """
@@ -529,7 +587,7 @@ def _sortValue_familyName(font):
     return value
 
 
-def _sortValue_styleName(font):
+def _sortValue_styleName(font: BaseFont) -> str:
     """
     Returns font.info.styleName.
     """
@@ -539,7 +597,7 @@ def _sortValue_styleName(font):
     return value
 
 
-def _sortValue_isRoman(font):
+def _sortValue_isRoman(font: BaseFont) -> int:
     """
     Returns 0 if the font is roman.
     Returns 1 if the font is not roman.
@@ -550,7 +608,7 @@ def _sortValue_isRoman(font):
     return 1
 
 
-def _sortValue_isItalic(font):
+def _sortValue_isItalic(font: BaseFont) -> int:
     """
     Returns 0 if the font is italic.
     Returns 1 if the font is not italic.
@@ -564,7 +622,7 @@ def _sortValue_isItalic(font):
     return 1
 
 
-def _sortValue_widthValue(font):
+def _sortValue_widthValue(font: BaseFont) -> int:
     """
     Returns font.info.openTypeOS2WidthClass.
     """
@@ -574,7 +632,7 @@ def _sortValue_widthValue(font):
     return value
 
 
-def _sortValue_weightValue(font):
+def _sortValue_weightValue(font: BaseFont) -> int:
     """
     Returns font.info.openTypeOS2WeightClass.
     """
@@ -584,7 +642,7 @@ def _sortValue_weightValue(font):
     return value
 
 
-def _sortValue_isProportional(font):
+def _sortValue_isProportional(font: BaseFont) -> int:
     """
     Returns 0 if the font is proportional.
     Returns 1 if the font is not proportional.
@@ -595,7 +653,7 @@ def _sortValue_isProportional(font):
     return 1
 
 
-def _sortValue_isMonospace(font):
+def _sortValue_isMonospace(font: BaseFont) -> int:
     """
     Returns 0 if the font is monospace.
     Returns 1 if the font is not monospace.
@@ -619,14 +677,15 @@ def _sortValue_isMonospace(font):
 # ----------
 
 
-class _EnvironmentDispatcher(object):
-    def __init__(self, registryItems):
-        self._registry = {item: None for item in registryItems}
+class _EnvironmentDispatcher:
 
-    def __setitem__(self, name, func):
+    def __init__(self, registryItems: CollectionType[str]) -> None:
+        self._registry: RegistryType = {item: None for item in registryItems}
+
+    def __setitem__(self, name: str, func: Optional[Callable]) -> None:
         self._registry[name] = func
 
-    def __getitem__(self, name):
+    def __getitem__(self, name: str) -> Callable:
         func = self._registry[name]
         if func is None:
             raise NotImplementedError
@@ -664,6 +723,8 @@ dispatcher = _EnvironmentDispatcher(
         "RKerning",
         "RLib",
     ]
+
+
 )
 
 # Register the default functions.
@@ -685,11 +746,13 @@ try:
 
     # OpenFonts
 
-    dispatcher["OpenFontsFileExtensions"] = [".ufo"]
+    dispatcher["OpenFontsFileExtensions"] = lambda: [".ufo"]
 
     # OpenFont, RFont
 
-    def _fontshellRFont(pathOrObject=None, showInterface=True):
+    def _fontshellRFont(
+        pathOrObject: Optional[Union[str, BaseFont]] = None,
+            showInterface: bool = True) -> fontshell.RFont:
         return fontshell.RFont(pathOrObject=pathOrObject, showInterface=showInterface)
 
     dispatcher["OpenFont"] = _fontshellRFont
@@ -697,7 +760,11 @@ try:
 
     # NewFont
 
-    def _fontshellNewFont(familyName=None, styleName=None, showInterface=True):
+    def _fontshellNewFont(
+            familyName: Optional[str] = None,
+            styleName: Optional[str] = None,
+            showInterface: bool = True
+    ) -> fontshell.RFont:
         font = fontshell.RFont(showInterface=showInterface)
         if familyName is not None:
             font.info.familyName = familyName
