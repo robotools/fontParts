@@ -2,9 +2,7 @@
 from __future__ import annotations
 import os
 import glob
-from typing import (
-    TYPE_CHECKING, Callable, Dict, Iterable, Optional, Tuple, Union
-)
+from typing import TYPE_CHECKING, Callable, Dict, Iterable, Optional, Tuple, Union
 from collections.abc import Generator
 from types import FunctionType
 
@@ -32,7 +30,7 @@ BaseTypes = Union[
     "BaseComponent",
     "BaseAnchor",
     "BaseGuideline",
-    "BaseFontList"
+    "BaseFontList",
 ]
 RegistryType = Dict[str, Optional[Callable[[], BaseTypes]]]
 InfoType = Union[str, int, float, bool]
@@ -40,8 +38,8 @@ InfoType = Union[str, int, float, bool]
 
 def OpenFonts(
     directory: Optional[Union[str, CollectionType[str]]] = None,
-        showInterface: bool = True,
-        fileExtensions: Optional[CollectionType[str]] = None
+    showInterface: bool = True,
+    fileExtensions: Optional[CollectionType[str]] = None,
 ) -> Generator[BaseFont]:
     """
     Open all fonts with the given **fileExtensions** located in
@@ -112,9 +110,10 @@ def OpenFont(path: str, showInterface: bool = True) -> BaseFont:
 
 
 def NewFont(
-        familyName: Optional[str] = None,
-        styleName: Optional[str] = None,
-        showInterface: bool = True) -> BaseFont:
+    familyName: Optional[str] = None,
+    styleName: Optional[str] = None,
+    showInterface: bool = True,
+) -> BaseFont:
     """
     Create a new font. **familyName** will be assigned
     to ``font.info.familyName`` and **styleName**
@@ -518,8 +517,7 @@ class BaseFontList(list):
     # Search
 
     def getFontsByFontInfoAttribute(
-            self,
-            *attributeValuePairs: Tuple[str, InfoType]
+        self, *attributeValuePairs: Tuple[str, InfoType]
     ) -> BaseFontList:
         """
         Get a list of fonts that match the (attribute, value)
@@ -538,9 +536,7 @@ class BaseFontList(list):
         return found
 
     def _matchFontInfoAttributes(
-            self,
-            fonts: BaseFontList,
-            attributeValuePair: Tuple[str, InfoType]
+        self, fonts: BaseFontList, attributeValuePair: Tuple[str, InfoType]
     ) -> BaseFontList:
         found = self.__class__()
         attr, value = attributeValuePair
@@ -564,9 +560,7 @@ class BaseFontList(list):
         return self.getFontsByFontInfoAttribute(("styleName", styleName))
 
     def getFontsByFamilyNameStyleName(
-            self,
-            familyName: str,
-            styleName: str
+        self, familyName: str, styleName: str
     ) -> BaseFontList:
         """
         Get a list of fonts that match ``familyName`` and ``styleName``.
@@ -678,7 +672,6 @@ def _sortValue_isMonospace(font: BaseFont) -> int:
 
 
 class _EnvironmentDispatcher:
-
     def __init__(self, registryItems: CollectionType[str]) -> None:
         self._registry: RegistryType = {item: None for item in registryItems}
 
@@ -723,8 +716,6 @@ dispatcher = _EnvironmentDispatcher(
         "RKerning",
         "RLib",
     ]
-
-
 )
 
 # Register the default functions.
@@ -751,8 +742,8 @@ try:
     # OpenFont, RFont
 
     def _fontshellRFont(
-        pathOrObject: Optional[Union[str, BaseFont]] = None,
-            showInterface: bool = True) -> fontshell.RFont:
+        pathOrObject: Optional[Union[str, BaseFont]] = None, showInterface: bool = True
+    ) -> fontshell.RFont:
         return fontshell.RFont(pathOrObject=pathOrObject, showInterface=showInterface)
 
     dispatcher["OpenFont"] = _fontshellRFont
@@ -761,9 +752,9 @@ try:
     # NewFont
 
     def _fontshellNewFont(
-            familyName: Optional[str] = None,
-            styleName: Optional[str] = None,
-            showInterface: bool = True
+        familyName: Optional[str] = None,
+        styleName: Optional[str] = None,
+        showInterface: bool = True,
     ) -> fontshell.RFont:
         font = fontshell.RFont(showInterface=showInterface)
         if familyName is not None:
