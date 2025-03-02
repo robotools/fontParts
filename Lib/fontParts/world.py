@@ -44,17 +44,17 @@ def OpenFonts(
     """Open all fonts located in the specified directories.
 
     The fonts are located within the directory using the :mod:`glob` module.
-    The patterns are created with ``os.path.join(directory, "*" + fileExtension)`` 
+    The patterns are created with ``os.path.join(directory, "*" + fileExtension)``
     for every file extension in `fileExtensions`.
 
-    :param directory: The optional directory :class:`str` or the :class:`list` 
-        or :class:`tuple`  of directories to search for fonts. If :obj:`None` (default), 
+    :param directory: The optional directory :class:`str` or the :class:`list`
+        or :class:`tuple`  of directories to search for fonts. If :obj:`None` (default),
         a dialog for selecting a directory will be opened.
-    :param showInterface: A :class:`bool` indicating whether to show the graphical 
-        interface. If :obj:`False`, the font should be opened without a graphical 
+    :param showInterface: A :class:`bool` indicating whether to show the graphical
+        interface. If :obj:`False`, the font should be opened without a graphical
         interface. Defaults to :obj:`True`.
-    :param fileExtensions: The optional file extensions to search for as a :class:`list`  
-        or :class:`tuple` of :class:`str` items. If :obj:`None` (default), the default 
+    :param fileExtensions: The optional file extensions to search for as a :class:`list`
+        or :class:`tuple` of :class:`str` items. If :obj:`None` (default), the default
         file extensions will be used.
     :return: A :class:`generator` yielding the opened fonts.
 
@@ -100,8 +100,8 @@ def OpenFont(path: str, showInterface: bool = True) -> BaseFont:
     """Open font located at the specified path.
 
     :param path: The path to the font file to be opened as a :class:`str`
-    :param showInterface: A :class:`bool` indicating whether to show the graphical 
-        interface. If :obj:`False`, the font should be opened without a graphical 
+    :param showInterface: A :class:`bool` indicating whether to show the graphical
+        interface. If :obj:`False`, the font should be opened without a graphical
         interface. Defaults to :obj:`True`.
     :return: The newly opened :class:`BaseFont` instance.
 
@@ -121,14 +121,14 @@ def NewFont(
     styleName: Optional[str] = None,
     showInterface: bool = True,
 ) -> BaseFont:
-    """Create a new font. 
+    """Create a new font.
 
-    :param familyName: The optional :attr:`BaseInfo.familyName` to apply to the font as 
+    :param familyName: The optional :attr:`BaseInfo.familyName` to apply to the font as
         a :class:`str`.
-    :param styleName: The optional :attr:`BaseInfo.styleName` to apply to the font as 
+    :param styleName: The optional :attr:`BaseInfo.styleName` to apply to the font as
         a :class:`str`.
-    :param showInterface: A :class:`bool` indicating whether to show the graphical 
-        interface. If :obj:`False`, the font should be opened without a graphical 
+    :param showInterface: A :class:`bool` indicating whether to show the graphical
+        interface. If :obj:`False`, the font should be opened without a graphical
         interface. Defaults to :obj:`True`.
     :return: The newly created :class:`BaseFont` instance.
 
@@ -149,7 +149,7 @@ def NewFont(
 def CurrentFont() -> BaseFont:
     """Get the currently active font.
 
-    :return: A :class:`BaseFont` subclass instance representing the currently active 
+    :return: A :class:`BaseFont` subclass instance representing the currently active
         font.
 
     """
@@ -190,7 +190,7 @@ def CurrentLayer() -> BaseLayer:
 def CurrentContours() -> Tuple[BaseContour, ...]:
     """Get the currently selected contours from :func:`CurrentGlyph`.
 
-    :return: A :class:`tuple` of :class:`BaseContour` subclass instances representing 
+    :return: A :class:`tuple` of :class:`BaseContour` subclass instances representing
         the currently selected glyph contours.
 
     Example::
@@ -213,7 +213,7 @@ def _defaultCurrentContours() -> Tuple[BaseContour, ...]:
 def CurrentSegments() -> Tuple[BaseSegment, ...]:
     """Get the currently selected segments from :func:`CurrentContours`.
 
-    :return: A :class:`tuple` of :class:`BaseSegments` subclass instances representing 
+    :return: A :class:`tuple` of :class:`BaseSegments` subclass instances representing
         the currently selected contour segments.
 
     Example::
@@ -239,7 +239,7 @@ def _defaultCurrentSegments() -> Tuple[BaseSegment, ...]:
 def CurrentPoints() -> Tuple[BasePoint, ...]:
     """Get the currently selected points from :func:`CurrentContours`.
 
-    :return: A :class:`tuple` of :class:`BasePoint` subclass instances representing 
+    :return: A :class:`tuple` of :class:`BasePoint` subclass instances representing
         the currently selected contour points.
 
     Example::
@@ -265,7 +265,7 @@ def _defaultCurrentPoints() -> Tuple[BasePoint, ...]:
 def CurrentComponents() -> Tuple[BaseComponent, ...]:
     """Get the currently selected components from :func:`CurrentGlyph`.
 
-    :return: A :class:`tuple` of :class:`BaseComponent` subclass instances representing 
+    :return: A :class:`tuple` of :class:`BaseComponent` subclass instances representing
         the currently selected glyph components.
 
     Example::
@@ -289,7 +289,7 @@ def _defaultCurrentComponents() -> Tuple[BaseComponent, ...]:
 def CurrentAnchors() -> Tuple[BaseAnchor, ...]:
     """Get the currently selected anchors from :func:`CurrentGlyph`.
 
-    :return: A :class:`tuple` of :class:`BaseAnchor` subclass instances representing 
+    :return: A :class:`tuple` of :class:`BaseAnchor` subclass instances representing
         the currently selected glyph anchors.
 
     Example::
@@ -314,7 +314,7 @@ def CurrentGuidelines() -> Tuple[BaseGuideline, ...]:
 
     This will include both font level and glyph level guidelines.
 
-    :return: A :class:`tuple` of :class:`BaseGuideline` subclass instances representing 
+    :return: A :class:`tuple` of :class:`BaseGuideline` subclass instances representing
         the currently selected guidelines.
 
     Example::
@@ -339,12 +339,12 @@ def _defaultCurrentGuidelines() -> Tuple[BaseGuideline, ...]:
 
 
 def AllFonts(sortOptions: Optional[CollectionType[str]] = None) -> BaseFontList:
-    """Get a list of all open fonts. 
+    """Get a list of all open fonts.
 
     Optionally, provide a value for `sortOptions` to sort the fonts. See
     :meth:`BaseFontList.sortBy` for options.
 
-    :param sortOptions: The optional :class:`list` or :class:`tuple` of :class:`str` 
+    :param sortOptions: The optional :class:`list` or :class:`tuple` of :class:`str`
         sort options to apply to the list. Defaults to :obj:`None`.
     :return: A :class:`BaseFontList` instance representing all open fonts.
 
@@ -466,6 +466,7 @@ class BaseFontList(list):
             def glyph_count_sort(font):
                 return len(font)
 
+
             fonts.sortBy(glyph_count_sort)
 
         A :class:`list` or :class:`tuple` of sort descriptions and/or sort functions
@@ -565,11 +566,11 @@ class BaseFontList(list):
         r"""Get a list of fonts that match the specified attribute-value pairs.
 
         This method filters fonts based on one or more ``(attribute, value)`` pairs.
-        When multiple pairs are provided, only fonts that satisfy all conditions are 
+        When multiple pairs are provided, only fonts that satisfy all conditions are
         included.
 
         :param \*attributeValuePairs: The attribute-value pairs to search
-            for as :class:`tuple` instances, each containing a font attribute name 
+            for as :class:`tuple` instances, each containing a font attribute name
             as a :class:`str` and the expected value.
         :return: A :class:`BaseFontList` instance containing the matching fonts.
 
@@ -597,7 +598,7 @@ class BaseFontList(list):
     def getFontsByFamilyName(self, familyName: str) -> BaseFontList:
         """Get a list of fonts that match the provided family name.
 
-        :param familyName: The :attr:`BaseInfo.familyName` to search for as 
+        :param familyName: The :attr:`BaseInfo.familyName` to search for as
             a :class:`str`.
         :return: A :class:`BaseFontList` instance containing the matching fonts.
 
@@ -607,7 +608,7 @@ class BaseFontList(list):
     def getFontsByStyleName(self, styleName: str) -> BaseFontList:
         """Get a list of fonts that match the provided style name.
 
-        :param styleName: The :attr:`BaseInfo.styleName` to search for as 
+        :param styleName: The :attr:`BaseInfo.styleName` to search for as
             a :class:`str`.
         :return: A :class:`BaseFontList` instance containing the matching fonts.
 
@@ -619,9 +620,9 @@ class BaseFontList(list):
     ) -> BaseFontList:
         """Get a list of fonts that match the provided family name and style name.
 
-        :param familyName: The :attr:`BaseInfo.familyName` to search for as 
+        :param familyName: The :attr:`BaseInfo.familyName` to search for as
             a :class:`str`.
-        :param styleName: The :attr:`BaseInfo.styleName` to search for as 
+        :param styleName: The :attr:`BaseInfo.styleName` to search for as
             a :class:`str`.
         :return: A :class:`BaseFontList` instance containing the matching fonts.
 
