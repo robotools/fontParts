@@ -493,9 +493,9 @@ class BaseFontList(list):
 
 
         :param sortOptions: The sorting option(s), given as a single :class:`str`,
-            :class:`FunctionType`, or a :class:`list` or :class:`tuple` of several. 
+            :class:`FunctionType`, or a :class:`list` or :class:`tuple` of several.
         :param reverse: Whether to reverse the sort order. Defaults to :obj:`False`.
-        :raises TypeError: If `sortOptions` is not a :class:`str`, 
+        :raises TypeError: If `sortOptions` is not a :class:`str`,
             :class:`FunctionType`, :class:`list` or :class:`tuple`.
         :raises ValueError:
             - If `sortOptions` does not conatain any sorting options.
