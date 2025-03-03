@@ -19,7 +19,7 @@ if TYPE_CHECKING:
     from fontParts.base.anchor import BaseAnchor
     from fontParts.base.guideline import BaseGuideline
 
-SortOptionType = Union[str, Callable, CollectionType[Union[str, Callable]]]
+SortOptionType = Union[str, FunctionType, CollectionType[Union[str, FunctionType]]]
 BaseTypes = Union[
     "BaseFont",
     "BaseGlyph",
