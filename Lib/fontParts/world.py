@@ -409,15 +409,16 @@ class BaseFontList(list):
     # Sort
 
     def sortBy(self, sortOptions: SortOptionType, reverse: bool = False) -> None:
-        """Sort items according to specified ordering preferences.
+        """Sort items according to specified options.
 
-        Sorting preferences may be defined as follows:
+        Sorting options may be defined as follows:
 
         - A :ref:`sort description <sort-descriptions>` as a :class:`str`
         - A :ref:`font info attribute name` <info-attributes` as a :class:`str`
         - A custom `sort value function <sort-value-function>`
         - A :class:`list` or :class:`tuple` containing a mix of any of the above
         - The special keyword ``"magic"`` (see :ref:`magic-sorting`)
+
 
         .. _sort-descriptions:
 
@@ -446,6 +447,7 @@ class BaseFontList(list):
         | ``"isProportional"`` | Sort proportional before monospaced. |
         +----------------------+--------------------------------------+
 
+
         .. _info-attributes:
 
         Font Info Attribute Names
@@ -454,6 +456,7 @@ class BaseFontList(list):
         Any attribute of :class:`BaseInfo` may be used as a sorting criterion.
         For example, sorting by x-height value can be achieved using the
         attribute name ``"xHeight"``.
+
 
         .. _sort-value-function:
 
@@ -471,6 +474,7 @@ class BaseFontList(list):
         A :class:`list` or :class:`tuple` of sort descriptions and/or sort functions
         may be provided to specify sorting precedence, from most to least important.
 
+
         .. _magic-sorting:
 
         Magic Sorting
@@ -486,17 +490,17 @@ class BaseFontList(list):
         #. ``"styleName"``
         #. ``"isRoman"``
 
-        Parameters
-        ----------
 
-        :param sortOptions: The sorting criteria, given as a single :class:`str`,
-            :class:`Callable`, or a :class:`list` or :class:`tuple` of these elements.
+        :param sortOptions: The sorting option(s), given as a single :class:`str`,
+            :class:`FunctionType`, or a :class:`list` or :class:`tuple` of several. 
         :param reverse: Whether to reverse the sort order. Defaults to :obj:`False`.
+        :raises TypeError: If `sortOptions` is not a :class:`str`, 
+            :class:`FunctionType`, :class:`list` or :class:`tuple`.
+        :raises ValueError:
+            - If `sortOptions` does not conatain any sorting options.
+            - If `sortOptions` contains an unrecognized value or value item.
 
-        Examples
-        --------
-
-        ::
+        Example::
 
             from fontParts.world import AllFonts
 
@@ -520,7 +524,7 @@ class BaseFontList(list):
         if isinstance(sortOptions, str) or isinstance(sortOptions, FunctionType):
             sortOptions = [sortOptions]
         if not isinstance(sortOptions, (list, tuple)):
-            raise ValueError("sortOptions must be a string, list or function.")
+            raise TypeError("sortOptions must be a string, list or function.")
         if not sortOptions:
             raise ValueError("At least one sort option must be defined.")
         if sortOptions == ["magic"]:
