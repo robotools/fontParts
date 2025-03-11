@@ -2402,7 +2402,7 @@ class BaseGlyph(
         normalizedOrigin = normalizers.normalizeCoordinateTuple(origin)
         if normalizedOrigin != (0, 0) and (width or height):
             raise FontPartsError(
-                ("The origin must not be set when " "scaling the width or height.")
+                ("The origin must not be set when scaling the width or height.")
             )
         super(BaseGlyph, self).scaleBy(normalizedValue, origin=normalizedOrigin)
         sX, sY = normalizedValue

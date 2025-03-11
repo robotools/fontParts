@@ -92,7 +92,11 @@ class BaseCompatibilityReporter(object):
         return f"[OK] {self.objectName}: " + text
 
     @staticmethod
-    def reportSubObjects(reporters: Sequence[BaseCompatibilityReporter], showOK: bool = True, showWarnings: bool = True) -> List[str]:
+    def reportSubObjects(
+        reporters: Sequence[BaseCompatibilityReporter],
+        showOK: bool = True,
+        showWarnings: bool = True,
+    ) -> List[str]:
         report = []
         for reporter in reporters:
             if showOK or reporter.fatal or (showWarnings and reporter.warning):
@@ -101,20 +105,30 @@ class BaseCompatibilityReporter(object):
 
     @staticmethod
     def reportCountDifference(
-        subObjectName: str, object1Name: str, object1Count: int, object2Name: str, object2Count: int
+        subObjectName: str,
+        object1Name: str,
+        object1Count: int,
+        object2Name: str,
+        object2Count: int,
     ) -> str:
         text = f"{object1Name} contains {object1Count} {subObjectName} | {object2Name} contains {object2Count} {subObjectName}"
         return text
 
     @staticmethod
     def reportOrderDifference(
-        subObjectName: str, object1Name: str, object1Order: List[str], object2Name: str, object2Order: List[str]
+        subObjectName: str,
+        object1Name: str,
+        object1Order: List[str],
+        object2Name: str,
+        object2Order: List[str],
     ) -> str:
         text = f"{object1Name} has {subObjectName} ordered {object1Order} | {object2Name} has {object2Order}"
         return text
 
     @staticmethod
-    def reportDifferences(object1Name: str, subObjectName: str, subObjectID: str, object2Name: str) -> str:
+    def reportDifferences(
+        object1Name: str, subObjectName: str, subObjectID: str, object2Name: str
+    ) -> str:
         text = (
             f"{object1Name} contains {subObjectName} {subObjectID} not in {object2Name}"
         )
