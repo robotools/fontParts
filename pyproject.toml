@@ -11,3 +11,9 @@ target-version = "py39"
 [tool.ruff.format]
 # Enable reformatting of code snippets in docstrings.
 docstring-code-format = true
+
+[tool.mypy]
+files = "Lib/fontParts"
+strict = false
+ignore_missing_imports = true
+
