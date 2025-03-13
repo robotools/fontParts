@@ -8,7 +8,7 @@ on:
       - 'v1'
 
 jobs:
-  ruff:
+  mypy:
     runs-on: ubuntu-latest
 
     steps:
