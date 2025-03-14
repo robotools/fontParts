@@ -1,7 +1,7 @@
 on: [push, pull_request]
 
 jobs:
-    lint_and_mypy:
+    lint:
         runs-on: ubuntu-latest
 
         steps:
@@ -12,6 +12,12 @@ jobs:
           with:
             args: "format --check"
 
+    mypy:
+        runs-on: ubuntu-latest
+
+        steps:
+        - name: Checkout
+          uses: actions/checkout@v4		
         - name: Set up Python
           uses: actions/setup-python@v5
           with:
