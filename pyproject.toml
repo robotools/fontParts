@@ -8,9 +8,27 @@ write_to_template = '__version__ = "{version}"'
 [tool.ruff]
 target-version = "py39"
 
+
+[tool.ruff.lint]
+select = [
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+]
+
 [tool.ruff.format]
 # Enable reformatting of code snippets in docstrings.
 docstring-code-format = true
+skip-magic-trailing-comma = true
 
 [tool.mypy]
 files = "Lib/fontParts"

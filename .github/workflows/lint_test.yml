@@ -7,9 +7,17 @@ jobs:
         steps:
         - name: Checkout
           uses: actions/checkout@v4
-        - name: Ruff checks
+
+        - name: Ruff lint check
           uses: astral-sh/ruff-action@v3
           with:
+            version: "latest"
+            src: "./Lib"
+
+        - name: Ruff format check
+          uses: astral-sh/ruff-action@v3
+          with:
+            version: "latest"
             args: "format --check"
 
     mypy:
@@ -21,7 +29,7 @@ jobs:
         - name: Set up Python
           uses: actions/setup-python@v5
           with:
-            python-version: '3.9'
+            python-version: '3.12'
 
         - name: Install dependencies
           run: |
