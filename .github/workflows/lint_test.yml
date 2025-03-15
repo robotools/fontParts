@@ -13,11 +13,7 @@ jobs:
           with:
             version: "latest"
             src: "./Lib"
-	
-    lint_format:
-        runs-on: ubuntu-latest
 
-        steps:
         - name: Ruff format check
           uses: astral-sh/ruff-action@v3
           with:
