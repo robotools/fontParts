@@ -58,9 +58,7 @@ class RLayer(RBaseObject, BaseLayer):
         return value
 
     def _set_color(
-            self,
-            value: Optional[QuadrupleCollectionType[IntFloatType]],
-            **kwargs: Any
+        self, value: Optional[QuadrupleCollectionType[IntFloatType]], **kwargs: Any
     ) -> None:
         self._getNaked().color = value
 

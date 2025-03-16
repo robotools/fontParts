@@ -9,7 +9,7 @@ from fontParts.base.annotations import (
     SextupleType,
     QuadrupleCollectionType,
     SextupleCollectionType,
-    IntFloatType
+    IntFloatType,
 )
 from fontParts.fontshell.base import RBaseObject
 
@@ -49,8 +49,7 @@ class RImage(RBaseObject, BaseImage):
         return value
 
     def _set_color(
-        self,
-        value: Optional[QuadrupleCollectionType[IntFloatType]]
+        self, value: Optional[QuadrupleCollectionType[IntFloatType]]
     ) -> None:
         if self.font is None:
             self._orphanColor = value

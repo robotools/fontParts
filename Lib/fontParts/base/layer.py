@@ -822,7 +822,9 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
             value = Color(value)
         return value
 
-    def _set_base_color(self, value: Optional[QuadrupleCollectionType[IntFloatType]]) -> None:
+    def _set_base_color(
+        self, value: Optional[QuadrupleCollectionType[IntFloatType]]
+    ) -> None:
         if value is not None:
             value = normalizers.normalizeColor(value)
         self._set_color(value)
