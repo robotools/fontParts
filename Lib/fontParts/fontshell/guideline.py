@@ -6,7 +6,7 @@ from fontParts.base import BaseGuideline
 from fontParts.base.annotations import (
     QuadrupleType,
     QuadrupleCollectionType,
-    IntFloatType
+    IntFloatType,
 )
 from fontParts.fontshell.base import RBaseObject
 

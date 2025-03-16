@@ -6,7 +6,7 @@ from fontParts.base import BaseAnchor
 from fontParts.base.annotations import (
     QuadrupleType,
     QuadrupleCollectionType,
-    IntFloatType
+    IntFloatType,
 )
 from fontParts.fontshell.base import RBaseObject
 
@@ -77,7 +77,6 @@ class RAnchor(RBaseObject, BaseAnchor):
         return self._getNaked().color
 
     def _set_color(
-        self,
-            value: Optional[QuadrupleCollectionType[IntFloatType]]
+        self, value: Optional[QuadrupleCollectionType[IntFloatType]]
     ) -> None:
         self._getNaked().color = value
