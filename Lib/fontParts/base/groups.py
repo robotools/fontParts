@@ -18,9 +18,9 @@ from fontParts.base.annotations import CollectionType
 
 if TYPE_CHECKING:
     from fontParts.base.font import BaseFont
-    from fontparts.base import BaseItems
-    from fontparts.base import BaseKeys
-    from fontparts.base import BaseValues
+    from fontParts.base.base import BaseKeys
+    from fontParts.base.base import BaseItems
+    from fontParts.base.base import BaseValues
 
 ValueType = Tuple[str, ...]
 GroupsDict = Dict[str, ValueType]

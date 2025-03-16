@@ -89,5 +89,8 @@ class RGuideline(RBaseObject, BaseGuideline):
             value = tuple(value)
         return value
 
-    def _set_color(self, value: Optional[QuadrupleCollectionType[float]]) -> None:
+    def _set_color(
+            self,
+            value: Optional[QuadrupleCollectionType[IntFloatType]]
+    ) -> None:
         self._getNaked().color = value

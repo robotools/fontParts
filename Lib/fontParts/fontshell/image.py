@@ -8,7 +8,8 @@ from fontParts.base.annotations import (
     QuadrupleType,
     SextupleType,
     QuadrupleCollectionType,
-    SextupleCollectionType
+    SextupleCollectionType,
+    IntFloatType
 )
 from fontParts.fontshell.base import RBaseObject
 
@@ -16,7 +17,7 @@ from fontParts.fontshell.base import RBaseObject
 class RImage(RBaseObject, BaseImage):
     wrapClass = defcon.Image
     _orphanData: Optional[bytes] = None
-    _orphanColor: Optional[QuadrupleCollectionType[float]] = None
+    _orphanColor: Optional[QuadrupleCollectionType[IntFloatType]] = None
 
     def _getNaked(self) -> defcon.Image:
         image = self.naked()
@@ -47,7 +48,10 @@ class RImage(RBaseObject, BaseImage):
             value = tuple(value)
         return value
 
-    def _set_color(self, value: Optional[QuadrupleCollectionType[float]]) -> None:
+    def _set_color(
+        self,
+        value: Optional[QuadrupleCollectionType[IntFloatType]]
+    ) -> None:
         if self.font is None:
             self._orphanColor = value
         else:

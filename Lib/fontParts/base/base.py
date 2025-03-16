@@ -25,7 +25,6 @@ from fontParts.base.errors import FontPartsError
 from fontParts.base import normalizers
 from fontParts.base.annotations import (
     PairType,
-    CollectionType,
     PairCollectionType,
     SextupleCollectionType,
     IntFloatType,

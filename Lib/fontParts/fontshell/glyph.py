@@ -326,7 +326,9 @@ class RGlyph(RBaseObject, BaseGlyph):
             value = tuple(value)
         return value
 
-    def _set_markColor(self, value: Optional[QuadrupleCollectionType[IntFloatType]]) -> None:
+    def _set_markColor(
+            self, value: Optional[QuadrupleCollectionType[IntFloatType]]
+    ) -> None:
         self._getNaked().markColor = value
 
     # Note
