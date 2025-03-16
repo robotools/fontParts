@@ -2401,7 +2401,7 @@ class BaseGlyph(
         normalizedOrigin = normalizers.normalizeCoordinateTuple(origin)
         if normalizedOrigin != (0, 0) and (width or height):
             raise FontPartsError(
-                ("The origin must not be set when " "scaling the width or height.")
+                ("The origin must not be set when scaling the width or height.")
             )
         super(BaseGlyph, self).scaleBy(normalizedValue, origin=normalizedOrigin)
         sX, sY = normalizedValue
@@ -3248,7 +3248,7 @@ class BaseGlyph(
     def _get_image(self) -> Optional[BaseImage]:  # type: ignore[return]
         """Get the image for the native glyph.
 
-        :return: The :class:`BaseImage` subclass instance belonging to the glyph, 
+        :return: The :class:`BaseImage` subclass instance belonging to the glyph,
             or :obj:`None` if the glyph has no image.
         :raises NotImplementedError: If the method has not been overridden by a
             subclass.

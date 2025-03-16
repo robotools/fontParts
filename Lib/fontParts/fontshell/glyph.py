@@ -31,7 +31,7 @@ if TYPE_CHECKING:
     from fontTools.pens.pointPen import SegmentToPointPen
     from defcon.pens.glyphObjectPointPen import (
         GlyphObjectPointPen,
-        GlyphObjectLoadingPointPen
+        GlyphObjectLoadingPointPen,
     )
 
 
@@ -204,7 +204,7 @@ class RGlyph(RBaseObject, BaseGlyph):
         position: Optional[PairCollectionType[IntFloatType]] = None,
         color: Optional[QuadrupleCollectionType[IntFloatType]] = None,
         identifier: Optional[str] = None,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> RAnchor:
         glyph = self._getNaked()
         anchor = self.anchorClass().naked()
@@ -242,7 +242,7 @@ class RGlyph(RBaseObject, BaseGlyph):
         name: Optional[str] = None,
         color: Optional[QuadrupleCollectionType[IntFloatType]] = None,
         identifier: Optional[str] = None,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> RGuideline:
         glyph = self._getNaked()
         guideline = self.guidelineClass().naked()
@@ -326,7 +326,9 @@ class RGlyph(RBaseObject, BaseGlyph):
             value = tuple(value)
         return value
 
-    def _set_markColor(self, value: Optional[QuadrupleCollectionType[IntFloatType]]) -> None:
+    def _set_markColor(
+        self, value: Optional[QuadrupleCollectionType[IntFloatType]]
+    ) -> None:
         self._getNaked().markColor = value
 
     # Note

@@ -7,7 +7,7 @@ from fontParts.base.annotations import (
     CollectionType,
     PairCollectionType,
     QuadrupleCollectionType,
-    IntFloatType
+    IntFloatType,
 )
 from fontParts.base import BaseFont
 from fontParts.fontshell.base import RBaseObject
@@ -43,10 +43,10 @@ class RFont(RBaseObject, BaseFont):
     # Initialize
 
     def _init(
-            self,
-            pathOrObject: Optional[Union[str, os.PathLike, defcon.Font]] = None,
-            showInterface: bool = True,
-            **kwargs: Any
+        self,
+        pathOrObject: Optional[Union[str, os.PathLike, defcon.Font]] = None,
+        showInterface: bool = True,
+        **kwargs: Any,
     ) -> None:
         if self.wrapClass is not None:
             if pathOrObject is None:
@@ -148,9 +148,10 @@ class RFont(RBaseObject, BaseFont):
     # new
 
     def _newLayer(
-            self,
-            name: str,
-            color: Optional[QuadrupleCollectionType[IntFloatType]], **kwargs: Any
+        self,
+        name: str,
+        color: Optional[QuadrupleCollectionType[IntFloatType]],
+        **kwargs: Any,
     ) -> RLayer:
         layers = self._getNaked().layers
         layer = layers.newLayer(name)
@@ -191,7 +192,7 @@ class RFont(RBaseObject, BaseFont):
         name: Optional[str] = None,
         color: Optional[QuadrupleCollectionType[IntFloatType]] = None,
         identifier: Optional[str] = None,
-        **kwargs: Any
+        **kwargs: Any,
     ) -> RGuideline:
         font = self._getNaked()
         guideline = self.guidelineClass().naked()

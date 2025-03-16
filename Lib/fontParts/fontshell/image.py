@@ -8,7 +8,7 @@ from fontParts.base.annotations import (
     QuadrupleType,
     SextupleType,
     QuadrupleCollectionType,
-    SextupleCollectionType
+    SextupleCollectionType,
 )
 from fontParts.fontshell.base import RBaseObject
 
@@ -68,7 +68,6 @@ class RImage(RBaseObject, BaseImage):
         return images[fileName]
 
     def _set_data(self, value: bytes) -> None:
-
         if not isinstance(value, bytes):
             raise FontPartsError("The image data provided is not valid.")
         if not pngValidator(data=value)[0]:
