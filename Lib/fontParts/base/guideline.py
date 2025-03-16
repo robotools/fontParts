@@ -523,7 +523,7 @@ class BaseGuideline(
         """,
     )
 
-    def _get_base_color(self) -> QuadrupleType[float]:
+    def _get_base_color(self) -> Optional[QuadrupleType[float]]:
         value = self._get_color()
         if value is not None:
             value = normalizers.normalizeColor(value)
@@ -535,7 +535,7 @@ class BaseGuideline(
             value = normalizers.normalizeColor(value)
         self._set_color(value)
 
-    def _get_color(self) -> QuadrupleType[float]:
+    def _get_color(self) -> Optional[QuadrupleType[float]]:
         """ "Get the native guideline's color.
 
         This is the environment implementation of the :attr:`BaseGuideline.color`

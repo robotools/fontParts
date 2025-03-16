@@ -295,7 +295,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         self,
         path: Optional[str],
         showProgress: bool,
-        formatVersion: Optional[float],
+        formatVersion: Optional[int],
         fileStructure: Optional[str],
         **kwargs: Any,
     ) -> None:
@@ -883,7 +883,8 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
             self._setFontInLayer(layer)
         return tuple(layers)
 
-    def _get_layers(self, **kwargs: Any) -> Tuple[BaseLayer, ...]:  # type: ignore[return]
+    # type: ignore[return]
+    def _get_layers(self, **kwargs: Any) -> Tuple[BaseLayer, ...]:
         r"""Get the native font's layer objects.
 
         This is the environment implementation of
@@ -1754,7 +1755,8 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         self._setFontInGuideline(guideline)
         return guideline
 
-    def _getGuideline(self, index: int, **kwargs: Any) -> BaseGuideline:  # type: ignore[return]
+    # type: ignore[return]
+    def _getGuideline(self, index: int, **kwargs: Any) -> BaseGuideline:
         r"""Return the guideline at the given index.
 
         :param index: The index of the guideline.
@@ -1848,11 +1850,11 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
 
     def _appendGuideline(  # type: ignore[return]
         self,
-        position: Optional[PairCollectionType[IntFloatType]],
+        position: PairCollectionType[IntFloatType],
         angle: Optional[float],
         name: Optional[str],
         color: Optional[QuadrupleCollectionType[IntFloatType]],
-        **kwargs,
+        **kwargs: Any
     ) -> BaseGuideline:
         r"""Append a new guideline to the native font.
 
