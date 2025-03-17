@@ -880,8 +880,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
             self._setFontInLayer(layer)
         return tuple(layers)
 
-    # type: ignore[return]
-    def _get_layers(self, **kwargs: Any) -> Tuple[BaseLayer, ...]:
+    def _get_layers(self, **kwargs: Any) -> Tuple[BaseLayer, ...]:  # type: ignore[return]
         r"""Get the native font's layer objects.
 
         This is the environment implementation of
@@ -1752,8 +1751,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         self._setFontInGuideline(guideline)
         return guideline
 
-    # type: ignore[return]
-    def _getGuideline(self, index: int, **kwargs: Any) -> BaseGuideline:
+    def _getGuideline(self, index: int, **kwargs: Any) -> BaseGuideline:  # type: ignore[return]
         r"""Return the guideline at the given index.
 
         :param index: The index of the guideline.

@@ -1218,8 +1218,7 @@ class BaseGlyph(
         self._setGlyphInContour(contour)
         return contour
 
-    # type: ignore[return]
-    def _getContour(self, index: int, **kwargs: Any) -> BaseContour:
+    def _getContour(self, index: int, **kwargs: Any) -> BaseContour:  # type: ignore[return]
         r"""Get the contour located at the given index from the native glyph.
 
         :param index: The index of the contour to return as an :class:`int`.
@@ -1455,8 +1454,7 @@ class BaseGlyph(
         self._setGlyphInComponent(component)
         return component
 
-    # type: ignore[return]
-    def _getComponent(self, index: int, **kwargs: Any) -> BaseComponent:
+    def _getComponent(self, index: int, **kwargs: Any) -> BaseComponent:  # type: ignore[return]
         r"""Get the component at the given index from the native glyph.
 
         :param index: The index of the component to return as an :class:`int`.
@@ -1732,8 +1730,7 @@ class BaseGlyph(
         self._setGlyphInAnchor(anchor)
         return anchor
 
-    # type: ignore[return]
-    def _getAnchor(self, index: int, **kwargs: Any) -> BaseAnchor:
+    def _getAnchor(self, index: int, **kwargs: Any) -> BaseAnchor:  # type: ignore[return]
         r"""Get the anchor at the given index from the native glyph.
 
         :param index: The index of the anchor to get as an :class:`int`.
@@ -1979,8 +1976,7 @@ class BaseGlyph(
         self._setGlyphInGuideline(guideline)
         return guideline
 
-    # type: ignore[return]
-    def _getGuideline(self, index: int, **kwargs: Any) -> BaseGuideline:
+    def _getGuideline(self, index: int, **kwargs: Any) -> BaseGuideline:  # type: ignore[return]
         r"""Get the anchor at the given index from the native glyph.
 
         :param index: The index of the guideline to get as an :class:`int`.
@@ -3420,8 +3416,7 @@ class BaseGlyph(
             value = normalizers.normalizeColor(value)
         self._set_markColor(value)
 
-    # type: ignore[return]
-    def _get_markColor(self) -> Optional[QuadrupleCollectionType[IntFloatType]]:
+    def _get_markColor(self) -> Optional[QuadrupleCollectionType[IntFloatType]]:  # type: ignore[return]
         """Get the glyph's mark color.
 
         This is the environment implementation of
