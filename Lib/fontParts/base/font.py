@@ -275,7 +275,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         """
         if path is None and self.path is None:
             raise IOError(
-                ("The font cannot be saved because no file " "location has been given.")
+                ("The font cannot be saved because no file location has been given.")
             )
         if path is not None:
             path = normalizers.normalizeFilePath(path)
@@ -295,7 +295,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         self,
         path: Optional[str],
         showProgress: bool,
-        formatVersion: Optional[float],
+        formatVersion: Optional[int],
         fileStructure: Optional[str],
         **kwargs: Any,
     ) -> None:
@@ -468,10 +468,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         ext = self.generateFormatToExtension(format, "." + format)
         if path is None and self.path is None:
             raise IOError(
-                (
-                    "The file cannot be generated because an "
-                    "output path was not defined."
-                )
+                ("The file cannot be generated because an output path was not defined.")
             )
         elif path is None:
             path = os.path.splitext(self.path)[0]
@@ -1848,11 +1845,11 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
 
     def _appendGuideline(  # type: ignore[return]
         self,
-        position: Optional[PairCollectionType[IntFloatType]],
+        position: PairCollectionType[IntFloatType],
         angle: Optional[float],
         name: Optional[str],
         color: Optional[QuadrupleCollectionType[IntFloatType]],
-        **kwargs,
+        **kwargs: Any,
     ) -> BaseGuideline:
         r"""Append a new guideline to the native font.
 

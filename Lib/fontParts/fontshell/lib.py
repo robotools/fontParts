@@ -1,22 +1,34 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING, Any
+
 import defcon
 from fontParts.base import BaseLib
 from fontParts.fontshell.base import RBaseObject
+
+if TYPE_CHECKING:
+    from collections.abc import ItemsView
 
 
 class RLib(RBaseObject, BaseLib):
     wrapClass = defcon.Lib
 
-    def _items(self):
-        return self.naked().items()
+    def _getNaked(self) -> defcon.Lib:
+        lib = self.naked()
+        if lib is None:
+            raise ValueError("Lib cannot be None.")
+        return lib
 
-    def _contains(self, key):
-        return key in self.naked()
+    def _items(self) -> ItemsView[str, Any]:
+        return self._getNaked().items()
 
-    def _setItem(self, key, value):
-        self.naked()[key] = value
+    def _contains(self, key: str) -> bool:
+        return key in self._getNaked()
 
-    def _getItem(self, key):
-        return self.naked()[key]
+    def _setItem(self, key: str, value: Any) -> None:
+        self._getNaked()[key] = value
 
-    def _delItem(self, key):
-        del self.naked()[key]
+    def _getItem(self, key: str) -> Any:
+        return self._getNaked()[key]
+
+    def _delItem(self, key: str) -> None:
+        del self._getNaked()[key]
