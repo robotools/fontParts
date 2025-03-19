@@ -103,7 +103,19 @@ class BaseGuideline(
     # Layer
 
     layer: dynamicProperty = dynamicProperty(
-        "layer", "The guideline's parent :class:`BaseLayer`."
+        "layer",
+        """Get the guideline's parent layer object.
+
+        This property is read-only.
+
+        :return: The :class:`BaseLayer` instance containing the guideline
+            or :obj:`None`.
+
+        Example::
+
+            >>> layer = guideline.layer
+
+        """,
     )
 
     def _get_layer(self) -> Optional[BaseLayer]:
@@ -366,7 +378,7 @@ class BaseGuideline(
         """
         self.raiseNotImplementedError()
 
-    def _set_angle(self, value: Optional[IntFloatType]) -> None:
+    def _set_angle(self, value: Optional[float]) -> None:
         """Set the native guideline's angle.
 
         This is the environment implementation of the :attr:`BaseGuideline.angle`
@@ -507,11 +519,11 @@ class BaseGuideline(
 
     color: dynamicProperty = dynamicProperty(
         "base_color",
-        """"Get or set the guideline's color.
+        """Get or set the guideline's color.
 
         The value must be a :ref:`type-color` or :obj:`None`.
 
-        :return: A :ref:`type-color` representing the color of the guideline,
+        :return: A :class:`Color` instance representing the color of the guideline,
             or :obj:`None`.
 
         Example::
@@ -523,27 +535,29 @@ class BaseGuideline(
         """,
     )
 
-    def _get_base_color(self) -> QuadrupleType[float]:
+    def _get_base_color(self) -> Optional[Color]:
         value = self._get_color()
         if value is not None:
-            value = normalizers.normalizeColor(value)
             value = Color(value)
         return value
 
-    def _set_base_color(self, value: QuadrupleCollectionType[IntFloatType]) -> None:
+    def _set_base_color(
+            self,
+            value: Optional[QuadrupleCollectionType[IntFloatType]]
+    ) -> None:
         if value is not None:
             value = normalizers.normalizeColor(value)
         self._set_color(value)
 
-    def _get_color(self) -> QuadrupleType[float]:
-        """ "Get the native guideline's color.
+    def _get_color(self) -> Optional[QuadrupleCollectionType[IntFloatType]]:
+        """Get the native guideline's color.
 
         This is the environment implementation of the :attr:`BaseGuideline.color`
         property getter.
 
         :return: A :ref:`type-color` representing the color of the guideline,
             or :obj:`None`. The value will be normalized
-         with :func:`normalizers.normalizeColor`.
+            with :func:`normalizers.normalizeColor`.
         :raises NotImplementedError: If the method has not been overridden by a
             subclass.
 
@@ -554,10 +568,8 @@ class BaseGuideline(
         """
         self.raiseNotImplementedError()
 
-    def _set_color(self, value: QuadrupleCollectionType[IntFloatType]) -> None:
-        """ "Set the native guideline's color.
-
-        Description
+    def _set_color(self, value: Optional[QuadrupleType[float]]) -> None:
+        """Set the native guideline's color.
 
         This is the environment implementation of the :attr:`BaseGuideline.color`
         property setter.
