@@ -12,18 +12,12 @@ from fontParts.base.deprecated import DeprecatedImage, RemovedImage
 
 
 class BaseImage(
-    BaseObject,
-    TransformationMixin,
-    SelectionMixin,
-    DeprecatedImage,
-    RemovedImage,
+    BaseObject, TransformationMixin, SelectionMixin, DeprecatedImage, RemovedImage
 ):
     copyAttributes = ("transformation", "color", "data")
 
     def _reprContents(self):
-        contents = [
-            f"offset='({self.offset[0]}, {self.offset[1]})'",
-        ]
+        contents = [f"offset='({self.offset[0]}, {self.offset[1]})'"]
         if self.color:
             contents.append(f"color={self.color!r}")
         if self.glyph is not None:

@@ -542,8 +542,7 @@ class BaseGuideline(
         return value
 
     def _set_base_color(
-            self,
-            value: Optional[QuadrupleCollectionType[IntFloatType]]
+        self, value: Optional[QuadrupleCollectionType[IntFloatType]]
     ) -> None:
         if value is not None:
             value = normalizers.normalizeColor(value)
