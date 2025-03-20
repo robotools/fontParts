@@ -40,10 +40,7 @@ class BaseBPoint(
     """Represent the basis for a bPoint object."""
 
     def _reprContents(self) -> List[str]:
-        contents = [
-            f"{self.type}",
-            f"anchor='({self.anchor[0]}, {self.anchor[1]})'",
-        ]
+        contents = [f"{self.type}", f"anchor='({self.anchor[0]}, {self.anchor[1]})'"]
         return contents
 
     def _setPoint(self, point: BasePoint) -> None:
@@ -364,7 +361,7 @@ class BaseBPoint(
         segment = self._segment
         if segment.type == "move" and value != (0, 0):
             raise FontPartsError(
-                ("Cannot set the bcpIn for the first " "point in an open contour.")
+                ("Cannot set the bcpIn for the first point in an open contour.")
             )
 
         offCurves = segment.offCurve
@@ -452,7 +449,7 @@ class BaseBPoint(
         nextSegment = self._nextSegment
         if nextSegment.type == "move" and value != (0, 0):
             raise FontPartsError(
-                ("Cannot set the bcpOut for the last " "point in an open contour.")
+                ("Cannot set the bcpOut for the last point in an open contour.")
             )
         else:
             offCurves = nextSegment.offCurve

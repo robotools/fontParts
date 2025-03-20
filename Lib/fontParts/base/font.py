@@ -62,9 +62,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         )
 
     def _reprContents(self) -> List[str]:
-        contents: List[str] = [
-            f"'{self.info.familyName} {self.info.styleName}'",
-        ]
+        contents: List[str] = [f"'{self.info.familyName} {self.info.styleName}'"]
         if self.path is not None:
             contents.append(f"path={self.path!r}")
         return contents
@@ -275,7 +273,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         """
         if path is None and self.path is None:
             raise IOError(
-                ("The font cannot be saved because no file " "location has been given.")
+                ("The font cannot be saved because no file location has been given.")
             )
         if path is not None:
             path = normalizers.normalizeFilePath(path)
@@ -468,10 +466,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         ext = self.generateFormatToExtension(format, "." + format)
         if path is None and self.path is None:
             raise IOError(
-                (
-                    "The file cannot be generated because an "
-                    "output path was not defined."
-                )
+                ("The file cannot be generated because an output path was not defined.")
             )
         elif path is None:
             path = os.path.splitext(self.path)[0]
@@ -711,7 +706,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         groups = self.groups
 
         for pair in sorted(self.kerning.keys(), key=kerningSortKeyFunc):
-            kern = kerning[pair]
+            kern_value = kerning[pair]
             (left, right) = pair
             if left.startswith("public.kern1."):
                 left = groups.get(left, [])
@@ -723,9 +718,9 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
             else:
                 right = [right]
 
-            for r in right:
-                for l in left:
-                    flatKerning[(l, r)] = kern
+            for right_glyph in right:
+                for left_glyph in left:
+                    flatKerning[(left_glyph, right_glyph)] = kern_value
 
         return flatKerning
 

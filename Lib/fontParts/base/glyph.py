@@ -83,9 +83,7 @@ class BaseGlyph(
     )
 
     def _reprContents(self) -> List[str]:
-        contents: List[str] = [
-            f"'{self.name}'",
-        ]
+        contents: List[str] = [f"'{self.name}'"]
         if self.layer is not None:
             contents.append(f"('{self.layer.name}')")
         return contents
@@ -1805,10 +1803,7 @@ class BaseGlyph(
             color = normalizers.normalizeColor(color)
         identifier = normalizers.normalizeIdentifier(identifier)
         return self._appendAnchor(
-            name,
-            position=position,
-            color=color,
-            identifier=identifier,
+            name, position=position, color=color, identifier=identifier
         )
 
     def _appendAnchor(
@@ -2064,11 +2059,7 @@ class BaseGlyph(
             color = None
         identifier = normalizers.normalizeIdentifier(identifier)
         newGuideline = self._appendGuideline(
-            position,
-            angle,
-            name=name,
-            color=color,
-            identifier=identifier,
+            position, angle, name=name, color=color, identifier=identifier
         )
         newGuideline.glyph = self
         return newGuideline
