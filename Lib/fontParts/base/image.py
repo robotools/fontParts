@@ -455,9 +455,9 @@ class BaseImage(
         self.raiseNotImplementedError()
 
     def _set_data(self, value: bytes) -> None:
-        """Set the native image's color.
+        """Set the native image's raw byte data.
 
-        This is the environment implementation of the :attr:`BaseImage.color`
+        This is the environment implementation of the :attr:`BaseImage.data`
         property setter.
 
         :param value: The :class:`bytes` object to set for the image.
