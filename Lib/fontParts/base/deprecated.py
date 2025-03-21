@@ -76,8 +76,7 @@ class DeprecatedTransformation(object):
     def transform(self, *args, **kwargs):
         objName = self.__class__.__name__.replace("Deprecated", "")
         warnings.warn(
-            f"'{objName}.transform()': use {objName}.transformBy()",
-            DeprecationWarning,
+            f"'{objName}.transform()': use {objName}.transformBy()", DeprecationWarning
         )
         self.transformBy(*args, **kwargs)
 
@@ -165,7 +164,7 @@ class RemovedAnchor(RemovedBase):
     @staticmethod
     def drawPoints(pen):
         raise RemovedError(
-            ("'Anchor.drawPoints': UFO3 is not drawing " "anchors into point pens")
+            ("'Anchor.drawPoints': UFO3 is not drawing anchors into point pens")
         )
 
 
@@ -207,14 +206,14 @@ class DeprecatedComponent(DeprecatedBase):
 
     def _generateIdentifier(self):
         warnings.warn(
-            ("'Component._generateIdentifier()': use " "'Component._getIdentifier()'"),
+            ("'Component._generateIdentifier()': use 'Component._getIdentifier()'"),
             DeprecationWarning,
         )
         return self._getIdentifier()
 
     def generateIdentifier(self):
         warnings.warn(
-            ("'Component.generateIdentifier()': " "use 'Component.getIdentifier()'"),
+            ("'Component.generateIdentifier()': use 'Component.getIdentifier()'"),
             DeprecationWarning,
         )
         return self.getIdentifier()
@@ -394,14 +393,14 @@ class DeprecatedGlyph(DeprecatedBase, DeprecatedTransformation):
 
     def readGlyphFromString(self, glifData):
         warnings.warn(
-            ("'Glyph.readGlyphFromString()': use " "'Glyph.loadFromGLIF()'"),
+            ("'Glyph.readGlyphFromString()': use 'Glyph.loadFromGLIF()'"),
             DeprecationWarning,
         )
         return self.loadFromGLIF(glifData)
 
     def writeGlyphToString(self, glyphFormatVersion=2):
         warnings.warn(
-            ("'Glyph.writeGlyphToString()': use " "'Glyph.dumpToGLIF()'"),
+            ("'Glyph.writeGlyphToString()': use 'Glyph.dumpToGLIF()'"),
             DeprecationWarning,
         )
         return self.dumpToGLIF(glyphFormatVersion)
@@ -419,21 +418,21 @@ class RemovedGuideline(RemovedBase):
 class DeprecatedGuideline(DeprecatedBase, DeprecatedTransformation):
     def _generateIdentifier(self):
         warnings.warn(
-            ("'Guideline._generateIdentifier()': " "use 'Guideline._getIdentifier()'"),
+            ("'Guideline._generateIdentifier()': use 'Guideline._getIdentifier()'"),
             DeprecationWarning,
         )
         return self._getIdentifier()
 
     def generateIdentifier(self):
         warnings.warn(
-            ("'Guideline.generateIdentifier()': " "use 'Guideline.getIdentifier()'"),
+            ("'Guideline.generateIdentifier()': use 'Guideline.getIdentifier()'"),
             DeprecationWarning,
         )
         return self.getIdentifier()
 
     def getParent(self):
         warnings.warn(
-            ("'Guideline.getParent()': use 'Guideline.glyph'" " or 'Guideline.font'"),
+            ("'Guideline.getParent()': use 'Guideline.glyph' or 'Guideline.font'"),
             DeprecationWarning,
         )
         glyph = self.glyph

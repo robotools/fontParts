@@ -30,20 +30,14 @@ if TYPE_CHECKING:
 
 
 class BaseImage(
-    BaseObject,
-    TransformationMixin,
-    SelectionMixin,
-    DeprecatedImage,
-    RemovedImage,
+    BaseObject, TransformationMixin, SelectionMixin, DeprecatedImage, RemovedImage
 ):
     """Represent the basis for an image object."""
 
     copyAttributes = ("transformation", "color", "data")
 
-    def _reprContents(self) -> list[str]:
-        contents = [
-            f"offset='({self.offset[0]}, {self.offset[1]})'",
-        ]
+    def _reprContents(self):
+        contents = [f"offset='({self.offset[0]}, {self.offset[1]})'"]
         if self.color:
             contents.append(f"color={self.color!r}")
         if self.glyph is not None:
