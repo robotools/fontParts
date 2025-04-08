@@ -119,7 +119,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
     # -------------
 
     def interpolate(self, factor, minKerning, maxKerning, round=True, suppressError=True):
-        """
+        r"""
         Interpolates all pairs between two :class:`BaseKerning` objects:
 
             >>> myKerning.interpolate(kerningOne, kerningTwo)
@@ -221,7 +221,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
     # ---------------------
 
     def remove(self, pair):
-        """
+        r"""
         Removes a pair from the Kerning. **pair** will
         be a ``tuple`` of two :ref:`type-string`\s.
 
@@ -245,7 +245,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
     # -------------------
 
     def __contains__(self, pair):
-        """
+        r"""
         Tests to see if a pair is in the Kerning.
         **pair** will be a ``tuple`` of two :ref:`type-string`\s.
 
@@ -258,7 +258,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         return super(BaseKerning, self).__contains__(pair)
 
     def __delitem__(self, pair):
-        """
+        r"""
         Removes **pair** from the Kerning. **pair** is a ``tuple`` of two
         :ref:`type-string`\s.::
 
@@ -267,7 +267,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         super(BaseKerning, self).__delitem__(pair)
 
     def __getitem__(self, pair):
-        """
+        r"""
         Returns the kerning value of the pair. **pair** is a ``tuple`` of
         two :ref:`type-string`\s.
 
@@ -309,7 +309,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         return super(BaseKerning, self).__len__()
 
     def __setitem__(self, pair, value):
-        """
+        r"""
         Sets the **pair** to the list of **value**. **pair** is the
         pair as a ``tuple`` of two :ref:`type-string`\s and **value**
 
@@ -330,7 +330,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         super(BaseKerning, self).clear()
 
     def get(self, pair, default=None):
-        """
+        r"""
         Returns the value for the kerning pair.
         **pair** is a ``tuple`` of two :ref:`type-string`\s, and the returned
         values will either be :ref:`type-int-float` or ``None``
@@ -350,7 +350,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         return super(BaseKerning, self).get(pair, default)
 
     def find(self, pair, default=None):
-        """
+        r"""
         Returns the value for the kerning pair - even if the pair only exists
         implicitly (one or both sides may be members of a kerning group).
 
@@ -379,7 +379,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         return lookupKerningValue(pair, self, groups, fallback=default)
 
     def items(self):
-        """
+        r"""
         Returns a list of ``tuple``\s of each pair and value. Pairs are a
         ``tuple`` of two :ref:`type-string`\s and values are :ref:`type-int-float`.
 
@@ -401,7 +401,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         return super(BaseKerning, self).keys()
 
     def pop(self, pair, default=None):
-        """
+        r"""
         Removes the **pair** from the Kerning and returns the value as an ``int``.
         If no pair is found, **default** is returned. **pair** is a
         ``tuple`` of two :ref:`type-string`\s. This must return either
@@ -428,7 +428,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         super(BaseKerning, self).update(otherKerning)
 
     def values(self):
-        """
+        r"""
         Returns a ``list`` of each pair's values, the values will be
         :ref:`type-int-float`\s.
 
