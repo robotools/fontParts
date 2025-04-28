@@ -68,7 +68,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         """
         glyphName = normalizers.normalizeGlyphName(glyphName)
         groupNames = self._findGlyph(glyphName)
-        groupNames = [self.keyNormalizer.__func__(
+        groupNames = [self._normalizeKey(
             groupName) for groupName in groupNames]
         return groupNames
 
