@@ -299,13 +299,11 @@ class BaseDict(BaseObject):
 
     def items(self):
         items = self._items()
-        if self._normalizeKey is not None and self._normalizeValue is not None:
-            values = [
-                (self._normalizeKey(key),
-                 self._normalizeValue(value))
-                for (key, value) in items
+        return [
+            (self._normalizeKey(key), self._normalizeValue(value))
+            for (key, value) in items
             ]
-        return values
+        
 
     def _items(self):
         """
