@@ -259,6 +259,18 @@ class BaseDict(BaseObject):
     keyNormalizer = None
     valueNormalizer = None
 
+    @classmethod
+    def _normalizeKey(cls, key):
+        if callable(cls.keyNormalizer):
+            return cls.keyNormalizer(key)
+        return key
+
+    @classmethod
+    def _normalizeValue(cls, value):
+        if callable(cls.valueNormalizer):
+            return cls.valueNormalizer(value)
+        return value
+
     def copyData(self, source):
         super(BaseDict, self).copyData(source)
         self.update(source)
@@ -275,8 +287,8 @@ class BaseDict(BaseObject):
 
     def keys(self):
         keys = self._keys()
-        if self.keyNormalizer is not None:
-            keys = [self.keyNormalizer.__func__(key) for key in keys]
+        if self._normalizeKey is not None:
+            keys = [self._normalizeKey(key) for key in keys]
         return keys
 
     def _keys(self):
@@ -287,10 +299,10 @@ class BaseDict(BaseObject):
 
     def items(self):
         items = self._items()
-        if self.keyNormalizer is not None and self.valueNormalizer is not None:
+        if self._normalizeKey is not None and self._normalizeValue is not None:
             values = [
-                (self.keyNormalizer.__func__(key),
-                 self.valueNormalizer.__func__(value))
+                (self._normalizeKey(key),
+                 self._normalizeValue(value))
                 for (key, value) in items
             ]
         return values
@@ -303,8 +315,8 @@ class BaseDict(BaseObject):
 
     def values(self):
         values = self._values()
-        if self.valueNormalizer is not None:
-            values = [self.valueNormalizer.__func__(value) for value in values]
+        if self._normalizeValue is not None:
+            values = [self._normalizeValue(value) for value in values]
         return values
 
     def _values(self):
@@ -314,8 +326,8 @@ class BaseDict(BaseObject):
         return [v for k, v in self.items()]
 
     def __contains__(self, key):
-        if self.keyNormalizer is not None:
-            key = self.keyNormalizer.__func__(key)
+        if self._normalizeKey is not None:
+            key = self._normalizeKey(key)
         return self._contains(key)
 
     def _contains(self, key):
@@ -327,10 +339,10 @@ class BaseDict(BaseObject):
     has_key = __contains__
 
     def __setitem__(self, key, value):
-        if self.keyNormalizer is not None:
-            key = self.keyNormalizer.__func__(key)
-        if self.valueNormalizer is not None:
-            value = self.valueNormalizer.__func__(value)
+        if self._normalizeKey is not None:
+            key = self._normalizeKey(key)
+        if self._normalizeValue is not None:
+            value = self._normalizeValue(value)
         self._setItem(key, value)
 
     def _setItem(self, key, value):
@@ -340,11 +352,11 @@ class BaseDict(BaseObject):
         self.raiseNotImplementedError()
 
     def __getitem__(self, key):
-        if self.keyNormalizer is not None:
-            key = self.keyNormalizer.__func__(key)
+        if self._normalizeKey is not None:
+            key = self._normalizeKey(key)
         value = self._getItem(key)
-        if self.valueNormalizer is not None:
-            value = self.valueNormalizer.__func__(value)
+        if self._normalizeValue is not None:
+            value = self._normalizeValue(value)
         return value
 
     def _getItem(self, key):
@@ -354,13 +366,13 @@ class BaseDict(BaseObject):
         self.raiseNotImplementedError()
 
     def get(self, key, default=None):
-        if self.keyNormalizer is not None:
-            key = self.keyNormalizer.__func__(key)
-        if default is not None and self.valueNormalizer is not None:
-            default = self.valueNormalizer.__func__(default)
+        if self._normalizeKey is not None:
+            key = self._normalizeKey(key)
+        if default is not None and self._normalizeValue is not None:
+            default = self._normalizeValue(default)
         value = self._get(key, default=default)
-        if value is not default and self.valueNormalizer is not None:
-            value = self.valueNormalizer.__func__(value)
+        if value is not default and self._normalizeValue is not None:
+            value = self._normalizeValue(value)
         return value
 
     def _get(self, key, default=None):
@@ -372,8 +384,8 @@ class BaseDict(BaseObject):
         return default
 
     def __delitem__(self, key):
-        if self.keyNormalizer is not None:
-            key = self.keyNormalizer.__func__(key)
+        if self._normalizeKey is not None:
+            key = self._normalizeKey(key)
         self._delItem(key)
 
     def _delItem(self, key):
@@ -383,13 +395,13 @@ class BaseDict(BaseObject):
         self.raiseNotImplementedError()
 
     def pop(self, key, default=None):
-        if self.keyNormalizer is not None:
-            key = self.keyNormalizer.__func__(key)
-        if default is not None and self.valueNormalizer is not None:
-            default = self.valueNormalizer.__func__(default)
+        if self._normalizeKey is not None:
+            key = self._normalizeKey(key)
+        if default is not None and self._normalizeValue is not None:
+            default = self._normalizeValue(default)
         value = self._pop(key, default=default)
-        if self.valueNormalizer is not None:
-            value = self.valueNormalizer.__func__(value)
+        if self._normalizeValue is not None:
+            value = self._normalizeValue(value)
         return value
 
     def _pop(self, key, default=None):
@@ -417,11 +429,11 @@ class BaseDict(BaseObject):
 
     def update(self, other):
         other = deepcopy(other)
-        if self.keyNormalizer is not None and self.valueNormalizer is not None:
+        if self._normalizeKey is not None and self._normalizeValue is not None:
             d = {}
             for key, value in other.items():
-                key = self.keyNormalizer.__func__(key)
-                value = self.valueNormalizer.__func__(value)
+                key = self._normalizeKey(key)
+                value = self._normalizeValue(value)
                 d[key] = value
             value = d
         self._update(other)
