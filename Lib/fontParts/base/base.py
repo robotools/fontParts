@@ -239,7 +239,7 @@ class BaseObject(Generic[BaseObjectType]):
             contentString = " " + contentString
         else:
             contentString = ""
-        return f"<{self.__class__.__name__}{contentString} at {id(self)}>"
+        return f"<{self.__class__.__name__}{contentString} at {hex(id(self))}>"
 
     def _reprContents(self) -> List[str]:
         """Provide a list of strings for inclusion in :meth:`BaseObject.__repr__.
