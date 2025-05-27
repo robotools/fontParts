@@ -1,3 +1,8 @@
+0.12.6 (released 2025-05-27)
+---------------------------
+- Fix guideline normalization when value is `None`. See #834. Thanks @typemytype!
+- Change memory address to be represented as hex. See #832, #833. Thanks knutnergaard!
+
 0.12.5 (released 2025-04-28)
 ---------------------------
 - Upgrade `BaseDict` normalization. See #831
