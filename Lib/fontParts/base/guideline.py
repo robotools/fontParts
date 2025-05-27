@@ -504,5 +504,9 @@ class BaseGuideline(
 
         Subclasses may override this method.
         """
-        self.x = normalizers.normalizeVisualRounding(self.x)
-        self.y = normalizers.normalizeVisualRounding(self.y)
+        x = self._get_x()
+        if x is not None:
+            self.x = normalizers.normalizeVisualRounding(normalizers.normalizeX(x))
+        y = self._get_y()
+        if y is not None:
+            self.y = normalizers.normalizeVisualRounding(normalizers.normalizeY(y))
