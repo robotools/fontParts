@@ -1,6 +1,6 @@
 # pylint: disable=C0103, C0114
 from __future__ import annotations
-from typing import Dict, List, Protocol, Tuple, TypeVar, Union
+from typing import Dict, List, Optional, Protocol, Tuple, TypeVar, Union
 import datetime
 
 from fontTools.pens.basePen import AbstractPen
@@ -20,6 +20,9 @@ SextupleCollectionType = Union[List[T], SextupleType[T]]
 
 # Builtins
 IntFloatType = Union[int, float]
+
+# Compatibility
+DiffType = List[Tuple[int, Optional[str], Optional[str]]]
 
 # Pens
 PenType = AbstractPen
