@@ -72,9 +72,9 @@ The ``__eq__`` method must be implemented by subclasses. It must return a boolea
 Properties
 ----------
 
-Properties in FontParts are accessed and modified using standardized getter and setter method names. To support subclassing of these accessors independently, FontParts uses a special class: :class:~fontParts.base.dynamicProperty.
+Properties in FontParts are accessed and modified using standardized getter and setter method names. To support subclassing of these accessors independently, FontParts uses a special class: :class:`~fontParts.base.dynamicProperty`.
 
-A property built with :class:~fontParts.base.dynamicProperty typically looks like this::
+A property built with :class:`~fontParts.base.dynamicProperty` typically looks like this::
 
     something = dynamicProperty(...)
     
