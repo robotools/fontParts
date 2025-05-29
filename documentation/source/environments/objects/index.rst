@@ -31,104 +31,123 @@ Environments will need to implement their own subclasses of:
    guideline
    image
 
+Structure
+=========
+
 Each of these require their own specific environment overrides, but the general structure follows this form:
 
-Import and declaration:
-    ::
+Import and declaration
+----------------------
 
-        from fontParts.base import BaseSomething
+::
 
-        class MySomething(BaseSomething):
+    from fontParts.base import BaseSomething
+
+    class MySomething(BaseSomething):
     
 
-Initialization:
-    This will be called when objects are initialized. The behavior, args and kwargs may be designed by the subclass to implement specific behaviors::
+Initialization
+--------------
 
-        def _init(self, myObj):
-            self.myObj = myObj
+This will be called when objects are initialized. The behavior, args and kwargs may be designed by the subclass to implement specific behaviors::
 
-Comparison:
-    The ``__eq__`` method must be implemented by subclasses. It must return a boolean indicating if the lower level objects are the same object. This does not mean that two objects that have the same content should be considered equal; it means that the object must be the same. The corrilary ``__ne__`` is optional to define. ::
+    def _init(self, myObj):
+        self.myObj = myObj
 
-        def __eq__(self, other):
-            return self.myObj == other.myObj
+Comparison
+----------
 
-        def __ne__(self, other):
-            return self.myObj != other.myObj
+The ``__eq__`` method must be implemented by subclasses. It must return a boolean indicating if the lower level objects are the same object. This does not mean that two objects that have the same content should be considered equal; it means that the object must be the same. The corrilary ``__ne__`` is optional to define. ::
 
-    .. note::
+    def __eq__(self, other):
+        return self.myObj == other.myObj
 
-        The base implentation of fontParts provides ``__eq__`` and ``__ne__`` methods that test the naked objects for equality. Depending on environmental needs these can be overridden.
+    def __ne__(self, other):
+        return self.myObj != other.myObj
 
-Properties:
-    Properties in FontParts are accessed and modified using standardized getter and setter method names. To support subclassing of these accessors independently, FontParts uses a special class: :class:~fontParts.base.dynamicProperty.
+.. note::
+
+    The base implentation of fontParts provides ``__eq__`` and ``__ne__`` methods that test the naked objects for equality. Depending on environmental needs these can be overridden.
+
+Properties
+----------
+
+Properties in FontParts are accessed and modified using standardized getter and setter method names. To support subclassing of these accessors independently, FontParts uses a special class: :class:~fontParts.base.dynamicProperty.
+
+A property built with :class:~fontParts.base.dynamicProperty typically looks like this::
+
+    something = dynamicProperty(...)
     
-    A property built with :class:~fontParts.base.dynamicProperty typically looks like this::
+    def _get_base_something(self):
+        value = self._get_something()
+        ... 
+        return value
 
-        something = dynamicProperty(...)
-        
-        def _get_base_something(self):
-            value = self._get_something()
-            ... 
-            return value
+    def _set_base_something(self, value):
+        ...
+        self._set_something(value)
 
-        def _set_base_something(self, value):
-            ...
-            self._set_something(value)
+    def _get_something(self)
+        self.raiseNotImplementedError()
 
-        def _get_something(self)
-            self.raiseNotImplementedError()
+    def _set_something(self, value):
+        self.raiseNotImplementedError()
 
-        def _set_something(self, value):
-            self.raiseNotImplementedError()
+The ``_get_something`` and ``set_something`` methods are the *environment-level
+implementations*. Subclasses override these to define how the value is retrieved from or written to the actual object in the environment::
 
-    The ``_get_something`` and ``set_something`` methods are the *environment-level
-    implementations*. Subclasses override these to define how the value is retrieved from or written to the actual object in the environment::
+    def _get_something(self):
+        ...
+        return self.myObj.getSomething()
 
-        def _get_something(self):
-            ...
-            return self.myObj.getSomething()
+    def _set_something(self, value):
+        ...
+        self.myObj.setSomething(value)
 
-        def _set_something(self, value):
-            ...
-            self.myObj.setSomething(value)
-
-   Subclasses do *not* need to handle normalization or validation of data. That logic is
-   handled by the base class methods:
+Subclasses do *not* need to handle normalization or validation of data. That logic is
+handled by the base class methods:
    
-    - ``_get_base_something`` calls ``_get_something``, validates and normalizes the return value, and provides it to the scripter.
+- ``_get_base_something`` calls ``_get_something``, validates and normalizes the return value, and provides it to the scripter.
+
+- ``_set_base_something`` takes the value from the scripter, validates and normalizes it, then passes it to ``_set_something``.
+
+
+See :ref:`data-normalization` below for more information about normalization in FontParts. 
     
-    - ``_set_base_something`` takes the value from the scripter, validates and normalizes it, then passes it to ``_set_something``.
+Methods
+-------
 
+Generally, the public methods call internal methods with the same name, but preceded with an underscore (``_``). Subclasses may implement the internal method. Any values passed to the internal methods will have been normalized and will be a standard type. ::
 
-    See :ref:`data-normalization` below for more information about normalization in FontParts. 
-    
-Methods:
-    Generally, the public methods call internal methods with the same name, but preceded with an underscore (``_``). Subclasses may implement the internal method. Any values passed to the internal methods will have been normalized and will be a standard type. ::
+    def _whatever(self, value):
+        self.myObj.doWhatever(value)
 
-        def _whatever(self, value):
-            self.myObj.doWhatever(value)
+Copying
+-------
 
-Copying:
-    Copying is handled in most cases by the base objects. If subclasses have a special class that should be used when creating a copy of an object, the class must be defined with the `copyClass` attribute. If anything special needs to be done during the copying process, the subclass can implement the :meth:`~fontParts.base.BaseObject.copyData` method. This method will be called automatically. The subclass must call the base class method with super. ::
+Copying is handled in most cases by the base objects. If subclasses have a special class that should be used when creating a copy of an object, the class must be defined with the `copyClass` attribute. If anything special needs to be done during the copying process, the subclass can implement the :meth:`~fontParts.base.BaseObject.copyData` method. This method will be called automatically. The subclass must call the base class method with super. ::
 
-        copyClass = MyObjectWithoutUI
+    copyClass = MyObjectWithoutUI
 
-        def copyData(self, source):
-            super(MySomething, self).copyData(source)
-            self.myObj.internalThing = source.internalThing
+    def copyData(self, source):
+        super(MySomething, self).copyData(source)
+        self.myObj.internalThing = source.internalThing
 
-Environment updating:
-    If the environment requires the scripter to manually notify the environment that the object has been changed, the subclass must implement the changed method. Please try to avoid requiring this. ::
+Environment updating
+--------------------
 
-        def changed(self):
-            myEnv.goUpdateYourself()
+If the environment requires the scripter to manually notify the environment that the object has been changed, the subclass must implement the changed method. Please try to avoid requiring this. ::
 
-Wrapped objects:
-    It is very useful for scripters to have access to the lower level, wrapped object. Subclasses implement this with the naked method. ::
+    def changed(self):
+        myEnv.goUpdateYourself()
 
-        def naked(self):
-            return self.myObj
+Wrapped objects
+---------------
+
+It is very useful for scripters to have access to the lower level, wrapped object. Subclasses implement this with the naked method. ::
+
+    def naked(self):
+        return self.myObj
 
 All methods that must be overridden are labeled with the following note in the method's documentation string:
 
@@ -158,10 +177,6 @@ code to check that there are exactly two values, that each is an :class:`int` or
 :class:`float`, and that the result is a :class:`tuple` (not a :class:`list`,
 :class:`set`, or some other type), we use a single function to handle all these checks
 in one place.
-
-FontParts employs
-
-
 
 Environment Specific Methods, Attributes and Arguments
 ======================================================
