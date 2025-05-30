@@ -1,3 +1,7 @@
+0.12.7 (released 2025-05-30)
+---------------------------
+- Fix getting `color` and `name` in _fromMathGlyph`
+
 0.12.6 (released 2025-05-27)
 ---------------------------
 - Fix guideline normalization when value is `None`. See #834. Thanks @typemytype!

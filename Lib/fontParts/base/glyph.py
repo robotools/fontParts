@@ -1696,7 +1696,7 @@ class BaseGlyph(BaseObject,
             a = copied.appendAnchor(
                 name=anchor.get("name"),
                 position=(anchor["x"], anchor["y"]),
-                color=anchor["color"]
+                color=anchor.get("color")
             )
             identifier = anchor.get("identifier")
             if identifier is not None:
@@ -1705,8 +1705,8 @@ class BaseGlyph(BaseObject,
             g = copied.appendGuideline(
                 position=(guideline["x"], guideline["y"]),
                 angle=guideline["angle"],
-                name=guideline["name"],
-                color=guideline["color"]
+                name=guideline.get("name"),
+                color=guideline.get("color")
             )
             identifier = guideline.get("identifier")
             if identifier is not None:
