@@ -44,6 +44,25 @@ LibValueType = Union[
     datetime.datetime,
 ]
 
+class LibValue:
+    # Documentation class for LibValueType
+    """A :class:`~fontParts.base.BaseLib` value may be one of the following 
+    *non-collection* types:
+
+    - :class:`str` 
+    - :class:`int` 
+    - :class:`float` 
+    - :class:`bool`
+    - :class:`bytes`,
+    - :class:`bytearray` 
+    - :class:`datetime.datetime`
+
+    In addition, a value may also be a :class:`list` or :class:`tuple` containing any of 
+    the types above, or a :class:`dict` mapping :class:`str` keys to values of those 
+    same types (including nested lists, tuples, or dicts).
+
+    """
+
 # Transformation
 TransformationType = Union[IntFloatType, List[IntFloatType], PairType[IntFloatType]]
 
