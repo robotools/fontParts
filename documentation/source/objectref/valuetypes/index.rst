@@ -89,3 +89,9 @@ Immutable List
 --------------
 
 This must be an immutable, ordered iterable like a ``tuple``.
+
+
+Lib Value
+---------
+
+.. autoclass:: fontParts.base.annotations.LibValue
