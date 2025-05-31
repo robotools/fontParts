@@ -1,13 +1,5 @@
 from __future__ import annotations
-from typing import (
-    TYPE_CHECKING,
-    Callable,
-    Dict,
-    Iterator,
-    List,
-    Optional,
-    Union,
-)
+from typing import TYPE_CHECKING, Callable, Dict, Iterator, List, Optional, Union
 from collections.abc import MutableMapping
 
 from fontParts.base.base import BaseDict, dynamicProperty, reference

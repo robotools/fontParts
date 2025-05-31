@@ -2,10 +2,7 @@ from __future__ import annotations
 from typing import Union
 
 from fontParts.base.normalizers import normalizeColor
-from fontParts.base.annotations import (
-    IntFloatType,
-    QuadrupleCollectionType,
-)
+from fontParts.base.annotations import IntFloatType, QuadrupleCollectionType
 
 
 class Color(tuple):

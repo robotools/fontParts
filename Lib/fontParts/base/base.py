@@ -238,7 +238,7 @@ class BaseObject(Generic[BaseObjectType]):
             contentString = " " + contentString
         else:
             contentString = ""
-        return f"<{self.__class__.__name__}{contentString} at {id(self)}>"
+        return f"<{self.__class__.__name__}{contentString} at {hex(id(self))}>"
 
     def _reprContents(self) -> List[str]:
         """Provide a list of strings for inclusion in :meth:`BaseObject.__repr__.
@@ -1113,10 +1113,7 @@ class TransformationMixin(ABC):
         self._scaleBy(value, origin=origin)
 
     def _scaleBy(
-        self,
-        value: PairType[float],
-        origin: PairType[IntFloatType],
-        **kwargs: Any,
+        self, value: PairType[float], origin: PairType[IntFloatType], **kwargs: Any
     ) -> None:
         r"""Scale the native object according to the given values.
 
@@ -1167,10 +1164,7 @@ class TransformationMixin(ABC):
         self._rotateBy(value, origin=origin)
 
     def _rotateBy(
-        self,
-        value: float,
-        origin: PairType[IntFloatType],
-        **kwargs: Any,
+        self, value: float, origin: PairType[IntFloatType], **kwargs: Any
     ) -> None:
         r"""Rotate the native object by the specified value.
 
@@ -1221,10 +1215,7 @@ class TransformationMixin(ABC):
         self._skewBy(value, origin=origin)
 
     def _skewBy(
-        self,
-        value: PairType[float],
-        origin: PairType[IntFloatType],
-        **kwargs: Any,
+        self, value: PairType[float], origin: PairType[IntFloatType], **kwargs: Any
     ) -> None:
         r"""Skew the native object by the given value.
 

@@ -83,9 +83,7 @@ class BaseGlyph(
     )
 
     def _reprContents(self) -> List[str]:
-        contents: List[str] = [
-            f"'{self.name}'",
-        ]
+        contents: List[str] = [f"'{self.name}'"]
         if self.layer is not None:
             contents.append(f"('{self.layer.name}')")
         return contents
@@ -1805,10 +1803,7 @@ class BaseGlyph(
             color = normalizers.normalizeColor(color)
         identifier = normalizers.normalizeIdentifier(identifier)
         return self._appendAnchor(
-            name,
-            position=position,
-            color=color,
-            identifier=identifier,
+            name, position=position, color=color, identifier=identifier
         )
 
     def _appendAnchor(
@@ -2064,11 +2059,7 @@ class BaseGlyph(
             color = None
         identifier = normalizers.normalizeIdentifier(identifier)
         newGuideline = self._appendGuideline(
-            position,
-            angle,
-            name=name,
-            color=color,
-            identifier=identifier,
+            position, angle, name=name, color=color, identifier=identifier
         )
         newGuideline.glyph = self
         return newGuideline
@@ -3390,7 +3381,7 @@ class BaseGlyph(
         """Get or set the glyph's mark color.
 
         The value must be either a :ref:`type-color` or :obj:`None`.
-        :return: The color value assigned to the glyph, or:obj:`None` if
+        :return: The :class:`Color` instance assigned to the glyph, or :obj:`None` if
             no color has been assigned.
 
         Example::
@@ -3402,12 +3393,11 @@ class BaseGlyph(
         """,
     )
 
-    def _get_base_markColor(self) -> Optional[QuadrupleCollectionType[IntFloatType]]:
+    def _get_base_markColor(self) -> Optional[Color]:
         value = self._get_markColor()
         if value is None:
             return None
-        normalizedValue = normalizers.normalizeColor(value)
-        return Color(normalizedValue)
+        return Color(value)
 
     def _set_base_markColor(
         self, value: Optional[QuadrupleCollectionType[IntFloatType]]
@@ -3434,9 +3424,7 @@ class BaseGlyph(
         """
         self.raiseNotImplementedError()
 
-    def _set_markColor(
-        self, value: Optional[QuadrupleCollectionType[IntFloatType]]
-    ) -> None:
+    def _set_markColor(self, value: Optional[QuadrupleType[float]]) -> None:
         """Set the glyph's mark color.
 
         This is the environment implementation of

@@ -320,10 +320,10 @@ def FontList(fonts=None):
 
     Refer to :class:`BaseFontList` for full documentation.
     """
-    l = dispatcher["FontList"]()
+    list = dispatcher["FontList"]()
     if fonts:
-        l.extend(fonts)
-    return l
+        list.extend(fonts)
+    return list
 
 
 class BaseFontList(list):
