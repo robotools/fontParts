@@ -1,16 +1,25 @@
-class RBaseObject(object):
-    wrapClass = None
+from __future__ import annotations
+from typing import Generic, Optional, Type, TypeVar
 
-    def _init(self, wrap=None):
-        if wrap is None and self.wrapClass is not None:
-            wrap = self.wrapClass()
-        if wrap is not None:
-            self._wrapped = wrap
+RBaseObjectType = TypeVar("RBaseObjectType", bound="RBaseObject")
 
-    def changed(self):
-        self.naked().dirty = True
 
-    def naked(self):
+class RBaseObject(Generic[RBaseObjectType]):
+    wrapClass: Optional[Type[RBaseObjectType]] = None
+    dirty: bool
+
+    def _init(self, pathOrObject: Optional[RBaseObjectType] = None) -> None:
+        if pathOrObject is not None:
+            self._wrapped = pathOrObject
+        if self.wrapClass is not None:
+            pathOrObject = self.wrapClass()
+
+    def changed(self) -> None:
+        naked = self.naked()
+        if naked is not None:
+            naked.dirty = True
+
+    def naked(self) -> Optional[RBaseObjectType]:
         if hasattr(self, "_wrapped"):
             return self._wrapped
         return None

@@ -293,7 +293,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         self,
         path: Optional[str],
         showProgress: bool,
-        formatVersion: Optional[float],
+        formatVersion: Optional[int],
         fileStructure: Optional[str],
         **kwargs: Any,
     ) -> None:
@@ -1843,11 +1843,11 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
 
     def _appendGuideline(  # type: ignore[return]
         self,
-        position: Optional[PairCollectionType[IntFloatType]],
+        position: PairCollectionType[IntFloatType],
         angle: Optional[float],
         name: Optional[str],
         color: Optional[QuadrupleCollectionType[IntFloatType]],
-        **kwargs,
+        **kwargs: Any,
     ) -> BaseGuideline:
         r"""Append a new guideline to the native font.
 
