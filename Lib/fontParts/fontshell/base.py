@@ -9,17 +9,15 @@ class RBaseObject(Generic[RBaseObjectType]):
     dirty: bool
 
     def _init(self, pathOrObject: Optional[RBaseObjectType] = None) -> None:
+        if pathOrObject is None and self.wrapClass is not None:
+            pathOrObject = self.wrapClass()  # pylint: disable=E1102
         if pathOrObject is not None:
             self._wrapped = pathOrObject
-        if self.wrapClass is not None:
-            pathOrObject = self.wrapClass()
 
     def changed(self) -> None:
-        naked = self.naked()
-        if naked is not None:
-            naked.dirty = True
+        self.naked().dirty = True
 
-    def naked(self) -> Optional[RBaseObjectType]:
+    def naked(self) -> RBaseObjectType:
         if hasattr(self, "_wrapped"):
             return self._wrapped
-        return None
+        return None  # type: ignore[return-value]

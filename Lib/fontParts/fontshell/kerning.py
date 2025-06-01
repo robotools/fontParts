@@ -11,26 +11,20 @@ from fontParts.fontshell.base import RBaseObject
 class RKerning(RBaseObject, BaseKerning):
     wrapClass = defcon.Kerning
 
-    def _getNaked(self) -> defcon.Kerning:
-        kerning = self.naked()
-        if kerning is None:
-            raise ValueError("Kerning cannot be None.")
-        return kerning
-
     def _items(self) -> ItemsView[str, int]:
-        return self._getNaked().items()
+        return self.naked().items()
 
     def _contains(self, key: str) -> bool:
-        return key in self._getNaked()
+        return key in self.naked()
 
     def _setItem(self, key: str, value: int) -> None:
-        self._getNaked()[key] = value
+        self.naked()[key] = value
 
     def _getItem(self, key: str) -> Any:
-        return self._getNaked()[key]
+        return self.naked()[key]
 
     def _delItem(self, key: str) -> None:
-        del self._getNaked()[key]
+        del self.naked()[key]
 
     def _find(self, pair: PairCollectionType[str], default: int = 0) -> int:
-        return self._getNaked().find(pair, default)
+        return self.naked().find(pair, default)

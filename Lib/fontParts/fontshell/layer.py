@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Optional, Tuple, Dict, Any
+from typing import TYPE_CHECKING, Optional, Tuple, Dict, Any
 
 import defcon
 from fontParts.base import BaseLayer
@@ -8,17 +8,14 @@ from fontParts.fontshell.base import RBaseObject
 from fontParts.fontshell.lib import RLib
 from fontParts.fontshell.glyph import RGlyph
 
+if TYPE_CHECKING:
+    from fontParts.base.glyph import BaseGlyph
+
 
 class RLayer(RBaseObject, BaseLayer):
     wrapClass = defcon.Layer
     libClass = RLib
     glyphClass = RGlyph
-
-    def _getNaked(self) -> defcon.Layer:
-        layer = self.naked()
-        if layer is None:
-            raise ValueError("Layer cannot be None.")
-        return layer
 
     # -----------
     # Sub-Objects
@@ -27,12 +24,12 @@ class RLayer(RBaseObject, BaseLayer):
     # lib
 
     def _get_lib(self) -> RLib:
-        return self.libClass(wrap=self._getNaked().lib)
+        return self.libClass(pathOrObject=self.naked().lib)
 
     # tempLib
 
     def _get_tempLib(self) -> RLib:
-        return self.libClass(wrap=self._getNaked().tempLib)
+        return self.libClass(pathOrObject=self.naked().tempLib)
 
     # --------------
     # Identification
@@ -41,15 +38,15 @@ class RLayer(RBaseObject, BaseLayer):
     # name
 
     def _get_name(self) -> str:
-        return self._getNaked().name
+        return self.naked().name
 
     def _set_name(self, value: str, **kwargs: Any) -> None:
-        self._getNaked().name = value
+        self.naked().name = value
 
     # color
 
     def _get_color(self) -> Optional[QuadrupleCollectionType[IntFloatType]]:
-        value = self._getNaked().color
+        value = self.naked().color
         if value is not None:
             value = tuple(value)
         return value
@@ -57,27 +54,27 @@ class RLayer(RBaseObject, BaseLayer):
     def _set_color(
         self, value: Optional[QuadrupleCollectionType[IntFloatType]], **kwargs: Any
     ) -> None:
-        self._getNaked().color = value
+        self.naked().color = value
 
     # -----------------
     # Glyph Interaction
     # -----------------
 
     def _getItem(self, name: str, **kwargs: Any) -> RGlyph:
-        layer = self._getNaked()
+        layer = self.naked()
         glyph = layer[name]
         return self.glyphClass(glyph)
 
     def _keys(self, **kwargs: Any) -> Tuple[str, ...]:
-        return tuple(self._getNaked().keys())
+        return tuple(self.naked().keys())
 
-    def _newGlyph(self, name: str, **kwargs: Any) -> RGlyph:
-        layer = self._getNaked()
+    def _newGlyph(self, name: str, **kwargs: Any) -> BaseGlyph:
+        layer = self.naked()
         layer.newGlyph(name)
         return self[name]
 
     def _removeGlyph(self, name: str, **kwargs: Any) -> None:
-        layer = self._getNaked()
+        layer = self.naked()
         del layer[name]
 
     # -------
@@ -85,9 +82,9 @@ class RLayer(RBaseObject, BaseLayer):
     # -------
 
     def _getReverseComponentMapping(self) -> Dict[str, Tuple[str, ...]]:
-        mapping = self._getNaked().componentReferences
+        mapping = self.naked().componentReferences
         return {k: tuple(v) for k, v in mapping.items()}
 
     def _getCharacterMapping(self) -> Dict[int, Tuple[str, ...]]:
-        mapping = self._getNaked().unicodeData
+        mapping = self.naked().unicodeData
         return {k: tuple(v) for k, v in mapping.items()}

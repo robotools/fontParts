@@ -19,12 +19,6 @@ class RImage(RBaseObject, BaseImage):
     _orphanData: Optional[bytes] = None
     _orphanColor: Optional[QuadrupleCollectionType[IntFloatType]] = None
 
-    def _getNaked(self) -> defcon.Image:
-        image = self.naked()
-        if image is None:
-            raise ValueError("Image cannot be None.")
-        return image
-
     # ----------
     # Attributes
     # ----------
@@ -32,10 +26,10 @@ class RImage(RBaseObject, BaseImage):
     # Transformation
 
     def _get_transformation(self) -> SextupleType[float]:
-        return self._getNaked().transformation
+        return self.naked().transformation
 
     def _set_transformation(self, value: SextupleCollectionType[float]) -> None:
-        self._getNaked().transformation = value
+        self.naked().transformation = value
 
     # Color
 
@@ -43,7 +37,7 @@ class RImage(RBaseObject, BaseImage):
         if self.font is None and self._orphanColor is not None:
             r, g, b, a = self._orphanColor
             return (r, g, b, a)
-        value = self._getNaked().color
+        value = self.naked().color
         if value is not None:
             value = tuple(value)
         return value
@@ -54,14 +48,14 @@ class RImage(RBaseObject, BaseImage):
         if self.font is None:
             self._orphanColor = value
         else:
-            self._getNaked().color = value
+            self.naked().color = value
 
     # Data
 
     def _get_data(self) -> Optional[bytes]:
         if self.font is None:
             return self._orphanData
-        image = self._getNaked()
+        image = self.naked()
         images = self.font.naked().images
         fileName = image.fileName
         if fileName is None:
@@ -78,7 +72,7 @@ class RImage(RBaseObject, BaseImage):
         if self.font is None:
             self._orphanData = value
         else:
-            image = self._getNaked()
+            image = self.naked()
             images = image.font.images
             fileName = images.findDuplicateImage(value)
             if fileName is None:

@@ -30,12 +30,6 @@ class RFont(RBaseObject, BaseFont):
     layerClass = RLayer
     guidelineClass = RGuideline
 
-    def _getNaked(self) -> defcon.Font:
-        font = self.naked()
-        if font is None:
-            raise ValueError("Font cannot be None.")
-        return font
-
     # ---------------
     # File Operations
     # ---------------
@@ -60,7 +54,7 @@ class RFont(RBaseObject, BaseFont):
     # path
 
     def _get_path(self, **kwargs: Any) -> Optional[str]:
-        return self._getNaked().path
+        return self.naked().path
 
     # save
 
@@ -72,7 +66,7 @@ class RFont(RBaseObject, BaseFont):
         fileStructure: Optional[str] = None,
         **kwargs: Any,
     ) -> None:
-        self._getNaked().save(
+        self.naked().save(
             path=path, formatVersion=formatVersion, structure=fileStructure
         )
 
@@ -88,32 +82,32 @@ class RFont(RBaseObject, BaseFont):
     # info
 
     def _get_info(self) -> RInfo:
-        return self.infoClass(pathOrObject=self._getNaked().info)
+        return self.infoClass(pathOrObject=self.naked().info)
 
     # groups
 
     def _get_groups(self) -> RGroups:
-        return self.groupsClass(pathOrObject=self._getNaked().groups)
+        return self.groupsClass(pathOrObject=self.naked().groups)
 
     # kerning
 
     def _get_kerning(self) -> RKerning:
-        return self.kerningClass(pathOrObject=self._getNaked().kerning)
+        return self.kerningClass(pathOrObject=self.naked().kerning)
 
     # features
 
     def _get_features(self) -> RFeatures:
-        return self.featuresClass(pathOrObject=self._getNaked().features)
+        return self.featuresClass(pathOrObject=self.naked().features)
 
     # lib
 
     def _get_lib(self) -> RLib:
-        return self.libClass(pathOrObject=self._getNaked().lib)
+        return self.libClass(pathOrObject=self.naked().lib)
 
     # tempLib
 
     def _get_tempLib(self) -> RLib:
-        return self.libClass(pathOrObject=self._getNaked().tempLib)
+        return self.libClass(pathOrObject=self.naked().tempLib)
 
     # ------
     # Layers
@@ -121,24 +115,24 @@ class RFont(RBaseObject, BaseFont):
 
     def _get_layers(self, **kwargs: Any) -> Tuple[RLayer, ...]:
         return tuple(
-            self.layerClass(pathOrObject=layer) for layer in self._getNaked().layers
+            self.layerClass(pathOrObject=layer) for layer in self.naked().layers
         )
 
     # order
 
     def _get_layerOrder(self, **kwargs: Any) -> Tuple[str, ...]:
-        return self._getNaked().layers.layerOrder
+        return self.naked().layers.layerOrder
 
     def _set_layerOrder(self, value: CollectionType[str], **kwargs: Any) -> None:
-        self._getNaked().layers.layerOrder = value
+        self.naked().layers.layerOrder = value
 
     # default layer
 
     def _get_defaultLayerName(self) -> str:
-        return self._getNaked().layers.defaultLayer.name
+        return self.naked().layers.defaultLayer.name
 
     def _set_defaultLayerName(self, value: str, **kwargs: Any) -> None:
-        font = self._getNaked()
+        font = self.naked()
         for layer in self.layers:
             if layer.name == value:
                 break
@@ -153,7 +147,7 @@ class RFont(RBaseObject, BaseFont):
         color: Optional[QuadrupleCollectionType[IntFloatType]],
         **kwargs: Any,
     ) -> RLayer:
-        layers = self._getNaked().layers
+        layers = self.naked().layers
         layer = layers.newLayer(name)
         layer.color = color
         return self.layerClass(pathOrObject=layer)
@@ -161,7 +155,7 @@ class RFont(RBaseObject, BaseFont):
     # remove
 
     def _removeLayer(self, name: str, **kwargs: Any) -> None:
-        layers = self._getNaked().layers
+        layers = self.naked().layers
         del layers[name]
 
     # ------
@@ -169,20 +163,20 @@ class RFont(RBaseObject, BaseFont):
     # ------
 
     def _get_glyphOrder(self) -> Tuple[str, ...]:
-        return self._getNaked().glyphOrder
+        return self.naked().glyphOrder
 
     def _set_glyphOrder(self, value: CollectionType[str]) -> None:
-        self._getNaked().glyphOrder = value
+        self.naked().glyphOrder = value
 
     # ----------
     # Guidelines
     # ----------
 
     def _lenGuidelines(self, **kwargs: Any) -> int:
-        return len(self._getNaked().guidelines)
+        return len(self.naked().guidelines)
 
     def _getGuideline(self, index: int, **kwargs: Any) -> RGuideline:
-        guideline = self._getNaked().guidelines[index]
+        guideline = self.naked().guidelines[index]
         return self.guidelineClass(guideline)
 
     def _appendGuideline(
@@ -194,7 +188,7 @@ class RFont(RBaseObject, BaseFont):
         identifier: Optional[str] = None,
         **kwargs: Any,
     ) -> RGuideline:
-        font = self._getNaked()
+        font = self.naked()
         guideline = self.guidelineClass().naked()
         if guideline is None:
             raise ValueError("Guideline cannot be None.")
@@ -208,6 +202,6 @@ class RFont(RBaseObject, BaseFont):
         return self.guidelineClass(guideline)
 
     def _removeGuideline(self, index: int, **kwargs: Any) -> None:
-        font = self._getNaked()
+        font = self.naked()
         guideline = font.guidelines[index]
         font.removeGuideline(guideline)

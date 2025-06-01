@@ -19,12 +19,6 @@ class RContour(RBaseObject, BaseContour):
     segmentClass = RSegment
     bPointClass = RBPoint
 
-    def _getNaked(self) -> defcon.Contour:
-        contour = self.naked()
-        if contour is None:
-            raise ValueError("Contour cannot be None.")
-        return contour
-
     # --------------
     # Identification
     # --------------
@@ -32,7 +26,7 @@ class RContour(RBaseObject, BaseContour):
     # index
 
     def _set_index(self, value: int) -> None:
-        contour = self._getNaked()
+        contour = self.naked()
         glyph = contour.glyph
         if glyph is not None:
             glyph.removeContour(contour)
@@ -41,13 +35,13 @@ class RContour(RBaseObject, BaseContour):
     # identifier
 
     def _get_identifier(self) -> Optional[str]:
-        return self._getNaked().identifier
+        return self.naked().identifier
 
     def _getIdentifier(self) -> str:
-        return self._getNaked().generateIdentifier()
+        return self.naked().generateIdentifier()
 
     def _getIdentifierForPoint(self, point: BasePoint) -> str:
-        contour = self._getNaked()
+        contour = self.naked()
         nakedPoint = point.naked()
         return contour.generateIdentifierForPoint(nakedPoint)
 
@@ -56,51 +50,51 @@ class RContour(RBaseObject, BaseContour):
     # ----
 
     def _get_open(self) -> bool:
-        return self._getNaked().open
+        return self.naked().open
 
     # ------
     # Bounds
     # ------
 
     def _get_bounds(self) -> Optional[QuadrupleType[float]]:
-        return self._getNaked().bounds
+        return self.naked().bounds
 
     # ----
     # Area
     # ----
 
     def _get_area(self) -> Optional[float]:
-        return self._getNaked().area
+        return self.naked().area
 
     # ---------
     # Direction
     # ---------
 
     def _get_clockwise(self) -> bool:
-        return self._getNaked().clockwise
+        return self.naked().clockwise
 
     def _reverse(self, **kwargs: Any) -> None:
-        self._getNaked().reverse()
+        self.naked().reverse()
 
     # ------------------------
     # Point and Contour Inside
     # ------------------------
 
     def _pointInside(self, point: PairCollectionType[IntFloatType]) -> bool:
-        return self._getNaked().pointInside(point)
+        return self.naked().pointInside(point)
 
     def _contourInside(self, otherContour: BaseContour) -> bool:
-        return self._getNaked().contourInside(otherContour.naked(), segmentLength=5)
+        return self.naked().contourInside(otherContour.naked(), segmentLength=5)
 
     # ------
     # Points
     # ------
 
     def _lenPoints(self, **kwargs: Any) -> int:
-        return len(self._getNaked())
+        return len(self.naked())
 
     def _getPoint(self, index: int, **kwargs: Any) -> RPoint:
-        contour = self._getNaked()
+        contour = self.naked()
         point = contour[index]
         return self.pointClass(point)
 
@@ -124,10 +118,10 @@ class RContour(RBaseObject, BaseContour):
         if nakedPoint is not None:
             point = nakedPoint
         point.identifier = identifier
-        contour = self._getNaked()
+        contour = self.naked()
         contour.insertPoint(index, point)
 
     def _removePoint(self, index: int, preserveCurve: bool, **kwargs: Any) -> None:
-        contour = self._getNaked()
+        contour = self.naked()
         point = contour[index]
         contour.removePoint(point)

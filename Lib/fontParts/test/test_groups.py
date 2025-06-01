@@ -7,10 +7,10 @@ class TestGroups(unittest.TestCase):
         groups, _ = self.objectGenerator("groups")
         groups.update(
             {
-                "group 1": ["A", "B", "C"],
-                "group 2": ["x", "y", "z"],
-                "group 3": [],
-                "group 4": ["A"],
+                "group 1": ("A", "B", "C"),
+                "group 2": ("x", "y", "z"),
+                "group 3": (),
+                "group 4": ("A",),
             }
         )
         return groups
@@ -147,10 +147,10 @@ class TestGroups(unittest.TestCase):
     def getGroups_kerning(self):
         groups = self.getGroups_generic()
         kerningGroups = {
-            "public.kern1.A": ["A", "Aacute"],
-            "public.kern1.O": ["O", "D"],
-            "public.kern2.A": ["A", "Aacute"],
-            "public.kern2.O": ["O", "C"],
+            "public.kern1.A": ("A", "Aacute"),
+            "public.kern1.O": ("O", "D"),
+            "public.kern2.A": ("A", "Aacute"),
+            "public.kern2.O": ("O", "C"),
         }
         groups.update(kerningGroups)
         return groups
@@ -163,7 +163,7 @@ class TestGroups(unittest.TestCase):
 
     def test_get_side1KerningGroups(self):
         groups = self.getGroups_kerning()
-        expected = {"public.kern1.A": ["A", "Aacute"], "public.kern1.O": ["O", "D"]}
+        expected = {"public.kern1.A": ("A", "Aacute"), "public.kern1.O": ("O", "D")}
         self.assertEqual(groups._get_side1KerningGroups(), expected)
 
     def test_side2KerningGroups(self):
@@ -173,7 +173,7 @@ class TestGroups(unittest.TestCase):
 
     def test_get_side2KerningGroups(self):
         groups = self.getGroups_kerning()
-        expected = {"public.kern1.A": ["A", "Aacute"], "public.kern1.O": ["O", "D"]}
+        expected = {"public.kern1.A": ("A", "Aacute"), "public.kern1.O": ("O", "D")}
         self.assertEqual(groups._get_side1KerningGroups(), expected)
 
     # ----

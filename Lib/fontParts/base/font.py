@@ -131,8 +131,8 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
             else:
                 layer = self.newLayer(layerName)
             layer.copyData(source.getLayer(layerName))
-        for guideline in self.guidelines:
-            self.appendGuideline(guideline)
+        for guideline in source.guidelines:
+            self.appendGuideline(guideline=guideline)
         super(BaseFont, self).copyData(source)
 
     # ---------------

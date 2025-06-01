@@ -44,12 +44,6 @@ class RGlyph(RBaseObject, BaseGlyph):
     imageClass = RImage
     libClass = RLib
 
-    def _getNaked(self) -> defcon.Glyph:
-        glyph = self.naked()
-        if glyph is None:
-            raise ValueError("Glyph cannot be None.")
-        return glyph
-
     # --------------
     # Identification
     # --------------
@@ -57,18 +51,18 @@ class RGlyph(RBaseObject, BaseGlyph):
     # Name
 
     def _get_name(self) -> str:
-        return self._getNaked().name
+        return self.naked().name
 
     def _set_name(self, value: str) -> None:
-        self._getNaked().name = value
+        self.naked().name = value
 
     # Unicodes
 
     def _get_unicodes(self) -> CollectionType[int]:
-        return self._getNaked().unicodes
+        return self.naked().unicodes
 
     def _set_unicodes(self, value: CollectionType[int]) -> None:
-        self._getNaked().unicodes = value
+        self.naked().unicodes = value
 
     # -------
     # Metrics
@@ -77,66 +71,66 @@ class RGlyph(RBaseObject, BaseGlyph):
     # horizontal
 
     def _get_width(self) -> IntFloatType:
-        return self._getNaked().width
+        return self.naked().width
 
     def _set_width(self, value: IntFloatType) -> None:
-        self._getNaked().width = value
+        self.naked().width = value
 
     def _get_leftMargin(self) -> Optional[IntFloatType]:
-        return self._getNaked().leftMargin
+        return self.naked().leftMargin
 
     def _set_leftMargin(self, value: IntFloatType) -> None:
-        self._getNaked().leftMargin = value
+        self.naked().leftMargin = value
 
     def _get_rightMargin(self) -> Optional[IntFloatType]:
-        return self._getNaked().rightMargin
+        return self.naked().rightMargin
 
     def _set_rightMargin(self, value: IntFloatType) -> None:
-        self._getNaked().rightMargin = value
+        self.naked().rightMargin = value
 
     # vertical
 
     def _get_height(self) -> IntFloatType:
-        return self._getNaked().height
+        return self.naked().height
 
     def _set_height(self, value: IntFloatType) -> None:
-        self._getNaked().height = value
+        self.naked().height = value
 
     def _get_bottomMargin(self) -> Optional[IntFloatType]:
-        return self._getNaked().bottomMargin
+        return self.naked().bottomMargin
 
     def _set_bottomMargin(self, value: IntFloatType) -> None:
-        self._getNaked().bottomMargin = value
+        self.naked().bottomMargin = value
 
     def _get_topMargin(self) -> Optional[IntFloatType]:
-        return self._getNaked().topMargin
+        return self.naked().topMargin
 
     def _set_topMargin(self, value: IntFloatType) -> None:
-        self._getNaked().topMargin = value
+        self.naked().topMargin = value
 
     # ------
     # Bounds
     # ------
 
     def _get_bounds(self) -> Optional[QuadrupleType[IntFloatType]]:
-        return self._getNaked().bounds
+        return self.naked().bounds
 
     # ----
     # Area
     # ----
 
     def _get_area(self) -> Optional[float]:
-        return self._getNaked().area
+        return self.naked().area
 
     # ----
     # Pens
     # ----
 
     def getPen(self) -> SegmentToPointPen:
-        return self._getNaked().getPen()
+        return self.naked().getPen()
 
     def getPointPen(self) -> Union[GlyphObjectPointPen, GlyphObjectLoadingPointPen]:
-        return self._getNaked().getPointPen()
+        return self.naked().getPointPen()
 
     # -----------------------------------------
     # Contour, Component and Anchor Interaction
@@ -145,14 +139,14 @@ class RGlyph(RBaseObject, BaseGlyph):
     # Contours
 
     def _lenContours(self, **kwargs: Any) -> int:
-        return len(self._getNaked())
+        return len(self.naked())
 
     def _getContour(self, index: int, **kwargs: Any) -> RContour:
-        contour = self._getNaked()[index]
+        contour = self.naked()[index]
         return self.contourClass(contour)
 
     def _removeContour(self, index: int, **kwargs: Any) -> None:
-        glyph = self._getNaked()
+        glyph = self.naked()
         contour = glyph[index]
         glyph.removeContour(contour)
 
@@ -173,29 +167,29 @@ class RGlyph(RBaseObject, BaseGlyph):
             booleanOperations.union(contours, self.getPointPen())
 
     def _correctDirection(self, trueType: bool = False, **kwargs: Any) -> None:
-        self._getNaked().correctContourDirection(trueType=trueType)
+        self.naked().correctContourDirection(trueType=trueType)
 
     # Components
 
     def _lenComponents(self, **kwargs: Any) -> int:
-        return len(self._getNaked().components)
+        return len(self.naked().components)
 
     def _getComponent(self, index: int, **kwargs: Any) -> RComponent:
-        component = self._getNaked().components[index]
+        component = self.naked().components[index]
         return self.componentClass(component)
 
     def _removeComponent(self, index: int, **kwargs: Any) -> None:
-        glyph = self._getNaked()
+        glyph = self.naked()
         component = glyph.components[index]
         glyph.removeComponent(component)
 
     # Anchors
 
     def _lenAnchors(self, **kwargs: Any) -> int:
-        return len(self._getNaked().anchors)
+        return len(self.naked().anchors)
 
     def _getAnchor(self, index: int, **kwargs: Any) -> RAnchor:
-        anchor = self._getNaked().anchors[index]
+        anchor = self.naked().anchors[index]
         return self.anchorClass(anchor)
 
     def _appendAnchor(
@@ -206,7 +200,7 @@ class RGlyph(RBaseObject, BaseGlyph):
         identifier: Optional[str] = None,
         **kwargs: Any,
     ) -> RAnchor:
-        glyph = self._getNaked()
+        glyph = self.naked()
         anchor = self.anchorClass().naked()
         if anchor is None:
             raise ValueError("Anchor cannot be None")
@@ -222,17 +216,17 @@ class RGlyph(RBaseObject, BaseGlyph):
         return wrapped
 
     def _removeAnchor(self, index: int, **kwargs: Any) -> None:
-        glyph = self._getNaked()
+        glyph = self.naked()
         anchor = glyph.anchors[index]
         glyph.removeAnchor(anchor)
 
     # Guidelines
 
     def _lenGuidelines(self, **kwargs: Any) -> int:
-        return len(self._getNaked().guidelines)
+        return len(self.naked().guidelines)
 
     def _getGuideline(self, index: int, **kwargs: Any) -> RGuideline:
-        guideline = self._getNaked().guidelines[index]
+        guideline = self.naked().guidelines[index]
         return self.guidelineClass(guideline)
 
     def _appendGuideline(
@@ -244,7 +238,7 @@ class RGlyph(RBaseObject, BaseGlyph):
         identifier: Optional[str] = None,
         **kwargs: Any,
     ) -> RGuideline:
-        glyph = self._getNaked()
+        glyph = self.naked()
         guideline = self.guidelineClass().naked()
         if guideline is None:
             raise ValueError("Guideline cannot be None")
@@ -258,7 +252,7 @@ class RGlyph(RBaseObject, BaseGlyph):
         return self.guidelineClass(guideline)
 
     def _removeGuideline(self, index: int, **kwargs: Any) -> None:
-        glyph = self._getNaked()
+        glyph = self.naked()
         guideline = glyph.guidelines[index]
         glyph.removeGuideline(guideline)
 
@@ -293,7 +287,7 @@ class RGlyph(RBaseObject, BaseGlyph):
     # -----
 
     def _get_image(self) -> Optional[RImage]:
-        image = self._getNaked().image
+        image = self.naked().image
         if image is None:
             return None
         return self.imageClass(image)
@@ -304,7 +298,7 @@ class RGlyph(RBaseObject, BaseGlyph):
         transformation: Optional[SextupleCollectionType[IntFloatType]] = None,
         color: Optional[QuadrupleCollectionType[IntFloatType]] = None,
     ) -> None:
-        image = self._getNaked().image
+        image = self.naked().image
         image = self.imageClass(image)
         image.glyph = self
         image.data = data
@@ -312,7 +306,7 @@ class RGlyph(RBaseObject, BaseGlyph):
         image.color = color
 
     def _clearImage(self, **kwargs: Any) -> None:
-        self._getNaked().image = None
+        self.naked().image = None
 
     # ----
     # Note
@@ -321,7 +315,7 @@ class RGlyph(RBaseObject, BaseGlyph):
     # Mark
 
     def _get_markColor(self) -> Optional[QuadrupleType[float]]:
-        value = self._getNaked().markColor
+        value = self.naked().markColor
         if value is not None:
             value = tuple(value)
         return value
@@ -329,15 +323,15 @@ class RGlyph(RBaseObject, BaseGlyph):
     def _set_markColor(
         self, value: Optional[QuadrupleCollectionType[IntFloatType]]
     ) -> None:
-        self._getNaked().markColor = value
+        self.naked().markColor = value
 
     # Note
 
     def _get_note(self) -> Optional[str]:
-        return self._getNaked().note
+        return self.naked().note
 
     def _set_note(self, value: Optional[str]) -> None:
-        self._getNaked().note = value
+        self.naked().note = value
 
     # -----------
     # Sub-Objects
@@ -346,12 +340,12 @@ class RGlyph(RBaseObject, BaseGlyph):
     # lib
 
     def _get_lib(self) -> RLib:
-        return self.libClass(wrap=self._getNaked().lib)
+        return self.libClass(pathOrObject=self.naked().lib)
 
     # tempLib
 
     def _get_tempLib(self) -> RLib:
-        return self.libClass(wrap=self._getNaked().tempLib)
+        return self.libClass(pathOrObject=self.naked().tempLib)
 
     # ---
     # API
@@ -361,7 +355,7 @@ class RGlyph(RBaseObject, BaseGlyph):
         try:
             readGlyphFromString(
                 aString=glifData,
-                glyphObject=self._getNaked(),
+                glyphObject=self.naked(),
                 pointPen=self.getPointPen(),
                 validate=validate,
             )
@@ -369,7 +363,7 @@ class RGlyph(RBaseObject, BaseGlyph):
             raise FontPartsError("Not valid glif data") from e
 
     def _dumpToGLIF(self, glyphFormatVersion: int) -> str:
-        glyph = self._getNaked()
+        glyph = self.naked()
         return writeGlyphToString(
             glyphName=glyph.name,
             glyphObject=glyph,

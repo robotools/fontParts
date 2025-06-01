@@ -24,12 +24,6 @@ class RGuideline(RBaseObject, BaseGuideline):
                     pathOrObject.angle = 0
             super(RGuideline, self)._init(pathOrObject=pathOrObject)
 
-    def _getNaked(self) -> defcon.Guideline:
-        guideline = self.naked()
-        if guideline is None:
-            raise ValueError("Guideline cannot be None.")
-        return guideline
-
     # --------
     # Position
     # --------
@@ -37,26 +31,26 @@ class RGuideline(RBaseObject, BaseGuideline):
     # x
 
     def _get_x(self) -> float:
-        return self._getNaked().x
+        return self.naked().x
 
     def _set_x(self, value: float) -> None:
-        self._getNaked().x = value
+        self.naked().x = value
 
     # y
 
     def _get_y(self) -> float:
-        return self._getNaked().y
+        return self.naked().y
 
     def _set_y(self, value: float) -> None:
-        self._getNaked().y = value
+        self.naked().y = value
 
     # angle
 
     def _get_angle(self) -> float:
-        return self._getNaked().angle
+        return self.naked().angle
 
     def _set_angle(self, value: Optional[IntFloatType]) -> None:
-        self._getNaked().angle = value
+        self.naked().angle = value
 
     # --------------
     # Identification
@@ -65,26 +59,26 @@ class RGuideline(RBaseObject, BaseGuideline):
     # identifier
 
     def _get_identifier(self) -> Optional[str]:
-        return self._getNaked().identifier
+        return self.naked().identifier
 
     def _getIdentifier(self) -> str:
-        return self._getNaked().generateIdentifier()
+        return self.naked().generateIdentifier()
 
     def _setIdentifier(self, value: str) -> None:
-        self._getNaked().identifier = value
+        self.naked().identifier = value
 
     # name
 
     def _get_name(self) -> Optional[str]:
-        return self._getNaked().name
+        return self.naked().name
 
     def _set_name(self, value: Optional[str]) -> None:
-        self._getNaked().name = value
+        self.naked().name = value
 
     # color
 
     def _get_color(self) -> Optional[QuadrupleType[float]]:
-        value = self._getNaked().color
+        value = self.naked().color
         if value is not None:
             value = tuple(value)
         return value
@@ -92,4 +86,4 @@ class RGuideline(RBaseObject, BaseGuideline):
     def _set_color(
         self, value: Optional[QuadrupleCollectionType[IntFloatType]]
     ) -> None:
-        self._getNaked().color = value
+        self.naked().color = value
