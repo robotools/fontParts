@@ -1,4 +1,4 @@
-0.12.7 (released 2025-06-04)
+0.12.8 (released 2025-06-04)
 ---------------------------
 - Fix bug in `copyData`, #839. Thanks @knutergaard
 
