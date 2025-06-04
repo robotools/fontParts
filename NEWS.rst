@@ -1,3 +1,7 @@
+0.12.7 (released 2025-06-04)
+---------------------------
+- Fix bug in `copyData`, #839. Thanks @knutergaard
+
 0.12.7 (released 2025-05-30)
 ---------------------------
 - Fix getting `color` and `name` in _fromMathGlyph`
