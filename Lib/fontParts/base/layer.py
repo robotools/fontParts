@@ -255,7 +255,8 @@ class _BaseGlyphVendor(
         """
         if name is None:
             name = glyph.name
-        return self[name] = glyph
+        newGlyph = self[name] = glyph
+        return newGlyph
 
     def _insertGlyph(self, glyph, name, **kwargs):
         """
