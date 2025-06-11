@@ -1,3 +1,7 @@
+0.13.0 (released 2025-06-11)
+---------------------------
+- `insertGlyph` will return the inserted glyph object. #727 & #841
+
 0.12.8 (released 2025-06-04)
 ---------------------------
 - Fix bug in `copyData`, #839. Thanks @knutergaard
