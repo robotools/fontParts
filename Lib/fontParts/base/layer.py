@@ -250,11 +250,13 @@ class _BaseGlyphVendor(
 
             >>> glyph = layer.insertGlyph(otherGlyph, name="A")
 
+        This will return the inserted **glyph**.
         This method is deprecated. :meth:`BaseFont.__setitem__` instead.
         """
         if name is None:
             name = glyph.name
-        self[name] = glyph
+        newGlyph = self[name] = glyph
+        return newGlyph
 
     def _insertGlyph(self, glyph, name, **kwargs):
         """
