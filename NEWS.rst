@@ -1,4 +1,4 @@
-0.13.0 (released 2025-06-11)
+0.13.1 (released 2025-06-11)
 ---------------------------
 - `insertGlyph` will return the inserted glyph object. #727 & #841
 
