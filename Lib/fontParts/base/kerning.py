@@ -1,11 +1,16 @@
 # pylint: disable=C0103, C0114
 from __future__ import annotations
-from typing import TYPE_CHECKING, Callable, Dict, Iterator, List, Optional, Union
+from typing import (
+    TYPE_CHECKING,
+    Callable,
+    Dict,
+    Iterator,
+    List,
+    Optional,
+    TypeVar,
+    Union,
+)
 from collections.abc import MutableMapping
-
-from fontMath import MathKerning
-from fontMath.mathFunctions import setRoundIntegerFunction
-from fontTools.ufoLib.kerning import lookupKerningValue
 
 from fontParts.base.base import BaseDict, dynamicProperty, interpolate, reference
 from fontParts.base import normalizers
@@ -22,6 +27,8 @@ if TYPE_CHECKING:
     from fontParts.base.base import BaseItems
     from fontParts.base.base import BaseKeys
     from fontParts.base.base import BaseValues
+
+BaseKerningType = TypeVar("BaseKerningType", bound="BaseKerning")
 
 
 class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
@@ -187,8 +194,8 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
     def interpolate(
         self,
         factor: TransformationType,
-        minKerning: MathKerning,
-        maxKerning: MathKerning,
+        minKerning: BaseKerningType,
+        maxKerning: BaseKerningType,
         round: bool = True,
         suppressError: bool = True,
     ) -> None:
@@ -263,6 +270,9 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
             Subclasses may override this method.
 
         """
+        from fontMath.mathFunctions import setRoundIntegerFunction
+        from fontMath import MathKerning
+
         setRoundIntegerFunction(normalizers.normalizeVisualRounding)
         kerningGroupCompatibility = self._testKerningGroupCompatibility(
             minKerning, maxKerning, suppressError=suppressError
@@ -535,6 +545,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
             Subclasses may override this method.
 
         """
+        from fontTools.ufoLib.kerning import lookupKerningValue
 
         font = self.font
         groups = font.groups
