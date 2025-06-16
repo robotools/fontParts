@@ -49,9 +49,8 @@ class BaseAnchor(
     """
 
     def _reprContents(self) -> List[str]:
-        contents = [
-            f"({self.x}, {self.y})",
-        ]
+        contents = [f"({self.x}, {self.y})"]
+
         if self.name is not None:
             contents.append(f"name='{self.name}'")
         if self.color:

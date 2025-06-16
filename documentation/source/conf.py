@@ -92,6 +92,10 @@ intersphinx_mapping = {"python": ("https://docs.python.org/3/", None)}
 autodoc_member_order = "bysource"
 autoclass_content = "both"
 
+autodoc_type_aliases = {
+    "LibValueType": "~fontParts.base.annotations.LibValue"
+}
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 

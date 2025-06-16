@@ -463,19 +463,13 @@ class TestPoint(unittest.TestCase):
         point = self.getPoint_generic()
         point._setIdentifier(None)
         copied = point.copy()
-        self.assertEqual(
-            point.identifier,
-            copied.identifier,
-        )
+        self.assertEqual(point.identifier, copied.identifier)
 
     def test_copy_different_identifier(self):
         point = self.getPoint_generic()
         point.getIdentifier()
         copied = point.copy()
-        self.assertNotEqual(
-            point.identifier,
-            copied.identifier,
-        )
+        self.assertNotEqual(point.identifier, copied.identifier)
 
     def test_copy_generated_identifier_different(self):
         otherContour, _ = self.objectGenerator("contour")
@@ -490,57 +484,39 @@ class TestPoint(unittest.TestCase):
         point = self.getPoint_generic()
         pointOther, _ = self.objectGenerator("point")
         pointOther.copyData(point)
-        self.assertEqual(
-            point.type,
-            pointOther.type,
-        )
+        self.assertEqual(point.type, pointOther.type)
 
     def test_copyData_smooth(self):
         point = self.getPoint_generic()
         pointOther, _ = self.objectGenerator("point")
         pointOther.copyData(point)
-        self.assertEqual(
-            point.smooth,
-            pointOther.smooth,
-        )
+        self.assertEqual(point.smooth, pointOther.smooth)
 
     def test_copyData_x(self):
         point = self.getPoint_generic()
         pointOther, _ = self.objectGenerator("point")
         pointOther.copyData(point)
-        self.assertEqual(
-            point.x,
-            pointOther.x,
-        )
+        self.assertEqual(point.x, pointOther.x)
 
     def test_copyData_y(self):
         point = self.getPoint_generic()
         pointOther, _ = self.objectGenerator("point")
         pointOther.copyData(point)
-        self.assertEqual(
-            point.y,
-            pointOther.y,
-        )
+        self.assertEqual(point.y, pointOther.y)
 
     def test_copyData_name(self):
         point = self.getPoint_generic()
         point.name = "P"
         pointOther, _ = self.objectGenerator("point")
         pointOther.copyData(point)
-        self.assertEqual(
-            point.name,
-            pointOther.name,
-        )
+        self.assertEqual(point.name, pointOther.name)
 
     def test_copyData_different_identifier(self):
         point = self.getPoint_generic()
         point.getIdentifier()
         pointOther, _ = self.objectGenerator("point")
         pointOther.copyData(point)
-        self.assertNotEqual(
-            point.identifier,
-            pointOther.identifier,
-        )
+        self.assertNotEqual(point.identifier, pointOther.identifier)
 
     # --------------
     # Transformation
