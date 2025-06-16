@@ -34,7 +34,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
 
     :cvar keyNormalizer: A function to normalize the key of the dictionary.
         Defaults to :func:`normalizers.normalizeKerningKey`.
-    :cvar valueNormalizer: A function to normalize the key of the dictionary.
+    :cvar valueNormalizer: A function to normalize the value of the dictionary.
         Defaults to :func:`normalizers.normalizeKerningValue`.
 
     This object is normally created as part of a :class:`BaseFont`.
