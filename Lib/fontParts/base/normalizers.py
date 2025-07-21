@@ -628,7 +628,7 @@ def normalizeComponentScale(value):
     * **value** must be a `tuple`` or ``list``.
     * **value** must have exactly two items.
       These items must be instances of :ref:`type-int-float`.
-    * Returned value is a ``tuple`` of two ``float``\s.
+    * Returned value is a ``tuple`` of two ``float``s.
     """
     if not isinstance(value, (list, tuple)):
         raise TypeError("Component scale must be a tuple "
@@ -1071,7 +1071,7 @@ def normalizeTransformationScale(value):
     * **value** must be an :ref:`type-int-float`, ``tuple`` or ``list``.
     * If **value** is a ``tuple`` or ``list``, it must have exactly two items.
       These items must be instances of :ref:`type-int-float`.
-    * Returned value is a ``tuple`` of two ``float``\s.
+    * Returned value is a ``tuple`` of two ``float``s.
     """
     if not isinstance(value, (int, float, list, tuple)):
         raise TypeError("Transformation scale must be an int, float, or tuple "
