@@ -1,3 +1,7 @@
+0.13.2 (released 2025-07-21)
+---------------------------
+- Fixed python syntax warning errors due to doc strings, thanks @bgermann. #849
+
 0.13.1 (released 2025-06-11)
 ---------------------------
 - `insertGlyph` will return the inserted glyph object. #727 & #841
