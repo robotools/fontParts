@@ -625,7 +625,7 @@ def normalizeComponentScale(value):
     """
     Normalizes component scale.
 
-    * **value** must be a `tuple`` or ``list``.
+    * **value** must be a ``tuple`` or ``list``.
     * **value** must have exactly two items.
       These items must be instances of :ref:`type-int-float`.
     * Returned value is a ``tuple`` of two ``float``s.
