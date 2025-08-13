@@ -1702,11 +1702,21 @@ class BaseGlyph(BaseObject,
             if identifier is not None:
                 a._setIdentifier(identifier)
         for guideline in mathGlyph.guidelines:
+            guideColor = guideline.get("color")
+            if type(guideColor) == tuple:
+                colorData = guideColor
+            else:
+                try:
+                    colorData = (guideColor.r, guideColor.g, guideColor.b, guideColor.a)
+                except:
+                    # fork it
+                    print('fontParts glyph fromMathGlyph guideline color object', type(guideColor))
+                    continue
             g = copied.appendGuideline(
                 position=(guideline["x"], guideline["y"]),
                 angle=guideline["angle"],
                 name=guideline.get("name"),
-                color=guideline.get("color")
+                color=colorData,
             )
             identifier = guideline.get("identifier")
             if identifier is not None:
