@@ -1703,17 +1703,11 @@ class BaseGlyph(BaseObject,
                 a._setIdentifier(identifier)
         for guideline in mathGlyph.guidelines:
             guideColor = guideline.get("color")
-            if type(guideColor) == tuple or guideColor is None:
-                colorData = guideColor
+            if guideColor is None:
+                colorData = None
             else:
-                try:
-                    colorData = (guideColor.r, guideColor.g, guideColor.b, guideColor.a)
-                except:
-                    # it is not a tuple
-                    # it is not a defcon color object
-                    # it is just a color value for a guideline
-                    # we can ignore it.
-                    colorData = None
+                r, g, b, a = guideColor
+                colorData = (r, g, b, a)
             g = copied.appendGuideline(
                 position=(guideline["x"], guideline["y"]),
                 angle=guideline["angle"],
