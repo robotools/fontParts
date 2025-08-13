@@ -1709,8 +1709,10 @@ class BaseGlyph(BaseObject,
                 try:
                     colorData = (guideColor.r, guideColor.g, guideColor.b, guideColor.a)
                 except:
-                    # fork it
-                    print('fontParts glyph fromMathGlyph guideline color object', type(guideColor))
+                    # it is not a tuple
+                    # it is not a defcon color object
+                    # it is just a color value for a guideline
+                    # we can ignore it.
                     continue
             g = copied.appendGuideline(
                 position=(guideline["x"], guideline["y"]),
