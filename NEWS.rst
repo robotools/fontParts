@@ -1,3 +1,8 @@
+0.13.3 (released 2025-08-14)
+---------------------------
+- Fix `.fromMathGlyph` for the issue of a guideline color coming from defcon, thanks @LettError. #851 #850
+
+
 0.13.2 (released 2025-07-21)
 ---------------------------
 - Fixed python syntax warning errors due to doc strings, thanks @bgermann. #849
