@@ -1702,11 +1702,17 @@ class BaseGlyph(BaseObject,
             if identifier is not None:
                 a._setIdentifier(identifier)
         for guideline in mathGlyph.guidelines:
+            guideColor = guideline.get("color")
+            if guideColor is None:
+                colorData = None
+            else:
+                r, g, b, a = guideColor
+                colorData = (r, g, b, a)
             g = copied.appendGuideline(
                 position=(guideline["x"], guideline["y"]),
                 angle=guideline["angle"],
                 name=guideline.get("name"),
-                color=guideline.get("color")
+                color=colorData,
             )
             identifier = guideline.get("identifier")
             if identifier is not None:
