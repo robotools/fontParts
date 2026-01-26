@@ -48,6 +48,7 @@ jobs:
         coverage combine
         coverage xml
     - name: Upload coverage to Codecov
+      if: github.repository == 'robotools/fontparts'
       uses: codecov/codecov-action@v5
       with:
         file: coverage.xml
