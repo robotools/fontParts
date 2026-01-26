@@ -495,7 +495,7 @@ class TestFont(unittest.TestCase):
 
     def _saveFontPath(self, ext):
         root = tempfile.mkdtemp()
-        return os.path.join(root, "test.%s" % ext)
+        return os.path.join(root, "test%s" % ext)
 
     def _tearDownPath(self, path):
         if os.path.isdir(path):
