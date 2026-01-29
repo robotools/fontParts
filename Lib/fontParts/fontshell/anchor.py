@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import cast, Optional
+from typing import Optional
 
 import defcon
 from fontParts.base import BaseAnchor
@@ -62,13 +62,17 @@ class RAnchor(RBaseObject, BaseAnchor):
     def _get_name(self) -> Optional[str]:
         return self.naked().name
 
-    def _set_name(self, value: str) -> None:
+    def _set_name(self, value: Optional[str]) -> None:
         self.naked().name = value
 
     # color
 
     def _get_color(self) -> Optional[QuadrupleType[float]]:
-        return self.naked().color
+        value = self.naked().color
+        if value is not None:
+            value = tuple(value)
+        return value
+    
 
     def _set_color(
         self, value: Optional[QuadrupleCollectionType[IntFloatType]]
