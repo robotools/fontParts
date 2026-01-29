@@ -422,7 +422,6 @@ class BaseAnchor(
     def _get_base_color(self) -> Optional[Color]:
         value = self._get_color()
         if value is not None:
-            value = normalizers.normalizeColor(value)
             value = Color(value)
         return value
 
