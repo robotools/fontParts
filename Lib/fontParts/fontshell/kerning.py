@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Any
+from typing import Any, Optional, Union
 from collections.abc import ItemsView
 
 import defcon
@@ -26,5 +26,7 @@ class RKerning(RBaseObject, BaseKerning):
     def _delItem(self, key: str) -> None:
         del self.naked()[key]
 
-    def _find(self, pair: PairCollectionType[str], default: int = 0) -> int:
+    def _find(
+        self, pair: PairCollectionType[str], default: Optional[Union[int, float]] = 0
+    ) -> int:
         return self.naked().find(pair, default)

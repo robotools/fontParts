@@ -13,6 +13,6 @@ class RFeatures(RBaseObject, BaseFeatures):
         features = self.naked()
         return features.text
 
-    def _set_text(self, value: str) -> None:
+    def _set_text(self, value: Optional[str]) -> None:
         features = self.naked()
         features.text = value

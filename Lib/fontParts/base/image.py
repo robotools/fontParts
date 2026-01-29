@@ -420,24 +420,26 @@ class BaseImage(
         The possible formats are defined by each environment.
         The value must be a :class:`bytes` object.
 
-        :return: A :class:`bytes` object representing the raw byte data of the image.
+        :return: A :class:`bytes` object representing the raw byte data of the image 
+            or :obj:`None`.
 
         """,
     )
 
-    def _get_base_data(self) -> bytes:
+    def _get_base_data(self) -> Optional[bytes]:
         return self._get_data()
 
     def _set_base_data(self, value: bytes) -> None:
         self._set_data(value)
 
-    def _get_data(self) -> bytes:
+    def _get_data(self) -> Optional[bytes]:
         """Get the native image's raw byte data.
 
         This is the environment implementation of the :attr:`BaseImage.data`
         property getter.
 
-        :return: A :class:`bytes` object representing the data of the image.
+        :return: A :class:`bytes` object representing the raw byte data of the image 
+            or :obj:`None`.
         :raises NotImplementedError: If the method has not been overridden by a
             subclass.
 

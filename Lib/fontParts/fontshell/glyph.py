@@ -242,8 +242,9 @@ class RGlyph(RBaseObject, BaseGlyph):
         guideline = self.guidelineClass().naked()
         if guideline is None:
             raise ValueError("Guideline cannot be None")
-        guideline.x = position[0]
-        guideline.y = position[1]
+        if position is not None:
+            guideline.x = position[0]
+            guideline.y = position[1]
         guideline.angle = angle
         guideline.name = name
         guideline.color = color
@@ -297,13 +298,14 @@ class RGlyph(RBaseObject, BaseGlyph):
         data: bytes,
         transformation: Optional[SextupleCollectionType[IntFloatType]] = None,
         color: Optional[QuadrupleCollectionType[IntFloatType]] = None,
-    ) -> None:
+    ) -> RImage:
         image = self.naked().image
         image = self.imageClass(image)
         image.glyph = self
         image.data = data
         image.transformation = transformation
         image.color = color
+        return image
 
     def _clearImage(self, **kwargs: Any) -> None:
         self.naked().image = None
