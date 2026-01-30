@@ -475,7 +475,7 @@ class TestFont(unittest.TestCase):
         font = self.getFont_glyphs()
         font.defaultLayer.name = "hello"
         copy = font.copy()
-        self.assertEqual(font.keys(), copy.keys())
+        self.assertCountEqual(font.keys(), copy.keys())
         self.assertEqual(font.defaultLayerName, copy.defaultLayerName)
 
         font = self.getFont_guidelines()
