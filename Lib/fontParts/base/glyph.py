@@ -308,7 +308,7 @@ class BaseGlyph(
         value = normalizers.normalizeGlyphUnicodes(value)
         self._set_unicodes(value)
 
-    def _get_unicodes(self) -> Tuple[int, ...]:  # type: ignore[return]
+    def _get_unicodes(self) -> CollectionType[int]:  # type: ignore[return]
         """Get the Unicode values assigned to the glyph.
 
         This is the environment implementation of
@@ -3226,16 +3226,18 @@ class BaseGlyph(
         """,
     )
 
-    def _get_base_image(self) -> BaseImage:
+    def _get_base_image(self) -> Optional[BaseImage]:
         image = self._get_image()
-        if image.glyph is None:
-            image.glyph = self
+        if image is not None:
+            if image.glyph is None:
+                image.glyph = self
         return image
 
-    def _get_image(self) -> BaseImage:  # type: ignore[return]
+    def _get_image(self) -> Optional[BaseImage]:  # type: ignore[return]
         """Get the image for the native glyph.
 
-        :return: The :class:`BaseImage` subclass instance belonging to the glyph.
+        :return: The :class:`BaseImage` subclass instance belonging to the glyph,
+            or :obj:`None` if the glyph has no image.
         :raises NotImplementedError: If the method has not been overridden by a
             subclass.
 

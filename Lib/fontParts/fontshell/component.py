@@ -1,10 +1,18 @@
+from __future__ import annotations
+from typing import Optional, Type
+
 import defcon
 from fontParts.base import BaseComponent
+from fontParts.base.annotations import (
+    SextupleType,
+    SextupleCollectionType,
+    IntFloatType,
+)
 from fontParts.fontshell.base import RBaseObject
 
 
 class RComponent(RBaseObject, BaseComponent):
-    wrapClass = defcon.Component
+    wrapClass: Type[defcon.Component] = defcon.Component
 
     # ----------
     # Attributes
@@ -12,19 +20,27 @@ class RComponent(RBaseObject, BaseComponent):
 
     # baseGlyph
 
-    def _get_baseGlyph(self):
-        return self.naked().baseGlyph
+    def _get_baseGlyph(self) -> Optional[str]:
+        component = self.naked()
+        return component.baseGlyph if component else None
 
-    def _set_baseGlyph(self, value):
-        self.naked().baseGlyph = value
+    def _set_baseGlyph(self, value: str) -> None:
+        component = self.naked()
+        if component is not None:
+            component.baseGlyph = value
 
     # transformation
 
-    def _get_transformation(self):
-        return self.naked().transformation
+    def _get_transformation(self) -> SextupleType[float]:
+        component = self.naked()
+        if component is None:
+            raise ValueError("Component cannot be None.")
+        return component.transformation
 
-    def _set_transformation(self, value):
-        self.naked().transformation = value
+    def _set_transformation(self, value: SextupleCollectionType[IntFloatType]) -> None:
+        component = self.naked()
+        if component is not None:
+            component.transformation = value
 
     # --------------
     # Identification
@@ -44,14 +60,20 @@ class RComponent(RBaseObject, BaseComponent):
 
     def _get_identifier(self):
         component = self.naked()
+        if component is None:
+            return None
         return component.identifier
 
     def _getIdentifier(self):
         component = self.naked()
+        if component is None:
+            return None
         return component.generateIdentifier()
 
     def _setIdentifier(self, value):
-        self.naked().identifier = value
+        component = self.naked()
+        if component is not None:
+            component.identifier = value
 
     # -------------
     # Normalization

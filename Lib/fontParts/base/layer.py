@@ -804,18 +804,20 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
         """,
     )
 
-    def _get_base_color(self) -> QuadrupleCollectionType[IntFloatType]:
+    def _get_base_color(self) -> Optional[QuadrupleCollectionType[IntFloatType]]:
         value = self._get_color()
         if value is not None:
             value = Color(value)
         return value
 
-    def _set_base_color(self, value: QuadrupleCollectionType[IntFloatType]) -> None:
+    def _set_base_color(
+        self, value: Optional[QuadrupleCollectionType[IntFloatType]]
+    ) -> None:
         if value is not None:
             value = normalizers.normalizeColor(value)
         self._set_color(value)
 
-    def _get_color(self) -> QuadrupleCollectionType[IntFloatType]:  # type: ignore[return]
+    def _get_color(self) -> Optional[QuadrupleCollectionType[IntFloatType]]:  # type: ignore[return]
         """Get the color of the layer.
 
         This is the environment implementation of
@@ -835,7 +837,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
         self.raiseNotImplementedError()
 
     def _set_color(
-        self, value: QuadrupleCollectionType[IntFloatType], **kwargs: Any
+        self, value: Optional[QuadrupleCollectionType[IntFloatType]], **kwargs: Any
     ) -> None:
         r"""Get or set the color of the layer.
 

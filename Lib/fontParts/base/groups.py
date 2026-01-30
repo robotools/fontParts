@@ -9,9 +9,9 @@ from fontParts.base.annotations import CollectionType
 
 if TYPE_CHECKING:
     from fontParts.base.font import BaseFont
-    from fontparts.base import BaseItems
-    from fontparts.base import BaseKeys
-    from fontparts.base import BaseValues
+    from fontParts.base.base import BaseKeys
+    from fontParts.base.base import BaseItems
+    from fontParts.base.base import BaseValues
 
 ValueType = Tuple[str, ...]
 GroupsDict = Dict[str, ValueType]
@@ -410,7 +410,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         """
         return super(BaseGroups, self).get(groupName, default)
 
-    def items(self) -> BaseItems[Tuple[str, ValueType]]:
+    def items(self) -> BaseItems[str, ValueType]:
         """Return the items in the current groups instance.
 
         Each item is represented as a :class:`tuple` of key-value pairs, where:
