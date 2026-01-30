@@ -34,7 +34,7 @@ class RComponent(RBaseObject, BaseComponent):
     def _get_transformation(self) -> SextupleType[float]:
         component = self.naked()
         if component is None:
-            raise ValueError("Naked cannot be None.")
+            raise ValueError("Component cannot be None.")
         return component.transformation
 
     def _set_transformation(self, value: SextupleCollectionType[IntFloatType]) -> None:
