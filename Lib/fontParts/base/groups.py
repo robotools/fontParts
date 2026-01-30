@@ -410,7 +410,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         """
         return super(BaseGroups, self).get(groupName, default)
 
-    def items(self) -> BaseItems[Tuple[str, ValueType]]:
+    def items(self) -> BaseItems[str, ValueType]:
         """Return the items in the current groups instance.
 
         Each item is represented as a :class:`tuple` of key-value pairs, where:

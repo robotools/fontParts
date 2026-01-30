@@ -1828,6 +1828,8 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
                     identifier = normalizedGuideline.identifier
         if position is not None:
             position = normalizers.normalizeCoordinateTuple(position)
+        else:
+            raise ValueError("Position cannot be None.")
         if angle is not None:
             angle = normalizers.normalizeRotationAngle(angle)
         if name is not None:

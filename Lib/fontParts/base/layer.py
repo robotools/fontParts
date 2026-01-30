@@ -837,7 +837,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
         self.raiseNotImplementedError()
 
     def _set_color(
-        self, value: QuadrupleCollectionType[IntFloatType], **kwargs: Any
+        self, value: Optional[QuadrupleCollectionType[IntFloatType]], **kwargs: Any
     ) -> None:
         r"""Get or set the color of the layer.
 

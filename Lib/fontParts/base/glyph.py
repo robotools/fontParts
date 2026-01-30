@@ -3226,10 +3226,11 @@ class BaseGlyph(
         """,
     )
 
-    def _get_base_image(self) -> BaseImage:
+    def _get_base_image(self) -> Optional[BaseImage]:
         image = self._get_image()
-        if image.glyph is None:
-            image.glyph = self
+        if image is not None:
+            if image.glyph is None:
+                image.glyph = self
         return image
 
     def _get_image(self) -> Optional[BaseImage]:  # type: ignore[return]
