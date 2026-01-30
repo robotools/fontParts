@@ -1465,6 +1465,7 @@ class BaseGlyph(BaseObject,
         - components
         - anchors
         - guidelines
+        - image
         """
         self._round()
 
@@ -1480,6 +1481,8 @@ class BaseGlyph(BaseObject,
             anchor.round()
         for guideline in self.guidelines:
             guideline.round()
+        if self.image.data is not None:
+            image.round()
         self.width = normalizers.normalizeVisualRounding(self.width)
         self.height = normalizers.normalizeVisualRounding(self.height)
 
