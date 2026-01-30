@@ -1,6 +1,10 @@
-0.13.3 (released 2026-01-20)
+0.14.0 (released 2026-01-30)
 ---------------------------
-- Update dependencies
+- `glyph.round` now rounds image offset
+
+0.13.4 (released 2026-01-20)
+---------------------------
+- Update dependencies to fix issue with tests of `booleanOperations`
 
 0.13.3 (released 2025-08-14)
 ---------------------------
