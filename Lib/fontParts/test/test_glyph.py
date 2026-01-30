@@ -1361,6 +1361,16 @@ class TestGlyph(unittest.TestCase):
         self.assertEqual(len(glyph), 1)
 
 
+    # ------------------
+    # Data Normalization
+    # ------------------
+
+    def test_round_nothing(self):
+        glyph = self.getGlyph_generic()
+        glyph.round()
+
+
+
 def test_generator(test_name, metric, value):
     if '_invalid_' in test_name:
         def test(self):
