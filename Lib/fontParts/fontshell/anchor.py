@@ -72,7 +72,6 @@ class RAnchor(RBaseObject, BaseAnchor):
         if value is not None:
             value = tuple(value)
         return value
-    
 
     def _set_color(
         self, value: Optional[QuadrupleCollectionType[IntFloatType]]
