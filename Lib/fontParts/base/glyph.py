@@ -35,6 +35,7 @@ from fontParts.base.annotations import (
     SextupleCollectionType,
     IntFloatType,
     TransformationType,
+    DiffType,
     PenType,
     PointPenType,
 )
@@ -1216,7 +1217,8 @@ class BaseGlyph(
         self._setGlyphInContour(contour)
         return contour
 
-    def _getContour(self, index: int, **kwargs: Any) -> BaseContour:  # type: ignore[return]
+    # type: ignore[return]
+    def _getContour(self, index: int, **kwargs: Any) -> BaseContour:
         r"""Get the contour located at the given index from the native glyph.
 
         :param index: The index of the contour to return as an :class:`int`.
@@ -1452,7 +1454,8 @@ class BaseGlyph(
         self._setGlyphInComponent(component)
         return component
 
-    def _getComponent(self, index: int, **kwargs: Any) -> BaseComponent:  # type: ignore[return]
+    # type: ignore[return]
+    def _getComponent(self, index: int, **kwargs: Any) -> BaseComponent:
         r"""Get the component at the given index from the native glyph.
 
         :param index: The index of the component to return as an :class:`int`.
@@ -1728,7 +1731,8 @@ class BaseGlyph(
         self._setGlyphInAnchor(anchor)
         return anchor
 
-    def _getAnchor(self, index: int, **kwargs: Any) -> BaseAnchor:  # type: ignore[return]
+    # type: ignore[return]
+    def _getAnchor(self, index: int, **kwargs: Any) -> BaseAnchor:
         r"""Get the anchor at the given index from the native glyph.
 
         :param index: The index of the anchor to get as an :class:`int`.
@@ -1971,7 +1975,8 @@ class BaseGlyph(
         self._setGlyphInGuideline(guideline)
         return guideline
 
-    def _getGuideline(self, index: int, **kwargs: Any) -> BaseGuideline:  # type: ignore[return]
+    # type: ignore[return]
+    def _getGuideline(self, index: int, **kwargs: Any) -> BaseGuideline:
         r"""Get the anchor at the given index from the native glyph.
 
         :param index: The index of the guideline to get as an :class:`int`.
@@ -2819,7 +2824,6 @@ class BaseGlyph(
 
         """
         GuidelineListType = List[Tuple[Optional[str], int]]
-        DiffType = List[Tuple[int, Optional[str], Optional[str]]]
 
         glyph1 = self
         glyph2 = other
@@ -3407,7 +3411,8 @@ class BaseGlyph(
             value = normalizers.normalizeColor(value)
         self._set_markColor(value)
 
-    def _get_markColor(self) -> Optional[QuadrupleCollectionType[IntFloatType]]:  # type: ignore[return]
+    # type: ignore[return]
+    def _get_markColor(self) -> Optional[QuadrupleCollectionType[IntFloatType]]:
         """Get the glyph's mark color.
 
         This is the environment implementation of
