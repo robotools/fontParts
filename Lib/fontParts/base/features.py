@@ -1,12 +1,25 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING, Callable, Tuple, List, Optional, Union
+
 from fontParts.base.base import BaseObject, dynamicProperty, reference
 from fontParts.base import normalizers
 from fontParts.base.deprecated import DeprecatedFeatures, RemovedFeatures
 
+if TYPE_CHECKING:
+    from fontParts.base.font import BaseFont
+
 
 class BaseFeatures(BaseObject, DeprecatedFeatures, RemovedFeatures):
-    copyAttributes = ("text",)
+    """Represent the basis for a features object.
 
-    def _reprContents(self):
+    This class contains the font's `Adobe Font Development Kit for OpenType (AFDKO)
+    <https://github.com/adobe-type-tools/afdko/>`_ feature definitions.
+
+    """
+
+    copyAttributes: Tuple[str] = ("text",)
+
+    def _reprContents(self) -> List[str]:
         contents = []
         if self.font is not None:
             contents.append("for font")
@@ -19,16 +32,35 @@ class BaseFeatures(BaseObject, DeprecatedFeatures, RemovedFeatures):
 
     # Font
 
-    _font = None
+    _font: Optional[Callable[[], BaseFont]] = None
 
-    font = dynamicProperty("font", "The features' parent :class:`BaseFont`.")
+    font: dynamicProperty = dynamicProperty(
+        "font",
+        """Get the feature's parent font object.
 
-    def _get_font(self):
+        This property is read-only.
+
+        :return: The :class:`BaseFont` instance containing the features
+            or :obj:`None`.
+        :raises AssertionError:
+            - If attempting to set the font when it has already been set and is
+              not the same as the provided font.
+
+        Example::
+
+            >>> font = features.font
+
+        """,
+    )
+
+    def _get_font(self) -> Optional[BaseFont]:
         if self._font is None:
             return None
         return self._font()
 
-    def _set_font(self, font):
+    def _set_font(
+        self, font: Optional[Union[BaseFont, Callable[[], BaseFont]]]
+    ) -> None:
         if self._font is not None and self._font() != font:
             raise AssertionError(
                 "font for features already set and is not same as font"
@@ -41,43 +73,66 @@ class BaseFeatures(BaseObject, DeprecatedFeatures, RemovedFeatures):
     # Text
     # ----
 
-    text = dynamicProperty(
+    text: dynamicProperty = dynamicProperty(
         "base_text",
-        """
-        The `.fea formated
-        <http://www.adobe.com/devnet/opentype/afdko/topic_feature_file_syntax.html>`_
-        text representing the features.
-        It must be a :ref:`type-string`.
+        """Get or set the features text.
+        
+        The value must be a `AFDKO FEA formatted
+        <https://adobe-type-tools.github.io/afdko/OpenTypeFeatureFileSpecification.html>`_
+        :class:`str` or :obj:`None`.
+        
+        :return: A :class:`str` representing the font's features text, or :obj:`None`.
+
         """,
     )
 
-    def _get_base_text(self):
+    def _get_base_text(self) -> Optional[str]:
         value = self._get_text()
         if value is not None:
             value = normalizers.normalizeFeatureText(value)
         return value
 
-    def _set_base_text(self, value):
+    def _set_base_text(self, value: Optional[str]) -> None:
         if value is not None:
             value = normalizers.normalizeFeatureText(value)
         self._set_text(value)
 
-    def _get_text(self):
-        """
-        This is the environment implementation of
-        :attr:`BaseFeatures.text`. This must return a
-        :ref:`type-string`.
+    def _get_text(self) -> Optional[str]:
+        """Get the features text.
 
-        Subclasses must override this method.
+        This is the environment implementation of the :attr:`BaseFeatures.text` property
+        getter.
+
+        :return: :class:`_empty`. The value will be normalized with
+            :func:`normalizers.normalizeFeatureText`.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
-    def _set_text(self, value):
-        """
-        This is the environment implementation of
-        :attr:`BaseFeatures.text`. **value** will be
-        a :ref:`type-string`.
+    def _set_text(self, value: Optional[str]) -> None:
+        """Set the features text.
 
-        Subclasses must override this method.
+        Description
+
+        This is the environment implementation of the :attr:`BaseFeatures.text` property
+        setter.
+
+        :param value: A `AFDKO FEA formatted
+        <https://adobe-type-tools.github.io/afdko/OpenTypeFeatureFileSpecification.html>`_
+        :class:`str` or :obj:`None`. The value will have been
+            normalized with :func:`normalizers.normalizeFeatureText`.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
