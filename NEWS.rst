@@ -1,3 +1,7 @@
+0.14.1 (released 2026-02-24)
+---------------------------
+- `glyph.round` fixed, thank you @adbac
+
 0.14.0 (released 2026-01-30)
 ---------------------------
 - `glyph.round` now rounds image offset
