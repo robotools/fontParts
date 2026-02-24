@@ -1482,7 +1482,7 @@ class BaseGlyph(BaseObject,
         for guideline in self.guidelines:
             guideline.round()
         if self.image.data is not None:
-            image.round()
+            self.image.round()
         self.width = normalizers.normalizeVisualRounding(self.width)
         self.height = normalizers.normalizeVisualRounding(self.height)
 
