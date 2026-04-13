@@ -50,10 +50,7 @@ class BasePoint(
     copyAttributes: QuintupleType[str] = ("type", "smooth", "x", "y", "name")
 
     def _reprContents(self) -> list[str]:
-        contents = [
-            f"{self.type}",
-            f"({self.x}, {self.y})",
-        ]
+        contents = [f"{self.type}", f"({self.x}, {self.y})"]
         if self.name is not None:
             contents.append(f"name='{self.name}'")
         if self.smooth:

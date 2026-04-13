@@ -43,9 +43,7 @@ class BaseSegment(
         self._points = points
 
     def _reprContents(self) -> List[str]:
-        contents = [
-            f"{self.type}",
-        ]
+        contents = [f"{self.type}"]
         if self.index is not None:
             contents.append(f"index='{self.index!r}'")
         return contents

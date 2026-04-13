@@ -1,13 +1,5 @@
 from __future__ import annotations
-from typing import (
-    TYPE_CHECKING,
-    Callable,
-    Dict,
-    Iterator,
-    List,
-    Optional,
-    Union,
-)
+from typing import TYPE_CHECKING, Callable, Dict, Iterator, List, Optional, Union
 from collections.abc import MutableMapping
 
 from fontParts.base.base import BaseDict, dynamicProperty, reference
@@ -18,10 +10,10 @@ from fontParts.base.annotations import LibValueType
 if TYPE_CHECKING:
     from fontParts.base.glyph import BaseGlyph
     from fontParts.base.font import BaseFont
-    from fontparts.base.layer import BaseLayer
-    from fontparts.base import BaseItems
-    from fontparts.base import BaseKeys
-    from fontparts.base import BaseValues
+    from fontParts.base.layer import BaseLayer
+    from fontParts.base.base import BaseItems
+    from fontParts.base.base import BaseValues
+    from fontParts.base.base import BaseKeys
 
 
 class BaseLib(BaseDict, DeprecatedLib, RemovedLib):

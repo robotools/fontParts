@@ -825,9 +825,7 @@ def normalizeAnchorName(value: str) -> str:
     if not isinstance(value, str):
         raise TypeError(f"Anchor names must be strings, not {type(value).__name__}.")
     if len(value) < 1:
-        raise ValueError(
-            ("Anchor names must be at least one character " "long or None.")
-        )
+        raise ValueError(("Anchor names must be at least one character long or None."))
     return value
 
 
@@ -861,7 +859,7 @@ def normalizeGuidelineName(value: str) -> str:
     if not isinstance(value, str):
         raise TypeError(f"Guideline names must be strings, not {type(value).__name__}.")
     if len(value) < 1:
-        raise ValueError("Guideline names must be at least one character " "long.")
+        raise ValueError("Guideline names must be at least one character long.")
     return value
 
 
@@ -1052,9 +1050,9 @@ def normalizeBoundingBox(
             )
     xMin, yMin, xMax, yMax = value
     if xMin > xMax:
-        raise ValueError("Bounding box xMin must be less than or equal to " "xMax.")
+        raise ValueError("Bounding box xMin must be less than or equal to xMax.")
     if yMin > yMax:
-        raise ValueError("Bounding box yMin must be less than or equal to " "yMax.")
+        raise ValueError("Bounding box yMin must be less than or equal to yMax.")
     return (float(xMin), float(yMin), float(xMax), float(yMax))
 
 
