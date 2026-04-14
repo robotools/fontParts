@@ -1,12 +1,5 @@
 from __future__ import annotations
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Callable,
-    List,
-    Optional,
-    Union,
-)
+from typing import TYPE_CHECKING, Any, Callable, List, Optional, Union
 
 from fontTools.ufoLib import fontInfoAttributesVersion3
 from fontTools.ufoLib import validateFontInfoVersion3ValueForAttribute
@@ -17,9 +10,7 @@ from fontParts.base.base import BaseObject, dynamicProperty, interpolate, refere
 from fontParts.base import normalizers
 from fontParts.base.errors import FontPartsError
 from fontParts.base.deprecated import DeprecatedInfo, RemovedInfo
-from fontParts.base.annotations import (
-    TransformationType,
-)
+from fontParts.base.annotations import TransformationType
 
 if TYPE_CHECKING:
     from fontParts.base.font import BaseFont
