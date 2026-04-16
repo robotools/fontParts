@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
 
 class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
-    """Represent the basis for an info object."""
+    """Represent the basis for a font info object."""
 
     familyName: str
     """Family name."""
@@ -532,16 +532,20 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
     # Attributes
     # ----------
 
-    # has
-
-    def __hasattr__(self, attr: str) -> bool:
-        if attr in fontInfoAttributesVersion3:
-            return True
-        return super(BaseInfo, self).__hasattr__(attr)
-
     # get
 
-    def __getattribute__(self, attr: str) -> None:
+    def __getattribute__(self, attr: str) -> Any:
+        """Get the value of the specified font info attribute.
+
+        Attributes listed in :const:`fonttools.ufolib.fontInfoAttributesVersion3` are
+        retrieved by calling a corresponding ``_get_<attr>`` method via
+        :meth:`_getAttr`. The value is validated before being returned.
+
+        :param attr: The name of the attribute to retrieve.
+        :return: The value of the specified attribute.
+        :raises ValueError: if the value of `attr` is invalid.
+
+        """
         if attr != "guidelines" and attr in fontInfoAttributesVersion3:
             value = self._getAttr(attr)
             if value is not None:
@@ -549,24 +553,47 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
             return value
         return super(BaseInfo, self).__getattribute__(attr)
 
-    def _getAttr(self, attr: str) -> None:
-        """
-        Subclasses may override this method.
+    def _getAttr(self, attr: str) -> Any:
+        """Get the value of the specified native font info attribute.
 
-        If a subclass does not override this method,
-        it must implement '_get_attributeName' methods
-        for all Info methods.
+        This is the environment implementation of :meth:`BaseInfo.__getattribute__`.
+
+        :param attr: The name of the attribute to retrieve.
+            The value will be validated by
+            :func:`fonttools.ufolib.validateFontInfoVersion3ValueForAttribute`
+        :return: The value of the specified attribute.
+        :raises AttributeError: If no getter is defined for `attr`.
+        :raises ValueError: if the value of `attr` is invalid.
+
+        .. note::
+
+            Subclasses may override this method.
+
+            If a subclass does not override this method, it must implement
+            ``_get_<attr>`` methods for all :class:`BaseInfo` methods.
+
         """
         methodName = f"_get_{attr}"
-        if not hasattr(self, methodName):
+        try:
+            method = object.__getattribute__(self, methodName)
+        except AttributeError:
             raise AttributeError(f"No getter for attribute '{attr}'.")
-        method = getattr(self, methodName)
-        value = method()
-        return value
+        return method()
 
     # set
 
     def __setattr__(self, attr: str, value: Any) -> None:
+        """Set the value of the specified font info attribute.
+
+        Attributes listed in :const:`fonttools.ufolib.fontInfoAttributesVersion3` are
+        set by validating the value and calling a corresponding ``_set_<attr>`` method
+        via :meth:`_setAttr`.
+
+        :param attr: The name of the attribute to set.
+        :param value: The value to set for `attr`.
+        :raises ValueError: if the value of `attr` is invalid.
+
+        """
         if attr != "guidelines" and attr in fontInfoAttributesVersion3:
             if value is not None:
                 value = self._validateFontInfoAttributeValue(attr, value)
@@ -574,12 +601,24 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
         return super(BaseInfo, self).__setattr__(attr, value)
 
     def _setAttr(self, attr: str, value: Any) -> None:
-        """
-        Subclasses may override this method.
+        """Set the value of the specified native font info attribute.
 
-        If a subclass does not override this method,
-        it must implement '_set_attributeName' methods
-        for all Info methods.
+        This is the environment implementation of :meth:`BaseInfo.__setattr__`.
+
+        :param attr: The name of the attribute to set.
+            The value will have been validated by
+            :func:`fonttools.ufolib.validateFontInfoVersion3ValueForAttribute`
+        :param value: The value to set for `attr`.
+        :raises AttributeError: If no setter is defined for `attr`.
+        :raises ValueError: if the value of `attr` is invalid.
+
+        .. note::
+
+            Subclasses may override this method.
+
+            If a subclass does not override this method, it must implement
+            ``_set_<attr>`` methods for all :class:`BaseInfo` methods.
+
         """
         methodName = f"_set_{attr}"
         if not hasattr(self, methodName):
@@ -592,8 +631,7 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
     # -------------
 
     def round(self) -> None:
-        """
-        Round the following attributes to integers:
+        """Round the following attributes to the nearest integer:
 
         - unitsPerEm
         - descender
@@ -643,12 +681,25 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
         - postscriptBlueShift
         - postscriptDefaultWidthX
         - postscriptNominalWidthX
+
+        Example::
+
+            >>> info.round()
+
         """
         self._round()
 
     def _round(self, **kwargs: Any) -> None:
-        """
-        Subclasses may override this method.
+        """Round selected native attributes to the nearest integer.
+
+        This is the environment implementation of :meth:`BaseInfo.round`.
+
+        :param \**kwargs: Additional keyword arguments.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         setRoundIntegerFunction(normalizers.normalizeVisualRounding)
 
@@ -660,18 +711,30 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
     # Updating
     # --------
 
-    def update(self, other: BaseInfo) -> None:
-        """
-        Update this object with the values
-        from **otherInfo**.
+    def update(self, other: BaseInfo) -> None:  # type: ignore[override]
+        """Update the current info object with the values from another.
+
+        :param other: A :class:`BaseInfo` to update this info object with.
+
+        Example::
+
+            >>> info.update(newInfo)
+
         """
         self._update(other)
 
     def _update(self, other: BaseInfo) -> None:
+        """Update the current native info object with the values from another.
+
+        This is the environment implementation of :meth:`BaseInfo.update`.
+
+        :param other: A :class:`BaseInfo` to update this info object with.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
-        Subclasses may override this method.
-        """
-        from fontTools.ufoLib import fontInfoAttributesVersion3
 
         for attr in fontInfoAttributesVersion3:
             if attr == "guidelines":
@@ -684,28 +747,45 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
     # -------------
 
     def toMathInfo(self, guidelines=True) -> MathInfo:
-        """
-        Returns the info as an object that follows the
+        """Return this info as an object conforming to the
         `MathGlyph protocol <https://github.com/typesupply/fontMath>`_.
 
+        :param guidelines: Whether to replace guidelines. Defaults to :obj:`True`.
+
+        Example::
+
             >>> mg = font.info.toMathInfo()
+
         """
         return self._toMathInfo(guidelines=guidelines)
 
-    def fromMathInfo(self, mathInfo, guidelines=True) -> BaseInfo:
-        """
-        Replaces the contents of this info object with the contents of ``mathInfo``.
+    def fromMathInfo(self, mathInfo, guidelines=True) -> None:
+        """Replace the contents of this info object with that of `mathInfo`.
+
+        :param mathInfo: An object conforming to the `MathInfo protocol
+            <https://github.com/typesupply/fontMath>`_, containing the replacement
+            values.
+        :param guidelines: Whether to replace guidelines. Defaults to :obj:`True`.
+
+        Example::
 
             >>> font.fromMathInfo(mg)
 
-        ``mathInfo`` must be an object following the
-        `MathInfo protocol <https://github.com/typesupply/fontMath>`_.
         """
-        return self._fromMathInfo(mathInfo, guidelines=guidelines)
+        self._fromMathInfo(mathInfo, guidelines=guidelines)
 
     def _toMathInfo(self, guidelines=True) -> MathInfo:
-        """
-        Subclasses may override this method.
+        """Return this native info as an object conforming to the
+        `MathGlyph protocol <https://github.com/typesupply/fontMath>`_.
+
+        This is the environment implementation of :meth:`BaseInfo.toMathInfo`.
+
+        :param guidelines: Whether to replace guidelines. Defaults to :obj:`True`.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
 
         # A little trickery is needed here because MathInfo
@@ -729,8 +809,19 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
         return info
 
     def _fromMathInfo(self, mathInfo, guidelines=True) -> None:
-        """
-        Subclasses may override this method.
+        """Replace the contents of this native info object with that of `mathInfo`.
+
+        This is the environment implementation of :meth:`BaseInfo.fromMathInfo`.
+
+        :param mathInfo: An object conforming to the `MathInfo protocol
+            <https://github.com/typesupply/fontMath>`_, containing the replacement
+            values.
+        :param guidelines: Whether to replace guidelines. Defaults to :obj:`True`.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         mathInfo.extractInfo(self)
         font = self.font
@@ -752,30 +843,39 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
         round: bool = True,
         suppressError: bool = True,
     ) -> None:
-        """
-        Interpolate all pairs between minInfo and maxInfo.
-        The interpolation occurs on a 0 to 1.0 range where minInfo
-        is located at 0 and maxInfo is located at 1.0.
+        """Interpolate all possible data in the current info object.
 
-        factor is the interpolation value. It may be less than 0
-        and greater than 1.0. It may be a number (integer, float)
-        or a tuple of two numbers. If it is a tuple, the first
-        number indicates the x factor and the second number
-        indicates the y factor.
+        :param factor: The interpolation value as a single :class:`int`
+            or :class:`float` or a :class:`tuple` of two :class:`int`
+            or :class:`float` values representing the factors ``(x, y)``.
+        :param minInfo: The :class:`BaseInfo` instance corresponding to the
+            0.0 position in the interpolation.
+        :param maxInfo: The :class:`BaseInfo` instance corresponding to the
+            1.0 position in the interpolation.
+        :param round: A :class:`bool` indicating whether the result should
+            be rounded to integers. Defaults to :obj:`True`.
+        :param suppressError: A :class:`bool` indicating whether to ignore
+            incompatible data or raise an error when such
+            incompatibilities are found. Defaults to :obj:`True`.
+        :raises TypeError: If `minInfo` or `maxInfo` are not instances
+            of :class:`BaseInfo`.
 
-        round indicates if the result should be rounded to integers.
+        Example::
 
-        suppressError indicates if incompatible data should be ignored
-        or if an error should be raised when such incompatibilities are found.
+            >>> info.interpolate(0.5, otherInfo1, otherInfo2)
+            >>> info.interpolate((0.5, 2.0), otherInfo1, otherInfo2, round=False)
+
         """
         factor = normalizers.normalizeInterpolationFactor(factor)
         if not isinstance(minInfo, BaseInfo):
             raise TypeError(
-                f"Interpolation to an instance of {self.__class__.__name__!r} can not be performed from an instance of {minInfo.__class__.__name__!r}."
+                f"Interpolation to an instance of {self.__class__.__name__!r} can not "
+                f"be performed from an instance of {minInfo.__class__.__name__!r}."
             )
         if not isinstance(maxInfo, BaseInfo):
             raise TypeError(
-                f"Interpolation to an instance of {self.__class__.__name__!r} can not be performed from an instance of {maxInfo.__class__.__name__!r}."
+                f"Interpolation to an instance of {self.__class__.__name__!r} can not "
+                f"be performed from an instance of {maxInfo.__class__.__name__!r}."
             )
         round = normalizers.normalizeBoolean(round)
         suppressError = normalizers.normalizeBoolean(suppressError)
@@ -791,7 +891,10 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
         round: bool = True,
         suppressError: bool = True,
     ) -> None:
-        """
+        """ "Interpolate all possible data in the current native info object.
+
+        This is the environment implementation of :meth:`BaseInfo.interpolate`.
+
         Subclasses may override this method.
         """
 
@@ -799,11 +902,15 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
 
         minInfo = minInfo._toMathInfo()
         maxInfo = maxInfo._toMathInfo()
-        result = interpolate(minInfo, maxInfo, factor)
-        if result is None and not suppressError:
-            raise FontPartsError(
-                f"Info from font '{minInfo.font.name}' and font '{maxInfo.font.name}' could not be interpolated."
-            )
+        result: Optional[MathInfo] = interpolate(minInfo, maxInfo, factor)
+        if result is None:
+            if not suppressError:
+                raise FontPartsError(
+                    f"Info from font '{minInfo.font.name}' and font '{maxInfo.font.name}' "
+                    "could not be interpolated."
+                )
+            return
+
         if round:
-            result = result.round()  # type: ignore[func-returns-value]
+            result = result.round()
         self._fromMathInfo(result)
