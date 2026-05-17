@@ -231,7 +231,22 @@ class BaseContour(
 
         XXX port this from robofab
         """
-        self.raiseNotImplementedError()
+        startIndex = 0
+        startSegment = self.segments[0]
+        for i in range(len(self.segments)):
+            segment = self.segments[i]
+            startOn = startSegment.onCurve
+            on = segment.onCurve
+            if on.y <= startOn.y:
+                if on.y == startOn.y:
+                    if on.x < startOn.x:
+                        startSegment = segment
+                        startIndex = i
+                else:
+                    startSegment = segment
+                    startIndex = i
+        if startIndex != 0:
+            self.setStartSegment(startIndex)
 
     def round(self):
         """
