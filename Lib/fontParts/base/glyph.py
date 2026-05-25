@@ -2890,13 +2890,19 @@ class BaseGlyph(
         guidelines2 = set(otherGuidelines)
         if len(guidelines1.difference(guidelines2)) != 0:
             reporter.warning = True
-            reporter.guidelinesMissingFromGlyph2 = list(
-                guidelines1.difference(guidelines2)
+            reporter.guidelinesMissingFromGlyph2 = [
+                f"[name] [index]"
+                for name, index in guidelines1.difference(guidelines2)
+                if name is not None
+            ]
             )
         if len(guidelines2.difference(guidelines1)) != 0:
             reporter.warning = True
-            reporter.guidelinesMissingFromGlyph1 = list(
-                guidelines2.difference(guidelines1)
+            reporter.guidelinesMissingFromGlyph1 = [
+                f"[name] [index]"
+                for name, index in guidelines2.difference(guidelines1)
+                if name is not None
+            ]
             )
         # anchor count
         if len(self.anchors) != len(glyph2.anchors):
