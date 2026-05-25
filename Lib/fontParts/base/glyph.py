@@ -1977,7 +1977,7 @@ class BaseGlyph(
 
     # type: ignore[return]
     def _getGuideline(self, index: int, **kwargs: Any) -> BaseGuideline:
-        r"""Get the anchor at the given index from the native glyph.
+        r"""Get the guideline at the given index from the native glyph.
 
         :param index: The index of the guideline to get as an :class:`int`.
         :param \**kwargs: Additional keyword arguments.
