@@ -749,7 +749,7 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
 
     def toMathInfo(self, guidelines=True) -> MathInfo:
         """Return this info as an object conforming to the
-        `MathGlyph protocol <https://github.com/typesupply/fontMath>`_.
+        `MathGlyph protocol <https://github.com/robotools/fontMath>`_.
 
         :param guidelines: Whether to replace guidelines. Defaults to :obj:`True`.
 
@@ -764,7 +764,7 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
         """Replace the contents of this info object with that of `mathInfo`.
 
         :param mathInfo: An object conforming to the `MathInfo protocol
-            <https://github.com/typesupply/fontMath>`_, containing the replacement
+            <https://github.com/robotools/fontMath>`_, containing the replacement
             values.
         :param guidelines: Whether to replace guidelines. Defaults to :obj:`True`.
 
@@ -777,7 +777,7 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
 
     def _toMathInfo(self, guidelines=True) -> MathInfo:
         """Return this native info as an object conforming to the
-        `MathGlyph protocol <https://github.com/typesupply/fontMath>`_.
+        `MathGlyph protocol <https://github.com/robotools/fontMath>`_.
 
         This is the environment implementation of :meth:`BaseInfo.toMathInfo`.
 
@@ -815,7 +815,7 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
         This is the environment implementation of :meth:`BaseInfo.fromMathInfo`.
 
         :param mathInfo: An object conforming to the `MathInfo protocol
-            <https://github.com/typesupply/fontMath>`_, containing the replacement
+            <https://github.com/robotools/fontMath>`_, containing the replacement
             values.
         :param guidelines: Whether to replace guidelines. Defaults to :obj:`True`.
 
