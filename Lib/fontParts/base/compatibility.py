@@ -1,4 +1,19 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING, Any, List, Sequence
+from _collections_abc import Callable
+
 from fontParts.base.base import dynamicProperty
+from fontParts.base.annotations import DiffType
+
+if TYPE_CHECKING:
+    from fontParts.base.base import BaseObject
+    from fontParts.base.font import BaseFont
+    from fontParts.base.layer import BaseLayer
+    from fontParts.base.glyph import BaseGlyph
+    from fontParts.base.contour import BaseContour
+    from fontParts.base.component import BaseComponent
+    from fontParts.base.anchor import BaseAnchor
+    from fontParts.base.guideline import BaseGuideline
 
 # ----
 # Base
@@ -8,7 +23,7 @@ from fontParts.base.base import dynamicProperty
 class BaseCompatibilityReporter(object):
     objectName = "Base"
 
-    def __init__(self, obj1, obj2):
+    def __init__(self, obj1: BaseObject, obj2: BaseObject) -> None:
         self._object1 = obj1
         self._object2 = obj2
 
@@ -17,7 +32,7 @@ class BaseCompatibilityReporter(object):
     fatal = False
     warning = False
 
-    def _get_title(self):
+    def _get_title(self) -> str:
         title = f"{self.object1Name} + {self.object2Name}"
         if self.fatal:
             return self.formatFatalString(title)
@@ -26,30 +41,30 @@ class BaseCompatibilityReporter(object):
         else:
             return self.formatOKString(title)
 
-    title = dynamicProperty("title")
+    title: dynamicProperty = dynamicProperty("title")
 
     # objects
 
-    object1 = dynamicProperty("object1")
-    object1Name = dynamicProperty("object1Name")
+    object1: dynamicProperty = dynamicProperty("object1")
+    object1Name: dynamicProperty = dynamicProperty("object1Name")
 
-    def _get_object1(self):
+    def _get_object1(self) -> Any:
         return self._object1
 
-    def _get_object1Name(self):
+    def _get_object1Name(self) -> str:
         return self._getObjectName(self._object1)
 
-    object2 = dynamicProperty("object2")
-    object2Name = dynamicProperty("object2Name")
+    object2: dynamicProperty = dynamicProperty("object2")
+    object2Name: dynamicProperty = dynamicProperty("object2Name")
 
-    def _get_object2(self):
+    def _get_object2(self) -> Any:
         return self._object2
 
-    def _get_object2Name(self):
+    def _get_object2Name(self) -> str:
         return self._getObjectName(self._object2)
 
     @staticmethod
-    def _getObjectName(obj):
+    def _getObjectName(obj) -> str:
         if hasattr(obj, "name") and obj.name is not None:
             return f'"{obj.name}"'
         elif hasattr(obj, "identifier") and obj.identifier is not None:
@@ -61,23 +76,27 @@ class BaseCompatibilityReporter(object):
 
     # Report
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.report()
 
-    def report(self, showOK=False, showWarnings=False):
+    def report(self, showOK: bool = False, showWarnings: bool = False) -> str:
         raise NotImplementedError
 
-    def formatFatalString(self, text):
+    def formatFatalString(self, text: str) -> str:
         return f"[Fatal] {self.objectName}: " + text
 
-    def formatWarningString(self, text):
+    def formatWarningString(self, text: str) -> str:
         return f"[Warning] {self.objectName}: " + text
 
-    def formatOKString(self, text):
+    def formatOKString(self, text: str) -> str:
         return f"[OK] {self.objectName}: " + text
 
     @staticmethod
-    def reportSubObjects(reporters, showOK=True, showWarnings=True):
+    def reportSubObjects(
+        reporters: Sequence[BaseCompatibilityReporter],
+        showOK: bool = True,
+        showWarnings: bool = True,
+    ) -> List[str]:
         report = []
         for reporter in reporters:
             if showOK or reporter.fatal or (showWarnings and reporter.warning):
@@ -86,20 +105,30 @@ class BaseCompatibilityReporter(object):
 
     @staticmethod
     def reportCountDifference(
-        subObjectName, object1Name, object1Count, object2Name, object2Count
-    ):
+        subObjectName: str,
+        object1Name: str,
+        object1Count: int,
+        object2Name: str,
+        object2Count: int,
+    ) -> str:
         text = f"{object1Name} contains {object1Count} {subObjectName} | {object2Name} contains {object2Count} {subObjectName}"
         return text
 
     @staticmethod
     def reportOrderDifference(
-        subObjectName, object1Name, object1Order, object2Name, object2Order
-    ):
+        subObjectName: str,
+        object1Name: str,
+        object1Order: List[str],
+        object2Name: str,
+        object2Order: List[str],
+    ) -> str:
         text = f"{object1Name} has {subObjectName} ordered {object1Order} | {object2Name} has {object2Order}"
         return text
 
     @staticmethod
-    def reportDifferences(object1Name, subObjectName, subObjectID, object2Name):
+    def reportDifferences(
+        object1Name: str, subObjectName: str, subObjectID: str, object2Name: str
+    ) -> str:
         text = (
             f"{object1Name} contains {subObjectName} {subObjectID} not in {object2Name}"
         )
@@ -114,22 +143,22 @@ class BaseCompatibilityReporter(object):
 class FontCompatibilityReporter(BaseCompatibilityReporter):
     objectName = "Font"
 
-    def __init__(self, font1, font2):
+    def __init__(self, font1: BaseFont, font2: BaseFont) -> None:
         super(FontCompatibilityReporter, self).__init__(font1, font2)
         self.guidelineCountDifference = False
         self.layerCountDifference = False
-        self.guidelinesMissingFromFont2 = []
-        self.guidelinesMissingInFont1 = []
-        self.layersMissingFromFont2 = []
-        self.layersMissingInFont1 = []
-        self.layers = []
+        self.guidelinesMissingFromFont2: List[str] = []
+        self.guidelinesMissingInFont1: List[str] = []
+        self.layersMissingFromFont2: List[str] = []
+        self.layersMissingInFont1: List[str] = []
+        self.layers: List[LayerCompatibilityReporter] = []
 
     font1 = dynamicProperty("object1")
     font1Name = dynamicProperty("object1Name")
     font2 = dynamicProperty("object2")
     font2Name = dynamicProperty("object2Name")
 
-    def report(self, showOK=True, showWarnings=True):
+    def report(self, showOK: bool = True, showWarnings: bool = True) -> str:
         font1 = self.font1
         font2 = self.font2
         report = []
@@ -200,19 +229,19 @@ class FontCompatibilityReporter(BaseCompatibilityReporter):
 class LayerCompatibilityReporter(BaseCompatibilityReporter):
     objectName = "Layer"
 
-    def __init__(self, layer1, layer2):
+    def __init__(self, layer1: BaseLayer, layer2: BaseLayer) -> None:
         super(LayerCompatibilityReporter, self).__init__(layer1, layer2)
         self.glyphCountDifference = False
-        self.glyphsMissingFromLayer2 = []
-        self.glyphsMissingInLayer1 = []
-        self.glyphs = []
+        self.glyphsMissingFromLayer2: List[str] = []
+        self.glyphsMissingInLayer1: List[str] = []
+        self.glyphs: List[GlyphCompatibilityReporter] = []
 
     layer1 = dynamicProperty("object1")
     layer1Name = dynamicProperty("object1Name")
     layer2 = dynamicProperty("object2")
     layer2Name = dynamicProperty("object2Name")
 
-    def report(self, showOK=True, showWarnings=True):
+    def report(self, showOK: bool = True, showWarnings: bool = True) -> str:
         layer1 = self.layer1
         layer2 = self.layer2
         report = []
@@ -258,30 +287,30 @@ class LayerCompatibilityReporter(BaseCompatibilityReporter):
 class GlyphCompatibilityReporter(BaseCompatibilityReporter):
     objectName = "Glyph"
 
-    def __init__(self, glyph1, glyph2):
+    def __init__(self, glyph1: BaseGlyph, glyph2: BaseGlyph) -> None:
         super(GlyphCompatibilityReporter, self).__init__(glyph1, glyph2)
         self.contourCountDifference = False
         self.componentCountDifference = False
         self.guidelineCountDifference = False
-        self.anchorDifferences = []
+        self.anchorDifferences: DiffType = []
         self.anchorCountDifference = False
         self.anchorOrderDifference = False
-        self.anchorsMissingFromGlyph1 = []
-        self.anchorsMissingFromGlyph2 = []
-        self.componentDifferences = []
+        self.anchorsMissingFromGlyph1: List[str] = []
+        self.anchorsMissingFromGlyph2: List[str] = []
+        self.componentDifferences: DiffType = []
         self.componentOrderDifference = False
-        self.componentsMissingFromGlyph1 = []
-        self.componentsMissingFromGlyph2 = []
-        self.guidelinesMissingFromGlyph1 = []
-        self.guidelinesMissingFromGlyph2 = []
-        self.contours = []
+        self.componentsMissingFromGlyph1: List[str] = []
+        self.componentsMissingFromGlyph2: List[str] = []
+        self.guidelinesMissingFromGlyph1: List[str] = []
+        self.guidelinesMissingFromGlyph2: List[str] = []
+        self.contours: List[ContourCompatibilityReporter] = []
 
     glyph1 = dynamicProperty("object1")
     glyph1Name = dynamicProperty("object1Name")
     glyph2 = dynamicProperty("object2")
     glyph2Name = dynamicProperty("object2Name")
 
-    def report(self, showOK=True, showWarnings=True):
+    def report(self, showOK: bool = True, showWarnings: bool = True) -> str:
         glyph1 = self.glyph1
         glyph2 = self.glyph2
         report = []
@@ -412,19 +441,19 @@ class GlyphCompatibilityReporter(BaseCompatibilityReporter):
 class ContourCompatibilityReporter(BaseCompatibilityReporter):
     objectName = "Contour"
 
-    def __init__(self, contour1, contour2):
+    def __init__(self, contour1: BaseContour, contour2: BaseContour) -> None:
         super(ContourCompatibilityReporter, self).__init__(contour1, contour2)
         self.openDifference = False
         self.directionDifference = False
         self.segmentCountDifference = False
-        self.segments = []
+        self.segments: List[SegmentCompatibilityReporter] = []
 
     contour1 = dynamicProperty("object1")
     contour1Name = dynamicProperty("object1Name")
     contour2 = dynamicProperty("object2")
     contour2Name = dynamicProperty("object2Name")
 
-    def report(self, showOK=True, showWarnings=True):
+    def report(self, showOK: bool = True, showWarnings: bool = True) -> str:
         contour1 = self.contour1
         contour2 = self.contour2
         report = []
@@ -469,7 +498,7 @@ class ContourCompatibilityReporter(BaseCompatibilityReporter):
 class SegmentCompatibilityReporter(BaseCompatibilityReporter):
     objectName = "Segment"
 
-    def __init__(self, contour1, contour2):
+    def __init__(self, contour1: BaseContour, contour2: BaseContour) -> None:
         super(SegmentCompatibilityReporter, self).__init__(contour1, contour2)
         self.typeDifference = False
 
@@ -478,7 +507,7 @@ class SegmentCompatibilityReporter(BaseCompatibilityReporter):
     segment2 = dynamicProperty("object2")
     segment2Name = dynamicProperty("object2Name")
 
-    def report(self, showOK=True, showWarnings=True):
+    def report(self, showOK: bool = True, showWarnings: bool = True) -> str:
         segment1 = self.segment1
         segment2 = self.segment2
         report = []
@@ -500,7 +529,7 @@ class SegmentCompatibilityReporter(BaseCompatibilityReporter):
 class ComponentCompatibilityReporter(BaseCompatibilityReporter):
     objectName = "Component"
 
-    def __init__(self, component1, component2):
+    def __init__(self, component1: BaseComponent, component2: BaseComponent) -> None:
         super(ComponentCompatibilityReporter, self).__init__(component1, component2)
         self.baseDifference = False
 
@@ -509,7 +538,7 @@ class ComponentCompatibilityReporter(BaseCompatibilityReporter):
     component2 = dynamicProperty("object2")
     component2Name = dynamicProperty("object2Name")
 
-    def report(self, showOK=True, showWarnings=True):
+    def report(self, showOK: bool = True, showWarnings: bool = True) -> str:
         component1 = self.component1
         component2 = self.component2
         report = []
@@ -531,7 +560,7 @@ class ComponentCompatibilityReporter(BaseCompatibilityReporter):
 class AnchorCompatibilityReporter(BaseCompatibilityReporter):
     objectName = "Anchor"
 
-    def __init__(self, anchor1, anchor2):
+    def __init__(self, anchor1: BaseAnchor, anchor2: BaseAnchor) -> None:
         super(AnchorCompatibilityReporter, self).__init__(anchor1, anchor2)
         self.nameDifference = False
 
@@ -540,7 +569,7 @@ class AnchorCompatibilityReporter(BaseCompatibilityReporter):
     anchor2 = dynamicProperty("object2")
     anchor2Name = dynamicProperty("object2Name")
 
-    def report(self, showOK=True, showWarnings=True):
+    def report(self, showOK: bool = True, showWarnings: bool = True) -> str:
         anchor1 = self.anchor1
         anchor2 = self.anchor2
         report = []
@@ -562,7 +591,7 @@ class AnchorCompatibilityReporter(BaseCompatibilityReporter):
 class GuidelineCompatibilityReporter(BaseCompatibilityReporter):
     objectName = "Guideline"
 
-    def __init__(self, guideline1, guideline2):
+    def __init__(self, guideline1: BaseGuideline, guideline2: BaseGuideline) -> None:
         super(GuidelineCompatibilityReporter, self).__init__(guideline1, guideline2)
         self.nameDifference = False
 
@@ -571,7 +600,7 @@ class GuidelineCompatibilityReporter(BaseCompatibilityReporter):
     guideline2 = dynamicProperty("object2")
     guideline2Name = dynamicProperty("object2Name")
 
-    def report(self, showOK=True, showWarnings=True):
+    def report(self, showOK: bool = True, showWarnings: bool = True) -> str:
         guideline1 = self.guideline1
         guideline2 = self.guideline2
         report = []
