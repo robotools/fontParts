@@ -81,7 +81,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
 
         :return: The :class:`BaseFont` instance containing the kerning
             or :obj:`None`.
-        :raises AssertionError: If attempting to set the font when it has already been 
+        :raises AssertionError: If attempting to set the font when it has already been
             set and is not the same as the provided font.
 
         Example::
@@ -589,7 +589,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
 
         Example::
 
-            >>> font.kerning.items()
+            >>> font.kerning.values()
             BaseKerning_values([-20, -15, 5, 3.5])
 
         """
