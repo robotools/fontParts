@@ -57,7 +57,7 @@ write_to = 'Lib/fontParts/_version.py'
 write_to_template = '__version__ = "{version}"'
 
 [tool.ruff]
-target-version = "py39"
+target-version = "py310"
 
 [tool.ruff.lint]
 # Ignore unused imports
@@ -70,5 +70,6 @@ skip-magic-trailing-comma = true
 
 [tool.mypy]
 files = "Lib/fontParts"
+python_version = "3.10"
 strict = false
 ignore_missing_imports = true
