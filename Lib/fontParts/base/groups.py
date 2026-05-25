@@ -109,7 +109,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         """
         glyphName = normalizers.normalizeGlyphName(glyphName)
         groupNames = self._findGlyph(glyphName)
-        return [type(self).keyNormalizer(groupName) for groupName in groupNames]
+        return [self._normalizeKey(groupName) for groupName in groupNames]
 
     def _findGlyph(self, glyphName: str) -> List[str]:
         """Retrieve the groups associated with the given native glyph.

@@ -372,7 +372,7 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin, ABC):
         """
         self.raiseNotImplementedError()
 
-    def insertGlyph(self, glyph: BaseGlyph, name: Optional[str] = None) -> None:
+    def insertGlyph(self, glyph: BaseGlyph, name: Optional[str] = None) -> BaseGlyph:
         """Insert a specified glyph into the layer.
 
         .. deprecated::
@@ -398,6 +398,7 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin, ABC):
         if name is None:
             name = glyph.name
         self[name] = glyph
+        return self[name]
 
     def _insertGlyph(self, glyph: BaseGlyph, name: str, **kwargs: Any) -> BaseGlyph:
         r"""Insert a specified glyph into the native layer.

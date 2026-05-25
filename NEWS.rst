@@ -1,3 +1,51 @@
+0.14.1 (released 2026-02-24)
+---------------------------
+- `glyph.round` fixed, thank you @adbac
+
+0.14.0 (released 2026-01-30)
+---------------------------
+- `glyph.round` now rounds image offset
+
+0.13.4 (released 2026-01-20)
+---------------------------
+- Update dependencies to fix issue with tests of `booleanOperations`
+
+0.13.3 (released 2025-08-14)
+---------------------------
+- Fix `.fromMathGlyph` for the issue of a guideline color coming from defcon, thanks @LettError. #851 #850
+
+0.13.2 (released 2025-07-21)
+---------------------------
+- Fixed python syntax warning errors due to doc strings, thanks @bgermann. #849
+
+0.13.1 (released 2025-06-11)
+---------------------------
+- `insertGlyph` will return the inserted glyph object. #727 & #841
+
+0.12.8 (released 2025-06-04)
+---------------------------
+- Fix bug in `copyData`, #839. Thanks @knutergaard
+
+0.12.7 (released 2025-05-30)
+---------------------------
+- Fix getting `color` and `name` in _fromMathGlyph`
+
+0.12.6 (released 2025-05-27)
+---------------------------
+- Fix guideline normalization when value is `None`. See #834. Thanks @typemytype!
+
+0.12.5 (released 2025-04-28)
+---------------------------
+- Upgrade `BaseDict` normalization. See #831
+
+0.12.4 (released 2025-04-08)
+---------------------------
+- Mark `base.kerning` docstrings raw to avoid `SyntaxWarning`. See #830
+
+0.12.3 (released 2024-11-08)
+---------------------------
+- Fixed `copyData` to copy, not link, subdata. See #758
+
 0.12.2 (released 2024-08-07)
 ---------------------------
 - Replace remaining usage of assertEquals with assertEqual. See #720
@@ -69,20 +117,20 @@
 
 0.9.9 (released 2021-02-13)
 ---------------------------
-- 2021-02-13: Fixed import of version. (#573, thanks @gyscos!) 
+- 2021-02-13: Fixed import of version. (#573, thanks @gyscos!)
 
 0.9.8 (released 2021-02-12)
 ---------------------------
-- 2021-02-11: Add support for quadratic curves with no on-curve points in Contour and Segment. (#572, thanks @typemytype!) 
+- 2021-02-11: Add support for quadratic curves with no on-curve points in Contour and Segment. (#572, thanks @typemytype!)
 
 0.9.7 (released 2020-12-23)
 ---------------------------
-- 2020-12-23: Change to github actions for CI and release. 
+- 2020-12-23: Change to github actions for CI and release.
 - 2020-12-18: fontShell returns `None` when referenced file name doesn't exist for an `Image` (#567, thanks @typemytype)
 
 0.9.6 (released 2020-09-06)
 ---------------------------
-- 2020-09-06: fontShell has `changed()` implemented now 
+- 2020-09-06: fontShell has `changed()` implemented now
 
 0.9.5 (released 2020-09-04)
 ---------------------------

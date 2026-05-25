@@ -1,4 +1,11 @@
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason for running workflow'
+        required: true
 
 jobs:
     lint:
@@ -6,7 +13,7 @@ jobs:
 
         steps:
         - name: Checkout
-          uses: actions/checkout@v4
+          uses: actions/checkout@v6.0.1
 
         - name: Ruff lint check
           uses: astral-sh/ruff-action@v3
@@ -19,7 +26,7 @@ jobs:
 
         steps:
         - name: Checkout
-          uses: actions/checkout@v4
+          uses: actions/checkout@v6.0.1
 
         - name: Ruff format check
           uses: astral-sh/ruff-action@v3
@@ -33,9 +40,9 @@ jobs:
 
         steps:
         - name: Checkout
-          uses: actions/checkout@v4		
+          uses: actions/checkout@v6.0.1		
         - name: Set up Python
-          uses: actions/setup-python@v5
+          uses: actions/setup-python@v6.1.0
           with:
             python-version: '3.9'
 
@@ -53,6 +60,7 @@ jobs:
     test:
 
         runs-on: ${{ matrix.platform }}
+        if: "! contains(toJSON(github.event.commits.*.message), '[skip ci]')"
         strategy:
           matrix:
             python-version: ['3.9', '3.10', '3.11', '3.12', '3.13']
@@ -71,9 +79,9 @@ jobs:
               - platform: windows-latest
                 python-version: 3.13
         steps:
-        - uses: actions/checkout@v4
+        - uses: actions/checkout@v6.0.1
         - name: Set up Python ${{ matrix.python-version }}
-          uses: actions/setup-python@v5
+          uses: actions/setup-python@v6.1.0
           with:
             python-version: ${{ matrix.python-version }}
         - name: Install packages
@@ -86,9 +94,9 @@ jobs:
             coverage xml
         - name: Upload coverage to Codecov
           if: github.repository == 'robotools/fontparts'
-          uses: codecov/codecov-action@v4
+          uses: codecov/codecov-action@v5
           with:
-            file: coverage.xml
+            files: coverage.xml
             flags: unittests
             name: codecov-umbrella
             fail_ci_if_error: true
