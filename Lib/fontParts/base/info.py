@@ -466,7 +466,6 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
 
     The values are defined below."""
 
-
     fontInfoAttributes = set(fontInfoAttributesVersion3)
     fontInfoAttributes.remove("guidelines")
     copyAttributes = tuple(fontInfoAttributes)
