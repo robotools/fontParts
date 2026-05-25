@@ -191,7 +191,8 @@ def CurrentContours() -> Tuple[BaseContour, ...]:
     """Get the currently selected contours from :func:`CurrentGlyph`.
 
     :return: A :class:`tuple` of :class:`BaseContour` subclass instances representing
-        the currently selected glyph contours.
+        the currently selected glyph contours. If nothing is selected, the :class:`tuple`
+        will be empty.
 
     Example::
 
@@ -214,7 +215,8 @@ def CurrentSegments() -> Tuple[BaseSegment, ...]:
     """Get the currently selected segments from :func:`CurrentContours`.
 
     :return: A :class:`tuple` of :class:`BaseSegments` subclass instances representing
-        the currently selected contour segments.
+        the currently selected contour segments. If nothing is selected, the :class:`tuple`
+        will be empty.
 
     Example::
 
@@ -240,7 +242,8 @@ def CurrentPoints() -> Tuple[BasePoint, ...]:
     """Get the currently selected points from :func:`CurrentContours`.
 
     :return: A :class:`tuple` of :class:`BasePoint` subclass instances representing
-        the currently selected contour points.
+        the currently selected contour points. If nothing is selected, the :class:`tuple`
+        will be empty.
 
     Example::
 
@@ -266,7 +269,8 @@ def CurrentComponents() -> Tuple[BaseComponent, ...]:
     """Get the currently selected components from :func:`CurrentGlyph`.
 
     :return: A :class:`tuple` of :class:`BaseComponent` subclass instances representing
-        the currently selected glyph components.
+        the currently selected glyph components. If nothing is selected, the :class:`tuple`
+        will be empty.
 
     Example::
 
@@ -274,7 +278,6 @@ def CurrentComponents() -> Tuple[BaseComponent, ...]:
 
         components = CurrentComponents()
 
-    This returns an immutable list, even when nothing is selected.
     """
     return dispatcher["CurrentComponents"]()
 
@@ -290,7 +293,8 @@ def CurrentAnchors() -> Tuple[BaseAnchor, ...]:
     """Get the currently selected anchors from :func:`CurrentGlyph`.
 
     :return: A :class:`tuple` of :class:`BaseAnchor` subclass instances representing
-        the currently selected glyph anchors.
+        the currently selected glyph anchors. If nothing is selected, the :class:`tuple`
+        will be empty.
 
     Example::
 
@@ -315,7 +319,8 @@ def CurrentGuidelines() -> Tuple[BaseGuideline, ...]:
     This will include both font level and glyph level guidelines.
 
     :return: A :class:`tuple` of :class:`BaseGuideline` subclass instances representing
-        the currently selected guidelines.
+        the currently selected guidelines. If nothing is selected, the :class:`tuple`
+        will be empty.
 
     Example::
 
