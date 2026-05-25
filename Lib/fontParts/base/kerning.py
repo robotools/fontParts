@@ -183,8 +183,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         new_kerning: MutableMapping[PairType[str], IntFloatType] = {}
         for pair, value in self.items():
             value = (
-                normalizers.normalizeVisualRounding(value / float(multiple))
-                * multiple
+                normalizers.normalizeVisualRounding(value / float(multiple)) * multiple
             )
             new_kerning[pair] = value
         self.update(new_kerning)
