@@ -180,10 +180,10 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
             Subclasses may override this method.
 
         """
-        new_kerning: MutableMapping[PairType[str], int] = {}
+        new_kerning: MutableMapping[PairType[str], IntFloatType] = {}
         for pair, value in self.items():
             value = (
-                int(normalizers.normalizeVisualRounding(value / float(multiple)))
+                normalizers.normalizeVisualRounding(value / float(multiple))
                 * multiple
             )
             new_kerning[pair] = value
