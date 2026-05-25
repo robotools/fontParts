@@ -2179,6 +2179,7 @@ class BaseGlyph(
         - :attr:`components`
         - :attr:`anchors`
         - :attr:`guidelines`
+        - :attr:`image`
 
         Example::
 
@@ -2205,6 +2206,8 @@ class BaseGlyph(
             anchor.round()
         for guideline in self.guidelines:
             guideline.round()
+        if self.image.data is not None:
+            self.image.round()
         self.width = normalizers.normalizeVisualRounding(self.width)
         self.height = normalizers.normalizeVisualRounding(self.height)
 
@@ -2561,17 +2564,23 @@ class BaseGlyph(
             a = copied.appendAnchor(
                 name=anchor.get("name"),
                 position=(anchor["x"], anchor["y"]),
-                color=anchor["color"],
+                color=anchor.get("color"),
             )
             identifier = anchor.get("identifier")
             if identifier is not None:
                 a._setIdentifier(identifier)
         for guideline in mathGlyph.guidelines:
+            guideColor = guideline.get("color")
+            if guideColor is None:
+                colorData = None
+            else:
+                r, g, b, alpha = guideColor
+                colorData = (r, g, b, alpha)
             g = copied.appendGuideline(
                 position=(guideline["x"], guideline["y"]),
                 angle=guideline["angle"],
-                name=guideline["name"],
-                color=guideline["color"],
+                name=guideline.get("name"),
+                color=colorData,
             )
             identifier = guideline.get("identifier")
             if identifier is not None:
