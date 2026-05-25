@@ -134,7 +134,7 @@ def NewFont(
 
     Example::
 
-        from fontParts.world import *
+        from fontParts.world import NewFont
 
         font = NewFont()
         font = NewFont(familyName="My Family", styleName="My Style")
@@ -164,7 +164,7 @@ def CurrentGlyph() -> BaseGlyph:
 
     Example::
 
-        from fontParts.world import *
+        from fontParts.world import CurrentGlyph
 
         glyph = CurrentGlyph()
     """
@@ -179,7 +179,7 @@ def CurrentLayer() -> BaseLayer:
 
     Example::
 
-        from fontParts.world import *
+        from fontParts.world import CurrentLayer
 
         layer = CurrentLayer()
 
@@ -195,7 +195,7 @@ def CurrentContours() -> Tuple[BaseContour, ...]:
 
     Example::
 
-        from fontParts.world import *
+        from fontParts.world import CurrentContours
 
         contours = CurrentContours()
 
@@ -218,7 +218,7 @@ def CurrentSegments() -> Tuple[BaseSegment, ...]:
 
     Example::
 
-        from fontParts.world import *
+        from fontParts.world import CurrentSegments
 
         segments = CurrentSegments()
 
@@ -244,7 +244,7 @@ def CurrentPoints() -> Tuple[BasePoint, ...]:
 
     Example::
 
-        from fontParts.world import *
+        from fontParts.world import CurrentPoints
 
         points = CurrentPoints()
 
@@ -270,7 +270,7 @@ def CurrentComponents() -> Tuple[BaseComponent, ...]:
 
     Example::
 
-        from fontParts.world import *
+        from fontParts.world import CurrentComponents
 
         components = CurrentComponents()
 
@@ -294,7 +294,7 @@ def CurrentAnchors() -> Tuple[BaseAnchor, ...]:
 
     Example::
 
-        from fontParts.world import *
+        from fontParts.world import CurrentAnchors
 
         anchors = CurrentAnchors()
 
@@ -319,7 +319,7 @@ def CurrentGuidelines() -> Tuple[BaseGuideline, ...]:
 
     Example::
 
-        from fontParts.world import *
+        from fontParts.world import CurrentGuidelines
 
         guidelines = CurrentGuidelines()
 
@@ -350,7 +350,7 @@ def AllFonts(sortOptions: Optional[CollectionType[str]] = None) -> BaseFontList:
 
     Example::
 
-        from fontParts.world import *
+        from fontParts.world import AllFonts
 
         fonts = AllFonts()
         for font in fonts:
@@ -391,7 +391,7 @@ def FontList(fonts: Optional[Iterable[T]] = None):
 
     Example::
 
-        from fontParts.world import *
+        from fontParts.world import FontList
 
         fonts = FontList()
 
