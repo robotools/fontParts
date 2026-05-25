@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 def AskString(
     message: str, value: Optional[str] = None, title: Optional[str] = "FontParts"
 ) -> str:
-    """Dispaly a dialog to ask for a string input.
+    """Display a dialog to ask for a string input.
 
     :param message: The message to display in the dialog as a :class:`str`.
     :param value: The optional default value to display in the input field as
@@ -22,7 +22,7 @@ def AskString(
 
     Example::
 
-        >>> AskString("who are you?")
+        >>> AskString("What glyph is your darling?")
 
     """
     return dispatcher["AskString"](message=message, value=value, title=title)
@@ -98,7 +98,7 @@ def GetFile(
         a :class:`bool`. Defaults to :obj:`False`.
     :param fileTypes: The optional file types to filter the dialog with as
         a :class:`str`. Defaults to :obj:`None`.
-    :return: A :class:`str` representing the path of the selected file.
+    :return: A :class:`str` representing the path of the selected file path.
 
     Example::
 
