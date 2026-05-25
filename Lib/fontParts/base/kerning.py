@@ -180,12 +180,14 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
             Subclasses may override this method.
 
         """
+        new_kerning = {}
         for pair, value in self.items():
             value = (
                 int(normalizers.normalizeVisualRounding(value / float(multiple)))
                 * multiple
             )
-            self[pair] = value
+            new_kerning[pair] = value
+        self.update(new_kerning)
 
     # -------------
     # Interpolation
