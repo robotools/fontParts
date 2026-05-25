@@ -807,7 +807,7 @@ try:
 
     # OpenFonts
 
-    dispatcher["OpenFontsFileExtensions"] = lambda: [".ufo"]
+    dispatcher["OpenFontsFileExtensions"] = lambda: [".ufo", ".ufoz"]
 
     # OpenFont, RFont
 
