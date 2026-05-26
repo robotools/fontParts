@@ -1,5 +1,6 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, Callable, Optional, Union, Tuple
+from typing import TYPE_CHECKING, Any, Optional, Union, Tuple
+from collections.abc import Callable
 
 from fontTools.misc import transform
 from fontParts.base.base import (
@@ -63,7 +64,7 @@ class BasePoint(
 
     # Contour
 
-    _contour: Optional[Callable[[], BaseContour]] = None
+    _contour: Callable[[], BaseContour] | None = None
 
     contour: dynamicProperty = dynamicProperty(
         "contour",
@@ -83,13 +84,13 @@ class BasePoint(
         """,
     )
 
-    def _get_contour(self) -> Optional[BaseContour]:
+    def _get_contour(self) -> BaseContour | None:
         if self._contour is None:
             return None
         return self._contour()
 
     def _set_contour(
-        self, contour: Optional[Union[BaseContour, Callable[[], BaseContour]]]
+        self, contour: BaseContour | Callable[[], BaseContour] | None
     ) -> None:
         if self._contour is not None:
             raise AssertionError("contour for point already set")
@@ -117,7 +118,7 @@ class BasePoint(
         """,
     )
 
-    def _get_glyph(self) -> Optional[BaseObject]:
+    def _get_glyph(self) -> BaseObject | None:
         if self._contour is None:
             return None
         return self.contour.glyph
@@ -140,7 +141,7 @@ class BasePoint(
         """,
     )
 
-    def _get_layer(self) -> Optional[BaseObject]:
+    def _get_layer(self) -> BaseObject | None:
         if self._contour is None:
             return None
         return self.glyph.layer
@@ -163,7 +164,7 @@ class BasePoint(
         """,
     )
 
-    def _get_font(self) -> Optional[BaseObject]:
+    def _get_font(self) -> BaseObject | None:
         if self._contour is None:
             return None
         return self.glyph.font
@@ -467,12 +468,12 @@ class BasePoint(
         """,
     )
 
-    def _get_base_index(self) -> Optional[int]:
+    def _get_base_index(self) -> int | None:
         value = self._get_index()
         value = normalizers.normalizeIndex(value)
         return value
 
-    def _get_index(self) -> Optional[int]:
+    def _get_index(self) -> int | None:
         """Get the index of the native point.
 
         This is the environment implementation of the :attr:`BasePoint.index`
@@ -512,7 +513,7 @@ class BasePoint(
         """,
     )
 
-    def _get_base_name(self) -> Optional[str]:
+    def _get_base_name(self) -> str | None:
         value = self._get_name()
         if value is not None:
             value = normalizers.normalizePointName(value)
@@ -523,7 +524,7 @@ class BasePoint(
             value = normalizers.normalizePointName(value)
         self._set_name(value)
 
-    def _get_name(self) -> Optional[str]:  # type: ignore[return]
+    def _get_name(self) -> str | None:  # type: ignore[return]
         """Get the name of the native point.
 
         This is the environment implementation of the :attr:`BasePoint.name`

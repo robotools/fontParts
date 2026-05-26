@@ -14,7 +14,7 @@ class Color(tuple):
     """
 
     def __new__(
-        cls, *args: Union[IntFloatType, QuadrupleCollectionType[IntFloatType]]
+        cls, *args: IntFloatType | QuadrupleCollectionType[IntFloatType]
     ) -> Color:
         value = args[0] if len(args) == 1 else args
         normalizedValue = normalizeColor(value)  # type: ignore[arg-type]

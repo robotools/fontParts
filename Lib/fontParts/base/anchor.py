@@ -1,5 +1,6 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, Callable, Optional, Union, List, Tuple
+from typing import TYPE_CHECKING, Any, Optional, Union, List, Tuple
+from collections.abc import Callable
 
 from fontTools.misc import transform
 from fontParts.base import normalizers
@@ -48,7 +49,7 @@ class BaseAnchor(
 
     """
 
-    def _reprContents(self) -> List[str]:
+    def _reprContents(self) -> list[str]:
         contents = [f"({self.x}, {self.y})"]
 
         if self.name is not None:
@@ -61,7 +62,7 @@ class BaseAnchor(
     # Copy
     # ----
 
-    copyAttributes: Tuple[str, ...] = ("x", "y", "name", "color")
+    copyAttributes: tuple[str, ...] = ("x", "y", "name", "color")
 
     # -------
     # Parents
@@ -69,7 +70,7 @@ class BaseAnchor(
 
     # Glyph
 
-    _glyph: Optional[Callable[[], BaseGlyph]] = None
+    _glyph: Callable[[], BaseGlyph] | None = None
 
     glyph: dynamicProperty = dynamicProperty(
         "glyph",
@@ -89,13 +90,13 @@ class BaseAnchor(
         """,
     )
 
-    def _get_glyph(self) -> Optional[BaseGlyph]:
+    def _get_glyph(self) -> BaseGlyph | None:
         if self._glyph is None:
             return None
         return self._glyph()
 
     def _set_glyph(
-        self, glyph: Optional[Union[BaseGlyph, Callable[[], BaseGlyph]]]
+        self, glyph: BaseGlyph | Callable[[], BaseGlyph] | None
     ) -> None:
         if self._glyph is not None:
             raise AssertionError("glyph for anchor already set")
@@ -121,7 +122,7 @@ class BaseAnchor(
         """,
     )
 
-    def _get_layer(self) -> Optional[BaseLayer]:
+    def _get_layer(self) -> BaseLayer | None:
         if self._glyph is None:
             return None
         return self.glyph.layer
@@ -144,7 +145,7 @@ class BaseAnchor(
         """,
     )
 
-    def _get_font(self) -> Optional[BaseFont]:
+    def _get_font(self) -> BaseFont | None:
         if self._glyph is None:
             return None
         return self.glyph.font
@@ -308,12 +309,12 @@ class BaseAnchor(
         """,
     )
 
-    def _get_base_index(self) -> Optional[int]:
+    def _get_base_index(self) -> int | None:
         value = self._get_index()
         value = normalizers.normalizeIndex(value)
         return value
 
-    def _get_index(self) -> Optional[int]:
+    def _get_index(self) -> int | None:
         """Get the native anchor's index.
 
         This is the environment implementation of the :attr:`BaseAnchor.index`
@@ -350,18 +351,18 @@ class BaseAnchor(
         """,
     )
 
-    def _get_base_name(self) -> Optional[str]:
+    def _get_base_name(self) -> str | None:
         value = self._get_name()
         if value is not None:
             value = normalizers.normalizeAnchorName(value)
         return value
 
-    def _set_base_name(self, value: Optional[str]) -> None:
+    def _set_base_name(self, value: str | None) -> None:
         if value is not None:
             value = normalizers.normalizeAnchorName(value)
         self._set_name(value)
 
-    def _get_name(self) -> Optional[str]:
+    def _get_name(self) -> str | None:
         """Get the native anchor's name.
 
         This is the environment implementation of the :attr:`BaseAnchor.name`
@@ -380,7 +381,7 @@ class BaseAnchor(
         """
         self.raiseNotImplementedError()
 
-    def _set_name(self, value: Optional[str]) -> None:
+    def _set_name(self, value: str | None) -> None:
         """Set the native anchor's name.
 
         This is the environment implementation of the :attr:`BaseAnchor.name`
@@ -419,7 +420,7 @@ class BaseAnchor(
         """,
     )
 
-    def _get_base_color(self) -> Optional[Color]:
+    def _get_base_color(self) -> Color | None:
         value = self._get_color()
         if value is not None:
             value = Color(value)
@@ -430,7 +431,7 @@ class BaseAnchor(
             value = normalizers.normalizeColor(value)
         self._set_color(value)
 
-    def _get_color(self) -> Optional[QuadrupleCollectionType[IntFloatType]]:
+    def _get_color(self) -> QuadrupleCollectionType[IntFloatType] | None:
         """Get the native anchor's color.
 
         This is the environment implementation of the :attr:`BaseAnchor.color`
@@ -449,7 +450,7 @@ class BaseAnchor(
         """
         self.raiseNotImplementedError()
 
-    def _set_color(self, value: Optional[QuadrupleType[float]]) -> None:
+    def _set_color(self, value: QuadrupleType[float] | None) -> None:
         """Set the native anchor's color.
 
         Description
@@ -502,7 +503,7 @@ class BaseAnchor(
 
     def isCompatible(
         self, other: BaseAnchor, cls=None
-    ) -> Tuple[bool, AnchorCompatibilityReporter]:
+    ) -> tuple[bool, AnchorCompatibilityReporter]:
         """Evaluate interpolation compatibility with another anchor.
 
         :param other: The other :class:`BaseAnchor` instance to check
@@ -522,7 +523,7 @@ class BaseAnchor(
             [Warning] Anchor: "left" has name left | "right" has name right
 
         """
-        return super(BaseAnchor, self).isCompatible(other, BaseAnchor)
+        return super().isCompatible(other, BaseAnchor)
 
     def _isCompatible(
         self, other: BaseAnchor, reporter: AnchorCompatibilityReporter

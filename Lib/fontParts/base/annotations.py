@@ -9,31 +9,31 @@ from fontTools.pens.pointPen import AbstractPointPen
 # Generic
 T = TypeVar("T")
 
-PairType = Tuple[T, T]
-QuadrupleType = Tuple[T, T, T, T]
-QuintupleType = Tuple[T, T, T, T, T]
-SextupleType = Tuple[T, T, T, T, T, T]
-CollectionType = Union[List[T], Tuple[T, ...]]
-PairCollectionType = Union[List[T], PairType[T]]
-QuadrupleCollectionType = Union[List[T], QuadrupleType[T]]
-SextupleCollectionType = Union[List[T], SextupleType[T]]
+PairType = tuple[T, T]
+QuadrupleType = tuple[T, T, T, T]
+QuintupleType = tuple[T, T, T, T, T]
+SextupleType = tuple[T, T, T, T, T, T]
+CollectionType = Union[list[T], tuple[T, ...]]
+PairCollectionType = Union[list[T], PairType[T]]
+QuadrupleCollectionType = Union[list[T], QuadrupleType[T]]
+SextupleCollectionType = Union[list[T], SextupleType[T]]
 
 # Builtins
 IntFloatType = Union[int, float]
 
 # Compatibility
-DiffType = List[Tuple[int, Optional[str], Optional[str]]]
+DiffType = list[tuple[int, Optional[str], Optional[str]]]
 
 # Pens
 PenType = AbstractPen
 PointPenType = AbstractPointPen
 
 # Mapping
-CharacterMappingType = Dict[int, Tuple[str, ...]]
-ReverseComponentMappingType = Dict[str, Tuple[str, ...]]
+CharacterMappingType = dict[int, tuple[str, ...]]
+ReverseComponentMappingType = dict[str, tuple[str, ...]]
 
 # Kerning
-KerningDictType = Dict[PairType[str], PairType[str]]
+KerningDictType = dict[PairType[str], PairType[str]]
 
 # Lib
 LibValueType = Union[
@@ -41,7 +41,7 @@ LibValueType = Union[
     IntFloatType,
     bool,
     CollectionType["LibValueType"],
-    Dict[str, "LibValueType"],
+    dict[str, "LibValueType"],
     bytes,
     bytearray,
     datetime.datetime,
@@ -69,7 +69,7 @@ class LibValue:
 
 
 # Transformation
-TransformationType = Union[IntFloatType, List[IntFloatType], PairType[IntFloatType]]
+TransformationType = Union[IntFloatType, list[IntFloatType], PairType[IntFloatType]]
 
 # Interpolation
 InterpolatableType = TypeVar("InterpolatableType", bound="Interpolatable")

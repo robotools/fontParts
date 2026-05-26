@@ -1,5 +1,6 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, Callable, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, List, Optional, Tuple, Union
+from collections.abc import Callable
 
 from fontTools.misc import transform
 from fontTools.pens.pointInsidePen import PointInsidePen
@@ -50,9 +51,9 @@ class BaseComponent(
 
     """
 
-    copyAttributes: Tuple[str, str] = ("baseGlyph", "transformation")
+    copyAttributes: tuple[str, str] = ("baseGlyph", "transformation")
 
-    def _reprContents(self) -> List[str]:
+    def _reprContents(self) -> list[str]:
         contents = [
             f"baseGlyph='{self.baseGlyph}'",
             f"offset='({self.offset[0]}, {self.offset[1]})'",
@@ -68,7 +69,7 @@ class BaseComponent(
 
     # Glyph
 
-    _glyph: Optional[Callable[[], BaseGlyph]] = None
+    _glyph: Callable[[], BaseGlyph] | None = None
 
     glyph: dynamicProperty = dynamicProperty(
         "glyph",
@@ -88,13 +89,13 @@ class BaseComponent(
         """,
     )
 
-    def _get_glyph(self) -> Optional[BaseGlyph]:
+    def _get_glyph(self) -> BaseGlyph | None:
         if self._glyph is None:
             return None
         return self._glyph()
 
     def _set_glyph(
-        self, glyph: Optional[Union[BaseGlyph, Callable[[], BaseGlyph]]]
+        self, glyph: BaseGlyph | Callable[[], BaseGlyph] | None
     ) -> None:
         if self._glyph is not None:
             raise AssertionError("glyph for component already set")
@@ -120,7 +121,7 @@ class BaseComponent(
         """,
     )
 
-    def _get_layer(self) -> Optional[BaseLayer]:
+    def _get_layer(self) -> BaseLayer | None:
         if self._glyph is None:
             return None
         return self.glyph.layer
@@ -143,7 +144,7 @@ class BaseComponent(
         """,
     )
 
-    def _get_font(self) -> Optional[BaseFont]:
+    def _get_font(self) -> BaseFont | None:
         if self._glyph is None:
             return None
         return self.glyph.font
@@ -167,7 +168,7 @@ class BaseComponent(
         """,
     )
 
-    def _get_base_baseGlyph(self) -> Optional[str]:
+    def _get_base_baseGlyph(self) -> str | None:
         value = self._get_baseGlyph()
         # if the component does not belong to a layer,
         # it is allowed to have None as its baseGlyph
@@ -181,7 +182,7 @@ class BaseComponent(
         value = normalizers.normalizeGlyphName(value)
         self._set_baseGlyph(value)
 
-    def _get_baseGlyph(self) -> Optional[str]:
+    def _get_baseGlyph(self) -> str | None:
         """Get the name of the glyph referenced by the native component.
 
         This is the environment implementation of the :attr:`BaseComponent.baseGlyph`
@@ -422,7 +423,7 @@ class BaseComponent(
         """,
     )
 
-    def _get_base_index(self) -> Optional[int]:
+    def _get_base_index(self) -> int | None:
         glyph = self.glyph
         if glyph is None:
             return None
@@ -445,7 +446,7 @@ class BaseComponent(
             value = componentCount
         self._set_index(value)
 
-    def _get_index(self) -> Optional[int]:
+    def _get_index(self) -> int | None:
         """Get the index of the native contour.
 
         This is the environment implementation of the :attr:`BaseComponent.index`
@@ -632,7 +633,7 @@ class BaseComponent(
 
     def isCompatible(
         self, other: BaseComponent, cls=None
-    ) -> Tuple[bool, ComponentCompatibilityReporter]:
+    ) -> tuple[bool, ComponentCompatibilityReporter]:
         """Evaluate interpolation compatibility with another component.
 
         :param other: The other :class:`BaseComponent` instance to check
@@ -652,7 +653,7 @@ class BaseComponent(
             [Warning] Component: "A" has name A | "B" has name B
 
         """
-        return super(BaseComponent, self).isCompatible(other, BaseComponent)
+        return super().isCompatible(other, BaseComponent)
 
     def _isCompatible(
         self, other: BaseComponent, reporter: ComponentCompatibilityReporter

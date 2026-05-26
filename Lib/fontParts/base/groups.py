@@ -1,5 +1,6 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Callable, Dict, Iterator, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Dict, List, Optional, Tuple, Union
+from collections.abc import Callable, Iterator
 from collections.abc import MutableMapping
 
 from fontParts.base.base import BaseDict, dynamicProperty, reference
@@ -13,8 +14,8 @@ if TYPE_CHECKING:
     from fontParts.base.base import BaseItems
     from fontParts.base.base import BaseValues
 
-ValueType = Tuple[str, ...]
-GroupsDict = Dict[str, ValueType]
+ValueType = tuple[str, ...]
+GroupsDict = dict[str, ValueType]
 
 
 class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
@@ -42,7 +43,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         normalizers.normalizeGroupValue
     )
 
-    def _reprContents(self) -> List[str]:
+    def _reprContents(self) -> list[str]:
         contents = []
         if self.font is not None:
             contents.append("for font")
@@ -55,7 +56,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
 
     # Font
 
-    _font: Optional[Callable[[], BaseFont]] = None
+    _font: Callable[[], BaseFont] | None = None
 
     font: dynamicProperty = dynamicProperty(
         "font",
@@ -76,13 +77,13 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         """,
     )
 
-    def _get_font(self) -> Optional[BaseFont]:
+    def _get_font(self) -> BaseFont | None:
         if self._font is None:
             return None
         return self._font()
 
     def _set_font(
-        self, font: Optional[Union[BaseFont, Callable[[], BaseFont]]]
+        self, font: BaseFont | Callable[[], BaseFont] | None
     ) -> None:
         if self._font is not None and self._font != font:
             raise AssertionError("font for groups already set and is not same as font")
@@ -94,7 +95,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
     # Searching
     # ---------
 
-    def findGlyph(self, glyphName: str) -> List[str]:
+    def findGlyph(self, glyphName: str) -> list[str]:
         """Retrieve the groups associated with the given glyph.
 
         :param glyphName: The name of the glyph to search for as a :class:`str`.
@@ -111,7 +112,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
         groupNames = self._findGlyph(glyphName)
         return [self._normalizeKey(groupName) for groupName in groupNames]
 
-    def _findGlyph(self, glyphName: str) -> List[str]:
+    def _findGlyph(self, glyphName: str) -> list[str]:
         """Retrieve the groups associated with the given native glyph.
 
         This is the environment implementation of :meth:`BaseGroups.findGlyph`.
@@ -279,7 +280,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
             True
 
         """
-        return super(BaseGroups, self).__contains__(groupName)
+        return super().__contains__(groupName)
 
     def __delitem__(self, groupName: str) -> None:
         """Remove the given group from the current groups instance.
@@ -291,9 +292,9 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
             >>> del font.groups["myGroup"]
 
         """
-        super(BaseGroups, self).__delitem__(groupName)
+        super().__delitem__(groupName)
 
-    def __getitem__(self, groupName: str) -> Tuple[str, ...]:
+    def __getitem__(self, groupName: str) -> tuple[str, ...]:
         """Get the contents of the given group.
 
         :param groupName: The group name to retrieve the value for as a :class:`str`.
@@ -316,7 +317,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
                 >>> font.groups["myGroup"] = group
 
         """
-        return super(BaseGroups, self).__getitem__(groupName)
+        return super().__getitem__(groupName)
 
     def __iter__(self) -> Iterator[str]:
         """Return an iterator over the keys in the current groups instance.
@@ -334,7 +335,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
             "myGroup2"
 
         """
-        return super(BaseGroups, self).__iter__()
+        return super().__iter__()
 
     def __len__(self) -> int:
         """Return the number of groups in the current groups instance.
@@ -348,7 +349,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
             5
 
         """
-        return super(BaseGroups, self).__len__()
+        return super().__len__()
 
     def __setitem__(self, groupName: str, glyphNames: CollectionType[str]) -> None:
         """Set the glyph names for a given group in the current groups instance.
@@ -363,7 +364,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
 
         """
 
-        super(BaseGroups, self).__setitem__(groupName, glyphNames)
+        super().__setitem__(groupName, glyphNames)
 
     def clear(self) -> None:
         """Remove all groups from the current groups instance.
@@ -375,11 +376,11 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
             >>> font.groups.clear()
 
         """
-        super(BaseGroups, self).clear()
+        super().clear()
 
     def get(
-        self, groupName: str, default: Optional[CollectionType[str]] = None
-    ) -> Optional[Tuple[str, ...]]:
+        self, groupName: str, default: CollectionType[str] | None = None
+    ) -> tuple[str, ...] | None:
         """Get the contents for the given group in the current groups instance.
 
         If the given `groupName` is not found, The specified `default` will be
@@ -408,7 +409,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
                 >>> font.groups["myGroup"] = group
 
         """
-        return super(BaseGroups, self).get(groupName, default)
+        return super().get(groupName, default)
 
     def items(self) -> BaseItems[str, ValueType]:
         """Return the items in the current groups instance.
@@ -426,7 +427,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
             ("myGroup2", ("D", "E", "F")), ...])
 
         """
-        return super(BaseGroups, self).items()
+        return super().items()
 
     def keys(self) -> BaseKeys:
         """Return the group names (keys) in the current groups instance.
@@ -439,7 +440,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
             BaseGroups_keys(["myGroup4", "myGroup1", "myGroup5", ...])
 
         """
-        return super(BaseGroups, self).keys()
+        return super().keys()
 
     def values(self) -> BaseValues:
         """Return the values in the current groups instance.
@@ -453,11 +454,11 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
             BaseGroups_values([("A", "B", "C"), ("D", "E", "F")]
 
         """
-        return super(BaseGroups, self).values()
+        return super().values()
 
     def pop(
-        self, groupName: str, default: Optional[CollectionType[str]] = None
-    ) -> Optional[Tuple[str, ...]]:
+        self, groupName: str, default: CollectionType[str] | None = None
+    ) -> tuple[str, ...] | None:
         """Remove the specified group and return its associated contents.
 
         If the `groupName` does not exist, the `default` value is returned.
@@ -475,7 +476,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
             ("A", "B", "C")
 
         """
-        return super(BaseGroups, self).pop(groupName, default)
+        return super().pop(groupName, default)
 
     def update(self, otherGroups: MutableMapping[str, CollectionType[str]]) -> None:
         """Update the current groups instance with key-value pairs from another.
@@ -497,4 +498,4 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
             >>> font.groups.update(newGroups)
 
         """
-        super(BaseGroups, self).update(otherGroups)
+        super().update(otherGroups)

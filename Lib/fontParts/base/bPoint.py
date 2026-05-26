@@ -1,5 +1,6 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, Callable, List, Optional, Union
+from typing import TYPE_CHECKING, Any, List, Optional, Union
+from collections.abc import Callable
 from fontTools.misc import transform
 
 from fontParts.base.base import (
@@ -39,7 +40,7 @@ class BaseBPoint(
 ):
     """Represent the basis for a bPoint object."""
 
-    def _reprContents(self) -> List[str]:
+    def _reprContents(self) -> list[str]:
         contents = [f"{self.type}", f"anchor='({self.anchor[0]}, {self.anchor[1]})'"]
         return contents
 
@@ -64,7 +65,7 @@ class BaseBPoint(
 
     # identifier
 
-    def _get_identifier(self) -> Optional[str]:
+    def _get_identifier(self) -> str | None:
         """Get the native bPoint's unique identifier.
 
         This is the environment implementation of :attr:`BaseBPoint.identifier`.
@@ -100,7 +101,7 @@ class BaseBPoint(
 
     _segment: dynamicProperty = dynamicProperty("base_segment")
 
-    def _get_base_segment(self) -> Optional[BaseSegment]:
+    def _get_base_segment(self) -> BaseSegment | None:
         point = self._point
         for segment in self.contour.segments:
             if segment.onCurve == point:
@@ -109,7 +110,7 @@ class BaseBPoint(
 
     _nextSegment: dynamicProperty = dynamicProperty("base_nextSegment")
 
-    def _get_base_nextSegment(self) -> Optional[BaseSegment]:
+    def _get_base_nextSegment(self) -> BaseSegment | None:
         contour = self.contour
         if contour is None:
             return None
@@ -123,7 +124,7 @@ class BaseBPoint(
 
     # Contour
 
-    _contour: Optional[Callable[[], BaseContour]] = None
+    _contour: Callable[[], BaseContour] | None = None
 
     contour = dynamicProperty(
         "contour",
@@ -143,13 +144,13 @@ class BaseBPoint(
         """,
     )
 
-    def _get_contour(self) -> Optional[BaseContour]:
+    def _get_contour(self) -> BaseContour | None:
         if self._contour is None:
             return None
         return self._contour()
 
     def _set_contour(
-        self, contour: Optional[Union[BaseContour, Callable[[], BaseContour]]]
+        self, contour: BaseContour | Callable[[], BaseContour] | None
     ) -> None:
         if self._contour is not None:
             raise AssertionError("contour for bPoint already set")
@@ -177,7 +178,7 @@ class BaseBPoint(
         """,
     )
 
-    def _get_glyph(self) -> Optional[BaseGlyph]:
+    def _get_glyph(self) -> BaseGlyph | None:
         if self._contour is None:
             return None
         return self.contour.glyph
@@ -200,7 +201,7 @@ class BaseBPoint(
         """,
     )
 
-    def _get_layer(self) -> Optional[BaseLayer]:
+    def _get_layer(self) -> BaseLayer | None:
         if self._contour is None:
             return None
         return self.glyph.layer
@@ -223,7 +224,7 @@ class BaseBPoint(
         """,
     )
 
-    def _get_font(self) -> Optional[BaseFont]:
+    def _get_font(self) -> BaseFont | None:
         if self._contour is None:
             return None
         return self.glyph.font
@@ -361,7 +362,7 @@ class BaseBPoint(
         segment = self._segment
         if segment.type == "move" and value != (0, 0):
             raise FontPartsError(
-                ("Cannot set the bcpIn for the first point in an open contour.")
+                "Cannot set the bcpIn for the first point in an open contour."
             )
 
         offCurves = segment.offCurve
@@ -449,7 +450,7 @@ class BaseBPoint(
         nextSegment = self._nextSegment
         if nextSegment.type == "move" and value != (0, 0):
             raise FontPartsError(
-                ("Cannot set the bcpOut for the last point in an open contour.")
+                "Cannot set the bcpOut for the last point in an open contour."
             )
         else:
             offCurves = nextSegment.offCurve
@@ -584,14 +585,14 @@ class BaseBPoint(
         """,
     )
 
-    def _get_base_index(self) -> Optional[int]:
+    def _get_base_index(self) -> int | None:
         if self.contour is None:
             return None
         value = self._get_index()
         value = normalizers.normalizeIndex(value)
         return value
 
-    def _get_index(self) -> Optional[int]:
+    def _get_index(self) -> int | None:
         """Get the index of the native bPoint.
 
         This is the environment implementation of the :attr:`BaseBPoint.index`

@@ -13,13 +13,13 @@ class RemovedError(Exception):
 # ========
 
 
-class RemovedBase(object):
+class RemovedBase:
     def setParent(self, parent):
         objName = self.__class__.__name__.replace("Removed", "")
         raise RemovedError(f"'{objName}.setParent()'")
 
 
-class DeprecatedBase(object):
+class DeprecatedBase:
     def update(self):
         objName = self.__class__.__name__.replace("Deprecated", "")
         warnings.warn(
@@ -40,7 +40,7 @@ class DeprecatedBase(object):
 # ==================
 
 
-class DeprecatedTransformation(object):
+class DeprecatedTransformation:
     def move(self, *args, **kwargs):
         objName = self.__class__.__name__.replace("Deprecated", "")
         warnings.warn(f"'{objName}.move()': use {objName}.moveBy()", DeprecationWarning)
@@ -164,7 +164,7 @@ class RemovedAnchor(RemovedBase):
     @staticmethod
     def drawPoints(pen):
         raise RemovedError(
-            ("'Anchor.drawPoints': UFO3 is not drawing anchors into point pens")
+            "'Anchor.drawPoints': UFO3 is not drawing anchors into point pens"
         )
 
 
@@ -450,7 +450,7 @@ class RemovedLib(RemovedBase):
     pass
 
 
-class DeprecatedLib(object):
+class DeprecatedLib:
     def getParent(self):
         warnings.warn(
             "'Lib.getParent()': use 'Lib.glyph' or 'Lib.font'", DeprecationWarning
@@ -474,7 +474,7 @@ class RemovedGroups(RemovedBase):
     pass
 
 
-class DeprecatedGroups(object):
+class DeprecatedGroups:
     def getParent(self):
         warnings.warn("'Groups.getParent()': use 'Groups.font'", DeprecationWarning)
         return self.font
@@ -489,7 +489,7 @@ class DeprecatedGroups(object):
 # ===========
 
 
-class RemovedKerning(object):
+class RemovedKerning:
     @staticmethod
     def setParent(parent):
         raise RemovedError("'Kerning.setParent()'")
@@ -549,7 +549,7 @@ class RemovedKerning(object):
         raise RemovedError("Kerning.explodeClasses()")
 
 
-class DeprecatedKerning(object):
+class DeprecatedKerning:
     def setChanged(self):
         warnings.warn("'Kerning.setChanged': use Kerning.changed()", DeprecationWarning)
         self.changed()

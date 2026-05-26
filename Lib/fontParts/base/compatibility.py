@@ -1,5 +1,6 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, List, Sequence
+from typing import TYPE_CHECKING, Any, List
+from collections.abc import Sequence
 from _collections_abc import Callable
 
 from fontParts.base.base import dynamicProperty
@@ -20,7 +21,7 @@ if TYPE_CHECKING:
 # ----
 
 
-class BaseCompatibilityReporter(object):
+class BaseCompatibilityReporter:
     objectName = "Base"
 
     def __init__(self, obj1: BaseObject, obj2: BaseObject) -> None:
@@ -96,7 +97,7 @@ class BaseCompatibilityReporter(object):
         reporters: Sequence[BaseCompatibilityReporter],
         showOK: bool = True,
         showWarnings: bool = True,
-    ) -> List[str]:
+    ) -> list[str]:
         report = []
         for reporter in reporters:
             if showOK or reporter.fatal or (showWarnings and reporter.warning):
@@ -118,9 +119,9 @@ class BaseCompatibilityReporter(object):
     def reportOrderDifference(
         subObjectName: str,
         object1Name: str,
-        object1Order: List[str],
+        object1Order: list[str],
         object2Name: str,
-        object2Order: List[str],
+        object2Order: list[str],
     ) -> str:
         text = f"{object1Name} has {subObjectName} ordered {object1Order} | {object2Name} has {object2Order}"
         return text
@@ -144,14 +145,14 @@ class FontCompatibilityReporter(BaseCompatibilityReporter):
     objectName = "Font"
 
     def __init__(self, font1: BaseFont, font2: BaseFont) -> None:
-        super(FontCompatibilityReporter, self).__init__(font1, font2)
+        super().__init__(font1, font2)
         self.guidelineCountDifference = False
         self.layerCountDifference = False
-        self.guidelinesMissingFromFont2: List[str] = []
-        self.guidelinesMissingInFont1: List[str] = []
-        self.layersMissingFromFont2: List[str] = []
-        self.layersMissingInFont1: List[str] = []
-        self.layers: List[LayerCompatibilityReporter] = []
+        self.guidelinesMissingFromFont2: list[str] = []
+        self.guidelinesMissingInFont1: list[str] = []
+        self.layersMissingFromFont2: list[str] = []
+        self.layersMissingInFont1: list[str] = []
+        self.layers: list[LayerCompatibilityReporter] = []
 
     font1 = dynamicProperty("object1")
     font1Name = dynamicProperty("object1Name")
@@ -230,11 +231,11 @@ class LayerCompatibilityReporter(BaseCompatibilityReporter):
     objectName = "Layer"
 
     def __init__(self, layer1: BaseLayer, layer2: BaseLayer) -> None:
-        super(LayerCompatibilityReporter, self).__init__(layer1, layer2)
+        super().__init__(layer1, layer2)
         self.glyphCountDifference = False
-        self.glyphsMissingFromLayer2: List[str] = []
-        self.glyphsMissingInLayer1: List[str] = []
-        self.glyphs: List[GlyphCompatibilityReporter] = []
+        self.glyphsMissingFromLayer2: list[str] = []
+        self.glyphsMissingInLayer1: list[str] = []
+        self.glyphs: list[GlyphCompatibilityReporter] = []
 
     layer1 = dynamicProperty("object1")
     layer1Name = dynamicProperty("object1Name")
@@ -288,22 +289,22 @@ class GlyphCompatibilityReporter(BaseCompatibilityReporter):
     objectName = "Glyph"
 
     def __init__(self, glyph1: BaseGlyph, glyph2: BaseGlyph) -> None:
-        super(GlyphCompatibilityReporter, self).__init__(glyph1, glyph2)
+        super().__init__(glyph1, glyph2)
         self.contourCountDifference = False
         self.componentCountDifference = False
         self.guidelineCountDifference = False
         self.anchorDifferences: DiffType = []
         self.anchorCountDifference = False
         self.anchorOrderDifference = False
-        self.anchorsMissingFromGlyph1: List[str] = []
-        self.anchorsMissingFromGlyph2: List[str] = []
+        self.anchorsMissingFromGlyph1: list[str] = []
+        self.anchorsMissingFromGlyph2: list[str] = []
         self.componentDifferences: DiffType = []
         self.componentOrderDifference = False
-        self.componentsMissingFromGlyph1: List[str] = []
-        self.componentsMissingFromGlyph2: List[str] = []
-        self.guidelinesMissingFromGlyph1: List[str] = []
-        self.guidelinesMissingFromGlyph2: List[str] = []
-        self.contours: List[ContourCompatibilityReporter] = []
+        self.componentsMissingFromGlyph1: list[str] = []
+        self.componentsMissingFromGlyph2: list[str] = []
+        self.guidelinesMissingFromGlyph1: list[str] = []
+        self.guidelinesMissingFromGlyph2: list[str] = []
+        self.contours: list[ContourCompatibilityReporter] = []
 
     glyph1 = dynamicProperty("object1")
     glyph1Name = dynamicProperty("object1Name")
@@ -442,11 +443,11 @@ class ContourCompatibilityReporter(BaseCompatibilityReporter):
     objectName = "Contour"
 
     def __init__(self, contour1: BaseContour, contour2: BaseContour) -> None:
-        super(ContourCompatibilityReporter, self).__init__(contour1, contour2)
+        super().__init__(contour1, contour2)
         self.openDifference = False
         self.directionDifference = False
         self.segmentCountDifference = False
-        self.segments: List[SegmentCompatibilityReporter] = []
+        self.segments: list[SegmentCompatibilityReporter] = []
 
     contour1 = dynamicProperty("object1")
     contour1Name = dynamicProperty("object1Name")
@@ -499,7 +500,7 @@ class SegmentCompatibilityReporter(BaseCompatibilityReporter):
     objectName = "Segment"
 
     def __init__(self, contour1: BaseContour, contour2: BaseContour) -> None:
-        super(SegmentCompatibilityReporter, self).__init__(contour1, contour2)
+        super().__init__(contour1, contour2)
         self.typeDifference = False
 
     segment1 = dynamicProperty("object1")
@@ -530,7 +531,7 @@ class ComponentCompatibilityReporter(BaseCompatibilityReporter):
     objectName = "Component"
 
     def __init__(self, component1: BaseComponent, component2: BaseComponent) -> None:
-        super(ComponentCompatibilityReporter, self).__init__(component1, component2)
+        super().__init__(component1, component2)
         self.baseDifference = False
 
     component1 = dynamicProperty("object1")
@@ -561,7 +562,7 @@ class AnchorCompatibilityReporter(BaseCompatibilityReporter):
     objectName = "Anchor"
 
     def __init__(self, anchor1: BaseAnchor, anchor2: BaseAnchor) -> None:
-        super(AnchorCompatibilityReporter, self).__init__(anchor1, anchor2)
+        super().__init__(anchor1, anchor2)
         self.nameDifference = False
 
     anchor1 = dynamicProperty("object1")
@@ -592,7 +593,7 @@ class GuidelineCompatibilityReporter(BaseCompatibilityReporter):
     objectName = "Guideline"
 
     def __init__(self, guideline1: BaseGuideline, guideline2: BaseGuideline) -> None:
-        super(GuidelineCompatibilityReporter, self).__init__(guideline1, guideline2)
+        super().__init__(guideline1, guideline2)
         self.nameDifference = False
 
     guideline1 = dynamicProperty("object1")

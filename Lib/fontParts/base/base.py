@@ -4,10 +4,7 @@ from abc import ABC, abstractmethod
 from typing import (
     TYPE_CHECKING,
     Any,
-    Callable,
     Generic,
-    Iterable,
-    Iterator,
     List,
     NoReturn,
     Optional,
@@ -16,6 +13,7 @@ from typing import (
     TypeVar,
     Union,
 )
+from collections.abc import Callable, Iterable, Iterator
 from copy import deepcopy
 import math
 from collections.abc import MutableMapping
@@ -125,13 +123,13 @@ class dynamicProperty:
 
     """
 
-    def __init__(self, name: str, doc: Optional[str] = None) -> None:
+    def __init__(self, name: str, doc: str | None = None) -> None:
         self.name = name
         self.__doc__ = doc
         self.getterName = "_get_" + name
         self.setterName = "_set_" + name
 
-    def __get__(self, obj: Any, cls: Type[Any]) -> Any:
+    def __get__(self, obj: Any, cls: type[Any]) -> Any:
         getter = getattr(obj, self.getterName, None)
         if getter is not None:
             return getter()
@@ -240,7 +238,7 @@ class BaseObject(Generic[BaseObjectType]):
             contentString = ""
         return f"<{self.__class__.__name__}{contentString} at {hex(id(self))}>"
 
-    def _reprContents(self) -> List[str]:
+    def _reprContents(self) -> list[str]:
         """Provide a list of strings for inclusion in :meth:`BaseObject.__repr__.
 
         :return: A :class:`list` of :class:`str` items.
@@ -311,8 +309,8 @@ class BaseObject(Generic[BaseObjectType]):
     # Copy
     # ----
 
-    copyClass: Optional[Type[Any]] = None
-    copyAttributes: Tuple[str, ...] = ()
+    copyClass: type[Any] | None = None
+    copyAttributes: tuple[str, ...] = ()
 
     def copy(self: BaseObjectType) -> BaseObjectType:
         """Copy the current object into a new object of the same type.
@@ -414,7 +412,7 @@ class BaseItems(Generic[KeyType, ValueType]):
     def __init__(self, mapping: BaseDict[KeyType, ValueType]) -> None:
         self._mapping = mapping
 
-    def __contains__(self, item: Tuple[KeyType, ValueType]) -> bool:
+    def __contains__(self, item: tuple[KeyType, ValueType]) -> bool:
         """Check if a key-value pair exists in the mapping.
 
         :param item: The key-value pair to check for existence as a :class:`tuple`.
@@ -428,7 +426,7 @@ class BaseItems(Generic[KeyType, ValueType]):
         )
         return normalizedItem in self._mapping._normalizeItems()
 
-    def __iter__(self) -> Iterator[Tuple[KeyType, ValueType]]:
+    def __iter__(self) -> Iterator[tuple[KeyType, ValueType]]:
         """Return an iterator over the key-value pairs in the mapping.
 
         This method yields each item one by one, removing it from the list of
@@ -583,8 +581,8 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
 
     """
 
-    keyNormalizer: Optional[Callable[[KeyType], KeyType]] = None
-    valueNormalizer: Optional[Callable[[ValueType], ValueType]] = None
+    keyNormalizer: Callable[[KeyType], KeyType] | None = None
+    valueNormalizer: Callable[[ValueType], ValueType] | None = None
 
     def _normalizeKey(self, key: KeyType) -> KeyType:
         keyNormalizer = type(self).keyNormalizer
@@ -594,7 +592,7 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
         valueNormalizer = type(self).valueNormalizer
         return valueNormalizer(value) if valueNormalizer is not None else value
 
-    def _normalizeItems(self) -> List[Tuple[KeyType, ValueType]]:
+    def _normalizeItems(self) -> list[tuple[KeyType, ValueType]]:
         items = self._items()
         return [(self._normalizeKey(k), self._normalizeValue(v)) for (k, v) in items]
 
@@ -609,7 +607,7 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
             to copy data.
 
         """
-        super(BaseDict, self).copyData(source)
+        super().copyData(source)
         if isinstance(source, MutableMapping):
             self.update(source)
 
@@ -803,8 +801,8 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
         self.raiseNotImplementedError()
 
     def get(
-        self, key: KeyType, default: Optional[ValueType] = None
-    ) -> Optional[ValueType]:
+        self, key: KeyType, default: ValueType | None = None
+    ) -> ValueType | None:
         """Get the value for a given key in the object.
 
         If the given key is not found, The specified `default` will be returned.
@@ -823,7 +821,7 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
             value = self._normalizeValue(value)
         return value
 
-    def _get(self, key: KeyType, default: Optional[ValueType]) -> Optional[ValueType]:
+    def _get(self, key: KeyType, default: ValueType | None) -> ValueType | None:
         """Get the value for a given key in the native object.
 
         This is the environment implementation of :meth:`BaseDict.get`.
@@ -871,8 +869,8 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
         self.raiseNotImplementedError()
 
     def pop(
-        self, key: KeyType, default: Optional[ValueType] = None
-    ) -> Optional[ValueType]:
+        self, key: KeyType, default: ValueType | None = None
+    ) -> ValueType | None:
         """Remove a key from the object and return it's value.
 
         If the given key is not found, The specified `default` will be returned.
@@ -892,7 +890,7 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
             value = self._normalizeValue(value)
         return value
 
-    def _pop(self, key: KeyType, default: Optional[ValueType]) -> Optional[ValueType]:
+    def _pop(self, key: KeyType, default: ValueType | None) -> ValueType | None:
         """Remove a key from the native object and return it's value.
 
         This is the environment implementation of :meth:`BaseDict.pop`.
@@ -938,8 +936,7 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
             Subclasses may override this method.
 
         """
-        for key in self.keys():
-            yield key
+        yield from self.keys()
 
     def update(self, other: MutableMapping[KeyType, ValueType]) -> None:
         """Update the current object instance with key-value pairs from another.
@@ -1003,7 +1000,7 @@ class TransformationMixin(ABC):
     def transformBy(
         self,
         matrix: SextupleCollectionType[IntFloatType],
-        origin: Optional[PairCollectionType[IntFloatType]] = None,
+        origin: PairCollectionType[IntFloatType] | None = None,
     ) -> None:
         """Transform the object according to the given matrix.
 
@@ -1088,7 +1085,7 @@ class TransformationMixin(ABC):
     def scaleBy(
         self,
         value: TransformationType,
-        origin: Optional[PairCollectionType[IntFloatType]] = None,
+        origin: PairCollectionType[IntFloatType] | None = None,
     ) -> None:
         """Scale the object according to the given values.
 
@@ -1141,7 +1138,7 @@ class TransformationMixin(ABC):
     def rotateBy(
         self,
         value: IntFloatType,
-        origin: Optional[PairCollectionType[IntFloatType]] = None,
+        origin: PairCollectionType[IntFloatType] | None = None,
     ) -> None:
         """Rotate the object by the specified value.
 
@@ -1190,7 +1187,7 @@ class TransformationMixin(ABC):
     def skewBy(
         self,
         value: TransformationType,
-        origin: Optional[PairCollectionType[IntFloatType]] = None,
+        origin: PairCollectionType[IntFloatType] | None = None,
     ) -> None:
         """Skew the object by the given value.
 
@@ -1264,9 +1261,9 @@ class InterpolationMixin(ABC):
     # Compatibility
     # -------------
 
-    compatibilityReporterClass: Optional[Type[Any]] = None
+    compatibilityReporterClass: type[Any] | None = None
 
-    def isCompatible(self, other: Any, cls: Type[Any]) -> Tuple[bool, Any]:
+    def isCompatible(self, other: Any, cls: type[Any]) -> tuple[bool, Any]:
         """Evaluate interpolation compatibility with another object.
 
         :param other: The other object instance to check compatibility with.
@@ -1388,7 +1385,7 @@ class SelectionMixin(ABC):
     # Sub-Objects
     # -----------
     @classmethod
-    def _getSelectedSubObjects(cls, subObjects: Any) -> Tuple[Any]:
+    def _getSelectedSubObjects(cls, subObjects: Any) -> tuple[Any]:
         selected = tuple(obj for obj in subObjects if obj.selected)
         return selected
 
@@ -1544,13 +1541,13 @@ class IdentifierMixin(ABC):
         """,
     )
 
-    def _get_base_identifier(self) -> Optional[str]:
+    def _get_base_identifier(self) -> str | None:
         value = self._get_identifier()
         if value is not None:
             value = normalizers.normalizeIdentifier(value)
         return value
 
-    def _get_identifier(self) -> Optional[str]:  # type: ignore[return]
+    def _get_identifier(self) -> str | None:  # type: ignore[return]
         """Get the native object's unique identifier.
 
         This is the environment implementation of :attr:`IdentifierMixin.identifier`.
@@ -1650,7 +1647,7 @@ class FuzzyNumber:
     def __repr__(self) -> str:
         return f"[{self.value:f} {self.threshold:f}]"
 
-    def __lt__(self, other: Union[FuzzyNumber, IntFloatType]) -> bool:
+    def __lt__(self, other: FuzzyNumber | IntFloatType) -> bool:
         if hasattr(other, "value"):
             if abs(self.value - other.value) < self.threshold:
                 return False

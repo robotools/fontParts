@@ -1,4 +1,3 @@
-# -*- coding: utf8 -*-
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Optional, Tuple, Type, Union
@@ -68,7 +67,7 @@ def normalizeFileStructure(value: str) -> str:
     return value
 
 
-def normalizeLayerOrder(value: CollectionType[str], font) -> Tuple[str, ...]:
+def normalizeLayerOrder(value: CollectionType[str], font) -> tuple[str, ...]:
     """Normalize layer order.
 
     :param value: The layer order to normalize as a :class:`list`
@@ -127,7 +126,7 @@ def normalizeDefaultLayerName(value: str, font) -> str:
     return str(value)
 
 
-def normalizeGlyphOrder(value: CollectionType[str]) -> Tuple[str, ...]:
+def normalizeGlyphOrder(value: CollectionType[str]) -> tuple[str, ...]:
     """Normalize glyph order.
 
     :param value: The glyph order to normalize as a :class:`list`
@@ -241,7 +240,7 @@ def normalizeGroupKey(value: str) -> str:
     return value
 
 
-def normalizeGroupValue(value: CollectionType[str]) -> Tuple[str, ...]:
+def normalizeGroupValue(value: CollectionType[str]) -> tuple[str, ...]:
     """Normalize a group value.
 
     :param value: The group value to normalize as a :class:`list`
@@ -409,7 +408,7 @@ def normalizeGlyphName(value: str) -> str:
     return value
 
 
-def normalizeGlyphUnicodes(value: CollectionType[int]) -> Tuple[int, ...]:
+def normalizeGlyphUnicodes(value: CollectionType[int]) -> tuple[int, ...]:
     """Normalize a glyph's unicodes.
 
     :param value: The glyph unicodes to normalize as a :class:`list`
@@ -434,7 +433,7 @@ def normalizeGlyphUnicodes(value: CollectionType[int]) -> Tuple[int, ...]:
     return tuple(values)
 
 
-def normalizeGlyphUnicode(value: Union[int, str]) -> int:
+def normalizeGlyphUnicode(value: int | str) -> int:
     """Normalize a glyph's unicode.
 
     :param value: The glyph Unicode value to normalize as an :class:`int` or a
@@ -475,7 +474,7 @@ def normalizeGlyphWidth(value: IntFloatType) -> IntFloatType:
     return value
 
 
-def normalizeGlyphLeftMargin(value: Optional[IntFloatType]) -> Optional[IntFloatType]:
+def normalizeGlyphLeftMargin(value: IntFloatType | None) -> IntFloatType | None:
     """Normalize a glyph's left margin.
 
     :param value: The glyph left margin to normalize as
@@ -491,7 +490,7 @@ def normalizeGlyphLeftMargin(value: Optional[IntFloatType]) -> Optional[IntFloat
     return value
 
 
-def normalizeGlyphRightMargin(value: Optional[IntFloatType]) -> Optional[IntFloatType]:
+def normalizeGlyphRightMargin(value: IntFloatType | None) -> IntFloatType | None:
     """Normalize a glyph's right margin.
 
     :param value: The glyph right margin to normalize as
@@ -522,7 +521,7 @@ def normalizeGlyphHeight(value: IntFloatType) -> IntFloatType:
     return value
 
 
-def normalizeGlyphBottomMargin(value: Optional[IntFloatType]) -> Optional[IntFloatType]:
+def normalizeGlyphBottomMargin(value: IntFloatType | None) -> IntFloatType | None:
     """Normalize a glyph's bottom margin.
 
     :param value: The glyph bottom margin to normalize as
@@ -538,7 +537,7 @@ def normalizeGlyphBottomMargin(value: Optional[IntFloatType]) -> Optional[IntFlo
     return value
 
 
-def normalizeGlyphTopMargin(value: Optional[IntFloatType]) -> Optional[IntFloatType]:
+def normalizeGlyphTopMargin(value: IntFloatType | None) -> IntFloatType | None:
     """Normalize a glyph's top margin.
 
     :param value: The glyph top margin to normalize as
@@ -623,7 +622,7 @@ def normalizePointType(value: str) -> str:
         raise TypeError(f"Point type must be a string, not {type(value).__name__}.")
     if value not in allowedTypes:
         raise ValueError(
-            "Point type must be '%s'; not %r." % ("', '".join(allowedTypes), value)
+            "Point type must be '{}'; not {!r}.".format("', '".join(allowedTypes), value)
         )
     return value
 
@@ -700,7 +699,7 @@ def normalizeSegmentType(value: str) -> str:
         raise TypeError(f"Segment type must be a string, not {type(value).__name__}.")
     if value not in allowedTypes:
         raise ValueError(
-            "Segment type must be '%s'; not %r." % ("', '".join(allowedTypes), value)
+            "Segment type must be '{}'; not {!r}.".format("', '".join(allowedTypes), value)
         )
     return value
 
@@ -825,7 +824,7 @@ def normalizeAnchorName(value: str) -> str:
     if not isinstance(value, str):
         raise TypeError(f"Anchor names must be strings, not {type(value).__name__}.")
     if len(value) < 1:
-        raise ValueError(("Anchor names must be at least one character long or None."))
+        raise ValueError("Anchor names must be at least one character long or None.")
     return value
 
 
@@ -868,7 +867,7 @@ def normalizeGuidelineName(value: str) -> str:
 # -------
 
 
-def normalizeInternalObjectType(value: object, cls: Type[T], name: str) -> T:
+def normalizeInternalObjectType(value: object, cls: type[T], name: str) -> T:
     """Normalize an internal object type.
 
     :param value: The object instance to normalize.
@@ -904,7 +903,7 @@ def normalizeBoolean(value: int) -> bool:
 # Identification
 
 
-def normalizeIndex(value: Optional[int]) -> Optional[int]:
+def normalizeIndex(value: int | None) -> int | None:
     """Normalize an index.
 
     :param value: The index to normalize as an :class:`int`, or :obj:`None`.
@@ -920,7 +919,7 @@ def normalizeIndex(value: Optional[int]) -> Optional[int]:
     return value
 
 
-def normalizeIdentifier(value: Optional[str]) -> Optional[str]:
+def normalizeIdentifier(value: str | None) -> str | None:
     """Normalize an identifier.
 
     :param value: The identifier to normalize as a non-empty :class:`str`,
@@ -1157,7 +1156,7 @@ def normalizeGlyphNote(value: str) -> str:
 # File Path
 
 
-def normalizeFilePath(value: Union[str, Path]) -> str:
+def normalizeFilePath(value: str | Path) -> str:
     """Normalize a file path.
 
     :param value: The file path to normalize as a :class:`str` or :class:`pathlib.Path`.

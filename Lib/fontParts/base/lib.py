@@ -1,5 +1,6 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Callable, Dict, Iterator, List, Optional, Union
+from typing import TYPE_CHECKING, Dict, List, Optional, Union
+from collections.abc import Callable, Iterator
 from collections.abc import MutableMapping
 
 from fontParts.base.base import BaseDict, dynamicProperty, reference
@@ -41,7 +42,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         normalizers.normalizeLibValue
     )
 
-    def _reprContents(self) -> List[str]:
+    def _reprContents(self) -> list[str]:
         contents = []
         if self.glyph is not None:
             contents.append("in glyph")
@@ -57,7 +58,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
 
     # Glyph
 
-    _glyph: Optional[Callable[[], BaseGlyph]] = None
+    _glyph: Callable[[], BaseGlyph] | None = None
 
     glyph: dynamicProperty = dynamicProperty(
         "glyph",
@@ -79,13 +80,13 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         """,
     )
 
-    def _get_glyph(self) -> Optional[BaseGlyph]:
+    def _get_glyph(self) -> BaseGlyph | None:
         if self._glyph is None:
             return None
         return self._glyph()
 
     def _set_glyph(
-        self, glyph: Optional[Union[BaseGlyph, Callable[[], BaseGlyph]]]
+        self, glyph: BaseGlyph | Callable[[], BaseGlyph] | None
     ) -> None:
         if self._font is not None:
             raise AssertionError("font for lib already set")
@@ -97,7 +98,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
 
     # Font
 
-    _font: Optional[Callable[[], BaseFont]] = None
+    _font: Callable[[], BaseFont] | None = None
 
     font: dynamicProperty = dynamicProperty(
         "font",
@@ -119,7 +120,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         """,
     )
 
-    def _get_font(self) -> Optional[BaseFont]:
+    def _get_font(self) -> BaseFont | None:
         if self._font is not None:
             return self._font()
         elif self._glyph is not None:
@@ -127,7 +128,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         return None
 
     def _set_font(
-        self, font: Optional[Union[BaseFont, Callable[[], BaseFont]]]
+        self, font: BaseFont | Callable[[], BaseFont] | None
     ) -> None:
         if self._font is not None and self._font() != font:
             raise AssertionError("font for lib already set and is not same as font")
@@ -155,7 +156,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         """,
     )
 
-    def _get_layer(self) -> Optional[BaseLayer]:
+    def _get_layer(self) -> BaseLayer | None:
         if self._glyph is None:
             return None
         return self.glyph.layer
@@ -180,7 +181,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         """
         del self[key]
 
-    def asDict(self) -> Dict[str, LibValueType]:
+    def asDict(self) -> dict[str, LibValueType]:
         """Return the lib as a dictionary.
 
         :return A :class:`dict` reflecting the contents of the lib.
@@ -212,7 +213,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
             True
 
         """
-        return super(BaseLib, self).__contains__(key)
+        return super().__contains__(key)
 
     def __delitem__(self, key: str) -> None:
         """Remove the given key from the lib.
@@ -224,7 +225,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
             >>> del font.lib["public.glyphOrder"]
 
         """
-        super(BaseLib, self).__delitem__(key)
+        super().__delitem__(key)
 
     def __getitem__(self, key: str) -> LibValueType:
         """Get the value associated with the given key.
@@ -249,7 +250,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
                 >>> font.lib["public.glyphOrder"] = lib
 
         """
-        return super(BaseLib, self).__getitem__(key)
+        return super().__getitem__(key)
 
     def __iter__(self) -> Iterator[str]:
         """Return an iterator over the keys in the lib.
@@ -267,7 +268,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
             "public.postscriptNames"
 
         """
-        return super(BaseLib, self).__iter__()
+        return super().__iter__()
 
     def __len__(self) -> int:
         """Return the number of keys in the lib.
@@ -280,7 +281,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
             5
 
         """
-        return super(BaseLib, self).__len__()
+        return super().__len__()
 
     def __setitem__(self, key: str, value: LibValueType) -> None:
         """Set the value for a given key in the lib.
@@ -293,7 +294,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
             >>> font.lib["public.glyphOrder"] = ["A", "B", "C"]
 
         """
-        super(BaseLib, self).__setitem__(key, value)
+        super().__setitem__(key, value)
 
     def clear(self) -> None:
         """Remove all keys from the lib.
@@ -305,11 +306,11 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
             >>> font.lib.clear()
 
         """
-        super(BaseLib, self).clear()
+        super().clear()
 
     def get(
-        self, key: str, default: Optional[LibValueType] = None
-    ) -> Optional[LibValueType]:
+        self, key: str, default: LibValueType | None = None
+    ) -> LibValueType | None:
         """Get the value for the given key in the lib.
 
         If the given `key` is not found, The specified `default` will be returned.
@@ -338,7 +339,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
                 >>> font.lib["public.glyphOrder"] = lib
 
         """
-        return super(BaseLib, self).get(key, default)
+        return super().get(key, default)
 
     def items(self) -> BaseItems[str, LibValueType]:
         """Return the lib's items.
@@ -356,7 +357,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
              ("public.postscriptNames", {'be': 'uni0431', 'ze': 'uni0437'})]
 
         """
-        return super(BaseLib, self).items()
+        return super().items()
 
     def keys(self) -> BaseKeys[str]:
         """Return the lib's keys.
@@ -370,7 +371,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
              "public.postscriptNames"]
 
         """
-        return super(BaseLib, self).keys()
+        return super().keys()
 
     def values(self) -> BaseValues[LibValueType]:
         """Return the lib's values.
@@ -383,11 +384,11 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
             [["A", "B", "C"], {'be': 'uni0431', 'ze': 'uni0437'}]
 
         """
-        return super(BaseLib, self).values()
+        return super().values()
 
     def pop(
-        self, key: str, default: Optional[LibValueType] = None
-    ) -> Optional[LibValueType]:
+        self, key: str, default: LibValueType | None = None
+    ) -> LibValueType | None:
         """Remove the specified key and return its associated value.
 
         If the `key` does not exist, the `default` value is returned.
@@ -404,7 +405,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
             ["A", "B", "C"]
 
         """
-        return super(BaseLib, self).pop(key, default)
+        return super().pop(key, default)
 
     def update(self, otherLib: MutableMapping[str, LibValueType]) -> None:
         """Update the current lib with key-value pairs from another.
@@ -424,4 +425,4 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
             >>> font.lib.update(newLib)
 
         """
-        super(BaseLib, self).update(otherLib)
+        super().update(otherLib)

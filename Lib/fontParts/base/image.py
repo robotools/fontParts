@@ -1,5 +1,6 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, Callable, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, Optional, Tuple, Union
+from collections.abc import Callable
 
 from fontTools.misc import transform
 from fontParts.base.base import (
@@ -61,7 +62,7 @@ class BaseImage(
 
     # Glyph
 
-    _glyph: Optional[Callable[[], BaseGlyph]] = None
+    _glyph: Callable[[], BaseGlyph] | None = None
 
     glyph = dynamicProperty(
         "glyph",
@@ -81,13 +82,13 @@ class BaseImage(
         """,
     )
 
-    def _get_glyph(self) -> Optional[BaseGlyph]:
+    def _get_glyph(self) -> BaseGlyph | None:
         if self._glyph is None:
             return None
         return self._glyph()
 
     def _set_glyph(
-        self, glyph: Optional[Union[BaseGlyph, Callable[[], BaseGlyph]]]
+        self, glyph: BaseGlyph | Callable[[], BaseGlyph] | None
     ) -> None:
         if self._glyph is not None:
             raise AssertionError("glyph for image already set")
@@ -113,7 +114,7 @@ class BaseImage(
         """,
     )
 
-    def _get_layer(self) -> Optional[BaseLayer]:
+    def _get_layer(self) -> BaseLayer | None:
         if self._glyph is None:
             return None
         return self.glyph.layer
@@ -136,7 +137,7 @@ class BaseImage(
         """,
     )
 
-    def _get_font(self) -> Optional[BaseFont]:
+    def _get_font(self) -> BaseFont | None:
         if self._glyph is None:
             return None
         return self.glyph.font
@@ -361,20 +362,20 @@ class BaseImage(
         """,
     )
 
-    def _get_base_color(self) -> Optional[Color]:
+    def _get_base_color(self) -> Color | None:
         value = self._get_color()
         if value is not None:
             value = Color(value)
         return value
 
     def _set_base_color(
-        self, value: Optional[QuadrupleCollectionType[IntFloatType]]
+        self, value: QuadrupleCollectionType[IntFloatType] | None
     ) -> None:
         if value is not None:
             value = normalizers.normalizeColor(value)
         self._set_color(value)
 
-    def _get_color(self) -> Optional[QuadrupleCollectionType[IntFloatType]]:
+    def _get_color(self) -> QuadrupleCollectionType[IntFloatType] | None:
         """Get the native image's color.
 
         This is the environment implementation of the :attr:`BaseImage.color`
@@ -393,7 +394,7 @@ class BaseImage(
         """
         self.raiseNotImplementedError()
 
-    def _set_color(self, value: Optional[QuadrupleType[float]]) -> None:
+    def _set_color(self, value: QuadrupleType[float] | None) -> None:
         """Set the native image's color.
 
         This is the environment implementation of the :attr:`BaseImage.color`
@@ -426,13 +427,13 @@ class BaseImage(
         """,
     )
 
-    def _get_base_data(self) -> Optional[bytes]:
+    def _get_base_data(self) -> bytes | None:
         return self._get_data()
 
     def _set_base_data(self, value: bytes) -> None:
         self._set_data(value)
 
-    def _get_data(self) -> Optional[bytes]:
+    def _get_data(self) -> bytes | None:
         """Get the native image's raw byte data.
 
         This is the environment implementation of the :attr:`BaseImage.data`

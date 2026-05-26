@@ -1,5 +1,6 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Callable, Tuple, List, Optional, Union
+from typing import TYPE_CHECKING, Tuple, List, Optional, Union
+from collections.abc import Callable
 
 from fontParts.base.base import BaseObject, dynamicProperty, reference
 from fontParts.base import normalizers
@@ -17,9 +18,9 @@ class BaseFeatures(BaseObject, DeprecatedFeatures, RemovedFeatures):
 
     """
 
-    copyAttributes: Tuple[str] = ("text",)
+    copyAttributes: tuple[str] = ("text",)
 
-    def _reprContents(self) -> List[str]:
+    def _reprContents(self) -> list[str]:
         contents = []
         if self.font is not None:
             contents.append("for font")
@@ -32,7 +33,7 @@ class BaseFeatures(BaseObject, DeprecatedFeatures, RemovedFeatures):
 
     # Font
 
-    _font: Optional[Callable[[], BaseFont]] = None
+    _font: Callable[[], BaseFont] | None = None
 
     font: dynamicProperty = dynamicProperty(
         "font",
@@ -53,13 +54,13 @@ class BaseFeatures(BaseObject, DeprecatedFeatures, RemovedFeatures):
         """,
     )
 
-    def _get_font(self) -> Optional[BaseFont]:
+    def _get_font(self) -> BaseFont | None:
         if self._font is None:
             return None
         return self._font()
 
     def _set_font(
-        self, font: Optional[Union[BaseFont, Callable[[], BaseFont]]]
+        self, font: BaseFont | Callable[[], BaseFont] | None
     ) -> None:
         if self._font is not None and self._font() != font:
             raise AssertionError(
@@ -86,18 +87,18 @@ class BaseFeatures(BaseObject, DeprecatedFeatures, RemovedFeatures):
         """,
     )
 
-    def _get_base_text(self) -> Optional[str]:
+    def _get_base_text(self) -> str | None:
         value = self._get_text()
         if value is not None:
             value = normalizers.normalizeFeatureText(value)
         return value
 
-    def _set_base_text(self, value: Optional[str]) -> None:
+    def _set_base_text(self, value: str | None) -> None:
         if value is not None:
             value = normalizers.normalizeFeatureText(value)
         self._set_text(value)
 
-    def _get_text(self) -> Optional[str]:
+    def _get_text(self) -> str | None:
         """Get the features text.
 
         This is the environment implementation of the :attr:`BaseFeatures.text` property
@@ -115,7 +116,7 @@ class BaseFeatures(BaseObject, DeprecatedFeatures, RemovedFeatures):
         """
         self.raiseNotImplementedError()
 
-    def _set_text(self, value: Optional[str]) -> None:
+    def _set_text(self, value: str | None) -> None:
         """Set the features text.
 
         Description

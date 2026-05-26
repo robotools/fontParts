@@ -1,5 +1,6 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, Callable, Generator, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, List, Optional, Tuple, Union
+from collections.abc import Callable, Generator
 
 from fontParts.base.errors import FontPartsError
 from fontParts.base.base import (
@@ -42,7 +43,7 @@ class BaseSegment(
             raise AssertionError("segment has points")
         self._points = points
 
-    def _reprContents(self) -> List[str]:
+    def _reprContents(self) -> list[str]:
         contents = [f"{self.type}"]
         if self.index is not None:
             contents.append(f"index='{self.index!r}'")
@@ -59,7 +60,7 @@ class BaseSegment(
 
     # Contour
 
-    _contour: Optional[Callable[[], BaseContour]] = None
+    _contour: Callable[[], BaseContour] | None = None
 
     contour: dynamicProperty = dynamicProperty(
         "contour",
@@ -79,13 +80,13 @@ class BaseSegment(
         """,
     )
 
-    def _get_contour(self) -> Optional[BaseContour]:
+    def _get_contour(self) -> BaseContour | None:
         if self._contour is None:
             return None
         return self._contour()
 
     def _set_contour(
-        self, contour: Optional[Union[BaseContour, Callable[[], BaseContour]]]
+        self, contour: BaseContour | Callable[[], BaseContour] | None
     ) -> None:
         if self._contour is not None:
             raise AssertionError("contour for segment already set")
@@ -113,7 +114,7 @@ class BaseSegment(
         """,
     )
 
-    def _get_glyph(self) -> Optional[BaseGlyph]:
+    def _get_glyph(self) -> BaseGlyph | None:
         if self._contour is None:
             return None
         return self.contour.glyph
@@ -136,7 +137,7 @@ class BaseSegment(
         """,
     )
 
-    def _get_layer(self) -> Optional[BaseLayer]:
+    def _get_layer(self) -> BaseLayer | None:
         if self._contour is None:
             return None
         return self.glyph.layer
@@ -159,7 +160,7 @@ class BaseSegment(
         """,
     )
 
-    def _get_font(self) -> Optional[BaseFont]:
+    def _get_font(self) -> BaseFont | None:
         if self._contour is None:
             return None
         return self.glyph.font
@@ -212,7 +213,7 @@ class BaseSegment(
         """,
     )
 
-    def _get_base_index(self) -> Optional[int]:
+    def _get_base_index(self) -> int | None:
         if self.contour is None:
             return None
         value = self._get_index()
@@ -503,10 +504,10 @@ class BaseSegment(
         """,
     )
 
-    def _get_base_points(self) -> Tuple[BasePoint, ...]:
+    def _get_base_points(self) -> tuple[BasePoint, ...]:
         return self._get_points()
 
-    def _get_points(self) -> Tuple[BasePoint, ...]:
+    def _get_points(self) -> tuple[BasePoint, ...]:
         """Get a list of all points in the native segment.
 
         This is the environment implementation of the :attr:`BaseSegment.points`
@@ -534,10 +535,10 @@ class BaseSegment(
         """,
     )
 
-    def _get_base_onCurve(self) -> Optional[BasePoint]:
+    def _get_base_onCurve(self) -> BasePoint | None:
         return self._get_onCurve()
 
-    def _get_onCurve(self) -> Optional[BasePoint]:
+    def _get_onCurve(self) -> BasePoint | None:
         """Get the on-curve point in the native segment.
 
         This is the environment implementation of
@@ -566,10 +567,10 @@ class BaseSegment(
         """,
     )
 
-    def _get_base_offCurve(self) -> Tuple[BasePoint, ...]:
+    def _get_base_offCurve(self) -> tuple[BasePoint, ...]:
         return self._get_offCurve()
 
-    def _get_offCurve(self) -> Tuple[BasePoint, ...]:
+    def _get_offCurve(self) -> tuple[BasePoint, ...]:
         """Get the off-curve points in the native segment.
 
         This is the environment implementation of
@@ -615,7 +616,7 @@ class BaseSegment(
 
     def isCompatible(
         self, other: BaseSegment, cls=None
-    ) -> Tuple[bool, SegmentCompatibilityReporter]:
+    ) -> tuple[bool, SegmentCompatibilityReporter]:
         """Evaluate interpolation compatibility with another segment.
 
         This method will return a :class:`bool` indicating if the segment is
@@ -641,7 +642,7 @@ class BaseSegment(
             [Fatal] Segment: [1] is line | [1] is qcurve
 
         """
-        return super(BaseSegment, self).isCompatible(other, BaseSegment)
+        return super().isCompatible(other, BaseSegment)
 
     def _isCompatible(
         self, other: BaseSegment, reporter: SegmentCompatibilityReporter
@@ -664,7 +665,7 @@ class BaseSegment(
         # type
         if segment1.type != segment2.type:
             # line <-> curve can be converted
-            if set((segment1.type, segment2.type)) != set(("curve", "line")):
+            if {segment1.type, segment2.type} != {"curve", "line"}:
                 reporter.typeDifference = True
                 reporter.fatal = True
 

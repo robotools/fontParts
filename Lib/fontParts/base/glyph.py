@@ -1,6 +1,7 @@
 # pylint: disable=C0103, C0302, C0114, W0613
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, Iterator, Optional, Union, List, Tuple, TypeVar
+from typing import TYPE_CHECKING, Any, Optional, Union, List, Tuple, TypeVar
+from collections.abc import Iterator
 from itertools import zip_longest
 from collections import Counter
 import os
@@ -50,11 +51,11 @@ if TYPE_CHECKING:
     from fontParts.base.anchor import BaseAnchor
     from fontParts.base.image import BaseImage
 
-    TempContourListType = List[
-        Tuple[int, int, IntFloatType, IntFloatType, IntFloatType, BaseContour]
+    TempContourListType = list[
+        tuple[int, int, IntFloatType, IntFloatType, IntFloatType, BaseContour]
     ]
-    ContourListType = List[
-        Tuple[int, int, FuzzyNumber, FuzzyNumber, IntFloatType, BaseContour]
+    ContourListType = list[
+        tuple[int, int, FuzzyNumber, FuzzyNumber, IntFloatType, BaseContour]
     ]
 
 
@@ -73,7 +74,7 @@ class BaseGlyph(
 
     """
 
-    copyAttributes: Tuple[str, ...] = (
+    copyAttributes: tuple[str, ...] = (
         "name",
         "unicodes",
         "width",
@@ -83,8 +84,8 @@ class BaseGlyph(
         "lib",
     )
 
-    def _reprContents(self) -> List[str]:
-        contents: List[str] = [f"'{self.name}'"]
+    def _reprContents(self) -> list[str]:
+        contents: list[str] = [f"'{self.name}'"]
         if self.layer is not None:
             contents.append(f"('{self.layer.name}')")
         return contents
@@ -116,7 +117,7 @@ class BaseGlyph(
             >>> copiedGlyph = glyph.copy()
 
         """
-        return super(BaseGlyph, self).copy()
+        return super().copy()
 
     def copyData(self: BaseGlyph, source: BaseGlyph) -> None:
         """Copy data from another glyph instance.
@@ -132,7 +133,7 @@ class BaseGlyph(
             >>> glyph.copyData(sourceGlyph)
 
         """
-        super(BaseGlyph, self).copyData(source)
+        super().copyData(source)
         for contour in source.contours:
             self.appendContour(contour)
         for component in source.components:
@@ -153,7 +154,7 @@ class BaseGlyph(
 
     # Layer
 
-    _layer: Optional[BaseLayer] = None
+    _layer: BaseLayer | None = None
 
     layer: dynamicProperty = dynamicProperty(
         "layer",
@@ -171,12 +172,12 @@ class BaseGlyph(
         """,
     )
 
-    def _get_layer(self) -> Optional[BaseLayer]:
+    def _get_layer(self) -> BaseLayer | None:
         if self._layer is None:
             return None
         return self._layer
 
-    def _set_layer(self, layer: Optional[BaseLayer]) -> None:
+    def _set_layer(self, layer: BaseLayer | None) -> None:
         self._layer = layer
 
     # Font
@@ -197,7 +198,7 @@ class BaseGlyph(
         """,
     )
 
-    def _get_font(self) -> Optional[BaseFont]:
+    def _get_font(self) -> BaseFont | None:
         if self._layer is None:
             return None
         return self.layer.font
@@ -299,7 +300,7 @@ class BaseGlyph(
         """,
     )
 
-    def _get_base_unicodes(self) -> Tuple[int, ...]:
+    def _get_base_unicodes(self) -> tuple[int, ...]:
         value = self._get_unicodes()
         value = normalizers.normalizeGlyphUnicodes(value)
         return value
@@ -382,20 +383,20 @@ class BaseGlyph(
         """,
     )
 
-    def _get_base_unicode(self) -> Optional[int]:
+    def _get_base_unicode(self) -> int | None:
         value = self._get_unicode()
         if value is not None:
             value = normalizers.normalizeGlyphUnicode(value)
         return value
 
-    def _set_base_unicode(self, value: Optional[int]) -> None:
+    def _set_base_unicode(self, value: int | None) -> None:
         if value is not None:
             value = normalizers.normalizeGlyphUnicode(value)
             self._set_unicode(value)
         else:
             self._set_unicodes(())
 
-    def _get_unicode(self) -> Optional[int]:
+    def _get_unicode(self) -> int | None:
         """Get the primary Unicode value assigned to the native glyph.
 
         This is the environment implementation of
@@ -414,7 +415,7 @@ class BaseGlyph(
             return values[0]
         return None
 
-    def _set_unicode(self, value: Optional[int]) -> None:
+    def _set_unicode(self, value: int | None) -> None:
         """Assign the primary Unicode value to the native glyph.
 
         This is the environment implementation of
@@ -551,7 +552,7 @@ class BaseGlyph(
         """,
     )
 
-    def _get_base_leftMargin(self) -> Optional[IntFloatType]:
+    def _get_base_leftMargin(self) -> IntFloatType | None:
         value = self._get_leftMargin()
         value = normalizers.normalizeGlyphLeftMargin(value)
         return value
@@ -563,7 +564,7 @@ class BaseGlyph(
             raise TypeError("The value for leftMargin cannot be None.")
         self._set_leftMargin(normalizedValue)
 
-    def _get_leftMargin(self) -> Optional[IntFloatType]:
+    def _get_leftMargin(self) -> IntFloatType | None:
         """Get the native glyph's left margin.
 
         This is the environment implementation of
@@ -619,7 +620,7 @@ class BaseGlyph(
         """,
     )
 
-    def _get_base_rightMargin(self) -> Optional[IntFloatType]:
+    def _get_base_rightMargin(self) -> IntFloatType | None:
         value = self._get_rightMargin()
         value = normalizers.normalizeGlyphRightMargin(value)
         return value
@@ -631,7 +632,7 @@ class BaseGlyph(
             raise TypeError("The value for rightMargin cannot be None.")
         self._set_rightMargin(normalizedValue)
 
-    def _get_rightMargin(self) -> Optional[IntFloatType]:
+    def _get_rightMargin(self) -> IntFloatType | None:
         """Get the native glyph's right margin.
 
         This is the environment implementation of
@@ -752,7 +753,7 @@ class BaseGlyph(
         """,
     )
 
-    def _get_base_bottomMargin(self) -> Optional[IntFloatType]:
+    def _get_base_bottomMargin(self) -> IntFloatType | None:
         value = self._get_bottomMargin()
         value = normalizers.normalizeGlyphBottomMargin(value)
         return value
@@ -764,7 +765,7 @@ class BaseGlyph(
             raise TypeError("The value for bottomMargin cannot be None.")
         self._set_bottomMargin(normalizedValue)
 
-    def _get_bottomMargin(self) -> Optional[IntFloatType]:
+    def _get_bottomMargin(self) -> IntFloatType | None:
         """Get the native glyph's bottom margin.
 
         This is the environment implementation of
@@ -819,7 +820,7 @@ class BaseGlyph(
         """,
     )
 
-    def _get_base_topMargin(self) -> Optional[IntFloatType]:
+    def _get_base_topMargin(self) -> IntFloatType | None:
         value = self._get_topMargin()
         value = normalizers.normalizeGlyphTopMargin(value)
         return value
@@ -831,7 +832,7 @@ class BaseGlyph(
             raise TypeError("The value for topMargin cannot be None.")
         self._set_topMargin(normalizedValue)
 
-    def _get_topMargin(self) -> Optional[IntFloatType]:
+    def _get_topMargin(self) -> IntFloatType | None:
         """Get the native glyph's top margin.
 
         This is the environment implementation of
@@ -1045,7 +1046,7 @@ class BaseGlyph(
     def appendGlyph(
         self,
         other: BaseGlyph,
-        offset: Optional[PairCollectionType[IntFloatType]] = None,
+        offset: PairCollectionType[IntFloatType] | None = None,
     ) -> None:
         """Append data from `other` to new objects in the glyph.
 
@@ -1121,7 +1122,7 @@ class BaseGlyph(
         """,
     )
 
-    def _get_contours(self) -> Tuple[BaseContour, ...]:
+    def _get_contours(self) -> tuple[BaseContour, ...]:
         """Get all contours in the native glyph.
 
         This is the environment implementation of the :attr:`BaseGlyph.contours`
@@ -1239,7 +1240,7 @@ class BaseGlyph(
     def appendContour(
         self,
         contour: BaseContour,
-        offset: Optional[PairCollectionType[IntFloatType]] = None,
+        offset: PairCollectionType[IntFloatType] | None = None,
     ) -> BaseContour:
         """Append the given contour's data to the glyph.
 
@@ -1293,7 +1294,7 @@ class BaseGlyph(
             contour.drawPoints(pointPen)
         return self[-1]
 
-    def removeContour(self, contour: Union[BaseContour, int]) -> None:
+    def removeContour(self, contour: BaseContour | int) -> None:
         """Remove the given contour from the glyph.
 
         :param contour: The contour to remove as a :class:`BaseContour`
@@ -1410,7 +1411,7 @@ class BaseGlyph(
         """,
     )
 
-    def _get_components(self) -> Tuple[BaseComponent, ...]:
+    def _get_components(self) -> tuple[BaseComponent, ...]:
         """Get all components in the native glyph.
 
         This is the environment implementation of
@@ -1479,10 +1480,10 @@ class BaseGlyph(
 
     def appendComponent(
         self,
-        baseGlyph: Optional[str] = None,
-        offset: Optional[PairCollectionType[IntFloatType]] = None,
-        scale: Optional[TransformationType] = None,
-        component: Optional[BaseComponent] = None,
+        baseGlyph: str | None = None,
+        offset: PairCollectionType[IntFloatType] | None = None,
+        scale: TransformationType | None = None,
+        component: BaseComponent | None = None,
     ) -> BaseComponent:
         """Append a component to the glyph.
 
@@ -1528,9 +1529,9 @@ class BaseGlyph(
             if baseGlyph is None:
                 baseGlyph = normalizedComponent.baseGlyph
             if normalizedComponent.identifier is not None:
-                existing = set(
+                existing = {
                     c.identifier for c in self.components if c.identifier is not None
-                )
+                }
                 if normalizedComponent.identifier not in existing:
                     identifier = normalizedComponent.identifier
         if baseGlyph is not None:
@@ -1558,8 +1559,8 @@ class BaseGlyph(
     def _appendComponent(
         self,
         baseGlyph: str,
-        transformation: Optional[SextupleCollectionType[IntFloatType]],
-        identifier: Optional[str],
+        transformation: SextupleCollectionType[IntFloatType] | None,
+        identifier: str | None,
         **kwargs: Any,
     ) -> BaseComponent:
         r"""Append a component to the native glyph.
@@ -1585,7 +1586,7 @@ class BaseGlyph(
         )
         return self.components[-1]
 
-    def removeComponent(self, component: Union[BaseComponent, int]) -> None:
+    def removeComponent(self, component: BaseComponent | int) -> None:
         """Remove the specified component from the glyph.
 
         :param component: The component to remove as a :class:`BaseComponent`
@@ -1693,7 +1694,7 @@ class BaseGlyph(
         """,
     )
 
-    def _get_anchors(self) -> Tuple[BaseAnchor, ...]:
+    def _get_anchors(self) -> tuple[BaseAnchor, ...]:
         """Get all anchors in the native glyph.
 
         :return: A :class:`tuple` of :class:`BaseAnthor` subclass instances.
@@ -1756,10 +1757,10 @@ class BaseGlyph(
 
     def appendAnchor(
         self,
-        name: Optional[str] = None,
-        position: Optional[PairCollectionType[IntFloatType]] = None,
-        color: Optional[QuadrupleCollectionType[IntFloatType]] = None,
-        anchor: Optional[BaseAnchor] = None,
+        name: str | None = None,
+        position: PairCollectionType[IntFloatType] | None = None,
+        color: QuadrupleCollectionType[IntFloatType] | None = None,
+        anchor: BaseAnchor | None = None,
     ) -> BaseAnchor:
         """Append an anchor to the glyph.
 
@@ -1813,9 +1814,9 @@ class BaseGlyph(
     def _appendAnchor(
         self,  # type: ignore[return]
         name: str,
-        position: Optional[PairCollectionType[IntFloatType]],
-        color: Optional[QuadrupleCollectionType[IntFloatType]],
-        identifier: Optional[str],
+        position: PairCollectionType[IntFloatType] | None,
+        color: QuadrupleCollectionType[IntFloatType] | None,
+        identifier: str | None,
         **kwargs: Any,
     ) -> BaseAnchor:
         r"""Append an anchor to the native glyph.
@@ -1842,7 +1843,7 @@ class BaseGlyph(
         """
         self.raiseNotImplementedError()
 
-    def removeAnchor(self, anchor: Union[BaseAnchor, int]) -> None:
+    def removeAnchor(self, anchor: BaseAnchor | int) -> None:
         """Remove the given anchor from the glyph.
 
         :param anchor: The anchor to remove as a :class:`BaseAnchor` intance,
@@ -1931,7 +1932,7 @@ class BaseGlyph(
         """,
     )
 
-    def _get_guidelines(self) -> Tuple[BaseGuideline, ...]:
+    def _get_guidelines(self) -> tuple[BaseGuideline, ...]:
         """Get all guidelines in the glyph.
 
         This is the environment implementation of
@@ -2000,11 +2001,11 @@ class BaseGlyph(
 
     def appendGuideline(
         self,
-        position: Optional[PairCollectionType[IntFloatType]] = None,
-        angle: Optional[IntFloatType] = None,
-        name: Optional[str] = None,
-        color: Optional[QuadrupleCollectionType[IntFloatType]] = None,
-        guideline: Optional[BaseGuideline] = None,
+        position: PairCollectionType[IntFloatType] | None = None,
+        angle: IntFloatType | None = None,
+        name: str | None = None,
+        color: QuadrupleCollectionType[IntFloatType] | None = None,
+        guideline: BaseGuideline | None = None,
     ) -> BaseGuideline:
         """Append a guideline to the glyph.
 
@@ -2029,7 +2030,7 @@ class BaseGlyph(
             >>> anchor = glyph.appendGuideline("top", (10, 20), color=(1, 0, 0, 1))
 
         """
-        identifier: Optional[str] = None
+        identifier: str | None = None
         if guideline is not None:
             guideline = normalizers.normalizeGuideline(guideline)
             if position is None:
@@ -2041,9 +2042,9 @@ class BaseGlyph(
             if color is None:
                 color = guideline.color
             if guideline.identifier is not None:
-                existing = set(
+                existing = {
                     g.identifier for g in self.guidelines if g.identifier is not None
-                )
+                }
                 if guideline.identifier not in existing:
                     identifier = guideline.identifier
         if position is not None:
@@ -2073,9 +2074,9 @@ class BaseGlyph(
         self,  # type: ignore[return]
         position: PairCollectionType[IntFloatType],
         angle: IntFloatType,
-        name: Optional[str],
-        color: Optional[QuadrupleCollectionType[IntFloatType]],
-        identifier: Optional[str],
+        name: str | None,
+        color: QuadrupleCollectionType[IntFloatType] | None,
+        identifier: str | None,
         **kwargs: Any,
     ) -> BaseGuideline:
         r"""Append a guideline to the native glyph.
@@ -2104,7 +2105,7 @@ class BaseGlyph(
         """
         self.raiseNotImplementedError()
 
-    def removeGuideline(self, guideline: Union[BaseGuideline, int]) -> None:
+    def removeGuideline(self, guideline: BaseGuideline | int) -> None:
         """Remove the given guideline from the glyph.
 
         :param guideline: The guideline to remove as a :class:`BaseGuideline`
@@ -2288,8 +2289,8 @@ class BaseGlyph(
         """
         tempContourList: TempContourListType = []
         contourList: ContourListType = []
-        xThreshold: Optional[IntFloatType] = None
-        yThreshold: Optional[IntFloatType] = None
+        xThreshold: IntFloatType | None = None
+        yThreshold: IntFloatType | None = None
 
         for contour in self:
             bounds = contour.bounds
@@ -2366,7 +2367,7 @@ class BaseGlyph(
     def scaleBy(
         self,
         value: TransformationType,
-        origin: Optional[PairCollectionType[IntFloatType]] = None,
+        origin: PairCollectionType[IntFloatType] | None = None,
         width: bool = False,
         height: bool = False,
     ) -> None:
@@ -2396,9 +2397,9 @@ class BaseGlyph(
         normalizedOrigin = normalizers.normalizeCoordinateTuple(origin)
         if normalizedOrigin != (0, 0) and (width or height):
             raise FontPartsError(
-                ("The origin must not be set when scaling the width or height.")
+                "The origin must not be set when scaling the width or height."
             )
-        super(BaseGlyph, self).scaleBy(normalizedValue, origin=normalizedOrigin)
+        super().scaleBy(normalizedValue, origin=normalizedOrigin)
         sX, sY = normalizedValue
         if width:
             self._scaleWidthBy(sX)
@@ -2739,7 +2740,7 @@ class BaseGlyph(
 
     def _interpolate(
         self,
-        factor: Tuple[IntFloatType, IntFloatType],
+        factor: tuple[IntFloatType, IntFloatType],
         minGlyph: BaseGlyph,
         maxGlyph: BaseGlyph,
         round: bool,
@@ -2790,7 +2791,7 @@ class BaseGlyph(
 
     @staticmethod
     def _checkPairs(
-        object1: Any, object2: Any, reporter: Any, reporterObject: List[Any]
+        object1: Any, object2: Any, reporter: Any, reporterObject: list[Any]
     ) -> None:
         compatibility = object1.isCompatible(object2)[1]
         if compatibility.fatal or compatibility.warning:
@@ -2802,7 +2803,7 @@ class BaseGlyph(
 
     def isCompatible(
         self, other: BaseGlyph, cls=None
-    ) -> Tuple[bool, GlyphCompatibilityReporter]:
+    ) -> tuple[bool, GlyphCompatibilityReporter]:
         """Evaluate interpolation compatibility with another glyph.
 
         :param other: The other :class:`BaseGlyph` instance to check
@@ -2813,7 +2814,7 @@ class BaseGlyph(
             instance.
 
         """
-        return super(BaseGlyph, self).isCompatible(other, BaseGlyph)
+        return super().isCompatible(other, BaseGlyph)
 
     def _isCompatible(
         self, other: BaseGlyph, reporter: GlyphCompatibilityReporter
@@ -2832,7 +2833,7 @@ class BaseGlyph(
 
 
         """
-        GuidelineListType = List[Tuple[Optional[str], int]]
+        GuidelineListType = list[tuple[Optional[str], int]]
 
         glyph1 = self
         glyph2 = other
@@ -3001,13 +3002,13 @@ class BaseGlyph(
         """,
     )
 
-    def _get_base_bounds(self) -> Optional[QuadrupleType[IntFloatType]]:
+    def _get_base_bounds(self) -> QuadrupleType[IntFloatType] | None:
         value = self._get_bounds()
         if value is not None:
             value = normalizers.normalizeBoundingBox(value)
         return value
 
-    def _get_bounds(self) -> Optional[QuadrupleType[IntFloatType]]:
+    def _get_bounds(self) -> QuadrupleType[IntFloatType] | None:
         """Get the bounds of the native glyph.
 
         This is the environment implementation of the :attr:`BaseGlyph.bounds`
@@ -3043,13 +3044,13 @@ class BaseGlyph(
         """,
     )
 
-    def _get_base_area(self) -> Optional[float]:
+    def _get_base_area(self) -> float | None:
         value = self._get_area()
         if value is not None:
             value = normalizers.normalizeArea(value)
         return value
 
-    def _get_area(self) -> Optional[float]:
+    def _get_area(self) -> float | None:
         """Get the area of the native glyph
 
         This is the environment implementation of the :attr:`BaseGlyph.area`
@@ -3087,7 +3088,7 @@ class BaseGlyph(
         """,
     )
 
-    def _get_layers(self, **kwargs) -> Tuple[BaseGlyph, ...]:
+    def _get_layers(self, **kwargs) -> tuple[BaseGlyph, ...]:
         r"""Get the layers of the native glyph.
 
         :param \**kwargs: Additional keyword arguments.
@@ -3193,7 +3194,7 @@ class BaseGlyph(
 
     # remove
 
-    def removeLayer(self, layer: Union[BaseGlyph, str]) -> None:
+    def removeLayer(self, layer: BaseGlyph | str) -> None:
         """Remove the specified layer from the glyph.
 
         :param name: The layer to remove as a :class:`BaseLayer` instance,
@@ -3243,14 +3244,14 @@ class BaseGlyph(
         """,
     )
 
-    def _get_base_image(self) -> Optional[BaseImage]:
+    def _get_base_image(self) -> BaseImage | None:
         image = self._get_image()
         if image is not None:
             if image.glyph is None:
                 image.glyph = self
         return image
 
-    def _get_image(self) -> Optional[BaseImage]:  # type: ignore[return]
+    def _get_image(self) -> BaseImage | None:  # type: ignore[return]
         """Get the image for the native glyph.
 
         :return: The :class:`BaseImage` subclass instance belonging to the glyph,
@@ -3267,11 +3268,11 @@ class BaseGlyph(
 
     def addImage(
         self,
-        path: Optional[str] = None,
-        data: Optional[bytes] = None,
-        scale: Optional[TransformationType] = None,
-        position: Optional[PairCollectionType[IntFloatType]] = None,
-        color: Optional[QuadrupleCollectionType[IntFloatType]] = None,
+        path: str | None = None,
+        data: bytes | None = None,
+        scale: TransformationType | None = None,
+        position: PairCollectionType[IntFloatType] | None = None,
+        color: QuadrupleCollectionType[IntFloatType] | None = None,
     ) -> BaseImage:
         """Set the image in the glyph.
 
@@ -3332,7 +3333,7 @@ class BaseGlyph(
         transformation = (sx, 0, 0, sy, ox, oy)
         if path is not None:
             if not os.path.exists(path):
-                raise IOError(f"No image located at '{path}'.")
+                raise OSError(f"No image located at '{path}'.")
             with open(path, "rb") as f:
                 data = f.read()
         if data is not None:
@@ -3344,8 +3345,8 @@ class BaseGlyph(
     def _addImage(
         self,  # type: ignore[return]
         data: bytes,
-        transformation: Optional[SextupleCollectionType[IntFloatType]],
-        color: Optional[QuadrupleCollectionType[IntFloatType]],
+        transformation: SextupleCollectionType[IntFloatType] | None,
+        color: QuadrupleCollectionType[IntFloatType] | None,
     ) -> BaseImage:
         """Set the image in the native glyph.
 
@@ -3411,21 +3412,21 @@ class BaseGlyph(
         """,
     )
 
-    def _get_base_markColor(self) -> Optional[Color]:
+    def _get_base_markColor(self) -> Color | None:
         value = self._get_markColor()
         if value is None:
             return None
         return Color(value)
 
     def _set_base_markColor(
-        self, value: Optional[QuadrupleCollectionType[IntFloatType]]
+        self, value: QuadrupleCollectionType[IntFloatType] | None
     ) -> None:
         if value is not None:
             value = normalizers.normalizeColor(value)
         self._set_markColor(value)
 
     # type: ignore[return]
-    def _get_markColor(self) -> Optional[QuadrupleCollectionType[IntFloatType]]:
+    def _get_markColor(self) -> QuadrupleCollectionType[IntFloatType] | None:
         """Get the glyph's mark color.
 
         This is the environment implementation of
@@ -3443,7 +3444,7 @@ class BaseGlyph(
         """
         self.raiseNotImplementedError()
 
-    def _set_markColor(self, value: Optional[QuadrupleType[float]]) -> None:
+    def _set_markColor(self, value: QuadrupleType[float] | None) -> None:
         """Set the glyph's mark color.
 
         This is the environment implementation of
@@ -3482,18 +3483,18 @@ class BaseGlyph(
         """,
     )
 
-    def _get_base_note(self) -> Optional[str]:
+    def _get_base_note(self) -> str | None:
         value = self._get_note()
         if value is not None:
             value = normalizers.normalizeGlyphNote(value)
         return value
 
-    def _set_base_note(self, value: Optional[str]) -> None:
+    def _set_base_note(self, value: str | None) -> None:
         if value is not None:
             value = normalizers.normalizeGlyphNote(value)
         self._set_note(value)
 
-    def _get_note(self) -> Optional[str]:  # type: ignore[return]
+    def _get_note(self) -> str | None:  # type: ignore[return]
         """Get the glyph's note.
 
         This is the environment implementation of the :attr:`BaseGlyph.note`
@@ -3510,7 +3511,7 @@ class BaseGlyph(
         """
         self.raiseNotImplementedError()
 
-    def _set_note(self, value: Optional[str]) -> None:
+    def _set_note(self, value: str | None) -> None:
         """Set the glyph's note.
 
         This is the environment implementation of the :attr:`BaseGlyph.note`
@@ -3724,14 +3725,14 @@ class BaseGlyph(
         """,
     )
 
-    def _get_base_selectedContours(self) -> Tuple[BaseContour, ...]:
+    def _get_base_selectedContours(self) -> tuple[BaseContour, ...]:
         selected = tuple(
             normalizers.normalizeContour(contour)
             for contour in self._get_selectedContours()
         )
         return selected
 
-    def _get_selectedContours(self) -> Tuple[BaseContour, ...]:
+    def _get_selectedContours(self) -> tuple[BaseContour, ...]:
         """Get the selected contours in the native glyph.
 
         This is the environment implementation of
@@ -3749,11 +3750,11 @@ class BaseGlyph(
         return self._getSelectedSubObjects(self.contours)
 
     def _set_base_selectedContours(
-        self, value: CollectionType[Union[BaseContour, int]]
+        self, value: CollectionType[BaseContour | int]
     ) -> None:
         normalized = []
         for contour in value:
-            normalizedContour: Union[BaseContour, int]
+            normalizedContour: BaseContour | int
             if isinstance(contour, int):
                 normalizedIndex = normalizers.normalizeIndex(contour)
                 # Avoid mypy conflict with normalizeIndex -> Optional[int]
@@ -3766,7 +3767,7 @@ class BaseGlyph(
         self._set_selectedContours(normalized)
 
     def _set_selectedContours(
-        self, value: CollectionType[Union[BaseContour, int]]
+        self, value: CollectionType[BaseContour | int]
     ) -> None:
         """Set the selected contours in the glyph.
 
@@ -3811,14 +3812,14 @@ class BaseGlyph(
         """,
     )
 
-    def _get_base_selectedComponents(self) -> Tuple[BaseComponent, ...]:
+    def _get_base_selectedComponents(self) -> tuple[BaseComponent, ...]:
         selected = tuple(
             normalizers.normalizeComponent(component)
             for component in self._get_selectedComponents()
         )
         return selected
 
-    def _get_selectedComponents(self) -> Tuple[BaseComponent, ...]:
+    def _get_selectedComponents(self) -> tuple[BaseComponent, ...]:
         """Get the selected components in the native glyph.
 
         This is the environment implementation of
@@ -3836,11 +3837,11 @@ class BaseGlyph(
         return self._getSelectedSubObjects(self.components)
 
     def _set_base_selectedComponents(
-        self, value: CollectionType[Union[BaseComponent, int]]
+        self, value: CollectionType[BaseComponent | int]
     ) -> None:
         normalized = []
         for component in value:
-            normalizedComponent: Union[BaseComponent, int]
+            normalizedComponent: BaseComponent | int
             if isinstance(component, int):
                 normalizedIndex = normalizers.normalizeIndex(component)
                 # Avoid mypy conflict with normalizeIndex -> Optional[int]
@@ -3853,7 +3854,7 @@ class BaseGlyph(
         self._set_selectedComponents(normalized)
 
     def _set_selectedComponents(
-        self, value: CollectionType[Union[BaseComponent, int]]
+        self, value: CollectionType[BaseComponent | int]
     ) -> None:
         """Set the selected components in the glyph.
 
@@ -3898,14 +3899,14 @@ class BaseGlyph(
         """,
     )
 
-    def _get_base_selectedAnchors(self) -> Tuple[BaseAnchor, ...]:
+    def _get_base_selectedAnchors(self) -> tuple[BaseAnchor, ...]:
         selected = tuple(
             normalizers.normalizeAnchor(anchor)
             for anchor in self._get_selectedAnchors()
         )
         return selected
 
-    def _get_selectedAnchors(self) -> Tuple[BaseAnchor, ...]:
+    def _get_selectedAnchors(self) -> tuple[BaseAnchor, ...]:
         """Get the selected anchors in the native glyph.
 
         This is the environment implementation of
@@ -3923,11 +3924,11 @@ class BaseGlyph(
         return self._getSelectedSubObjects(self.anchors)
 
     def _set_base_selectedAnchors(
-        self, value: CollectionType[Union[BaseAnchor, int]]
+        self, value: CollectionType[BaseAnchor | int]
     ) -> None:
         normalized = []
         for anchor in value:
-            normalizedAnchor: Union[BaseAnchor, int]
+            normalizedAnchor: BaseAnchor | int
             if isinstance(anchor, int):
                 normalizedIndex = normalizers.normalizeIndex(anchor)
                 # Avoid mypy conflict with normalizeIndex -> Optional[int]
@@ -3940,7 +3941,7 @@ class BaseGlyph(
         self._set_selectedAnchors(normalized)
 
     def _set_selectedAnchors(
-        self, value: CollectionType[Union[BaseAnchor, int]]
+        self, value: CollectionType[BaseAnchor | int]
     ) -> None:
         """Set the selected anchors in the glyph.
 
@@ -3985,14 +3986,14 @@ class BaseGlyph(
         """,
     )
 
-    def _get_base_selectedGuidelines(self) -> Tuple[BaseGuideline, ...]:
+    def _get_base_selectedGuidelines(self) -> tuple[BaseGuideline, ...]:
         selected = tuple(
             normalizers.normalizeGuideline(guideline)
             for guideline in self._get_selectedGuidelines()
         )
         return selected
 
-    def _get_selectedGuidelines(self) -> Tuple[BaseGuideline, ...]:
+    def _get_selectedGuidelines(self) -> tuple[BaseGuideline, ...]:
         """Get the selected guidelines in the native glyph.
 
         This is the environment implementation of
@@ -4010,11 +4011,11 @@ class BaseGlyph(
         return self._getSelectedSubObjects(self.guidelines)
 
     def _set_base_selectedGuidelines(
-        self, value: CollectionType[Union[BaseGuideline, int]]
+        self, value: CollectionType[BaseGuideline | int]
     ) -> None:
         normalized = []
         for guideline in value:
-            normalizedGuideline: Union[BaseGuideline, int]
+            normalizedGuideline: BaseGuideline | int
             if isinstance(guideline, int):
                 normalizedIndex = normalizers.normalizeIndex(guideline)
                 # Avoid mypy conflict with normalizeIndex -> Optional[int]
@@ -4027,7 +4028,7 @@ class BaseGlyph(
         self._set_selectedGuidelines(normalized)
 
     def _set_selectedGuidelines(
-        self, value: CollectionType[Union[BaseGuideline, int]]
+        self, value: CollectionType[BaseGuideline | int]
     ) -> None:
         """Set the selected guidelines in the glyph.
 

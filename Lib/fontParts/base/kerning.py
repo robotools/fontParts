@@ -2,14 +2,13 @@
 from __future__ import annotations
 from typing import (
     TYPE_CHECKING,
-    Callable,
     Dict,
-    Iterator,
     List,
     Optional,
     TypeVar,
     Union,
 )
+from collections.abc import Callable, Iterator
 from collections.abc import MutableMapping
 
 from fontParts.base.base import BaseDict, dynamicProperty, interpolate, reference
@@ -58,7 +57,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         normalizers.normalizeKerningValue
     )
 
-    def _reprContents(self) -> List[str]:
+    def _reprContents(self) -> list[str]:
         contents = []
         if self.font is not None:
             contents.append("for font")
@@ -71,7 +70,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
 
     # Font
 
-    _font: Optional[Callable[[], BaseFont]] = None
+    _font: Callable[[], BaseFont] | None = None
 
     font: dynamicProperty = dynamicProperty(
         "font",
@@ -91,13 +90,13 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         """,
     )
 
-    def _get_font(self) -> Optional[BaseFont]:
+    def _get_font(self) -> BaseFont | None:
         if self._font is None:
             return None
         return self._font()
 
     def _set_font(
-        self, font: Optional[Union[BaseFont, Callable[[], BaseFont]]]
+        self, font: BaseFont | Callable[[], BaseFont] | None
     ) -> None:
         if self._font is not None and self._font() != font:
             raise AssertionError("font for kerning already set and is not same as font")
@@ -339,7 +338,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         """
         del self[pair]
 
-    def asDict(self, returnIntegers: bool = True) -> Dict[PairType[str], IntFloatType]:
+    def asDict(self, returnIntegers: bool = True) -> dict[PairType[str], IntFloatType]:
         """Return the kerning as a dictionary.
 
         :return A :class:`dict` reflecting the contents of the kerning.
@@ -376,7 +375,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
             True
 
         """
-        return super(BaseKerning, self).__contains__(pair)
+        return super().__contains__(pair)
 
     def __delitem__(self, pair: PairType[str]) -> None:
         """Remove the given pair from the kerning.
@@ -388,7 +387,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
             >>> del font.kerning[("A","V")]
 
         """
-        super(BaseKerning, self).__delitem__(pair)
+        super().__delitem__(pair)
 
     def __getitem__(self, pair: PairType[str]) -> IntFloatType:
         """Get the value associated with the given kerning pair.
@@ -412,7 +411,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
                 >>> font.kerning[("A", "V")] = value
 
         """
-        return super(BaseKerning, self).__getitem__(pair)
+        return super().__getitem__(pair)
 
     def __iter__(self) -> Iterator[PairType[str]]:
         """Return an iterator over the pairs in the kerning.
@@ -431,7 +430,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
             ("A", "W")
 
         """
-        return super(BaseKerning, self).__iter__()
+        return super().__iter__()
 
     def __len__(self) -> int:
         """Return the number of pairs in the kerning.
@@ -444,7 +443,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
             5
 
         """
-        return super(BaseKerning, self).__len__()
+        return super().__len__()
 
     def __setitem__(self, pair: PairType[str], value: IntFloatType) -> None:
         """Set the value for the given kerning pair.
@@ -458,7 +457,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
             >>> font.kerning[("A", "W")] = -10.5
 
         """
-        super(BaseKerning, self).__setitem__(pair, value)
+        super().__setitem__(pair, value)
 
     def clear(self) -> None:
         """Remove all information from kerning.
@@ -470,11 +469,11 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
             >>> font.kerning.clear()
 
         """
-        super(BaseKerning, self).clear()
+        super().clear()
 
     def get(
-        self, pair: PairType[str], default: Optional[IntFloatType] = None
-    ) -> Optional[IntFloatType]:
+        self, pair: PairType[str], default: IntFloatType | None = None
+    ) -> IntFloatType | None:
         """Get the value for the given kerning pair.
 
         If the given `pair` is not found, The specified `default` will be returned.
@@ -500,11 +499,11 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
                 >>> font.kerning[("A", "V")] = value
 
         """
-        return super(BaseKerning, self).get(pair, default)
+        return super().get(pair, default)
 
     def find(
-        self, pair: PairCollectionType[str], default: Optional[IntFloatType] = None
-    ) -> Optional[IntFloatType]:
+        self, pair: PairCollectionType[str], default: IntFloatType | None = None
+    ) -> IntFloatType | None:
         """Get the value for the given explicit or implicit kerning pair.
 
         This method will return the value for the given `pair`, even if it only exists
@@ -529,8 +528,8 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         return value
 
     def _find(
-        self, pair: PairType[str], default: Optional[IntFloatType] = None
-    ) -> Optional[IntFloatType]:
+        self, pair: PairType[str], default: IntFloatType | None = None
+    ) -> IntFloatType | None:
         """Get the value for the given explicit or implicit native kerning pair.
 
         This is the environment implementation of :attr:`BaseKerning.find`.
@@ -566,7 +565,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
             BaseKerning_items([(("A", "V"), -30), (("A", "W"), -10)])
 
         """
-        return super(BaseKerning, self).items()
+        return super().items()
 
     def keys(self) -> BaseKeys[PairType[str]]:
         """Return the kering's pairs (keys).
@@ -580,7 +579,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
             BaseKerning_keys([("A", "Y"), ("A", "V"), ("A", "W")])
 
         """
-        return super(BaseKerning, self).keys()
+        return super().keys()
 
     def values(self) -> BaseValues[IntFloatType]:
         """Return the kerning's values.
@@ -593,11 +592,11 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
             BaseKerning_values([-20, -15, 5, 3.5])
 
         """
-        return super(BaseKerning, self).values()
+        return super().values()
 
     def pop(
-        self, pair: PairType[str], default: Optional[IntFloatType] = None
-    ) -> Optional[IntFloatType]:
+        self, pair: PairType[str], default: IntFloatType | None = None
+    ) -> IntFloatType | None:
         """Remove the specified kerning pair and return its associated value.
 
         If the `pair` does not exist, the `default` value is returned.
@@ -617,7 +616,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
             -10.5
 
         """
-        return super(BaseKerning, self).pop(pair, default)
+        return super().pop(pair, default)
 
     def update(self, otherKerning: MutableMapping[PairType[str], IntFloatType]) -> None:
         """Update the current kerning with key-value pairs from another.
@@ -639,4 +638,4 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
             >>> font.kerning.update(newKerning)
 
         """
-        super(BaseKerning, self).update(otherKerning)
+        super().update(otherKerning)
