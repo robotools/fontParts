@@ -47,6 +47,17 @@ class TestLayer(unittest.TestCase):
         with self.assertRaises(KeyError):
             layer["E"]
 
+    def test_newGlyph_rename(self):
+        layer = self.getLayer_glyphs()
+        original = layer["A"]
+
+        layer.newGlyph("A", clear=False, rename=True)
+        layer.newGlyph("A", clear=False, rename=True)
+
+        self.assertIn("A", layer)
+        self.assertIn("A.1",layer)
+        self.assertIn("A.2",layer)
+
     # ----
     # Hash
     # ----
