@@ -11,10 +11,10 @@ from fontParts.fontshell.base import RBaseObject
 class RPoint(RBaseObject, BasePoint):
     wrapClass = defcon.Point
 
-    def _init(self, pathOrObject: Optional[defcon.Point] = None) -> None:
+    def _init(self, pathOrObject: defcon.Point | None = None) -> None:
         if pathOrObject is None and self.wrapClass is not None:
             pathOrObject = self.wrapClass((0, 0))
-        super(RPoint, self)._init(pathOrObject=pathOrObject)
+        super()._init(pathOrObject=pathOrObject)
 
     def _postChangeNotification(self) -> None:
         contour = self.contour
@@ -75,7 +75,7 @@ class RPoint(RBaseObject, BasePoint):
 
     # name
 
-    def _get_name(self) -> Optional[str]:
+    def _get_name(self) -> str | None:
         return self.naked().name
 
     def _set_name(self, value: str) -> None:
@@ -84,7 +84,7 @@ class RPoint(RBaseObject, BasePoint):
 
     # identifier
 
-    def _get_identifier(self) -> Optional[str]:
+    def _get_identifier(self) -> str | None:
         return self.naked().identifier
 
     def _getIdentifier(self) -> str:
@@ -98,10 +98,8 @@ class RPoint(RBaseObject, BasePoint):
             value = point.identifier
         else:
             raise FontPartsError(
-                (
                     "An identifier can not be generated "
                     "for this point because it does not "
                     "belong to a contour."
-                )
             )
         return value

@@ -45,14 +45,14 @@ class RLayer(RBaseObject, BaseLayer):
 
     # color
 
-    def _get_color(self) -> Optional[QuadrupleCollectionType[IntFloatType]]:
+    def _get_color(self) -> QuadrupleCollectionType[IntFloatType] | None:
         value = self.naked().color
         if value is not None:
             value = tuple(value)
         return value
 
     def _set_color(
-        self, value: Optional[QuadrupleCollectionType[IntFloatType]], **kwargs: Any
+        self, value: QuadrupleCollectionType[IntFloatType] | None, **kwargs: Any
     ) -> None:
         self.naked().color = value
 
@@ -65,7 +65,7 @@ class RLayer(RBaseObject, BaseLayer):
         glyph = layer[name]
         return self.glyphClass(glyph)
 
-    def _keys(self, **kwargs: Any) -> Tuple[str, ...]:
+    def _keys(self, **kwargs: Any) -> tuple[str, ...]:
         return tuple(self.naked().keys())
 
     def _newGlyph(self, name: str, **kwargs: Any) -> BaseGlyph:
@@ -81,10 +81,10 @@ class RLayer(RBaseObject, BaseLayer):
     # mapping
     # -------
 
-    def _getReverseComponentMapping(self) -> Dict[str, Tuple[str, ...]]:
+    def _getReverseComponentMapping(self) -> dict[str, tuple[str, ...]]:
         mapping = self.naked().componentReferences
         return {k: tuple(v) for k, v in mapping.items()}
 
-    def _getCharacterMapping(self) -> Dict[int, Tuple[str, ...]]:
+    def _getCharacterMapping(self) -> dict[int, tuple[str, ...]]:
         mapping = self.naked().unicodeData
         return {k: tuple(v) for k, v in mapping.items()}

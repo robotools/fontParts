@@ -76,13 +76,13 @@ class RGlyph(RBaseObject, BaseGlyph):
     def _set_width(self, value: IntFloatType) -> None:
         self.naked().width = value
 
-    def _get_leftMargin(self) -> Optional[IntFloatType]:
+    def _get_leftMargin(self) -> IntFloatType | None:
         return self.naked().leftMargin
 
     def _set_leftMargin(self, value: IntFloatType) -> None:
         self.naked().leftMargin = value
 
-    def _get_rightMargin(self) -> Optional[IntFloatType]:
+    def _get_rightMargin(self) -> IntFloatType | None:
         return self.naked().rightMargin
 
     def _set_rightMargin(self, value: IntFloatType) -> None:
@@ -96,13 +96,13 @@ class RGlyph(RBaseObject, BaseGlyph):
     def _set_height(self, value: IntFloatType) -> None:
         self.naked().height = value
 
-    def _get_bottomMargin(self) -> Optional[IntFloatType]:
+    def _get_bottomMargin(self) -> IntFloatType | None:
         return self.naked().bottomMargin
 
     def _set_bottomMargin(self, value: IntFloatType) -> None:
         self.naked().bottomMargin = value
 
-    def _get_topMargin(self) -> Optional[IntFloatType]:
+    def _get_topMargin(self) -> IntFloatType | None:
         return self.naked().topMargin
 
     def _set_topMargin(self, value: IntFloatType) -> None:
@@ -112,14 +112,14 @@ class RGlyph(RBaseObject, BaseGlyph):
     # Bounds
     # ------
 
-    def _get_bounds(self) -> Optional[QuadrupleType[IntFloatType]]:
+    def _get_bounds(self) -> QuadrupleType[IntFloatType] | None:
         return self.naked().bounds
 
     # ----
     # Area
     # ----
 
-    def _get_area(self) -> Optional[float]:
+    def _get_area(self) -> float | None:
         return self.naked().area
 
     # ----
@@ -129,7 +129,7 @@ class RGlyph(RBaseObject, BaseGlyph):
     def getPen(self) -> SegmentToPointPen:
         return self.naked().getPen()
 
-    def getPointPen(self) -> Union[GlyphObjectPointPen, GlyphObjectLoadingPointPen]:
+    def getPointPen(self) -> GlyphObjectPointPen | GlyphObjectLoadingPointPen:
         return self.naked().getPointPen()
 
     # -----------------------------------------
@@ -195,9 +195,9 @@ class RGlyph(RBaseObject, BaseGlyph):
     def _appendAnchor(
         self,
         name: str,
-        position: Optional[PairCollectionType[IntFloatType]] = None,
-        color: Optional[QuadrupleCollectionType[IntFloatType]] = None,
-        identifier: Optional[str] = None,
+        position: PairCollectionType[IntFloatType] | None = None,
+        color: QuadrupleCollectionType[IntFloatType] | None = None,
+        identifier: str | None = None,
         **kwargs: Any,
     ) -> RAnchor:
         glyph = self.naked()
@@ -231,11 +231,11 @@ class RGlyph(RBaseObject, BaseGlyph):
 
     def _appendGuideline(
         self,
-        position: Optional[PairCollectionType[IntFloatType]],
+        position: PairCollectionType[IntFloatType] | None,
         angle: float,
-        name: Optional[str] = None,
-        color: Optional[QuadrupleCollectionType[IntFloatType]] = None,
-        identifier: Optional[str] = None,
+        name: str | None = None,
+        color: QuadrupleCollectionType[IntFloatType] | None = None,
+        identifier: str | None = None,
         **kwargs: Any,
     ) -> RGuideline:
         glyph = self.naked()
@@ -287,7 +287,7 @@ class RGlyph(RBaseObject, BaseGlyph):
     # Image
     # -----
 
-    def _get_image(self) -> Optional[RImage]:
+    def _get_image(self) -> RImage | None:
         image = self.naked().image
         if image is None:
             return None
@@ -296,8 +296,8 @@ class RGlyph(RBaseObject, BaseGlyph):
     def _addImage(
         self,
         data: bytes,
-        transformation: Optional[SextupleCollectionType[IntFloatType]] = None,
-        color: Optional[QuadrupleCollectionType[IntFloatType]] = None,
+        transformation: SextupleCollectionType[IntFloatType] | None = None,
+        color: QuadrupleCollectionType[IntFloatType] | None = None,
     ) -> RImage:
         image = self.naked().image
         image = self.imageClass(image)
@@ -316,23 +316,23 @@ class RGlyph(RBaseObject, BaseGlyph):
 
     # Mark
 
-    def _get_markColor(self) -> Optional[QuadrupleType[float]]:
+    def _get_markColor(self) -> QuadrupleType[float] | None:
         value = self.naked().markColor
         if value is not None:
             value = tuple(value)
         return value
 
     def _set_markColor(
-        self, value: Optional[QuadrupleCollectionType[IntFloatType]]
+        self, value: QuadrupleCollectionType[IntFloatType] | None
     ) -> None:
         self.naked().markColor = value
 
     # Note
 
-    def _get_note(self) -> Optional[str]:
+    def _get_note(self) -> str | None:
         return self.naked().note
 
-    def _set_note(self, value: Optional[str]) -> None:
+    def _set_note(self, value: str | None) -> None:
         self.naked().note = value
 
     # -----------

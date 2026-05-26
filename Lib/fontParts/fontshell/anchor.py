@@ -14,13 +14,13 @@ from fontParts.fontshell.base import RBaseObject
 class RAnchor(RBaseObject, BaseAnchor):
     wrapClass = defcon.Anchor
 
-    def _init(self, pathOrObject: Optional[defcon.Anchor] = None) -> None:
+    def _init(self, pathOrObject: defcon.Anchor | None = None) -> None:
         if self.wrapClass is not None:
             if pathOrObject is None:
                 pathOrObject = self.wrapClass()
                 pathOrObject.x = 0
                 pathOrObject.y = 0
-            super(RAnchor, self)._init(pathOrObject=pathOrObject)
+            super()._init(pathOrObject=pathOrObject)
 
     # --------
     # Position
@@ -48,7 +48,7 @@ class RAnchor(RBaseObject, BaseAnchor):
 
     # identifier
 
-    def _get_identifier(self) -> Optional[str]:
+    def _get_identifier(self) -> str | None:
         return self.naked().identifier
 
     def _getIdentifier(self) -> str:
@@ -59,21 +59,21 @@ class RAnchor(RBaseObject, BaseAnchor):
 
     # name
 
-    def _get_name(self) -> Optional[str]:
+    def _get_name(self) -> str | None:
         return self.naked().name
 
-    def _set_name(self, value: Optional[str]) -> None:
+    def _set_name(self, value: str | None) -> None:
         self.naked().name = value
 
     # color
 
-    def _get_color(self) -> Optional[QuadrupleType[float]]:
+    def _get_color(self) -> QuadrupleType[float] | None:
         value = self.naked().color
         if value is not None:
             value = tuple(value)
         return value
 
     def _set_color(
-        self, value: Optional[QuadrupleCollectionType[IntFloatType]]
+        self, value: QuadrupleCollectionType[IntFloatType] | None
     ) -> None:
         self.naked().color = value

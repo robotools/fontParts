@@ -38,7 +38,7 @@ class RFont(RBaseObject, BaseFont):
 
     def _init(
         self,
-        pathOrObject: Optional[Union[str, os.PathLike, defcon.Font]] = None,
+        pathOrObject: str | os.PathLike | defcon.Font | None = None,
         showInterface: bool = True,
         **kwargs: Any,
     ) -> None:
@@ -53,17 +53,17 @@ class RFont(RBaseObject, BaseFont):
 
     # path
 
-    def _get_path(self, **kwargs: Any) -> Optional[str]:
+    def _get_path(self, **kwargs: Any) -> str | None:
         return self.naked().path
 
     # save
 
     def _save(
         self,
-        path: Optional[str] = None,
+        path: str | None = None,
         showProgress: bool = False,
-        formatVersion: Optional[int] = None,
-        fileStructure: Optional[str] = None,
+        formatVersion: int | None = None,
+        fileStructure: str | None = None,
         **kwargs: Any,
     ) -> None:
         self.naked().save(
@@ -113,14 +113,14 @@ class RFont(RBaseObject, BaseFont):
     # Layers
     # ------
 
-    def _get_layers(self, **kwargs: Any) -> Tuple[RLayer, ...]:
+    def _get_layers(self, **kwargs: Any) -> tuple[RLayer, ...]:
         return tuple(
             self.layerClass(pathOrObject=layer) for layer in self.naked().layers
         )
 
     # order
 
-    def _get_layerOrder(self, **kwargs: Any) -> Tuple[str, ...]:
+    def _get_layerOrder(self, **kwargs: Any) -> tuple[str, ...]:
         return self.naked().layers.layerOrder
 
     def _set_layerOrder(self, value: CollectionType[str], **kwargs: Any) -> None:
@@ -144,7 +144,7 @@ class RFont(RBaseObject, BaseFont):
     def _newLayer(
         self,
         name: str,
-        color: Optional[QuadrupleCollectionType[IntFloatType]],
+        color: QuadrupleCollectionType[IntFloatType] | None,
         **kwargs: Any,
     ) -> RLayer:
         layers = self.naked().layers
@@ -162,7 +162,7 @@ class RFont(RBaseObject, BaseFont):
     # Glyphs
     # ------
 
-    def _get_glyphOrder(self) -> Tuple[str, ...]:
+    def _get_glyphOrder(self) -> tuple[str, ...]:
         return self.naked().glyphOrder
 
     def _set_glyphOrder(self, value: CollectionType[str]) -> None:
@@ -182,10 +182,10 @@ class RFont(RBaseObject, BaseFont):
     def _appendGuideline(
         self,
         position: PairCollectionType[IntFloatType],
-        angle: Optional[float],
-        name: Optional[str] = None,
-        color: Optional[QuadrupleCollectionType[IntFloatType]] = None,
-        identifier: Optional[str] = None,
+        angle: float | None,
+        name: str | None = None,
+        color: QuadrupleCollectionType[IntFloatType] | None = None,
+        identifier: str | None = None,
         **kwargs: Any,
     ) -> RGuideline:
         font = self.naked()
