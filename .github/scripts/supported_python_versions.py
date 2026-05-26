@@ -13,8 +13,6 @@ Usage:
     python supported_python_versions.py check-tox  # exit 1 on envlist drift
 """
 
-from __future__ import annotations
-
 import argparse
 import json
 import re
