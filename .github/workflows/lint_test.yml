@@ -55,27 +55,41 @@ jobs:
         - name: Run mypy
           run: mypy Lib/fontParts
 
+    versions:
+        runs-on: ubuntu-latest
+        outputs:
+          all:    ${{ steps.read.outputs.all }}
+          oldest: ${{ steps.read.outputs.oldest }}
+          newest: ${{ steps.read.outputs.newest }}
+        steps:
+        - uses: actions/checkout@v6.0.1
+        - id: read
+          run: |
+            {
+              echo "all=$(python3 .github/scripts/supported_python_versions.py)"
+              echo "oldest=$(python3 .github/scripts/supported_python_versions.py oldest)"
+              echo "newest=$(python3 .github/scripts/supported_python_versions.py newest)"
+            } >> "$GITHUB_OUTPUT"
+
     test:
+        needs: versions
         runs-on: ${{ matrix.platform }}
         if: "! contains(toJSON(github.event.commits.*.message), '[skip ci]')"
         strategy:
           matrix:
-            # Keep in sync with pyproject.toml [project].classifiers.
-            python-version: ['3.10', '3.11', '3.12', '3.13', '3.14']
-            platform: [ubuntu-latest, macos-latest, windows-latest]
-            exclude: # Only test on the oldest and latest supported stable Python on macOS and Windows.
+            # Derived from pyproject.toml [project].classifiers
+            # by .github/scripts/supported_python_versions.py.
+            python-version: ${{ fromJson(needs.versions.outputs.all) }}
+            platform: [ubuntu-latest]
+            include: # Oldest and newest only, on macOS and Windows.
               - platform: macos-latest
-                python-version: 3.11
-              - platform: windows-latest
-                python-version: 3.11
+                python-version: ${{ needs.versions.outputs.oldest }}
               - platform: macos-latest
-                python-version: 3.12
+                python-version: ${{ needs.versions.outputs.newest }}
               - platform: windows-latest
-                python-version: 3.12
-              - platform: macos-latest
-                python-version: 3.13
+                python-version: ${{ needs.versions.outputs.oldest }}
               - platform: windows-latest
-                python-version: 3.13
+                python-version: ${{ needs.versions.outputs.newest }}
         steps:
         - uses: actions/checkout@v6.0.1
         - name: Set up Python ${{ matrix.python-version }}
