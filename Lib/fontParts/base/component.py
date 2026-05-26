@@ -94,9 +94,7 @@ class BaseComponent(
             return None
         return self._glyph()
 
-    def _set_glyph(
-        self, glyph: BaseGlyph | Callable[[], BaseGlyph] | None
-    ) -> None:
+    def _set_glyph(self, glyph: BaseGlyph | Callable[[], BaseGlyph] | None) -> None:
         if self._glyph is not None:
             raise AssertionError("glyph for component already set")
         if glyph is not None:

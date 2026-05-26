@@ -1,15 +1,5 @@
 from __future__ import annotations
-from typing import (
-    TYPE_CHECKING,
-    cast,
-    Any,
-    List,
-    Optional,
-    Tuple,
-    Type,
-    TypeVar,
-    Union,
-)
+from typing import TYPE_CHECKING, cast, Any, List, Optional, Tuple, Type, TypeVar, Union
 from collections.abc import Callable, Iterator
 
 from fontParts.base.errors import FontPartsError
@@ -131,9 +121,7 @@ class BaseContour(
             return None
         return self._glyph()
 
-    def _set_glyph(
-        self, glyph: BaseGlyph | Callable[[], BaseGlyph] | None
-    ) -> None:
+    def _set_glyph(self, glyph: BaseGlyph | Callable[[], BaseGlyph] | None) -> None:
         if self._glyph is not None:
             raise AssertionError("glyph for contour already set")
         if glyph is not None:
@@ -1767,9 +1755,7 @@ class BaseContour(
         """
         self.raiseNotImplementedError()
 
-    def removePoint(
-        self, point: BasePoint | int, preserveCurve: bool = False
-    ) -> None:
+    def removePoint(self, point: BasePoint | int, preserveCurve: bool = False) -> None:
         """Remove the given point from the contour.
 
         If ``preserveCurve=True``, an attempt will be made to preserve the
@@ -1955,9 +1941,7 @@ class BaseContour(
             normalized.append(normalizedSegment)
         self._set_selectedSegments(normalized)
 
-    def _set_selectedSegments(
-        self, value: CollectionType[BaseSegment | int]
-    ) -> None:
+    def _set_selectedSegments(self, value: CollectionType[BaseSegment | int]) -> None:
         """Set the selected segments in the native contour.
 
         This is the environment implementation of the
@@ -2028,9 +2012,7 @@ class BaseContour(
         """
         return self._getSelectedSubObjects(self.points)
 
-    def _set_base_selectedPoints(
-        self, value: CollectionType[BasePoint | int]
-    ) -> None:
+    def _set_base_selectedPoints(self, value: CollectionType[BasePoint | int]) -> None:
         normalized = []
         for point in value:
             normalizedPoint: BasePoint | int
@@ -2134,9 +2116,7 @@ class BaseContour(
             normalized.append(normalizedBPoint)
         self._set_selectedBPoints(normalized)
 
-    def _set_selectedBPoints(
-        self, value: CollectionType[BaseBPoint | int]
-    ) -> None:
+    def _set_selectedBPoints(self, value: CollectionType[BaseBPoint | int]) -> None:
         """Set the selected bPoints in the native contour.
 
         This is the environment implementation of

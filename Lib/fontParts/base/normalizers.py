@@ -622,7 +622,9 @@ def normalizePointType(value: str) -> str:
         raise TypeError(f"Point type must be a string, not {type(value).__name__}.")
     if value not in allowedTypes:
         raise ValueError(
-            "Point type must be '{}'; not {!r}.".format("', '".join(allowedTypes), value)
+            "Point type must be '{}'; not {!r}.".format(
+                "', '".join(allowedTypes), value
+            )
         )
     return value
 
@@ -699,7 +701,9 @@ def normalizeSegmentType(value: str) -> str:
         raise TypeError(f"Segment type must be a string, not {type(value).__name__}.")
     if value not in allowedTypes:
         raise ValueError(
-            "Segment type must be '{}'; not {!r}.".format("', '".join(allowedTypes), value)
+            "Segment type must be '{}'; not {!r}.".format(
+                "', '".join(allowedTypes), value
+            )
         )
     return value
 

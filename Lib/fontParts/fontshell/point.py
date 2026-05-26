@@ -98,8 +98,8 @@ class RPoint(RBaseObject, BasePoint):
             value = point.identifier
         else:
             raise FontPartsError(
-                    "An identifier can not be generated "
-                    "for this point because it does not "
-                    "belong to a contour."
+                "An identifier can not be generated "
+                "for this point because it does not "
+                "belong to a contour."
             )
         return value

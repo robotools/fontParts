@@ -55,8 +55,8 @@ class TestLayer(unittest.TestCase):
         layer.newGlyph("A", clear=False, rename=True)
 
         self.assertIn("A", layer)
-        self.assertIn("A.1",layer)
-        self.assertIn("A.2",layer)
+        self.assertIn("A.1", layer)
+        self.assertIn("A.2", layer)
 
     # ----
     # Hash

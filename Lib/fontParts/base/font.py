@@ -53,13 +53,9 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
     """
 
     def __init__(
-        self,
-        pathOrObject: str | BaseFont | None = None,
-        showInterface: bool = True,
+        self, pathOrObject: str | BaseFont | None = None, showInterface: bool = True
     ) -> None:
-        super().__init__(
-            pathOrObject=pathOrObject, showInterface=showInterface
-        )
+        super().__init__(pathOrObject=pathOrObject, showInterface=showInterface)
 
     def _reprContents(self) -> list[str]:
         contents: list[str] = [f"'{self.info.familyName} {self.info.styleName}'"]
@@ -142,10 +138,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
     # Initialize
 
     def _init(
-        self,
-        pathOrObject: str | BaseFont | None,
-        showInterface: bool,
-        **kwargs: Any,
+        self, pathOrObject: str | BaseFont | None, showInterface: bool, **kwargs: Any
     ) -> None:
         r"""Initialize the native font object.
 
@@ -474,8 +467,8 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         elif os.path.isdir(path):
             if self.path is None:
                 raise OSError(
-                        "The file cannot be generated because "
-                        "the file does not have a path."
+                    "The file cannot be generated because "
+                    "the file does not have a path."
                 )
             fileName = os.path.basename(self.path)
             fileName += ext
@@ -506,11 +499,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         return False
 
     def _generate(
-        self,
-        format: str,
-        path: str | None,
-        environmentOptions: dict,
-        **kwargs: object,
+        self, format: str, path: str | None, environmentOptions: dict, **kwargs: object
     ) -> None:
         """Generate the native font in another format.
 
@@ -2411,9 +2400,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         """
         return self._getSelectedSubObjects(self.guidelines)
 
-    def _set_base_selectedGuidelines(
-        self, value: list[BaseGuideline | int]
-    ) -> None:
+    def _set_base_selectedGuidelines(self, value: list[BaseGuideline | int]) -> None:
         normalized = []
         for guideline in value:
             normalizedGuideline: BaseGuideline | int

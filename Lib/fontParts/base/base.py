@@ -800,9 +800,7 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
         """
         self.raiseNotImplementedError()
 
-    def get(
-        self, key: KeyType, default: ValueType | None = None
-    ) -> ValueType | None:
+    def get(self, key: KeyType, default: ValueType | None = None) -> ValueType | None:
         """Get the value for a given key in the object.
 
         If the given key is not found, The specified `default` will be returned.
@@ -868,9 +866,7 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
         """
         self.raiseNotImplementedError()
 
-    def pop(
-        self, key: KeyType, default: ValueType | None = None
-    ) -> ValueType | None:
+    def pop(self, key: KeyType, default: ValueType | None = None) -> ValueType | None:
         """Remove a key from the object and return it's value.
 
         If the given key is not found, The specified `default` will be returned.

@@ -1,13 +1,6 @@
 # pylint: disable=C0103, C0114
 from __future__ import annotations
-from typing import (
-    TYPE_CHECKING,
-    Dict,
-    List,
-    Optional,
-    TypeVar,
-    Union,
-)
+from typing import TYPE_CHECKING, Dict, List, Optional, TypeVar, Union
 from collections.abc import Callable, Iterator
 from collections.abc import MutableMapping
 
@@ -95,9 +88,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
             return None
         return self._font()
 
-    def _set_font(
-        self, font: BaseFont | Callable[[], BaseFont] | None
-    ) -> None:
+    def _set_font(self, font: BaseFont | Callable[[], BaseFont] | None) -> None:
         if self._font is not None and self._font() != font:
             raise AssertionError("font for kerning already set and is not same as font")
         if font is not None:

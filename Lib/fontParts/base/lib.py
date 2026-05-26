@@ -85,9 +85,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
             return None
         return self._glyph()
 
-    def _set_glyph(
-        self, glyph: BaseGlyph | Callable[[], BaseGlyph] | None
-    ) -> None:
+    def _set_glyph(self, glyph: BaseGlyph | Callable[[], BaseGlyph] | None) -> None:
         if self._font is not None:
             raise AssertionError("font for lib already set")
         if self._glyph is not None and self._glyph() != glyph:
@@ -127,9 +125,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
             return self.glyph.font
         return None
 
-    def _set_font(
-        self, font: BaseFont | Callable[[], BaseFont] | None
-    ) -> None:
+    def _set_font(self, font: BaseFont | Callable[[], BaseFont] | None) -> None:
         if self._font is not None and self._font() != font:
             raise AssertionError("font for lib already set and is not same as font")
         if self._glyph is not None:
@@ -308,9 +304,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         """
         super().clear()
 
-    def get(
-        self, key: str, default: LibValueType | None = None
-    ) -> LibValueType | None:
+    def get(self, key: str, default: LibValueType | None = None) -> LibValueType | None:
         """Get the value for the given key in the lib.
 
         If the given `key` is not found, The specified `default` will be returned.
@@ -386,9 +380,7 @@ class BaseLib(BaseDict, DeprecatedLib, RemovedLib):
         """
         return super().values()
 
-    def pop(
-        self, key: str, default: LibValueType | None = None
-    ) -> LibValueType | None:
+    def pop(self, key: str, default: LibValueType | None = None) -> LibValueType | None:
         """Remove the specified key and return its associated value.
 
         If the `key` does not exist, the `default` value is returned.

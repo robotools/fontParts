@@ -718,9 +718,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
             return None
         return self._font()
 
-    def _set_font(
-        self, font: BaseFont | Callable[[], BaseFont] | None
-    ) -> None:
+    def _set_font(self, font: BaseFont | Callable[[], BaseFont] | None) -> None:
         if self._font is not None:
             raise AssertionError("font for layer already set")
         if font is not None:

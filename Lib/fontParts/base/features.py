@@ -59,9 +59,7 @@ class BaseFeatures(BaseObject, DeprecatedFeatures, RemovedFeatures):
             return None
         return self._font()
 
-    def _set_font(
-        self, font: BaseFont | Callable[[], BaseFont] | None
-    ) -> None:
+    def _set_font(self, font: BaseFont | Callable[[], BaseFont] | None) -> None:
         if self._font is not None and self._font() != font:
             raise AssertionError(
                 "font for features already set and is not same as font"

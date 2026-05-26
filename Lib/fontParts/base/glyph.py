@@ -1044,9 +1044,7 @@ class BaseGlyph(
             self.clearImage()
 
     def appendGlyph(
-        self,
-        other: BaseGlyph,
-        offset: PairCollectionType[IntFloatType] | None = None,
+        self, other: BaseGlyph, offset: PairCollectionType[IntFloatType] | None = None
     ) -> None:
         """Append data from `other` to new objects in the glyph.
 
@@ -3766,9 +3764,7 @@ class BaseGlyph(
             normalized.append(normalizedContour)
         self._set_selectedContours(normalized)
 
-    def _set_selectedContours(
-        self, value: CollectionType[BaseContour | int]
-    ) -> None:
+    def _set_selectedContours(self, value: CollectionType[BaseContour | int]) -> None:
         """Set the selected contours in the glyph.
 
         This is the environment implementation of
@@ -3940,9 +3936,7 @@ class BaseGlyph(
             normalized.append(normalizedAnchor)
         self._set_selectedAnchors(normalized)
 
-    def _set_selectedAnchors(
-        self, value: CollectionType[BaseAnchor | int]
-    ) -> None:
+    def _set_selectedAnchors(self, value: CollectionType[BaseAnchor | int]) -> None:
         """Set the selected anchors in the glyph.
 
         This is the environment implementation of

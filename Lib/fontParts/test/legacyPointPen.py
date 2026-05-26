@@ -14,9 +14,7 @@ class LegacyPointPen(RecordingPointPen):
         super().endPath()
 
     def addPoint(self, pt, segmentType=None, smooth=False, name=None):
-        super().addPoint(
-            pt, segmentType=segmentType, smooth=smooth, name=name
-        )
+        super().addPoint(pt, segmentType=segmentType, smooth=smooth, name=name)
 
     def addComponent(self, baseGlyphName, transformation):
         super().addComponent(baseGlyphName, transformation)
