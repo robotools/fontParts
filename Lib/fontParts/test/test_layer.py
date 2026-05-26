@@ -49,7 +49,7 @@ class TestLayer(unittest.TestCase):
 
     def test_newGlyph_rename(self):
         layer = self.getLayer_glyphs()
-        original = layer["A"]
+        layer["A"]
 
         layer.newGlyph("A", clear=False, rename=True)
         layer.newGlyph("A", clear=False, rename=True)
