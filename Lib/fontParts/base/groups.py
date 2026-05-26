@@ -29,7 +29,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
     :cvar keyNormalizer: A function to normalize the key of the dictionary.
         Defaults to :func:`normalizers.normalizeGroupKey`
     :cvar valueNormalizer: A function to normalize the value of the dictionary.
-        Defaults to :func:`Normalizers.noramlizeGroupValue`
+        Defaults to :func:`normalizers.normalizeGroupValue`
 
     This object is normally created as part of a :class:`BaseFont`.
     An orphan :class:`BaseGroups` object instance can be created like this::
@@ -60,7 +60,7 @@ class BaseGroups(BaseDict, DeprecatedGroups, RemovedGroups):
 
     font: dynamicProperty = dynamicProperty(
         "font",
-        """Get or set the groups's parent font object.
+        """Get or set the groups' parent font object.
 
         The value must be a :class:`BaseFont` instance or :obj:`None`.
 

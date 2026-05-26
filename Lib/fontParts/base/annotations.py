@@ -57,7 +57,7 @@ class LibValue:
     - :class:`int`
     - :class:`float`
     - :class:`bool`
-    - :class:`bytes`,
+    - :class:`bytes`
     - :class:`bytearray`
     - :class:`datetime.datetime`
 

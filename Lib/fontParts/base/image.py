@@ -214,11 +214,11 @@ class BaseImage(
 
     offset: dynamicProperty = dynamicProperty(
         "base_offset",
-        """Get or set the component's offset.
+        """Get or set the image's offset.
 
-        The value must be a :ref:`type-coordinate.`
+        The value must be a :ref:`type-coordinate`.
 
-        :return: A :ref:`type-coordinate.` representing the offset of the image.
+        :return: A :ref:`type-coordinate` representing the offset of the image.
 
         Example::
 
@@ -244,7 +244,7 @@ class BaseImage(
         This is the environment implementation of the :attr:`BaseImage.offset`
         property getter.
 
-        :return: A :ref:`type-coordinate.` representing the offset of the image.
+        :return: A :ref:`type-coordinate` representing the offset of the image.
             The value will be normalized
             with :func:`normalizers.normalizeTransformationOffset`.
 
@@ -262,7 +262,7 @@ class BaseImage(
         This is the environment implementation of the :attr:`BaseImage.offset`
         property setter.
 
-        :param value: The offset to set as a :ref:`type-coordinate.`. The value will
+        :param value: The offset to set as a :ref:`type-coordinate`. The value will
             have been normalized with :func:`normalizers.normalizeTransformationOffset`.
 
         .. note::
@@ -310,7 +310,7 @@ class BaseImage(
 
         :return: A :class:`tuple` of two :class:`float` items representing the
             ``(x, y)`` scale of the image. The value will have been normalized
-            with :func:`normalizers.normalizeComponentScale`.
+            with :func:`normalizers.normalizeTransformationScale`.
 
         .. note::
 
@@ -329,7 +329,7 @@ class BaseImage(
         :param value: The scale to set as a :class:`list` or :class:`tuple`
             of :class:`int` or :class:`float` items representing the ``(x, y)``
             scale of the image. The value will have been normalized
-            with :func:`normalizers.normalizeComponentScale`.
+            with :func:`normalizers.normalizeTransformationScale`.
 
         .. note::
 
@@ -346,7 +346,7 @@ class BaseImage(
         "base_color",
         """Get or set the image's color.
 
-        The value must be a :ref:`type-color` or :obj`None`.
+        The value must be a :ref:`type-color` or :obj:`None`.
 
         :return: A :class:`Color` instance representing the color of the image,
             or :obj:`None`.
@@ -494,7 +494,7 @@ class BaseImage(
     # -------------
 
     def round(self) -> None:
-        """Round the images's offset coordinates.
+        """Round the image's offset coordinates.
 
         Example::
 
@@ -504,7 +504,7 @@ class BaseImage(
         self._round()
 
     def _round(self) -> None:
-        """Round the native images's offset coordinates.
+        """Round the native image's offset coordinates.
 
         This is the environment implementation of :meth:`BaseImage.round`.
 

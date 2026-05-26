@@ -432,7 +432,7 @@ class BaseItems(Generic[KeyType, ValueType]):
         This method yields each item one by one, removing it from the list of
         keys after it is yielded.
 
-        :returns: An iterator over the mapping's key-value pairs.
+        :return: An iterator over the mapping's key-value pairs.
 
         """
         return iter(self._mapping._normalizeItems())
@@ -487,7 +487,7 @@ class BaseKeys(Generic[KeyType]):
         This method yields each key one by one, removing it from the list of
         keys after it is yielded.
 
-        :returns: An iterator over the mapping's keys.
+        :return: An iterator over the mapping's keys.
 
         """
         return (k for k, _ in self._mapping._normalizeItems())
@@ -551,7 +551,7 @@ class BaseValues(Generic[ValueType]):
         This method yields each value one by one, removing it from the list of
         values after it is yielded.
 
-        :returns: An iterator over the mapping's values.
+        :return: An iterator over the mapping's values.
 
         """
         return (v for _, v in self._mapping._normalizeItems())
@@ -915,7 +915,7 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
         This method yields each key one by one, removing it from the list of
         keys after it is yielded.
 
-        :returns: An iterator over the object's keys.
+        :return: An iterator over the object's keys.
 
         """
         return self._iter()
@@ -925,7 +925,7 @@ class BaseDict(BaseObject, Generic[KeyType, ValueType]):
 
         This is the environment implementation of :meth:`BaseDict.__iter__`.
 
-        :returns: An iterator over the object's keys.
+        :return: An iterator over the object's keys.
 
         .. note::
 

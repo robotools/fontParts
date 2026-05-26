@@ -338,7 +338,7 @@ class BaseAnchor(
         "base_name",
         """Get or set the anchor's name.
 
-        The value must be a :class:`str` or :obj: `None`.
+        The value must be a :class:`str` or :obj:`None`.
 
         :return: A :class:`str` representing the name of the anchor, or :obj:`None`.
 

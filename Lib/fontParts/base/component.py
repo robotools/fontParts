@@ -286,9 +286,9 @@ class BaseComponent(
         "base_offset",
         """Get or set the component's offset.
 
-        The value must be a :ref:`type-coordinate.`
+        The value must be a :ref:`type-coordinate`.
 
-        :return: A :ref:`type-coordinate.` representing the offset of the component.
+        :return: A :ref:`type-coordinate` representing the offset of the component.
 
         """,
     )
@@ -308,7 +308,7 @@ class BaseComponent(
         This is the environment implementation of the :attr:`BaseComponent.offset`
         property getter.
 
-        :return: A :ref:`type-coordinate.` representing the offset of the component.
+        :return: A :ref:`type-coordinate` representing the offset of the component.
             The value will be normalized
             with :func:`normalizers.normalizeTransformationOffset`.
 
@@ -326,7 +326,7 @@ class BaseComponent(
         This is the environment implementation of the :attr:`BaseComponent.offset`
         property setter.
 
-        :param value: The offset to set as a :ref:`type-coordinate.`. The value will
+        :param value: The offset to set as a :ref:`type-coordinate`. The value will
             have been normalized with :func:`normalizers.normalizeTransformationOffset`.
 
         .. note::

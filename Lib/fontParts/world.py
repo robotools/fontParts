@@ -420,7 +420,7 @@ class BaseFontList(list):
         Sorting options may be defined as follows:
 
         - A :ref:`sort description <sort-descriptions>` as a :class:`str`
-        - A :ref:`font info attribute name` <info-attributes` as a :class:`str`
+        - A :ref:`font info attribute name <info-attributes>` as a :class:`str`
         - A custom `sort value function <sort-value-function>`
         - A :class:`list` or :class:`tuple` containing a mix of any of the above
         - The special keyword ``"magic"`` (see :ref:`magic-sorting`)

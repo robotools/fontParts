@@ -1683,7 +1683,7 @@ class BaseGlyph(
 
         This property is read-only.
 
-        :return: A :class:`tuple` of :class:`BaseAnthor` instances.
+        :return: A :class:`tuple` of :class:`BaseAnchor` instances.
 
         Example::
 
@@ -1695,7 +1695,7 @@ class BaseGlyph(
     def _get_anchors(self) -> tuple[BaseAnchor, ...]:
         """Get all anchors in the native glyph.
 
-        :return: A :class:`tuple` of :class:`BaseAnthor` subclass instances.
+        :return: A :class:`tuple` of :class:`BaseAnchor` subclass instances.
 
         .. note::
 
@@ -2277,7 +2277,7 @@ class BaseGlyph(
           or height in the glyph divided by two)
         - the (negative) surface of the bounding box of the contour: ``width * height``
 
-        The latter is a safety net for for instances like a very thin 'O' where the
+        The latter is a safety net for instances like a very thin 'O' where the
         x centers could be close enough to rely on the y for the sort, which could
         very well be the same for both contours. We use the *negative* of the surface
         to ensure that larger contours appear first, which seems more natural.
@@ -2648,7 +2648,7 @@ class BaseGlyph(
     def __add__(self, other: BaseGlyph) -> BaseGlyph:
         """Add another glyph to the current glyph.
 
-        :param other: The :class:`BaseGLyph` instance to add to the current glyph.
+        :param other: The :class:`BaseGlyph` instance to add to the current glyph.
         :return: A new :class:`BaseGlyph` instance representing the added results.
 
         .. note::
@@ -2667,7 +2667,7 @@ class BaseGlyph(
     def __sub__(self, other: BaseGlyph) -> BaseGlyph:
         """Subtract another glyph from the current glyph.
 
-        :param other: The :class:`BaseGLyph` instance to subtract
+        :param other: The :class:`BaseGlyph` instance to subtract
             from the current glyph.
         :return: A new :class:`BaseGlyph` instance representing
             the subtracted results.
@@ -3054,8 +3054,8 @@ class BaseGlyph(
         This is the environment implementation of the :attr:`BaseGlyph.area`
         property getter.
 
-        :return: An :class:`int` or a :class:` float value representing the
-             area of the glyph, or or :obj:`None` if the glyph is empty.
+        :return: An :class:`int` or a :class:`float` value representing the
+             area of the glyph, or :obj:`None` if the glyph is empty.
 
         .. note::
 
@@ -3110,7 +3110,7 @@ class BaseGlyph(
 
         :param name: The name of the :class:`BaseLayer` instance to
             retrieve.
-        :return: The specified :class:`Baselayer` instance.
+        :return: The specified :class:`BaseLayer` instance.
         :raises ValueError: If no layer with the given `name` exists in
             the font.
 
@@ -3128,7 +3128,7 @@ class BaseGlyph(
         :param name: The name of the :class:`BaseLayer` instance to
             retrieve.
         :param \**kwargs: Additional keyword arguments.
-        :return: The specified :class:`Baselayer` instance.
+        :return: The specified :class:`BaseLayer` instance.
         :raises ValueError: If no layer with the given `name` exists in
             the font.
 

@@ -39,14 +39,14 @@ if TYPE_CHECKING:
 def normalizeFileFormatVersion(value: int) -> int:
     """Normalize a font's file format version.
 
-    :param value: The file format verison of the font as an :class:`int`.
+    :param value: The file format version of the font as an :class:`int`.
     :return: An :class:`int` representing the normalized file format version.
     :raises TypeError: If `value` is not of type :class:`int`.
 
     """
     if not isinstance(value, int):
         raise TypeError(
-            f"Expected file formmat verison 'value' to be of type int, not {type(value).__name__}."
+            f"Expected file format version 'value' to be of type int, not {type(value).__name__}."
         )
     return value
 
@@ -79,7 +79,7 @@ def normalizeLayerOrder(value: CollectionType[str], font) -> tuple[str, ...]:
         normalization applies.
     :return: A :class:`tuple` of layer names in their normalized order.
     :raises TypeError:
-        - If `value` is not a :class:`list` or :class:`tuple.
+        - If `value` is not a :class:`list` or :class:`tuple`.
         - If any `value` item is not a :class:`str`.
     :raises ValueError:
         - If `value` contains duplicate values.
@@ -135,7 +135,7 @@ def normalizeGlyphOrder(value: CollectionType[str]) -> tuple[str, ...]:
         - must be unique (no duplicates are allowed).
     :return: A :class:`tuple` of glyph names in their normalized order.
     :raises TypeError:
-        - If `value` is not a :class:`list` or :class:`tuple.
+        - If `value` is not a :class:`list` or :class:`tuple`.
         - If any `value` item is not a :class:`str`.
     :raises ValueError:
         - If `value` contains duplicate values.
@@ -169,7 +169,7 @@ def normalizeKerningKey(value: PairCollectionType[str]) -> PairType[str]:
         - must be at least one character long.
     :return: The normalized kerning key as a :class:`tuple` of :class:`str` items.
     :raises TypeError:
-        - If `value` is not a :class:`list` or :class:`tuple.
+        - If `value` is not a :class:`list` or :class:`tuple`.
         - If any `value` item is not a :class:`str`.
     :raises ValueError:
         - If `value` does not a contain a pair of items.
@@ -214,7 +214,7 @@ def normalizeKerningValue(value: IntFloatType) -> IntFloatType:
     """
     if not isinstance(value, (int, float)):
         raise TypeError(
-            f"Kerning value must be a int or a float, not {type(value).__name__}."
+            f"Kerning value must be an int or a float, not {type(value).__name__}."
         )
     return value
 
@@ -285,7 +285,7 @@ def normalizeLibKey(value: str) -> str:
     """Normalize a lib key.
 
     :param value: The lib key to normalize as a non-empty :class:`str`.
-    :return: A :class:`str` representing the noramlized lib key.
+    :return: A :class:`str` representing the normalized lib key.
     :raises TypeError: If `value` is not a :class:`str`.
     :raises ValueError: If `value` is an empty :class:`str`.
 
@@ -415,12 +415,12 @@ def normalizeGlyphUnicodes(value: CollectionType[int]) -> tuple[int, ...]:
         or :class:`tuple` of Unicode values. Each item in `value`:
         - must normalize as glyph unicodes with :func:`normalizeGlyphUnicode`.
         - must be unique (no duplicates are allowed).
-    :return: A :class:`tuple of :class:`int` values representing the noramlized
+    :return: A :class:`tuple` of :class:`int` values representing the normalized
         glyph unicodes.
     :raises TypeError: If `value` is not a :class:`list` or :class:`tuple`.
     :raises ValueError:
         - If `value` contains duplicate values.
-        - If any `value` item is not a valid hexadelimal value.
+        - If any `value` item is not a valid hexadecimal value.
         - If any `value` item is not within the unicode range.
 
     """
@@ -438,10 +438,10 @@ def normalizeGlyphUnicode(value: int | str) -> int:
 
     :param value: The glyph Unicode value to normalize as an :class:`int` or a
         hexadecimal :class:`str`. The value must be within the unicode range.
-    :return: An :class:`int` representing the noramlized unicode value.
+    :return: An :class:`int` representing the normalized unicode value.
     :raises TypeError: If `value` is not and :class:`int` or a :class:`str`.
     :raises ValueError:
-        - If `value` is not a valid hexadelimal value.
+        - If `value` is not a valid hexadecimal value.
         - If `value` is not within the unicode range.
 
     """
@@ -773,7 +773,7 @@ def normalizeComponent(value: BaseComponent) -> BaseComponent:
 def normalizeComponentScale(value: PairCollectionType[IntFloatType]) -> PairType[float]:
     """Normalize a component scale.
 
-    :param value: The component scale to noramlize as a :class:`list`
+    :param value: The component scale to normalize as a :class:`list`
         or :class:`tuple` of two :class:`int` or :class:`float` values.
     :return: A :class:`tuple` of two :class:`float` values representing the
         normalized component scale.
@@ -995,7 +995,7 @@ def normalizeCoordinateTuple(
 ) -> PairType[IntFloatType]:
     """Normalize a coordinate tuple.
 
-    :param value: The coordinate tuple to noramlize as a :class:`list`
+    :param value: The coordinate tuple to normalize as a :class:`list`
         or :class:`tuple` of two :class:`int` or :class:`float` values.
     :return: :return: A :class:`tuple` of two values of the same type as the
          items in `value`, representing the normalized coordinates.
@@ -1113,7 +1113,7 @@ def normalizeColor(
         corresponding to the red, green, blue, and alpha (RGBA) channels, in that
         order.
     :return: A :class:`tuple` of four :class:`float` values representing the
-        noramlized color.
+        normalized color.
     :raises TypeError:
         - If `value` is not a :class:`list` or :class:`tuple`.
         - If any `value` item is not an :class:`int` or a :class:`float`.
@@ -1148,7 +1148,7 @@ def normalizeGlyphNote(value: str) -> str:
     """Normalize a glyph note.
 
     :param value: The glyph note to normalize as a :class:`str`.
-    :return: A :class:`str` representing the noramlized glyph note.
+    :return: A :class:`str` representing the normalized glyph note.
     :raises TypeError if `value` is not a :class:`str`.
 
     """
@@ -1354,7 +1354,7 @@ def normalizeTransformationScale(value: TransformationType) -> PairType[float]:
 def normalizeVisualRounding(value: IntFloatType) -> int:
     """Normalize rounding.
 
-    Python 3 uses banker’s rounding, meaning anything that is at 0.5 will round
+    Python 3 uses banker's rounding, meaning anything that is at 0.5 will round
     to the nearest even number. This isn't always ideal for point coordinates,
     so instead, this function rounds to the higher number
     with :func:`fontTools.misc.roundTools.otRound`.

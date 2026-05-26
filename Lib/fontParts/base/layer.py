@@ -815,7 +815,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
 
         The value must be a :class:`tuple` of :class:`int`
         or :class:`float` numbers representing a :ref:`type-color`,
-        or :obj`None` to indicate that the layer does not have an
+        or :obj:`None` to indicate that the layer does not have an
         assigned color.
 
         :return: A :class:`tuple` containing :class:`int`
@@ -851,7 +851,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
         This is the environment implementation of
         the :attr:`BaseLayer.color` property getter.
 
-        :return: The :ref:`type-color` assigned to the layer, or :obj`None` to
+        :return: The :ref:`type-color` assigned to the layer, or :obj:`None` to
             indicate that the layer does not have an assigned color. The value
             will be normalized with :func:`normalizers.normalizeColor`.
         :raises NotImplementedError: If the method has not been
@@ -1094,7 +1094,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
         This is the environment implementation of :meth:`BaseLayer.interpolate`.
 
         :param factor: The interpolation value as a single :class:`int`
-            or :class:`float` or a :class:`tuple of two :class:`int`
+            or :class:`float` or a :class:`tuple` of two :class:`int`
             or :class:`float` values representing the factors ``(x, y)``.
         :param minLayer: The :class:`BaseLayer` subclass instance
             corresponding to the 0.0 position in the interpolation.

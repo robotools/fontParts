@@ -867,7 +867,7 @@ class BaseContour(
 
     segments: dynamicProperty = dynamicProperty(
         "segments",
-        """Get the countour's segments.
+        """Get the contour's segments.
 
         This property is read-only.
 
@@ -882,7 +882,7 @@ class BaseContour(
     )
 
     def _get_segments(self) -> tuple[BaseSegment, ...]:
-        """Get the native countour's segments.
+        """Get the native contour's segments.
 
         This is the environment implementation of the :attr:`BaseContour.segments`
         property getter.
@@ -1496,7 +1496,7 @@ class BaseContour(
         This is the environment implementation of :meth:`BaseContour.removeBPoint`.
 
         :param index: The index representing the :class:`BaseBPoint` subclass
-            instance to remove as an :class:`int. The value will have been
+            instance to remove as an :class:`int`. The value will have been
             normalized with :func:`normalizers.normalizeIndex`.
         :param \**kwargs: Additional keyword arguments.
 
@@ -1584,7 +1584,7 @@ class BaseContour(
         r"""Get the given point from the native contour.
 
         :param index: The index representing the :class:`BaseBPoint` subclass
-            instance to retrieve as an :class:`int. The value will have been
+            instance to retrieve as an :class:`int`. The value will have been
             normalized with :func:`normalizers.normalizeIndex`.
         :param \**kwargs: Additional keyword arguments.
         :return: A :class:`BasePoint` subclass instance.
@@ -1763,7 +1763,7 @@ class BaseContour(
         environment supports such functionality.
 
         :param point: The point to remove as a :class:`BasePoint` instance,
-            or an :class:`int` representing the points's index.
+            or an :class:`int` representing the point's index.
         :param preserveCurve: A :class:`bool` indicating whether to preserve
             the curve's shape after the point is removed. Defaults to :obj:`False`.
         :raises ValueError: If the point index is out of range or if the
@@ -1791,7 +1791,7 @@ class BaseContour(
         This is the environment implementation of :meth:`BaseContour.removePoint`.
 
         :param index: The index representing the :class:`BasePoint` subclass
-            instance to remove as an :class:`int. The value will have been
+            instance to remove as an :class:`int`. The value will have been
             normalized with :func:`normalizers.normalizeIndex`.
         :param preserveCurve: A :class:`bool` indicating whether to preserve
             the curve's shape after the point is removed. The value will have been

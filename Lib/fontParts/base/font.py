@@ -79,7 +79,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
     )
 
     def copy(self) -> BaseFont:
-        """Copy data from the the current font into a new font.
+        """Copy data from the current font into a new font.
 
         This will copy:
 
@@ -1092,7 +1092,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
 
         :param name: The name of the :class:`BaseLayer` instance to
             retrieve.
-        :return: The specified :class:`Baselayer` instance.
+        :return: The specified :class:`BaseLayer` instance.
         :raises ValueError: If no layer with the given `name` exists in
             the font.
 
@@ -1466,7 +1466,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
             with :func:`normalizers.normalizeGlyphName` and verified as
             unique within the default layer.
         :param \**kwargs: Additional keyword arguments.
-        :return: An instance of a :class:`BaseGlyph subclass representing
+        :return: An instance of a :class:`BaseGlyph` subclass representing
             the new glyph.
 
         .. note::
@@ -1991,7 +1991,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         This is the environment implementation of :meth:`BaseFont.interpolate`.
 
         :param factor: The interpolation value as a single :class:`int`
-            or :class:`float` or a :class:`tuple of two :class:`int`
+            or :class:`float` or a :class:`tuple` of two :class:`int`
             or :class:`float` values representing the factors ``(x, y)``.
         :param minFont: The :class:`BaseFont` subclass instance
             corresponding to the 0.0 position in the interpolation.

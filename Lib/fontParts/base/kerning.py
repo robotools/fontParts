@@ -559,9 +559,9 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         return super().items()
 
     def keys(self) -> BaseKeys[PairType[str]]:
-        """Return the kering's pairs (keys).
+        """Return the kerning's pairs (keys).
 
-        :return: A :ref:`type-view` of the kerning's pairs as :class: `tuple` instances
+        :return: A :ref:`type-view` of the kerning's pairs as :class:`tuple` instances
             of two :class:`str` values.
 
         Example::

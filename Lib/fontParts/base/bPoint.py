@@ -237,11 +237,11 @@ class BaseBPoint(
 
     anchor: dynamicProperty = dynamicProperty(
         "base_anchor",
-        """Get or set the the bPoint's anchor point.
+        """Get or set the bPoint's anchor point.
 
-        The value must be a :ref:`type-coordianate`.
+        The value must be a :ref:`type-coordinate`.
 
-        :return: a :ref:`type-coordianate` representing the anchor point of the bPoint.
+        :return: a :ref:`type-coordinate` representing the anchor point of the bPoint.
 
         """,
     )
@@ -256,12 +256,12 @@ class BaseBPoint(
         self._set_anchor(value)
 
     def _get_anchor(self) -> PairType[IntFloatType]:
-        """Get the the bPoint's anchor point.
+        """Get the bPoint's anchor point.
 
         This is the environment implementation of the :attr:`BaseBPoint.anchor`
         property getter.
 
-        :return: a :ref:`type-coordianate` representing the anchor point of the
+        :return: a :ref:`type-coordinate` representing the anchor point of the
             bPoint. The value will be normalized
             with :func:`normalizers.normalizeCoordinateTuple`.
 
@@ -274,12 +274,12 @@ class BaseBPoint(
         return (point.x, point.y)
 
     def _set_anchor(self, value: PairCollectionType[IntFloatType]) -> None:
-        """Set the the bPoint's anchor point.
+        """Set the bPoint's anchor point.
 
         This is the environment implementation of the :attr:`BaseBPoint.anchor`
         property setter.
 
-        :param value: The anchor point to set as a :ref:`type-coordianate`.
+        :param value: The anchor point to set as a :ref:`type-coordinate`.
             The value will have been normalized
             with :func:`normalizers.normalizeCoordinateTuple`.
 
@@ -348,7 +348,7 @@ class BaseBPoint(
         property setter.
 
         :param value: The incoming off-curve to set as
-            a :ref:`type-coordianate`. The value will have been normalized
+            a :ref:`type-coordinate`. The value will have been normalized
             with :func:`normalizers.normalizeCoordinateTuple`.
         :raises FontPartsError: When attempting to set the incoming off-curve
             for a the first point in an open contour.
@@ -435,7 +435,7 @@ class BaseBPoint(
         property setter.
 
         :param value: The outgoing off-curve to set as
-            a :ref:`type-coordianate`. The value will have been normalized
+            a :ref:`type-coordinate`. The value will have been normalized
             with :func:`normalizers.normalizeCoordinateTuple`.
         :raises FontPartsError: When attempting to set the outgoing off-curve
             for a the last point in an open contour.
@@ -684,10 +684,10 @@ def relativeBCPIn(
     """convert absolute incoming bcp value to a relative value.
 
     :param anchor: The anchor reference point from which to measure the relative
-        BCP value as a :ref:`type-coordinate.
+        BCP value as a :ref:`type-coordinate`.
     :param BCPIn: The absolute incoming BCP value to be converted as
-        a :ref:`type-coordinate.
-    :return: The relative position of the incoming BCP as a :ref:`type-coordinate.
+        a :ref:`type-coordinate`.
+    :return: The relative position of the incoming BCP as a :ref:`type-coordinate`.
 
     """
     return (BCPIn[0] - anchor[0], BCPIn[1] - anchor[1])
@@ -699,10 +699,10 @@ def absoluteBCPIn(
     """convert relative incoming bcp value to an absolute value.
 
     :param anchor: The anchor reference point from which the relative BCP value
-        is measured as a :ref:`type-coordinate.
+        is measured as a :ref:`type-coordinate`.
     :param BCPIn: The relative incoming BCP value to be converted as
-        a :ref:`type-coordinate.
-    :return: The absolute position of the incoming BCP as a :ref:`type-coordinate.
+        a :ref:`type-coordinate`.
+    :return: The absolute position of the incoming BCP as a :ref:`type-coordinate`.
 
     """
     return (BCPIn[0] + anchor[0], BCPIn[1] + anchor[1])
@@ -714,10 +714,10 @@ def relativeBCPOut(
     """convert absolute outgoing bcp value to a relative value.
 
     :param anchor: The anchor reference point from which to measure the relative
-        BCP value as a :ref:`type-coordinate.
+        BCP value as a :ref:`type-coordinate`.
     :param BCPOut: The absolute outgoing BCP value to be converted as
-        a :ref:`type-coordinate.
-    :return: The relative position of the outgoing BCP as a :ref:`type-coordinate.
+        a :ref:`type-coordinate`.
+    :return: The relative position of the outgoing BCP as a :ref:`type-coordinate`.
 
     """
     return (BCPOut[0] - anchor[0], BCPOut[1] - anchor[1])
@@ -729,10 +729,10 @@ def absoluteBCPOut(
     """convert relative outgoing bcp value to an absolute value.
 
     :param anchor: The anchor reference point from which the relative BCP value
-        is measured as a :ref:`type-coordinate.
+        is measured as a :ref:`type-coordinate`.
     :param BCPOut: The relative outgoing BCP value to be converted as
-        a :ref:`type-coordinate.
-    :return: The absolute position of the outgoing BCP as a :ref:`type-coordinate.
+        a :ref:`type-coordinate`.
+    :return: The absolute position of the outgoing BCP as a :ref:`type-coordinate`.
 
     """
     return (BCPOut[0] + anchor[0], BCPOut[1] + anchor[1])
