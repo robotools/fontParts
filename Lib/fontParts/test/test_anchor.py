@@ -372,7 +372,7 @@ class TestAnchor(unittest.TestCase):
 
     def test_scaleBy_valid_one_value_no_origin(self):
         anchor = self.getAnchor_generic()
-        anchor.scaleBy((-2))
+        anchor.scaleBy(-2)
         self.assertEqual(anchor.x, -2)
         self.assertEqual(anchor.y, -4)
 

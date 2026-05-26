@@ -2,7 +2,8 @@
 from __future__ import annotations
 import os
 import glob
-from typing import TYPE_CHECKING, Callable, Dict, Iterable, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Dict, Optional, Tuple, Union
+from collections.abc import Callable, Iterable
 from collections.abc import Generator
 from types import FunctionType
 
@@ -32,14 +33,14 @@ BaseTypes = Union[
     "BaseGuideline",
     "BaseFontList",
 ]
-RegistryType = Dict[str, Optional[Callable[[], BaseTypes]]]
+RegistryType = dict[str, Optional[Callable[[], BaseTypes]]]
 InfoType = Union[str, int, float, bool]
 
 
 def OpenFonts(
-    directory: Optional[Union[str, CollectionType[str]]] = None,
+    directory: str | CollectionType[str] | None = None,
     showInterface: bool = True,
-    fileExtensions: Optional[CollectionType[str]] = None,
+    fileExtensions: CollectionType[str] | None = None,
 ) -> Generator[BaseFont]:
     """Open all fonts located in the specified directories.
 
@@ -117,8 +118,8 @@ def OpenFont(path: str, showInterface: bool = True) -> BaseFont:
 
 
 def NewFont(
-    familyName: Optional[str] = None,
-    styleName: Optional[str] = None,
+    familyName: str | None = None,
+    styleName: str | None = None,
     showInterface: bool = True,
 ) -> BaseFont:
     """Create a new font.
@@ -187,7 +188,7 @@ def CurrentLayer() -> BaseLayer:
     return dispatcher["CurrentLayer"]()
 
 
-def CurrentContours() -> Tuple[BaseContour, ...]:
+def CurrentContours() -> tuple[BaseContour, ...]:
     """Get the currently selected contours from :func:`CurrentGlyph`.
 
     :return: A :class:`tuple` of :class:`BaseContour` subclass instances representing
@@ -204,14 +205,14 @@ def CurrentContours() -> Tuple[BaseContour, ...]:
     return dispatcher["CurrentContours"]()
 
 
-def _defaultCurrentContours() -> Tuple[BaseContour, ...]:
+def _defaultCurrentContours() -> tuple[BaseContour, ...]:
     glyph = CurrentGlyph()
     if glyph is None:
         return ()
     return glyph.selectedContours
 
 
-def CurrentSegments() -> Tuple[BaseSegment, ...]:
+def CurrentSegments() -> tuple[BaseSegment, ...]:
     """Get the currently selected segments from :func:`CurrentContours`.
 
     :return: A :class:`tuple` of :class:`BaseSegments` subclass instances representing
@@ -228,7 +229,7 @@ def CurrentSegments() -> Tuple[BaseSegment, ...]:
     return dispatcher["CurrentSegments"]()
 
 
-def _defaultCurrentSegments() -> Tuple[BaseSegment, ...]:
+def _defaultCurrentSegments() -> tuple[BaseSegment, ...]:
     glyph = CurrentGlyph()
     if glyph is None:
         return ()
@@ -238,7 +239,7 @@ def _defaultCurrentSegments() -> Tuple[BaseSegment, ...]:
     return tuple(segments)
 
 
-def CurrentPoints() -> Tuple[BasePoint, ...]:
+def CurrentPoints() -> tuple[BasePoint, ...]:
     """Get the currently selected points from :func:`CurrentContours`.
 
     :return: A :class:`tuple` of :class:`BasePoint` subclass instances representing
@@ -255,7 +256,7 @@ def CurrentPoints() -> Tuple[BasePoint, ...]:
     return dispatcher["CurrentPoints"]()
 
 
-def _defaultCurrentPoints() -> Tuple[BasePoint, ...]:
+def _defaultCurrentPoints() -> tuple[BasePoint, ...]:
     glyph = CurrentGlyph()
     if glyph is None:
         return ()
@@ -265,7 +266,7 @@ def _defaultCurrentPoints() -> Tuple[BasePoint, ...]:
     return tuple(points)
 
 
-def CurrentComponents() -> Tuple[BaseComponent, ...]:
+def CurrentComponents() -> tuple[BaseComponent, ...]:
     """Get the currently selected components from :func:`CurrentGlyph`.
 
     :return: A :class:`tuple` of :class:`BaseComponent` subclass instances representing
@@ -282,14 +283,14 @@ def CurrentComponents() -> Tuple[BaseComponent, ...]:
     return dispatcher["CurrentComponents"]()
 
 
-def _defaultCurrentComponents() -> Tuple[BaseComponent, ...]:
+def _defaultCurrentComponents() -> tuple[BaseComponent, ...]:
     glyph = CurrentGlyph()
     if glyph is None:
         return ()
     return glyph.selectedComponents
 
 
-def CurrentAnchors() -> Tuple[BaseAnchor, ...]:
+def CurrentAnchors() -> tuple[BaseAnchor, ...]:
     """Get the currently selected anchors from :func:`CurrentGlyph`.
 
     :return: A :class:`tuple` of :class:`BaseAnchor` subclass instances representing
@@ -306,14 +307,14 @@ def CurrentAnchors() -> Tuple[BaseAnchor, ...]:
     return dispatcher["CurrentAnchors"]()
 
 
-def _defaultCurrentAnchors() -> Tuple[BaseAnchor, ...]:
+def _defaultCurrentAnchors() -> tuple[BaseAnchor, ...]:
     glyph = CurrentGlyph()
     if glyph is None:
         return ()
     return glyph.selectedAnchors
 
 
-def CurrentGuidelines() -> Tuple[BaseGuideline, ...]:
+def CurrentGuidelines() -> tuple[BaseGuideline, ...]:
     """Get the currently selected guidelines from :func:`CurrentGlyph`.
 
     This will include both font level and glyph level guidelines.
@@ -332,7 +333,7 @@ def CurrentGuidelines() -> Tuple[BaseGuideline, ...]:
     return dispatcher["CurrentGuidelines"]()
 
 
-def _defaultCurrentGuidelines() -> Tuple[BaseGuideline, ...]:
+def _defaultCurrentGuidelines() -> tuple[BaseGuideline, ...]:
     guidelines = []
     font = CurrentFont()
     if font is not None:
@@ -343,7 +344,7 @@ def _defaultCurrentGuidelines() -> Tuple[BaseGuideline, ...]:
     return tuple(guidelines)
 
 
-def AllFonts(sortOptions: Optional[CollectionType[str]] = None) -> BaseFontList:
+def AllFonts(sortOptions: CollectionType[str] | None = None) -> BaseFontList:
     """Get a list of all open fonts.
 
     Optionally, provide a value for `sortOptions` to sort the fonts. See
@@ -376,7 +377,7 @@ def AllFonts(sortOptions: Optional[CollectionType[str]] = None) -> BaseFontList:
     return fontList
 
 
-def RFont(path: Optional[str] = None, showInterface: bool = True) -> fontshell.RFont:
+def RFont(path: str | None = None, showInterface: bool = True) -> fontshell.RFont:
     return dispatcher["RFont"](pathOrObject=path, showInterface=showInterface)
 
 
@@ -389,7 +390,7 @@ def RGlyph() -> fontshell.RGlyph:
 # ---------
 
 
-def FontList(fonts: Optional[Iterable[T]] = None):
+def FontList(fonts: Iterable[T] | None = None):
     """Get a list with font-specific methods.
 
     :return: A :class:`BaseFontList` instance.
@@ -570,7 +571,7 @@ class BaseFontList(list):
     # Search
 
     def getFontsByFontInfoAttribute(
-        self, *attributeValuePairs: Tuple[str, InfoType]
+        self, *attributeValuePairs: tuple[str, InfoType]
     ) -> BaseFontList:
         r"""Get a list of fonts that match the specified attribute-value pairs.
 
@@ -595,7 +596,7 @@ class BaseFontList(list):
         return found
 
     def _matchFontInfoAttributes(
-        self, fonts: BaseFontList, attributeValuePair: Tuple[str, InfoType]
+        self, fonts: BaseFontList, attributeValuePair: tuple[str, InfoType]
     ) -> BaseFontList:
         found = self.__class__()
         attr, value = attributeValuePair
@@ -745,7 +746,7 @@ class _EnvironmentDispatcher:
     def __init__(self, registryItems: CollectionType[str]) -> None:
         self._registry: RegistryType = {item: None for item in registryItems}
 
-    def __setitem__(self, name: str, func: Optional[Callable]) -> None:
+    def __setitem__(self, name: str, func: Callable | None) -> None:
         self._registry[name] = func
 
     def __getitem__(self, name: str) -> Callable:
@@ -812,7 +813,7 @@ try:
     # OpenFont, RFont
 
     def _fontshellRFont(
-        pathOrObject: Optional[Union[str, BaseFont]] = None, showInterface: bool = True
+        pathOrObject: str | BaseFont | None = None, showInterface: bool = True
     ) -> fontshell.RFont:
         return fontshell.RFont(pathOrObject=pathOrObject, showInterface=showInterface)
 
@@ -822,8 +823,8 @@ try:
     # NewFont
 
     def _fontshellNewFont(
-        familyName: Optional[str] = None,
-        styleName: Optional[str] = None,
+        familyName: str | None = None,
+        styleName: str | None = None,
         showInterface: bool = True,
     ) -> fontshell.RFont:
         font = fontshell.RFont(showInterface=showInterface)
