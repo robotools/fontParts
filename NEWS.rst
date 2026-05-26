@@ -1,3 +1,7 @@
+0.14.2 (released 2026-05-26)
+---------------------------
+- `insertGlyph` bug fixed (#875), thank you @typemytype
+
 0.14.1 (released 2026-02-24)
 ---------------------------
 - `glyph.round` fixed, thank you @adbac
