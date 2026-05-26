@@ -63,6 +63,8 @@ jobs:
           newest: ${{ steps.read.outputs.newest }}
         steps:
         - uses: actions/checkout@v6.0.1
+        - name: Check tox.ini envlist matches pyproject.toml classifiers
+          run: python3 .github/scripts/supported_python_versions.py check-tox
         - id: read
           run: |
             {
