@@ -1,14 +1,11 @@
 [build-system]
-requires = ["setuptools>=77", "setuptools_scm[toml]>=3.4"]
-build-backend = "setuptools.build_meta"
+requires = ["setuptools>=42", "wheel", "setuptools_scm[toml]>=3.4"]
 
 [project]
 name = "fontParts"
 description = "An API for interacting with the parts of fonts during the font development process."
 readme = "README.rst"
 requires-python = ">=3.10"
-license = "MIT"
-license-files = ["LICENSE"]
 authors = [
     { name = "Just van Rossum, Tal Leming, Erik van Blokland, Ben Kiel, others", email = "info@robofab.com" },
 ]
@@ -21,6 +18,7 @@ classifiers = [
     "Environment :: Other Environment",
     "Intended Audience :: Developers",
     "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
     "Natural Language :: English",
     "Operating System :: OS Independent",
     "Programming Language :: Python",
