@@ -23,7 +23,7 @@ setup_params = dict(
          "write_to": 'Lib/fontParts/_version.py',
          "write_to_template": '__version__ = "{version}"',
     },
-    setup_requires=['setuptools_scm'],
+    setup_requires=['setuptools_scm', 'vcs-versioning'],
     install_requires=[
         "FontTools[ufo,lxml,unicode]>=3.32.0",
         "fontMath>=0.4.8",
