@@ -532,7 +532,7 @@ class TestGuideline(unittest.TestCase):
 
     def test_scaleBy_valid_one_value_no_origin(self):
         guideline = self.getGuideline_transform()
-        guideline.scaleBy((-2))
+        guideline.scaleBy(-2)
         self.assertEqual(guideline.x, -2)
         self.assertEqual(guideline.y, -4)
         self.assertAlmostEqual(guideline.angle, 225.000, places=3)

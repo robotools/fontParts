@@ -481,7 +481,7 @@ class TestComponent(unittest.TestCase):
 
     def test_scaleBy_valid_one_value_no_origin(self):
         component = self.getComponent_transform()
-        component.scaleBy((-2))
+        component.scaleBy(-2)
         self.assertEqual(
             component.transformation, (-2.0, -4.0, -6.0, -8.0, -10.0, -12.0)
         )

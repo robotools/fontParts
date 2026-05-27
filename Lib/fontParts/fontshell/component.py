@@ -12,7 +12,7 @@ from fontParts.fontshell.base import RBaseObject
 
 
 class RComponent(RBaseObject, BaseComponent):
-    wrapClass: Type[defcon.Component] = defcon.Component
+    wrapClass: type[defcon.Component] = defcon.Component
 
     # ----------
     # Attributes
@@ -20,7 +20,7 @@ class RComponent(RBaseObject, BaseComponent):
 
     # baseGlyph
 
-    def _get_baseGlyph(self) -> Optional[str]:
+    def _get_baseGlyph(self) -> str | None:
         component = self.naked()
         return component.baseGlyph if component else None
 

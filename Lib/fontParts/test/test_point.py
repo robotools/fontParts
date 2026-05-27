@@ -573,7 +573,7 @@ class TestPoint(unittest.TestCase):
 
     def test_scaleBy_valid_one_value_no_origin(self):
         point = self.getPoint_generic()
-        point.scaleBy((-2))
+        point.scaleBy(-2)
         self.assertEqual((point.x, point.y), (-202.0, -404.0))
 
     def test_scaleBy_valid_two_values_no_origin(self):

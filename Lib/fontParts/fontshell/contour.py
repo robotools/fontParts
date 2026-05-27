@@ -34,7 +34,7 @@ class RContour(RBaseObject, BaseContour):
 
     # identifier
 
-    def _get_identifier(self) -> Optional[str]:
+    def _get_identifier(self) -> str | None:
         return self.naked().identifier
 
     def _getIdentifier(self) -> str:
@@ -56,14 +56,14 @@ class RContour(RBaseObject, BaseContour):
     # Bounds
     # ------
 
-    def _get_bounds(self) -> Optional[QuadrupleType[float]]:
+    def _get_bounds(self) -> QuadrupleType[float] | None:
         return self.naked().bounds
 
     # ----
     # Area
     # ----
 
-    def _get_area(self) -> Optional[float]:
+    def _get_area(self) -> float | None:
         return self.naked().area
 
     # ---------
@@ -102,10 +102,10 @@ class RContour(RBaseObject, BaseContour):
         self,
         index: int,
         position: PairCollectionType[IntFloatType],
-        type: Optional[str] = None,
-        smooth: Optional[bool] = None,
-        name: Optional[str] = None,
-        identifier: Optional[str] = None,
+        type: str | None = None,
+        smooth: bool | None = None,
+        name: str | None = None,
+        identifier: str | None = None,
         **kwargs: Any,
     ) -> None:
         point = self.pointClass()

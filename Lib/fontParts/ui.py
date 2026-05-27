@@ -166,7 +166,7 @@ def Message(
     :param title: The optional title of the dialog window as a :class:`str`.
         Defaults to ``"FontParts"``.
     :param informativeText: The optional additional informative text to display in the
-        dialog as  a :class:`str`. Defaults to :obj`None`.
+        dialog as a :class:`str`. Defaults to :obj:`None`.
 
     Example::
 

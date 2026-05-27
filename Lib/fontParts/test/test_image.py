@@ -347,7 +347,7 @@ class TestImage(unittest.TestCase):
     def test_bool_data_len_zero(self):
         image, _ = self.objectGenerator("image")
         try:
-            image.data = "".encode("utf-8")
+            image.data = b""
         except FontPartsError:
             raise unittest.SkipTest("Cannot set zero data")
         self.assertFalse(image)

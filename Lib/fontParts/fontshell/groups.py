@@ -1,13 +1,14 @@
 from __future__ import annotations
-from typing import Tuple, Dict, ItemsView
+from typing import Tuple, Dict
+from collections.abc import ItemsView
 
 import defcon
 from fontParts.base import BaseGroups
 from fontParts.base.annotations import CollectionType
 from fontParts.fontshell.base import RBaseObject
 
-ValueType = Tuple[str, ...]
-GroupsDict = Dict[str, ValueType]
+ValueType = tuple[str, ...]
+GroupsDict = dict[str, ValueType]
 
 
 class RGroups(RBaseObject, BaseGroups):
@@ -23,7 +24,7 @@ class RGroups(RBaseObject, BaseGroups):
         representation = groups.getRepresentation("defcon.groups.kerningSide2Groups")
         return {k: tuple(v) for k, v in representation.items()}
 
-    def _items(self) -> ItemsView[str, Tuple[str]]:
+    def _items(self) -> ItemsView[str, tuple[str]]:
         groups = self.naked()
         formatted = {k: tuple(v) for k, v in groups.items()}
         return formatted.items()
@@ -36,7 +37,7 @@ class RGroups(RBaseObject, BaseGroups):
         groups = self.naked()
         groups[key] = tuple(value)
 
-    def _getItem(self, key: str) -> Tuple[str]:
+    def _getItem(self, key: str) -> tuple[str]:
         groups = self.naked()
         return tuple(groups[key])
 
