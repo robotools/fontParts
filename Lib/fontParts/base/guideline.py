@@ -18,8 +18,8 @@ from fontParts.base.compatibility import GuidelineCompatibilityReporter
 from fontParts.base.color import Color
 from fontParts.base.deprecated import DeprecatedGuideline, RemovedGuideline
 from fontParts.base.annotations import (
-    QuadrupleType,
-    QuadrupleCollectionType,
+    RGBALike,
+    RGBA,
     SextupleCollectionType,
     IntFloatType,
 )
@@ -532,20 +532,20 @@ class BaseGuideline(
         """,
     )
 
-    def _get_base_color(self) -> QuadrupleType[float] | None:
+    def _get_base_color(self) -> RGBA | None:
         value = self._get_color()
         if value is not None:
             value = Color(value)
         return value
 
     def _set_base_color(
-        self, value: QuadrupleCollectionType[IntFloatType] | None
+        self, value: RGBALike | None
     ) -> None:
         if value is not None:
             value = normalizers.normalizeColor(value)
         self._set_color(value)
 
-    def _get_color(self) -> QuadrupleType[float] | None:
+    def _get_color(self) -> RGBA | None:
         """Get the native guideline's color.
 
         This is the environment implementation of the :attr:`BaseGuideline.color`
@@ -564,7 +564,7 @@ class BaseGuideline(
         """
         self.raiseNotImplementedError()
 
-    def _set_color(self, value: QuadrupleCollectionType[IntFloatType] | None) -> None:
+    def _set_color(self, value: RGBALike | None) -> None:
         """Set the native guideline's color.
 
         This is the environment implementation of the :attr:`BaseGuideline.color`

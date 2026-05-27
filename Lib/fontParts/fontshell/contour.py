@@ -7,7 +7,6 @@ from fontParts.base.annotations import (
     BoundingBox,
     Coordinate,
     CoordinateLike,
-    QuadrupleType,
     IntFloatType,
 )
 from fontParts.fontshell.base import RBaseObject

@@ -4,8 +4,8 @@ from typing import Optional
 import defcon
 from fontParts.base import BaseGuideline
 from fontParts.base.annotations import (
-    QuadrupleType,
-    QuadrupleCollectionType,
+    RGBALike,
+    RGBA,
     IntFloatType,
 )
 from fontParts.fontshell.base import RBaseObject
@@ -77,11 +77,11 @@ class RGuideline(RBaseObject, BaseGuideline):
 
     # color
 
-    def _get_color(self) -> QuadrupleType[float] | None:
+    def _get_color(self) -> RGBA | None:
         value = self.naked().color
         if value is not None:
             value = tuple(value)
         return value
 
-    def _set_color(self, value: QuadrupleCollectionType[IntFloatType] | None) -> None:
+    def _set_color(self, value: RGBALike | None) -> None:
         self.naked().color = value

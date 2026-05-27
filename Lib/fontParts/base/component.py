@@ -24,7 +24,6 @@ from fontParts.base.annotations import (
     CoordinateLike,
     PairCollectionType,
     PairType,
-    QuadrupleType,
     SextupleType,
     SextupleCollectionType,
     IntFloatType,

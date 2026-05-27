@@ -11,12 +11,13 @@ from fontParts.base import normalizers
 from fontParts.base.compatibility import FontCompatibilityReporter
 from fontParts.base.deprecated import DeprecatedFont, RemovedFont
 from fontParts.base.annotations import (
+    RGBALike,
+    RGBA,
     Coordinate,
     CoordinateLike,
     CharacterMappingType,
     CollectionType,
     IntFloatType,
-    QuadrupleCollectionType,
     TransformationType,
     KerningDictType,
     ReverseComponentMappingType,
@@ -1138,7 +1139,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
     # new
 
     def newLayer(
-        self, name: str, color: QuadrupleCollectionType[IntFloatType] | None = None
+        self, name: str, color: RGBALike | None = None
     ) -> BaseLayer:
         """Create a new layer in the font.
 
@@ -1167,7 +1168,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
     def _newLayer(  # type: ignore[return]
         self,
         name: str,
-        color: QuadrupleCollectionType[IntFloatType] | None,
+        color: RGBALike | None,
         **kwargs: Any,
     ) -> BaseLayer:
         r"""Create a new layer in the native font.
@@ -1765,7 +1766,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         position: CoordinateLike | None = None,
         angle: IntFloatType | None = None,
         name: str | None = None,
-        color: QuadrupleCollectionType[IntFloatType] | None = None,
+        color: RGBALike | None = None,
         guideline: BaseGuideline | None = None,
     ) -> BaseGuideline:
         """Append a new guideline to the font.
@@ -1836,7 +1837,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         position: CoordinateLike,
         angle: float | None,
         name: str | None,
-        color: QuadrupleCollectionType[IntFloatType] | None,
+        color: RGBALike | None,
         **kwargs: Any,
     ) -> BaseGuideline:
         r"""Append a new guideline to the native font.

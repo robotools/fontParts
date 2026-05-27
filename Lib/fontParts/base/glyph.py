@@ -32,9 +32,9 @@ from fontParts.base.annotations import (
     Coordinate,
     CoordinateLike,
     PairCollectionType,
-    QuadrupleType,
+    RGBA,
+    RGBALike,
     CollectionType,
-    QuadrupleCollectionType,
     SextupleCollectionType,
     IntFloatType,
     TransformationType,
@@ -1759,7 +1759,7 @@ class BaseGlyph(
         self,
         name: str | None = None,
         position: CoordinateLike | None = None,
-        color: QuadrupleCollectionType[IntFloatType] | None = None,
+        color: RGBALike | None = None,
         anchor: BaseAnchor | None = None,
     ) -> BaseAnchor:
         """Append an anchor to the glyph.
@@ -1815,7 +1815,7 @@ class BaseGlyph(
         self,  # type: ignore[return]
         name: str,
         position: CoordinateLike | None,
-        color: QuadrupleCollectionType[IntFloatType] | None,
+        color: RGBALike | None,
         identifier: str | None,
         **kwargs: Any,
     ) -> BaseAnchor:
@@ -2004,7 +2004,7 @@ class BaseGlyph(
         position: CoordinateLike | None = None,
         angle: IntFloatType | None = None,
         name: str | None = None,
-        color: QuadrupleCollectionType[IntFloatType] | None = None,
+        color: RGBALike | None = None,
         guideline: BaseGuideline | None = None,
     ) -> BaseGuideline:
         """Append a guideline to the glyph.
@@ -2075,7 +2075,7 @@ class BaseGlyph(
         position: CoordinateLike,
         angle: IntFloatType,
         name: str | None,
-        color: QuadrupleCollectionType[IntFloatType] | None,
+        color: RGBALike | None,
         identifier: str | None,
         **kwargs: Any,
     ) -> BaseGuideline:
@@ -3272,7 +3272,7 @@ class BaseGlyph(
         data: bytes | None = None,
         scale: TransformationType | None = None,
         position: CoordinateLike | None = None,
-        color: QuadrupleCollectionType[IntFloatType] | None = None,
+        color: RGBALike | None = None,
     ) -> BaseImage:
         """Set the image in the glyph.
 
@@ -3346,7 +3346,7 @@ class BaseGlyph(
         self,  # type: ignore[return]
         data: bytes,
         transformation: SextupleCollectionType[IntFloatType] | None,
-        color: QuadrupleCollectionType[IntFloatType] | None,
+        color: RGBALike | None,
     ) -> BaseImage:
         """Set the image in the native glyph.
 
@@ -3419,14 +3419,14 @@ class BaseGlyph(
         return Color(value)
 
     def _set_base_markColor(
-        self, value: QuadrupleCollectionType[IntFloatType] | None
+        self, value: RGBALike | None
     ) -> None:
         if value is not None:
             value = normalizers.normalizeColor(value)
         self._set_markColor(value)
 
     # type: ignore[return]
-    def _get_markColor(self) -> QuadrupleType[float] | None:
+    def _get_markColor(self) -> RGBA | None:
         """Get the glyph's mark color.
 
         This is the environment implementation of
@@ -3445,7 +3445,7 @@ class BaseGlyph(
         self.raiseNotImplementedError()
 
     def _set_markColor(
-        self, value: QuadrupleCollectionType[IntFloatType] | None
+        self, value: RGBALike | None
     ) -> None:
         """Set the glyph's mark color.
 

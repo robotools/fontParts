@@ -11,13 +11,13 @@ from fontParts.base.annotations import (
     BoundingBoxLike,
     Coordinate,
     CoordinateLike,
+    RGBA,
+    RGBALike,
     T,
     PairType,
-    QuadrupleType,
     SextupleType,
     CollectionType,
     PairCollectionType,
-    QuadrupleCollectionType,
     SextupleCollectionType,
     IntFloatType,
     TransformationType,
@@ -1108,8 +1108,8 @@ def normalizeRotationAngle(value: IntFloatType) -> float:
 
 
 def normalizeColor(
-    value: QuadrupleCollectionType[IntFloatType],
-) -> QuadrupleType[float]:
+    value: RGBALike,
+) -> RGBA:
     """Normalize a color.
 
     :param value: The color to normalize as a :class:`list` or :class:`tuple`

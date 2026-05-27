@@ -30,6 +30,10 @@ CoordinateLike = list[IntFloatType] | Coordinate
 BoundingBox = tuple[float, float, float, float]
 BoundingBoxLike = list[IntFloatType] | BoundingBox
 
+# RGBA color — (r, g, b, a) in [0, 1]
+RGBA = tuple[float, float, float, float]
+RGBALike = list[IntFloatType] | RGBA
+
 # Compatibility
 DiffType = list[tuple[int, str | None, str | None]]
 

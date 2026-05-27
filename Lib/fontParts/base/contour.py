@@ -19,7 +19,6 @@ from fontParts.base.annotations import (
     BoundingBox,
     Coordinate,
     CoordinateLike,
-    QuadrupleType,
     CollectionType,
     SextupleCollectionType,
     IntFloatType,

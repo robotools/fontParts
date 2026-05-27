@@ -18,8 +18,8 @@ from fontParts.base.annotations import (
     CoordinateLike,
     PairCollectionType,
     PairType,
-    QuadrupleType,
-    QuadrupleCollectionType,
+    RGBA,
+    RGBALike,
     SextupleType,
     SextupleCollectionType,
     IntFloatType,
@@ -369,13 +369,13 @@ class BaseImage(
         return value
 
     def _set_base_color(
-        self, value: QuadrupleCollectionType[IntFloatType] | None
+        self, value: RGBALike | None
     ) -> None:
         if value is not None:
             value = normalizers.normalizeColor(value)
         self._set_color(value)
 
-    def _get_color(self) -> QuadrupleType[float] | None:
+    def _get_color(self) -> RGBA | None:
         """Get the native image's color.
 
         This is the environment implementation of the :attr:`BaseImage.color`
@@ -394,7 +394,7 @@ class BaseImage(
         """
         self.raiseNotImplementedError()
 
-    def _set_color(self, value: QuadrupleCollectionType[IntFloatType] | None) -> None:
+    def _set_color(self, value: RGBALike | None) -> None:
         """Set the native image's color.
 
         This is the environment implementation of the :attr:`BaseImage.color`

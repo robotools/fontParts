@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import Union
 
 from fontParts.base.normalizers import normalizeColor
-from fontParts.base.annotations import IntFloatType, QuadrupleCollectionType
+from fontParts.base.annotations import IntFloatType, RGBALike
 
 
 class Color(tuple):
@@ -14,7 +14,7 @@ class Color(tuple):
     """
 
     def __new__(
-        cls, *args: IntFloatType | QuadrupleCollectionType[IntFloatType]
+        cls, *args: IntFloatType | RGBALike
     ) -> Color:
         value = args[0] if len(args) == 1 else args
         normalizedValue = normalizeColor(value)  # type: ignore[arg-type]
