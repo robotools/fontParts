@@ -27,6 +27,6 @@ class RKerning(RBaseObject, BaseKerning):
         del self.naked()[key]
 
     def _find(
-        self, pair: PairCollectionType[str], default: Optional[Union[int, float]] = 0
+        self, pair: PairCollectionType[str], default: int | float | None = 0
     ) -> int:
         return self.naked().find(pair, default)

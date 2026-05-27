@@ -14,7 +14,7 @@ from fontParts.fontshell.base import RBaseObject
 class RGuideline(RBaseObject, BaseGuideline):
     wrapClass = defcon.Guideline
 
-    def _init(self, pathOrObject: Optional[defcon.Guideline] = None) -> None:
+    def _init(self, pathOrObject: defcon.Guideline | None = None) -> None:
         if self.wrapClass is not None:
             if pathOrObject is None:
                 pathOrObject = self.wrapClass()
@@ -22,7 +22,7 @@ class RGuideline(RBaseObject, BaseGuideline):
                     pathOrObject.x = 0
                     pathOrObject.y = 0
                     pathOrObject.angle = 0
-            super(RGuideline, self)._init(pathOrObject=pathOrObject)
+            super()._init(pathOrObject=pathOrObject)
 
     # --------
     # Position
@@ -49,7 +49,7 @@ class RGuideline(RBaseObject, BaseGuideline):
     def _get_angle(self) -> float:
         return self.naked().angle
 
-    def _set_angle(self, value: Optional[IntFloatType]) -> None:
+    def _set_angle(self, value: IntFloatType | None) -> None:
         self.naked().angle = value
 
     # --------------
@@ -58,7 +58,7 @@ class RGuideline(RBaseObject, BaseGuideline):
 
     # identifier
 
-    def _get_identifier(self) -> Optional[str]:
+    def _get_identifier(self) -> str | None:
         return self.naked().identifier
 
     def _getIdentifier(self) -> str:
@@ -69,21 +69,19 @@ class RGuideline(RBaseObject, BaseGuideline):
 
     # name
 
-    def _get_name(self) -> Optional[str]:
+    def _get_name(self) -> str | None:
         return self.naked().name
 
-    def _set_name(self, value: Optional[str]) -> None:
+    def _set_name(self, value: str | None) -> None:
         self.naked().name = value
 
     # color
 
-    def _get_color(self) -> Optional[QuadrupleType[float]]:
+    def _get_color(self) -> QuadrupleType[float] | None:
         value = self.naked().color
         if value is not None:
             value = tuple(value)
         return value
 
-    def _set_color(
-        self, value: Optional[QuadrupleCollectionType[IntFloatType]]
-    ) -> None:
+    def _set_color(self, value: QuadrupleCollectionType[IntFloatType] | None) -> None:
         self.naked().color = value

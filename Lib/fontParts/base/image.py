@@ -1,5 +1,6 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, Callable, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, Optional, Tuple, Union
+from collections.abc import Callable
 
 from fontTools.misc import transform
 from fontParts.base.base import (
@@ -61,7 +62,7 @@ class BaseImage(
 
     # Glyph
 
-    _glyph: Optional[Callable[[], BaseGlyph]] = None
+    _glyph: Callable[[], BaseGlyph] | None = None
 
     glyph = dynamicProperty(
         "glyph",
@@ -81,14 +82,12 @@ class BaseImage(
         """,
     )
 
-    def _get_glyph(self) -> Optional[BaseGlyph]:
+    def _get_glyph(self) -> BaseGlyph | None:
         if self._glyph is None:
             return None
         return self._glyph()
 
-    def _set_glyph(
-        self, glyph: Optional[Union[BaseGlyph, Callable[[], BaseGlyph]]]
-    ) -> None:
+    def _set_glyph(self, glyph: BaseGlyph | Callable[[], BaseGlyph] | None) -> None:
         if self._glyph is not None:
             raise AssertionError("glyph for image already set")
         if glyph is not None:
@@ -113,7 +112,7 @@ class BaseImage(
         """,
     )
 
-    def _get_layer(self) -> Optional[BaseLayer]:
+    def _get_layer(self) -> BaseLayer | None:
         if self._glyph is None:
             return None
         return self.glyph.layer
@@ -136,7 +135,7 @@ class BaseImage(
         """,
     )
 
-    def _get_font(self) -> Optional[BaseFont]:
+    def _get_font(self) -> BaseFont | None:
         if self._glyph is None:
             return None
         return self.glyph.font
@@ -215,11 +214,11 @@ class BaseImage(
 
     offset: dynamicProperty = dynamicProperty(
         "base_offset",
-        """Get or set the component's offset.
+        """Get or set the image's offset.
 
-        The value must be a :ref:`type-coordinate.`
+        The value must be a :ref:`type-coordinate`.
 
-        :return: A :ref:`type-coordinate.` representing the offset of the image.
+        :return: A :ref:`type-coordinate` representing the offset of the image.
 
         Example::
 
@@ -245,7 +244,7 @@ class BaseImage(
         This is the environment implementation of the :attr:`BaseImage.offset`
         property getter.
 
-        :return: A :ref:`type-coordinate.` representing the offset of the image.
+        :return: A :ref:`type-coordinate` representing the offset of the image.
             The value will be normalized
             with :func:`normalizers.normalizeTransformationOffset`.
 
@@ -263,7 +262,7 @@ class BaseImage(
         This is the environment implementation of the :attr:`BaseImage.offset`
         property setter.
 
-        :param value: The offset to set as a :ref:`type-coordinate.`. The value will
+        :param value: The offset to set as a :ref:`type-coordinate`. The value will
             have been normalized with :func:`normalizers.normalizeTransformationOffset`.
 
         .. note::
@@ -311,7 +310,7 @@ class BaseImage(
 
         :return: A :class:`tuple` of two :class:`float` items representing the
             ``(x, y)`` scale of the image. The value will have been normalized
-            with :func:`normalizers.normalizeComponentScale`.
+            with :func:`normalizers.normalizeTransformationScale`.
 
         .. note::
 
@@ -330,7 +329,7 @@ class BaseImage(
         :param value: The scale to set as a :class:`list` or :class:`tuple`
             of :class:`int` or :class:`float` items representing the ``(x, y)``
             scale of the image. The value will have been normalized
-            with :func:`normalizers.normalizeComponentScale`.
+            with :func:`normalizers.normalizeTransformationScale`.
 
         .. note::
 
@@ -347,7 +346,7 @@ class BaseImage(
         "base_color",
         """Get or set the image's color.
 
-        The value must be a :ref:`type-color` or :obj`None`.
+        The value must be a :ref:`type-color` or :obj:`None`.
 
         :return: A :class:`Color` instance representing the color of the image,
             or :obj:`None`.
@@ -361,20 +360,20 @@ class BaseImage(
         """,
     )
 
-    def _get_base_color(self) -> Optional[Color]:
+    def _get_base_color(self) -> Color | None:
         value = self._get_color()
         if value is not None:
             value = Color(value)
         return value
 
     def _set_base_color(
-        self, value: Optional[QuadrupleCollectionType[IntFloatType]]
+        self, value: QuadrupleCollectionType[IntFloatType] | None
     ) -> None:
         if value is not None:
             value = normalizers.normalizeColor(value)
         self._set_color(value)
 
-    def _get_color(self) -> Optional[QuadrupleCollectionType[IntFloatType]]:
+    def _get_color(self) -> QuadrupleCollectionType[IntFloatType] | None:
         """Get the native image's color.
 
         This is the environment implementation of the :attr:`BaseImage.color`
@@ -393,7 +392,7 @@ class BaseImage(
         """
         self.raiseNotImplementedError()
 
-    def _set_color(self, value: Optional[QuadrupleType[float]]) -> None:
+    def _set_color(self, value: QuadrupleType[float] | None) -> None:
         """Set the native image's color.
 
         This is the environment implementation of the :attr:`BaseImage.color`
@@ -426,13 +425,13 @@ class BaseImage(
         """,
     )
 
-    def _get_base_data(self) -> Optional[bytes]:
+    def _get_base_data(self) -> bytes | None:
         return self._get_data()
 
     def _set_base_data(self, value: bytes) -> None:
         self._set_data(value)
 
-    def _get_data(self) -> Optional[bytes]:
+    def _get_data(self) -> bytes | None:
         """Get the native image's raw byte data.
 
         This is the environment implementation of the :attr:`BaseImage.data`
@@ -495,7 +494,7 @@ class BaseImage(
     # -------------
 
     def round(self) -> None:
-        """Round the images's offset coordinates.
+        """Round the image's offset coordinates.
 
         Example::
 
@@ -505,7 +504,7 @@ class BaseImage(
         self._round()
 
     def _round(self) -> None:
-        """Round the native images's offset coordinates.
+        """Round the native image's offset coordinates.
 
         This is the environment implementation of :meth:`BaseImage.round`.
 

@@ -1,17 +1,6 @@
 from __future__ import annotations
-from typing import (
-    TYPE_CHECKING,
-    cast,
-    Any,
-    Callable,
-    Iterator,
-    List,
-    Optional,
-    Tuple,
-    Type,
-    TypeVar,
-    Union,
-)
+from typing import TYPE_CHECKING, cast, Any, List, Optional, Tuple, Type, TypeVar, Union
+from collections.abc import Callable, Iterator
 
 from fontParts.base.errors import FontPartsError
 from fontParts.base.base import (
@@ -66,10 +55,10 @@ class BaseContour(
 
     """
 
-    segmentClass: Optional[Type[BaseSegment]] = None
-    bPointClass: Optional[Type[BaseBPoint]] = None
+    segmentClass: type[BaseSegment] | None = None
+    bPointClass: type[BaseBPoint] | None = None
 
-    def _reprContents(self) -> List[str]:
+    def _reprContents(self) -> list[str]:
         contents = []
         if self.identifier is not None:
             contents.append(f"identifier='{self.identifier!r}'")
@@ -95,7 +84,7 @@ class BaseContour(
             >>> contour.copyData(sourceContour)
 
         """
-        super(BaseContour, self).copyData(source)
+        super().copyData(source)
         for sourcePoint in source.points:
             self.appendPoint((0, 0))
             selfPoint = self.points[-1]
@@ -107,7 +96,7 @@ class BaseContour(
 
     # Glyph
 
-    _glyph: Optional[Callable[[], BaseGlyph]] = None
+    _glyph: Callable[[], BaseGlyph] | None = None
 
     glyph: dynamicProperty = dynamicProperty(
         "glyph",
@@ -127,14 +116,12 @@ class BaseContour(
         """,
     )
 
-    def _get_glyph(self) -> Optional[BaseGlyph]:
+    def _get_glyph(self) -> BaseGlyph | None:
         if self._glyph is None:
             return None
         return self._glyph()
 
-    def _set_glyph(
-        self, glyph: Optional[Union[BaseGlyph, Callable[[], BaseGlyph]]]
-    ) -> None:
+    def _set_glyph(self, glyph: BaseGlyph | Callable[[], BaseGlyph] | None) -> None:
         if self._glyph is not None:
             raise AssertionError("glyph for contour already set")
         if glyph is not None:
@@ -159,7 +146,7 @@ class BaseContour(
         """,
     )
 
-    def _get_font(self) -> Optional[BaseFont]:
+    def _get_font(self) -> BaseFont | None:
         if self._glyph is None:
             return None
         return self.glyph.font
@@ -182,7 +169,7 @@ class BaseContour(
         """,
     )
 
-    def _get_layer(self) -> Optional[BaseLayer]:
+    def _get_layer(self) -> BaseLayer | None:
         if self._glyph is None:
             return None
         return self.glyph.layer
@@ -213,7 +200,7 @@ class BaseContour(
         """,
     )
 
-    def _get_base_index(self) -> Optional[int]:
+    def _get_base_index(self) -> int | None:
         glyph = self.glyph
         if glyph is None:
             return None
@@ -235,7 +222,7 @@ class BaseContour(
             normalizedValue = contourCount
         self._set_index(normalizedValue)
 
-    def _get_index(self) -> Optional[int]:
+    def _get_index(self) -> int | None:
         """Get the index of the native contour.
 
         This is the environment implementation of the :attr:`BaseContour.index`
@@ -493,7 +480,7 @@ class BaseContour(
 
     def isCompatible(
         self, other: BaseContour, cls=None
-    ) -> Tuple[bool, ContourCompatibilityReporter]:
+    ) -> tuple[bool, ContourCompatibilityReporter]:
         """Evaluate interpolation compatibility with another contour.
 
         :param other: The other :class:`BaseContour` instance to check
@@ -514,7 +501,7 @@ class BaseContour(
             [Fatal] Contour: [0] is closed | [0] is open
 
         """
-        return super(BaseContour, self).isCompatible(other, BaseContour)
+        return super().isCompatible(other, BaseContour)
 
     def _isCompatible(
         self, other: BaseContour, reporter: ContourCompatibilityReporter
@@ -794,13 +781,13 @@ class BaseContour(
         """,
     )
 
-    def _get_base_bounds(self) -> Optional[QuadrupleType[float]]:
+    def _get_base_bounds(self) -> QuadrupleType[float] | None:
         value = self._get_bounds()
         if value is not None:
             value = normalizers.normalizeBoundingBox(value)
         return value
 
-    def _get_bounds(self) -> Optional[QuadrupleType[float]]:
+    def _get_bounds(self) -> QuadrupleType[float] | None:
         """Get the bounds of the contour.
 
         This is the environment implementation of the :attr:`BaseContour.bounds`
@@ -839,13 +826,13 @@ class BaseContour(
         """,
     )
 
-    def _get_base_area(self) -> Optional[float]:
+    def _get_base_area(self) -> float | None:
         value = self._get_area()
         if value is not None:
             value = normalizers.normalizeArea(value)
         return value
 
-    def _get_area(self) -> Optional[float]:
+    def _get_area(self) -> float | None:
         """Get the area of the native contour
 
         This is the environment implementation of the :attr:`BaseContour.area`
@@ -880,7 +867,7 @@ class BaseContour(
 
     segments: dynamicProperty = dynamicProperty(
         "segments",
-        """Get the countour's segments.
+        """Get the contour's segments.
 
         This property is read-only.
 
@@ -894,8 +881,8 @@ class BaseContour(
         """,
     )
 
-    def _get_segments(self) -> Tuple[BaseSegment, ...]:
-        """Get the native countour's segments.
+    def _get_segments(self) -> tuple[BaseSegment, ...]:
+        """Get the native contour's segments.
 
         This is the environment implementation of the :attr:`BaseContour.segments`
         property getter.
@@ -910,7 +897,7 @@ class BaseContour(
         points = self.points
         if not points:
             return ()
-        segments: List[List[BasePoint]] = [[]]
+        segments: list[list[BasePoint]] = [[]]
         lastWasOffCurve = False
         firstIsMove = points[0].type == "move"
         for point in points:
@@ -932,7 +919,7 @@ class BaseContour(
             segment = segments.pop(0)
             segments.append(segment)
         # wrap into segments
-        wrapped: List[BaseSegment] = []
+        wrapped: list[BaseSegment] = []
         for points in segments:
             if self.segmentClass is None:
                 raise TypeError("segmentClass cannot be None.")
@@ -998,10 +985,10 @@ class BaseContour(
 
     def appendSegment(
         self,
-        type: Optional[str] = None,
-        points: Optional[PointCollectionType] = None,
+        type: str | None = None,
+        points: PointCollectionType | None = None,
         smooth: bool = False,
-        segment: Optional[BaseSegment] = None,
+        segment: BaseSegment | None = None,
     ) -> None:
         """Append the given segment to the contour.
 
@@ -1067,10 +1054,10 @@ class BaseContour(
     def insertSegment(
         self,
         index: int,
-        type: Optional[str] = None,
-        points: Optional[PointCollectionType] = None,
+        type: str | None = None,
+        points: PointCollectionType | None = None,
         smooth: bool = False,
-        segment: Optional[BaseSegment] = None,
+        segment: BaseSegment | None = None,
     ) -> None:
         """Insert the given segment into the contour.
 
@@ -1155,7 +1142,7 @@ class BaseContour(
             self.insertPoint(ptCount, offCurvePoint, type="offcurve")
 
     def removeSegment(
-        self, segment: Union[BaseSegment, int], preserveCurve: bool = False
+        self, segment: BaseSegment | int, preserveCurve: bool = False
     ) -> None:
         """Remove the given segment from the contour.
 
@@ -1209,7 +1196,7 @@ class BaseContour(
         for point in segment.points:
             self.removePoint(point, preserveCurve)
 
-    def setStartSegment(self, segment: Union[BaseSegment, int]) -> None:
+    def setStartSegment(self, segment: BaseSegment | int) -> None:
         """Set the first segment in the contour.
 
         :param segment: The segment to set as the first instance in the contour
@@ -1238,7 +1225,7 @@ class BaseContour(
             return
         if segmentIndex >= len(segments):
             raise ValueError(
-                (f"The contour does not contain a segment at index {segmentIndex}")
+                f"The contour does not contain a segment at index {segmentIndex}"
             )
         self._setStartSegment(segmentIndex)
 
@@ -1280,8 +1267,8 @@ class BaseContour(
         """,
     )
 
-    def _get_bPoints(self) -> Tuple[BaseBPoint, ...]:
-        bPoints: List[BaseBPoint] = []
+    def _get_bPoints(self) -> tuple[BaseBPoint, ...]:
+        bPoints: list[BaseBPoint] = []
         for point in self.points:
             if point.type not in ("move", "line", "curve"):
                 continue
@@ -1295,11 +1282,11 @@ class BaseContour(
 
     def appendBPoint(
         self,
-        type: Optional[str] = None,
-        anchor: Optional[PairCollectionType[IntFloatType]] = None,
-        bcpIn: Optional[PairCollectionType[IntFloatType]] = None,
-        bcpOut: Optional[PairCollectionType[IntFloatType]] = None,
-        bPoint: Optional[BaseBPoint] = None,
+        type: str | None = None,
+        anchor: PairCollectionType[IntFloatType] | None = None,
+        bcpIn: PairCollectionType[IntFloatType] | None = None,
+        bcpOut: PairCollectionType[IntFloatType] | None = None,
+        bPoint: BaseBPoint | None = None,
     ) -> None:
         """Append the given bPoint to the contour.
 
@@ -1377,11 +1364,11 @@ class BaseContour(
     def insertBPoint(
         self,
         index: int,
-        type: Optional[str] = None,
-        anchor: Optional[PairCollectionType[IntFloatType]] = None,
-        bcpIn: Optional[PairCollectionType[IntFloatType]] = None,
-        bcpOut: Optional[PairCollectionType[IntFloatType]] = None,
-        bPoint: Optional[BaseBPoint] = None,
+        type: str | None = None,
+        anchor: PairCollectionType[IntFloatType] | None = None,
+        bcpIn: PairCollectionType[IntFloatType] | None = None,
+        bcpOut: PairCollectionType[IntFloatType] | None = None,
+        bPoint: BaseBPoint | None = None,
     ) -> None:
         """Insert the given bPoint into the contour.
 
@@ -1480,7 +1467,7 @@ class BaseContour(
         bPoint.bcpOut = bcpOut
         bPoint.type = type
 
-    def removeBPoint(self, bPoint: Union[BaseBPoint, int]) -> None:
+    def removeBPoint(self, bPoint: BaseBPoint | int) -> None:
         """Remove the given bPoint from the contour.
 
         :param bPoint: The bPoint to remove as a :class:`BaseBPoint` instance,
@@ -1509,7 +1496,7 @@ class BaseContour(
         This is the environment implementation of :meth:`BaseContour.removeBPoint`.
 
         :param index: The index representing the :class:`BaseBPoint` subclass
-            instance to remove as an :class:`int. The value will have been
+            instance to remove as an :class:`int`. The value will have been
             normalized with :func:`normalizers.normalizeIndex`.
         :param \**kwargs: Additional keyword arguments.
 
@@ -1553,7 +1540,7 @@ class BaseContour(
         """,
     )
 
-    def _get_points(self) -> Tuple[BasePoint, ...]:
+    def _get_points(self) -> tuple[BasePoint, ...]:
         """Get a list of all points in the native contour.
 
         This is the environment implementation of the :attr:`BaseContour.points`
@@ -1597,7 +1584,7 @@ class BaseContour(
         r"""Get the given point from the native contour.
 
         :param index: The index representing the :class:`BaseBPoint` subclass
-            instance to retrieve as an :class:`int. The value will have been
+            instance to retrieve as an :class:`int`. The value will have been
             normalized with :func:`normalizers.normalizeIndex`.
         :param \**kwargs: Additional keyword arguments.
         :return: A :class:`BasePoint` subclass instance.
@@ -1617,12 +1604,12 @@ class BaseContour(
 
     def appendPoint(
         self,
-        position: Optional[PairCollectionType[IntFloatType]] = None,
+        position: PairCollectionType[IntFloatType] | None = None,
         type: str = "line",
         smooth: bool = False,
-        name: Optional[str] = None,
-        identifier: Optional[str] = None,
-        point: Optional[BasePoint] = None,
+        name: str | None = None,
+        identifier: str | None = None,
+        point: BasePoint | None = None,
     ) -> None:
         """Append the given point to the contour.
 
@@ -1665,12 +1652,12 @@ class BaseContour(
     def insertPoint(
         self,
         index: int,
-        position: Optional[PairCollectionType[IntFloatType]] = None,
+        position: PairCollectionType[IntFloatType] | None = None,
         type: str = "line",
         smooth: bool = False,
-        name: Optional[str] = None,
-        identifier: Optional[str] = None,
-        point: Optional[BasePoint] = None,
+        name: str | None = None,
+        identifier: str | None = None,
+        point: BasePoint | None = None,
     ) -> None:
         """Insert the given point into the contour.
 
@@ -1730,8 +1717,8 @@ class BaseContour(
         position: PairCollectionType[IntFloatType],
         type: str,
         smooth: bool,
-        name: Optional[str],
-        identifier: Optional[str],
+        name: str | None,
+        identifier: str | None,
         **kwargs: Any,
     ) -> None:
         r"""Insert the given point into the native contour.
@@ -1768,9 +1755,7 @@ class BaseContour(
         """
         self.raiseNotImplementedError()
 
-    def removePoint(
-        self, point: Union[BasePoint, int], preserveCurve: bool = False
-    ) -> None:
+    def removePoint(self, point: BasePoint | int, preserveCurve: bool = False) -> None:
         """Remove the given point from the contour.
 
         If ``preserveCurve=True``, an attempt will be made to preserve the
@@ -1778,7 +1763,7 @@ class BaseContour(
         environment supports such functionality.
 
         :param point: The point to remove as a :class:`BasePoint` instance,
-            or an :class:`int` representing the points's index.
+            or an :class:`int` representing the point's index.
         :param preserveCurve: A :class:`bool` indicating whether to preserve
             the curve's shape after the point is removed. Defaults to :obj:`False`.
         :raises ValueError: If the point index is out of range or if the
@@ -1806,7 +1791,7 @@ class BaseContour(
         This is the environment implementation of :meth:`BaseContour.removePoint`.
 
         :param index: The index representing the :class:`BasePoint` subclass
-            instance to remove as an :class:`int. The value will have been
+            instance to remove as an :class:`int`. The value will have been
             normalized with :func:`normalizers.normalizeIndex`.
         :param preserveCurve: A :class:`bool` indicating whether to preserve
             the curve's shape after the point is removed. The value will have been
@@ -1822,7 +1807,7 @@ class BaseContour(
         """
         self.raiseNotImplementedError()
 
-    def setStartPoint(self, point: Union[BasePoint, int]) -> None:
+    def setStartPoint(self, point: BasePoint | int) -> None:
         """Set the first segment in the contour.
 
         :param segment: The point to set as the first instance in the contour
@@ -1849,7 +1834,7 @@ class BaseContour(
             return
         if pointIndex >= len(points):
             raise ValueError(
-                (f"The contour does not contain a point at index {pointIndex}")
+                f"The contour does not contain a point at index {pointIndex}"
             )
         self._setStartPoint(pointIndex)
 
@@ -1915,14 +1900,14 @@ class BaseContour(
         """,
     )
 
-    def _get_base_selectedSegments(self) -> Tuple[BaseSegment, ...]:
+    def _get_base_selectedSegments(self) -> tuple[BaseSegment, ...]:
         selected = tuple(
             normalizers.normalizeSegment(segment)
             for segment in self._get_selectedSegments()
         )
         return selected
 
-    def _get_selectedSegments(self) -> Tuple[BaseSegment, ...]:
+    def _get_selectedSegments(self) -> tuple[BaseSegment, ...]:
         """Get the selected segments in the native contour.
 
         This is the environment implementation of the
@@ -1940,11 +1925,11 @@ class BaseContour(
         return self._getSelectedSubObjects(self.segments)
 
     def _set_base_selectedSegments(
-        self, value: CollectionType[Union[BaseSegment, int]]
+        self, value: CollectionType[BaseSegment | int]
     ) -> None:
         normalized = []
         for segment in value:
-            normalizedSegment: Union[BaseSegment, int]
+            normalizedSegment: BaseSegment | int
             if isinstance(segment, int):
                 normalizedIndex = normalizers.normalizeIndex(segment)
                 # Avoid mypy conflict with normalizeIndex -> Optional[int]
@@ -1956,9 +1941,7 @@ class BaseContour(
             normalized.append(normalizedSegment)
         self._set_selectedSegments(normalized)
 
-    def _set_selectedSegments(
-        self, value: CollectionType[Union[BaseSegment, int]]
-    ) -> None:
+    def _set_selectedSegments(self, value: CollectionType[BaseSegment | int]) -> None:
         """Set the selected segments in the native contour.
 
         This is the environment implementation of the
@@ -2006,13 +1989,13 @@ class BaseContour(
         """,
     )
 
-    def _get_base_selectedPoints(self) -> Tuple[BasePoint, ...]:
+    def _get_base_selectedPoints(self) -> tuple[BasePoint, ...]:
         selected = tuple(
             normalizers.normalizePoint(point) for point in self._get_selectedPoints()
         )
         return selected
 
-    def _get_selectedPoints(self) -> Tuple[BasePoint, ...]:
+    def _get_selectedPoints(self) -> tuple[BasePoint, ...]:
         """Get the selected points in the native contour.
 
         This is the environment implementation of
@@ -2029,12 +2012,10 @@ class BaseContour(
         """
         return self._getSelectedSubObjects(self.points)
 
-    def _set_base_selectedPoints(
-        self, value: CollectionType[Union[BasePoint, int]]
-    ) -> None:
+    def _set_base_selectedPoints(self, value: CollectionType[BasePoint | int]) -> None:
         normalized = []
         for point in value:
-            normalizedPoint: Union[BasePoint, int]
+            normalizedPoint: BasePoint | int
             if isinstance(point, int):
                 normalizedIndex = normalizers.normalizeIndex(point)
                 # Avoid mypy conflict with normalizeIndex -> Optional[int]
@@ -2046,7 +2027,7 @@ class BaseContour(
             normalized.append(normalizedPoint)
         self._set_selectedPoints(normalized)
 
-    def _set_selectedPoints(self, value: CollectionType[Union[BasePoint, int]]) -> None:
+    def _set_selectedPoints(self, value: CollectionType[BasePoint | int]) -> None:
         """Set the selected points in the native contour.
 
         This is the environment implementation of
@@ -2094,14 +2075,14 @@ class BaseContour(
         """,
     )
 
-    def _get_base_selectedBPoints(self) -> Tuple[BaseBPoint, ...]:
+    def _get_base_selectedBPoints(self) -> tuple[BaseBPoint, ...]:
         selected = tuple(
             normalizers.normalizeBPoint(bPoint)
             for bPoint in self._get_selectedBPoints()
         )
         return selected
 
-    def _get_selectedBPoints(self) -> Tuple[BaseBPoint, ...]:
+    def _get_selectedBPoints(self) -> tuple[BaseBPoint, ...]:
         """Get the selected bPoints in the native contour.
 
         This is the environment implementation of
@@ -2119,11 +2100,11 @@ class BaseContour(
         return self._getSelectedSubObjects(self.bPoints)
 
     def _set_base_selectedBPoints(
-        self, value: CollectionType[Union[BaseBPoint, int]]
+        self, value: CollectionType[BaseBPoint | int]
     ) -> None:
         normalized = []
         for bPoint in value:
-            normalizedBPoint: Union[BaseBPoint, int]
+            normalizedBPoint: BaseBPoint | int
             if isinstance(bPoint, int):
                 normalizedIndex = normalizers.normalizeIndex(bPoint)
                 # Avoid mypy conflict with normalizeIndex -> Optional[int]
@@ -2135,9 +2116,7 @@ class BaseContour(
             normalized.append(normalizedBPoint)
         self._set_selectedBPoints(normalized)
 
-    def _set_selectedBPoints(
-        self, value: CollectionType[Union[BaseBPoint, int]]
-    ) -> None:
+    def _set_selectedBPoints(self, value: CollectionType[BaseBPoint | int]) -> None:
         """Set the selected bPoints in the native contour.
 
         This is the environment implementation of

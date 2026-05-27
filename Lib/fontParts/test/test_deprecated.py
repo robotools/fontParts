@@ -200,9 +200,9 @@ class TestDeprecated(unittest.TestCase):
         anchor1 = self.getAnchor()
         anchor2 = self.getAnchor()
         with self.assertWarnsRegex(DeprecationWarning, "Anchor.scale()"):
-            anchor1.scale((-2))
+            anchor1.scale(-2)
         self.assertNotEqual((anchor1.x, anchor1.y), (anchor2.x, anchor2.y))
-        anchor2.scaleBy((-2))
+        anchor2.scaleBy(-2)
         self.assertEqual((anchor1.x, anchor1.y), (anchor2.x, anchor2.y))
 
     def test_anchor_deprecated_scale_center(self):
@@ -676,7 +676,7 @@ class TestDeprecated(unittest.TestCase):
     def test_guideline_deprecated_scale_no_center(self):
         guideline = self.getGuideline_transform()
         with self.assertWarnsRegex(DeprecationWarning, "Guideline.scale()"):
-            guideline.scale((-2))
+            guideline.scale(-2)
         self.assertEqual(guideline.x, -2)
         self.assertEqual(guideline.y, -4)
         self.assertAlmostEqual(guideline.angle, 225.000, places=3)
@@ -896,9 +896,9 @@ class TestDeprecated(unittest.TestCase):
         glyph1 = self.getGlyph_generic()
         glyph2 = self.getGlyph_generic()
         with self.assertWarnsRegex(DeprecationWarning, "Glyph.scale()"):
-            glyph1.scale((-2))
+            glyph1.scale(-2)
         self.assertNotEqual(glyph1.bounds, glyph2.bounds)
-        glyph2.scaleBy((-2))
+        glyph2.scaleBy(-2)
         self.assertEqual(glyph1.bounds, glyph2.bounds)
 
     def test_glyph_deprecated_scale_center(self):
@@ -1083,9 +1083,9 @@ class TestDeprecated(unittest.TestCase):
         contour1 = self.getContour_bounds()
         contour2 = self.getContour_bounds()
         with self.assertWarnsRegex(DeprecationWarning, "Contour.scale()"):
-            contour1.scale((-2))
+            contour1.scale(-2)
         self.assertNotEqual(contour1.bounds, contour2.bounds)
-        contour2.scaleBy((-2))
+        contour2.scaleBy(-2)
         self.assertEqual(contour1.bounds, contour2.bounds)
 
     def test_contour_deprecated_scale_center(self):
@@ -1233,11 +1233,11 @@ class TestDeprecated(unittest.TestCase):
         segment1 = self.getSegment()
         segment2 = self.getSegment()
         with self.assertWarnsRegex(DeprecationWarning, "Segment.scale()"):
-            segment1.scale((-2))
+            segment1.scale(-2)
         coordinates1 = tuple((point.x, point.y) for point in segment1.points)
         coordinates2 = tuple((point.x, point.y) for point in segment2.points)
         self.assertNotEqual(coordinates1, coordinates2)
-        segment2.scaleBy((-2))
+        segment2.scaleBy(-2)
         coordinates2 = tuple((point.x, point.y) for point in segment2.points)
         self.assertEqual(coordinates1, coordinates2)
 
@@ -1559,9 +1559,9 @@ class TestDeprecated(unittest.TestCase):
         point1 = self.getPoint()
         point2 = self.getPoint()
         with self.assertWarnsRegex(DeprecationWarning, "Point.scale()"):
-            point1.scale((-2))
+            point1.scale(-2)
         self.assertNotEqual((point1.x, point1.y), (point2.x, point2.y))
-        point2.scaleBy((-2))
+        point2.scaleBy(-2)
         self.assertEqual((point1.x, point1.y), (point2.x, point2.y))
 
     def test_point_deprecated_scale_center(self):
@@ -1710,9 +1710,9 @@ class TestDeprecated(unittest.TestCase):
         bPoint1 = self.getBPoint()
         bPoint2 = self.getBPoint()
         with self.assertWarnsRegex(DeprecationWarning, "BPoint.scale()"):
-            bPoint1.scale((-2))
+            bPoint1.scale(-2)
         self.assertNotEqual(bPoint1.anchor, bPoint2.anchor)
-        bPoint2.scaleBy((-2))
+        bPoint2.scaleBy(-2)
         self.assertEqual(bPoint1.anchor, bPoint2.anchor)
 
     def test_bPoint_deprecated_scale_center(self):

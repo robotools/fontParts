@@ -1,5 +1,6 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, Callable, Optional, Union, List, Tuple
+from typing import TYPE_CHECKING, Any, Optional, Union, List, Tuple
+from collections.abc import Callable
 import math
 from fontTools.misc import transform
 from fontParts.base.base import (
@@ -48,9 +49,9 @@ class BaseGuideline(
 
     """
 
-    copyAttributes: Tuple[str, ...] = ("x", "y", "angle", "name", "color")
+    copyAttributes: tuple[str, ...] = ("x", "y", "angle", "name", "color")
 
-    def _reprContents(self) -> List[str]:
+    def _reprContents(self) -> list[str]:
         contents = []
         if self.name is not None:
             contents.append(f"'{self.name}'")
@@ -64,7 +65,7 @@ class BaseGuideline(
 
     # Glyph
 
-    _glyph: Optional[Callable[[], BaseGlyph]] = None
+    _glyph: Callable[[], BaseGlyph] | None = None
 
     glyph: dynamicProperty = dynamicProperty(
         "glyph",
@@ -84,14 +85,12 @@ class BaseGuideline(
         """,
     )
 
-    def _get_glyph(self) -> Optional[BaseGlyph]:
+    def _get_glyph(self) -> BaseGlyph | None:
         if self._glyph is None:
             return None
         return self._glyph()
 
-    def _set_glyph(
-        self, glyph: Optional[Union[BaseGlyph, Callable[[], BaseGlyph]]]
-    ) -> None:
+    def _set_glyph(self, glyph: BaseGlyph | Callable[[], BaseGlyph] | None) -> None:
         if self._font is not None:
             raise AssertionError("font for guideline already set")
         if self._glyph is not None:
@@ -118,14 +117,14 @@ class BaseGuideline(
         """,
     )
 
-    def _get_layer(self) -> Optional[BaseLayer]:
+    def _get_layer(self) -> BaseLayer | None:
         if self._glyph is None:
             return None
         return self.glyph.layer
 
     # Font
 
-    _font: Optional[Callable[[], BaseFont]] = None
+    _font: Callable[[], BaseFont] | None = None
 
     font: dynamicProperty = dynamicProperty(
         "font",
@@ -143,16 +142,14 @@ class BaseGuideline(
         """,
     )
 
-    def _get_font(self) -> Optional[BaseFont]:
+    def _get_font(self) -> BaseFont | None:
         if self._font is not None:
             return self._font()
         elif self._glyph is not None:
             return self.glyph.font
         return None
 
-    def _set_font(
-        self, font: Optional[Union[BaseFont, Callable[[], BaseFont]]]
-    ) -> None:
+    def _set_font(self, font: BaseFont | Callable[[], BaseFont] | None) -> None:
         if self._font is not None:
             raise AssertionError("font for guideline already set")
         if self._glyph is not None:
@@ -346,7 +343,7 @@ class BaseGuideline(
         value = normalizers.normalizeRotationAngle(value)
         return value
 
-    def _set_base_angle(self, value: Optional[IntFloatType]) -> None:
+    def _set_base_angle(self, value: IntFloatType | None) -> None:
         if value is None:
             if self._get_x() != 0 and self._get_y() != 0:
                 value = 0
@@ -359,7 +356,7 @@ class BaseGuideline(
         value = normalizers.normalizeRotationAngle(value)
         self._set_angle(value)
 
-    def _get_angle(self) -> Optional[IntFloatType]:
+    def _get_angle(self) -> IntFloatType | None:
         """Get the native guideline's angle.
 
         This is the environment implementation of the :attr:`BaseGuideline.angle`
@@ -378,7 +375,7 @@ class BaseGuideline(
         """
         self.raiseNotImplementedError()
 
-    def _set_angle(self, value: Optional[float]) -> None:
+    def _set_angle(self, value: float | None) -> None:
         """Set the native guideline's angle.
 
         This is the environment implementation of the :attr:`BaseGuideline.angle`
@@ -420,12 +417,12 @@ class BaseGuideline(
         """,
     )
 
-    def _get_base_index(self) -> Optional[int]:
+    def _get_base_index(self) -> int | None:
         value = self._get_index()
         value = normalizers.normalizeIndex(value)
         return value
 
-    def _get_index(self) -> Optional[int]:
+    def _get_index(self) -> int | None:
         """Get the native guideline's index.
 
         This is the environment implementation of the :attr:`BaseGuideline.index`
@@ -455,7 +452,7 @@ class BaseGuideline(
         "base_name",
         """Get or set the guideline's name.
 
-        The value must be a :class:`str` or :obj: `None`.
+        The value must be a :class:`str` or :obj:`None`.
 
         :return: A :class:`str` representing the name of the guideline, or :obj:`None`.
 
@@ -466,18 +463,18 @@ class BaseGuideline(
         """,
     )
 
-    def _get_base_name(self) -> Optional[str]:
+    def _get_base_name(self) -> str | None:
         value = self._get_name()
         if value is not None:
             value = normalizers.normalizeGuidelineName(value)
         return value
 
-    def _set_base_name(self, value: Optional[str]) -> None:
+    def _set_base_name(self, value: str | None) -> None:
         if value is not None:
             value = normalizers.normalizeGuidelineName(value)
         self._set_name(value)
 
-    def _get_name(self) -> Optional[str]:
+    def _get_name(self) -> str | None:
         """Get the native guideline's name.
 
         This is the environment implementation of the :attr:`BaseGuideline.name`
@@ -496,7 +493,7 @@ class BaseGuideline(
         """
         self.raiseNotImplementedError()
 
-    def _set_name(self, value: Optional[str]) -> None:
+    def _set_name(self, value: str | None) -> None:
         """Set the native guideline's name.
 
         This is the environment implementation of the :attr:`BaseGuideline.name`
@@ -535,20 +532,20 @@ class BaseGuideline(
         """,
     )
 
-    def _get_base_color(self) -> Optional[QuadrupleType[float]]:
+    def _get_base_color(self) -> QuadrupleType[float] | None:
         value = self._get_color()
         if value is not None:
             value = Color(value)
         return value
 
     def _set_base_color(
-        self, value: Optional[QuadrupleCollectionType[IntFloatType]]
+        self, value: QuadrupleCollectionType[IntFloatType] | None
     ) -> None:
         if value is not None:
             value = normalizers.normalizeColor(value)
         self._set_color(value)
 
-    def _get_color(self) -> Optional[QuadrupleType[float]]:
+    def _get_color(self) -> QuadrupleType[float] | None:
         """Get the native guideline's color.
 
         This is the environment implementation of the :attr:`BaseGuideline.color`
@@ -567,7 +564,7 @@ class BaseGuideline(
         """
         self.raiseNotImplementedError()
 
-    def _set_color(self, value: Optional[QuadrupleType[float]]) -> None:
+    def _set_color(self, value: QuadrupleType[float] | None) -> None:
         """Set the native guideline's color.
 
         This is the environment implementation of the :attr:`BaseGuideline.color`
@@ -626,7 +623,7 @@ class BaseGuideline(
 
     def isCompatible(
         self, other: BaseGuideline, cls=None
-    ) -> Tuple[bool, GuidelineCompatibilityReporter]:
+    ) -> tuple[bool, GuidelineCompatibilityReporter]:
         """Evaluate interpolation compatibility with another guideline.
 
         :param other: The other :class:`BaseGuideline` instance to check
@@ -647,7 +644,7 @@ class BaseGuideline(
                                   name cap_height
 
         """
-        return super(BaseGuideline, self).isCompatible(other, BaseGuideline)
+        return super().isCompatible(other, BaseGuideline)
 
     def _isCompatible(
         self, other: BaseGuideline, reporter: GuidelineCompatibilityReporter

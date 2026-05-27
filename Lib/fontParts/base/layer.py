@@ -1,7 +1,8 @@
 # pylint: disable=C0103, C0302, C0114, W0613
 from __future__ import annotations
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any, Callable, Iterator, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, List, Optional, Tuple, Union
+from collections.abc import Callable, Iterator
 import collections
 
 from fontParts.base.base import (
@@ -193,7 +194,7 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin, ABC):
             raise KeyError(f"No glyph named '{name}'.")
         self._removeGlyph(name)
 
-    def keys(self) -> Tuple[str, ...]:
+    def keys(self) -> tuple[str, ...]:
         """Get the names of all glyphs in the layer.
 
         This method returns an unordered :class:`tuple` of glyph names
@@ -214,7 +215,7 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin, ABC):
         """
         return self._keys()
 
-    def _keys(self, **kwargs: Any) -> Tuple[str, ...]:  # type: ignore[return]
+    def _keys(self, **kwargs: Any) -> tuple[str, ...]:  # type: ignore[return]
         r"""Get the names of all glyphs in the native layer.
 
         This is the environment implementation of
@@ -400,7 +401,7 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin, ABC):
         """
         self.raiseNotImplementedError()
 
-    def insertGlyph(self, glyph: BaseGlyph, name: Optional[str] = None) -> BaseGlyph:
+    def insertGlyph(self, glyph: BaseGlyph, name: str | None = None) -> BaseGlyph:
         """Insert a specified glyph into the layer.
 
         .. deprecated::
@@ -484,13 +485,13 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin, ABC):
         """,
     )
 
-    def _get_base_selectedGlyphs(self) -> Tuple[BaseGlyph, ...]:
+    def _get_base_selectedGlyphs(self) -> tuple[BaseGlyph, ...]:
         selected = tuple(
             normalizers.normalizeGlyph(glyph) for glyph in self._get_selectedGlyphs()
         )
         return selected
 
-    def _get_selectedGlyphs(self) -> Tuple[BaseGlyph, ...]:
+    def _get_selectedGlyphs(self) -> tuple[BaseGlyph, ...]:
         """Get the selected glyphs in the native layer.
 
         This is the environment implementation of
@@ -550,14 +551,14 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin, ABC):
         """,
     )
 
-    def _get_base_selectedGlyphNames(self) -> Tuple[str, ...]:
+    def _get_base_selectedGlyphNames(self) -> tuple[str, ...]:
         selected = tuple(
             normalizers.normalizeGlyphName(name)
             for name in self._get_selectedGlyphNames()
         )
         return selected
 
-    def _get_selectedGlyphNames(self) -> Tuple[str, ...]:
+    def _get_selectedGlyphNames(self) -> tuple[str, ...]:
         """Get the selected glyph names in the layer.
 
         This is the environment implementation of
@@ -635,8 +636,8 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
 
     """
 
-    def _reprContents(self) -> List[str]:
-        contents: List[str] = [f"'{self.name}'"]
+    def _reprContents(self) -> list[str]:
+        contents: list[str] = [f"'{self.name}'"]
         if self.color:
             contents.append(f"color={self.color!r}")
         return contents
@@ -645,7 +646,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
     # Copy
     # ----
 
-    copyAttributes: Tuple[str, ...] = ("name", "color", "lib")
+    copyAttributes: tuple[str, ...] = ("name", "color", "lib")
 
     def copy(self) -> BaseLayer:
         """Copy data from the current layer into a new layer.
@@ -664,7 +665,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
             >>> copiedLayer = layer.copy()
 
         """
-        return super(BaseLayer, self).copy()
+        return super().copy()
 
     def copyData(self, source: BaseLayer) -> None:
         """Copy data from another layer instance.
@@ -681,7 +682,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
             >>> font.copyData(sourceFont)
 
         """
-        super(BaseLayer, self).copyData(source)
+        super().copyData(source)
         for name in source.keys():
             glyph = self.newGlyph(name)
             glyph.copyData(source[name])
@@ -692,7 +693,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
 
     # Font
 
-    _font: Optional[Callable[[], BaseFont]] = None
+    _font: Callable[[], BaseFont] | None = None
 
     font: dynamicProperty = dynamicProperty(
         "font",
@@ -712,14 +713,12 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
         """,
     )
 
-    def _get_font(self) -> Optional[BaseFont]:
+    def _get_font(self) -> BaseFont | None:
         if self._font is None:
             return None
         return self._font()
 
-    def _set_font(
-        self, font: Optional[Union[BaseFont, Callable[[], BaseFont]]]
-    ) -> None:
+    def _set_font(self, font: BaseFont | Callable[[], BaseFont] | None) -> None:
         if self._font is not None:
             raise AssertionError("font for layer already set")
         if font is not None:
@@ -752,7 +751,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
         """,
     )
 
-    def _get_base_name(self) -> Optional[str]:
+    def _get_base_name(self) -> str | None:
         value = self._get_name()
         if value is not None:
             value = normalizers.normalizeLayerName(value)
@@ -769,7 +768,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
                 raise ValueError(f"A layer with the name '{value}' already exists.")
         self._set_name(value)
 
-    def _get_name(self) -> Optional[str]:  # type: ignore[return]
+    def _get_name(self) -> str | None:  # type: ignore[return]
         """Get the name of the native layer.
 
         This is the environment implementation of the :attr:`BaseLayer.name`
@@ -816,7 +815,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
 
         The value must be a :class:`tuple` of :class:`int`
         or :class:`float` numbers representing a :ref:`type-color`,
-        or :obj`None` to indicate that the layer does not have an
+        or :obj:`None` to indicate that the layer does not have an
         assigned color.
 
         :return: A :class:`tuple` containing :class:`int`
@@ -833,26 +832,26 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
         """,
     )
 
-    def _get_base_color(self) -> Optional[QuadrupleCollectionType[IntFloatType]]:
+    def _get_base_color(self) -> QuadrupleCollectionType[IntFloatType] | None:
         value = self._get_color()
         if value is not None:
             value = Color(value)
         return value
 
     def _set_base_color(
-        self, value: Optional[QuadrupleCollectionType[IntFloatType]]
+        self, value: QuadrupleCollectionType[IntFloatType] | None
     ) -> None:
         if value is not None:
             value = normalizers.normalizeColor(value)
         self._set_color(value)
 
-    def _get_color(self) -> Optional[QuadrupleCollectionType[IntFloatType]]:  # type: ignore[return]
+    def _get_color(self) -> QuadrupleCollectionType[IntFloatType] | None:  # type: ignore[return]
         """Get the color of the layer.
 
         This is the environment implementation of
         the :attr:`BaseLayer.color` property getter.
 
-        :return: The :ref:`type-color` assigned to the layer, or :obj`None` to
+        :return: The :ref:`type-color` assigned to the layer, or :obj:`None` to
             indicate that the layer does not have an assigned color. The value
             will be normalized with :func:`normalizers.normalizeColor`.
         :raises NotImplementedError: If the method has not been
@@ -866,7 +865,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
         self.raiseNotImplementedError()
 
     def _set_color(
-        self, value: Optional[QuadrupleCollectionType[IntFloatType]], **kwargs: Any
+        self, value: QuadrupleCollectionType[IntFloatType] | None, **kwargs: Any
     ) -> None:
         r"""Get or set the color of the layer.
 
@@ -1095,7 +1094,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
         This is the environment implementation of :meth:`BaseLayer.interpolate`.
 
         :param factor: The interpolation value as a single :class:`int`
-            or :class:`float` or a :class:`tuple of two :class:`int`
+            or :class:`float` or a :class:`tuple` of two :class:`int`
             or :class:`float` values representing the factors ``(x, y)``.
         :param minLayer: The :class:`BaseLayer` subclass instance
             corresponding to the 0.0 position in the interpolation.
@@ -1130,7 +1129,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
 
     def isCompatible(
         self, other: BaseLayer, cls=None
-    ) -> Tuple[bool, LayerCompatibilityReporter]:
+    ) -> tuple[bool, LayerCompatibilityReporter]:
         """Evaluate interpolation compatibility with another layer.
 
         :param other: The other :class:`BaseLayer` instance to check
@@ -1151,7 +1150,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
             [Fatal] The glyphs do not contain the same number of contours.
 
         """
-        return super(BaseLayer, self).isCompatible(other, BaseLayer)
+        return super().isCompatible(other, BaseLayer)
 
     def _isCompatible(
         self, other: BaseLayer, reporter: LayerCompatibilityReporter

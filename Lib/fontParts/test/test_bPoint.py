@@ -761,7 +761,7 @@ class TestBPoint(unittest.TestCase):
 
     def test_scaleBy_valid_one_value_no_origin_anchor(self):
         bPoint = self.getBPoint_curve()
-        bPoint.scaleBy((-2))
+        bPoint.scaleBy(-2)
         self.assertEqual(bPoint.anchor, (-202.0, -404.0))
 
     def test_scaleBy_valid_two_values_no_origin_anchor(self):
