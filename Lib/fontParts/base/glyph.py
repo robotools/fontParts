@@ -1,6 +1,6 @@
 # pylint: disable=C0103, C0302, C0114, W0613
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, Optional, Union, List, Tuple, TypeVar
+from typing import TYPE_CHECKING, Any, TypeVar
 from collections.abc import Iterator
 from itertools import zip_longest
 from collections import Counter
@@ -2831,7 +2831,7 @@ class BaseGlyph(
 
 
         """
-        GuidelineListType = list[tuple[Optional[str], int]]
+        GuidelineListType = list[tuple[str | None, int]]
 
         glyph1 = self
         glyph2 = other
