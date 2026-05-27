@@ -564,7 +564,7 @@ class BaseGuideline(
         """
         self.raiseNotImplementedError()
 
-    def _set_color(self, value: QuadrupleType[float] | None) -> None:
+    def _set_color(self, value: QuadrupleCollectionType[IntFloatType] | None) -> None:
         """Set the native guideline's color.
 
         This is the environment implementation of the :attr:`BaseGuideline.color`

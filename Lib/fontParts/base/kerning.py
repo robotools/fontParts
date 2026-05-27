@@ -117,7 +117,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         factor = normalizers.normalizeTransformationScale(factor)
         self._scale(factor)
 
-    def _scale(self, factor: PairType[float]) -> None:
+    def _scale(self, factor: PairCollectionType[IntFloatType]) -> None:
         """Scale all native kerning values by the specified factor.
 
         This is the environment implementation of :meth:`BaseKerning.scaleBy`.
@@ -231,7 +231,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
 
     def _interpolate(
         self,
-        factor: PairType[float],
+        factor: PairCollectionType[IntFloatType],
         minKerning: BaseKerning,
         maxKerning: BaseKerning,
         round: bool,
@@ -313,7 +313,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
     # RoboFab Compatibility
     # ---------------------
 
-    def remove(self, pair: PairType[str]) -> None:
+    def remove(self, pair: PairCollectionType[str]) -> None:
         """Remove the specified pair from the Kerning.
 
         :param pair: The pair to remove as a :class:`tuple` of two :class:`str` values.
@@ -327,7 +327,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
             >>> myKerning.remove(("A", "V"))
 
         """
-        del self[pair]
+        del self[(pair[0], pair[1])]
 
     def asDict(self, returnIntegers: bool = True) -> dict[PairType[str], IntFloatType]:
         """Return the kerning as a dictionary.
@@ -463,7 +463,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         super().clear()
 
     def get(
-        self, pair: PairType[str], default: IntFloatType | None = None
+        self, pair: PairCollectionType[str], default: IntFloatType | None = None
     ) -> IntFloatType | None:
         """Get the value for the given kerning pair.
 
@@ -519,7 +519,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         return value
 
     def _find(
-        self, pair: PairType[str], default: IntFloatType | None = None
+        self, pair: PairCollectionType[str], default: IntFloatType | None = None
     ) -> IntFloatType | None:
         """Get the value for the given explicit or implicit native kerning pair.
 

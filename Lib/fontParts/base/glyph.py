@@ -2738,7 +2738,7 @@ class BaseGlyph(
 
     def _interpolate(
         self,
-        factor: tuple[IntFloatType, IntFloatType],
+        factor: PairCollectionType[IntFloatType],
         minGlyph: BaseGlyph,
         maxGlyph: BaseGlyph,
         round: bool,
@@ -3424,7 +3424,7 @@ class BaseGlyph(
         self._set_markColor(value)
 
     # type: ignore[return]
-    def _get_markColor(self) -> QuadrupleCollectionType[IntFloatType] | None:
+    def _get_markColor(self) -> QuadrupleType[float] | None:
         """Get the glyph's mark color.
 
         This is the environment implementation of
@@ -3442,7 +3442,7 @@ class BaseGlyph(
         """
         self.raiseNotImplementedError()
 
-    def _set_markColor(self, value: QuadrupleType[float] | None) -> None:
+    def _set_markColor(self, value: QuadrupleCollectionType[IntFloatType] | None) -> None:
         """Set the glyph's mark color.
 
         This is the environment implementation of
