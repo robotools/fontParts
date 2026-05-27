@@ -3000,13 +3000,13 @@ class BaseGlyph(
         """,
     )
 
-    def _get_base_bounds(self) -> QuadrupleType[IntFloatType] | None:
+    def _get_base_bounds(self) -> QuadrupleType[float] | None:
         value = self._get_bounds()
         if value is not None:
             value = normalizers.normalizeBoundingBox(value)
         return value
 
-    def _get_bounds(self) -> QuadrupleType[IntFloatType] | None:
+    def _get_bounds(self) -> QuadrupleType[float] | None:
         """Get the bounds of the native glyph.
 
         This is the environment implementation of the :attr:`BaseGlyph.bounds`

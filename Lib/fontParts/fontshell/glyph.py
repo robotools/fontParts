@@ -112,7 +112,7 @@ class RGlyph(RBaseObject, BaseGlyph):
     # Bounds
     # ------
 
-    def _get_bounds(self) -> QuadrupleType[IntFloatType] | None:
+    def _get_bounds(self) -> QuadrupleType[float] | None:
         return self.naked().bounds
 
     # ----
