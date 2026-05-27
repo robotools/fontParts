@@ -7,10 +7,10 @@ description = "An API for interacting with the parts of fonts during the font de
 readme = "README.rst"
 requires-python = ">=3.10"
 authors = [
-    { name = "Just van Rossum, Tal Leming, Erik van Blokland, Ben Kiel, others", email = "info@robofab.com" },
+    { name = "Just van Rossum, Tal Leming, Erik van Blokland, Ben Kiel, others" },
 ]
 maintainers = [
-    { name = "Just van Rossum, Tal Leming, Erik van Blokland, Ben Kiel", email = "info@robofab.com" },
+    { name = "Just van Rossum, Tal Leming, Erik van Blokland, Ben Kiel" },
 ]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
@@ -41,7 +41,11 @@ dependencies = [
 dynamic = ["version"]
 
 [project.urls]
-Homepage = "http://github.com/robotools/fontParts"
+source = "http://github.com/robotools/fontParts"
+documentation = "https://fontparts.robotools.dev/"
+changelog = "https://github.com/robotools/fontParts/blob/main/NEWS.rst"
+issues = "https://github.com/robotools/fontParts/issues"
+releasenotes = "https://github.com/robotools/fontParts/releases"
 
 [tool.setuptools]
 zip-safe = true
