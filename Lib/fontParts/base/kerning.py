@@ -327,7 +327,8 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
             >>> myKerning.remove(("A", "V"))
 
         """
-        del self[(pair[0], pair[1])]
+        one, two = pair
+        del self[(one, two)]
 
     def asDict(self, returnIntegers: bool = True) -> dict[PairType[str], IntFloatType]:
         """Return the kerning as a dictionary.
