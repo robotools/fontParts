@@ -7,6 +7,8 @@ from pathlib import Path
 import datetime
 
 from fontParts.base.annotations import (
+    KerningPairLike,
+    KerningPair,
     AffineTransformationLike,
     AffineTransformation,
     BoundingBox,
@@ -163,7 +165,7 @@ def normalizeGlyphOrder(value: CollectionType[str]) -> tuple[str, ...]:
 # -------
 
 
-def normalizeKerningKey(value: PairCollectionType[str]) -> PairType[str]:
+def normalizeKerningKey(value: KerningPairLike) -> KerningPair:
     """Normalize a kerning key.
 
     :param value: The kerning key to normalize as a :class:`tuple`

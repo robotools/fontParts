@@ -38,6 +38,10 @@ RGBALike = list[IntFloatType] | RGBA
 AffineTransformation = tuple[float, float, float, float, float, float]
 AffineTransformationLike = list[IntFloatType] | AffineTransformation
 
+# Kerning pair — (first, second) glyph or group names.
+KerningPair = tuple[str, str]
+KerningPairLike = list[str] | KerningPair
+
 # Compatibility
 DiffType = list[tuple[int, str | None, str | None]]
 
