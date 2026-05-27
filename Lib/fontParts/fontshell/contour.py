@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING, Optional, Any
 import defcon
 from fontParts.base import BaseContour
 from fontParts.base.annotations import (
+    BoundingBox,
     Coordinate,
     CoordinateLike,
     QuadrupleType,
@@ -61,7 +62,7 @@ class RContour(RBaseObject, BaseContour):
     # Bounds
     # ------
 
-    def _get_bounds(self) -> QuadrupleType[float] | None:
+    def _get_bounds(self) -> BoundingBox | None:
         return self.naked().bounds
 
     # ----

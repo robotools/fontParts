@@ -19,6 +19,7 @@ from fontParts.base.base import (
 from fontParts.base.compatibility import ComponentCompatibilityReporter
 from fontParts.base.deprecated import DeprecatedComponent, RemovedComponent
 from fontParts.base.annotations import (
+    BoundingBox,
     Coordinate,
     CoordinateLike,
     PairCollectionType,
@@ -735,13 +736,13 @@ class BaseComponent(
         """,
     )
 
-    def _get_base_bounds(self) -> QuadrupleType[float]:
+    def _get_base_bounds(self) -> BoundingBox:
         value = self._get_bounds()
         if value is not None:
             value = normalizers.normalizeBoundingBox(value)
         return value
 
-    def _get_bounds(self) -> QuadrupleType[float]:
+    def _get_bounds(self) -> BoundingBox:
         """Get the bounds of the component.
 
          This is the environment implementation of the :attr:`BaseComponent.bounds`

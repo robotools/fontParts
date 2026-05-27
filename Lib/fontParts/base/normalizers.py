@@ -7,6 +7,8 @@ from pathlib import Path
 import datetime
 
 from fontParts.base.annotations import (
+    BoundingBox,
+    BoundingBoxLike,
     Coordinate,
     CoordinateLike,
     T,
@@ -1020,8 +1022,8 @@ def normalizeCoordinateTuple(
 
 
 def normalizeBoundingBox(
-    value: QuadrupleCollectionType[IntFloatType],
-) -> QuadrupleType[float]:
+    value: BoundingBoxLike,
+) -> BoundingBox:
     """Normalize a bounding box.
 
     :param value: The bounding box to normalize as a :class:`list`

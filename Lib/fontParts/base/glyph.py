@@ -28,6 +28,7 @@ from fontParts.base.compatibility import GlyphCompatibilityReporter
 from fontParts.base.color import Color
 from fontParts.base.deprecated import DeprecatedGlyph, RemovedGlyph
 from fontParts.base.annotations import (
+    BoundingBox,
     Coordinate,
     CoordinateLike,
     PairCollectionType,
@@ -3001,13 +3002,13 @@ class BaseGlyph(
         """,
     )
 
-    def _get_base_bounds(self) -> QuadrupleType[float] | None:
+    def _get_base_bounds(self) -> BoundingBox | None:
         value = self._get_bounds()
         if value is not None:
             value = normalizers.normalizeBoundingBox(value)
         return value
 
-    def _get_bounds(self) -> QuadrupleType[float] | None:
+    def _get_bounds(self) -> BoundingBox | None:
         """Get the bounds of the native glyph.
 
         This is the environment implementation of the :attr:`BaseGlyph.bounds`

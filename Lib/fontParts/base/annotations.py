@@ -1,7 +1,8 @@
 # pylint: disable=C0103, C0114
 from __future__ import annotations
-from typing import Protocol, TypeVar
+
 import datetime
+from typing import Protocol, TypeVar
 
 from fontTools.pens.basePen import AbstractPen
 from fontTools.pens.pointPen import AbstractPointPen
@@ -21,9 +22,13 @@ SextupleCollectionType = list[T] | SextupleType[T]
 # Builtins
 IntFloatType = int | float
 
-# point / offset / anchor (bPoints)
+# Point / Offset / Anchor (bPoints)
 Coordinate = tuple[IntFloatType, IntFloatType]
 CoordinateLike = list[IntFloatType] | Coordinate
+
+# Bounding box — (xMin, yMin, xMax, yMax).
+BoundingBox = tuple[float, float, float, float]
+BoundingBoxLike = list[IntFloatType] | BoundingBox
 
 # Compatibility
 DiffType = list[tuple[int, str | None, str | None]]

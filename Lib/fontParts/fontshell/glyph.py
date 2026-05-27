@@ -5,6 +5,7 @@ import defcon
 import booleanOperations
 from fontParts.base import BaseGlyph
 from fontParts.base.annotations import (
+    BoundingBox,
     Coordinate,
     CoordinateLike,
     CollectionType,
@@ -113,7 +114,7 @@ class RGlyph(RBaseObject, BaseGlyph):
     # Bounds
     # ------
 
-    def _get_bounds(self) -> QuadrupleType[float] | None:
+    def _get_bounds(self) -> BoundingBox | None:
         return self.naked().bounds
 
     # ----
