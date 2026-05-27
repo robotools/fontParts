@@ -7,6 +7,13 @@ from pathlib import Path
 import datetime
 
 from fontParts.base.annotations import (
+    InterpolationFactorLike,
+    InterpolationFactor,
+    SkewAngleLike,
+    SkewAngle,
+    ScaleFactorLike,
+    ScaleFactorPair,
+    ScaleFactor,
     KerningPairLike,
     KerningPair,
     AffineTransformationLike,
@@ -18,11 +25,8 @@ from fontParts.base.annotations import (
     RGBA,
     RGBALike,
     T,
-    PairType,
     CollectionType,
-    PairCollectionType,
     IntFloatType,
-    TransformationType,
     LibValueType,
 )
 
@@ -776,7 +780,7 @@ def normalizeComponent(value: BaseComponent) -> BaseComponent:
     return normalizeInternalObjectType(value, BaseComponent, "Component")
 
 
-def normalizeComponentScale(value: PairCollectionType[IntFloatType]) -> PairType[float]:
+def normalizeComponentScale(value: ScaleFactorPair) -> ScaleFactor:
     """Normalize a component scale.
 
     :param value: The component scale to normalize as a :class:`list`
@@ -1185,7 +1189,7 @@ def normalizeFilePath(value: str | Path) -> str:
 # Interpolation
 
 
-def normalizeInterpolationFactor(value: TransformationType) -> PairType[float]:
+def normalizeInterpolationFactor(value: InterpolationFactorLike) -> InterpolationFactor:
     """Normalize an interpolation factor.
 
     :param value: The interpolation factor to normalize as a single :class:`int`
@@ -1276,7 +1280,7 @@ def normalizeTransformationOffset(
     return normalizeCoordinateTuple(value)
 
 
-def normalizeTransformationSkewAngle(value: TransformationType) -> PairType[float]:
+def normalizeTransformationSkewAngle(value: SkewAngleLike) -> SkewAngle:
     """Normalize a transformation skew angle.
 
     :param value: The skew angle to normalize as a single :class:`int`
@@ -1321,7 +1325,7 @@ def normalizeTransformationSkewAngle(value: TransformationType) -> PairType[floa
     return (normalized[0], normalized[1])
 
 
-def normalizeTransformationScale(value: TransformationType) -> PairType[float]:
+def normalizeTransformationScale(value: ScaleFactorLike) -> ScaleFactor:
     """Normalize a transformation scale.
 
     :param value: The scale to normalize as a single :class:`int`

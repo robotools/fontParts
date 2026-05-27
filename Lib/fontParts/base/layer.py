@@ -17,11 +17,12 @@ from fontParts.base.compatibility import LayerCompatibilityReporter
 from fontParts.base.color import Color
 from fontParts.base.deprecated import DeprecatedLayer, RemovedLayer
 from fontParts.base.annotations import (
+    InterpolationFactorPair,
+    InterpolationFactorLike,
     RGBALike,
     RGBA,
     CharacterMappingType,
     CollectionType,
-    TransformationType,
     ReverseComponentMappingType,
     IntFloatType,
 )
@@ -1035,7 +1036,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
 
     def interpolate(
         self,
-        factor: TransformationType,
+        factor: InterpolationFactorLike,
         minLayer: BaseLayer,
         maxLayer: BaseLayer,
         round: bool = True,
@@ -1084,7 +1085,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
 
     def _interpolate(
         self,
-        factor: TransformationType,
+        factor: InterpolationFactorPair,
         minLayer: BaseLayer,
         maxLayer: BaseLayer,
         round: bool,

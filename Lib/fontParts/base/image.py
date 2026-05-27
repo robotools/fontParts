@@ -14,16 +14,16 @@ from fontParts.base import normalizers
 from fontParts.base.color import Color
 from fontParts.base.deprecated import DeprecatedImage, RemovedImage
 from fontParts.base.annotations import (
+    ScaleFactorLike,
+    ScaleFactorPair,
+    ScaleFactor,
     AffineTransformationLike,
     AffineTransformation,
     Coordinate,
     CoordinateLike,
-    PairCollectionType,
-    PairType,
     RGBA,
     RGBALike,
     IntFloatType,
-    TransformationType,
 )
 
 if TYPE_CHECKING:
@@ -295,16 +295,16 @@ class BaseImage(
         """,
     )
 
-    def _get_base_scale(self) -> PairType[float]:
+    def _get_base_scale(self) -> ScaleFactor:
         value = self._get_scale()
         value = normalizers.normalizeTransformationScale(value)
         return value
 
-    def _set_base_scale(self, value: TransformationType) -> None:
+    def _set_base_scale(self, value: ScaleFactorLike) -> None:
         value = normalizers.normalizeTransformationScale(value)
         self._set_scale(value)
 
-    def _get_scale(self) -> PairType[float]:
+    def _get_scale(self) -> ScaleFactor:
         """Get the native image's scale.
 
         This is the environment implementation of the :attr:`BaseImage.scale`
@@ -322,7 +322,7 @@ class BaseImage(
         sx, sxy, syx, sy, ox, oy = self.transformation
         return (sx, sy)
 
-    def _set_scale(self, value: PairCollectionType[IntFloatType]) -> None:
+    def _set_scale(self, value: ScaleFactorPair) -> None:
         """Set the native image's scale.
 
         This is the environment implementation of the :attr:`BaseImage.scale`

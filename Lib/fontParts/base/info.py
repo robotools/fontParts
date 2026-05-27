@@ -11,7 +11,7 @@ from fontParts.base.base import BaseObject, dynamicProperty, interpolate, refere
 from fontParts.base import normalizers
 from fontParts.base.errors import FontPartsError
 from fontParts.base.deprecated import DeprecatedInfo, RemovedInfo
-from fontParts.base.annotations import TransformationType
+from fontParts.base.annotations import InterpolationFactorPair, InterpolationFactorLike
 
 if TYPE_CHECKING:
     from fontParts.base.font import BaseFont
@@ -836,7 +836,7 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
 
     def interpolate(
         self,
-        factor: TransformationType,
+        factor: InterpolationFactorLike,
         minInfo: BaseInfo,
         maxInfo: BaseInfo,
         round: bool = True,
@@ -884,7 +884,7 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
 
     def _interpolate(
         self,
-        factor: TransformationType,
+        factor: InterpolationFactorPair,
         minInfo: BaseInfo,
         maxInfo: BaseInfo,
         round: bool = True,

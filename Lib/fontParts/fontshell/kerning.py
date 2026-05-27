@@ -3,7 +3,7 @@ from typing import Any, Optional, Union
 from collections.abc import ItemsView
 
 import defcon
-from fontParts.base.annotations import KerningPairLike, PairCollectionType
+from fontParts.base.annotations import KerningPairLike
 from fontParts.base import BaseKerning
 from fontParts.fontshell.base import RBaseObject
 

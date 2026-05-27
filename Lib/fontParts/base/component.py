@@ -19,13 +19,13 @@ from fontParts.base.base import (
 from fontParts.base.compatibility import ComponentCompatibilityReporter
 from fontParts.base.deprecated import DeprecatedComponent, RemovedComponent
 from fontParts.base.annotations import (
+    ScaleFactorPair,
+    ScaleFactor,
     AffineTransformationLike,
     AffineTransformation,
     BoundingBox,
     Coordinate,
     CoordinateLike,
-    PairCollectionType,
-    PairType,
     IntFloatType,
     PenType,
     PointPenType,
@@ -355,16 +355,16 @@ class BaseComponent(
         """,
     )
 
-    def _get_base_scale(self) -> PairType[float]:
+    def _get_base_scale(self) -> ScaleFactor:
         value = self._get_scale()
         value = normalizers.normalizeComponentScale(value)
         return value
 
-    def _set_base_scale(self, value: PairCollectionType[IntFloatType]) -> None:
+    def _set_base_scale(self, value: ScaleFactorPair) -> None:
         value = normalizers.normalizeComponentScale(value)
         self._set_scale(value)
 
-    def _get_scale(self) -> PairType[float]:
+    def _get_scale(self) -> ScaleFactor:
         """Get the native component's scale.
 
         This is the environment implementation of the :attr:`BaseComponent.scale`
@@ -382,7 +382,7 @@ class BaseComponent(
         sx, sxy, syx, sy, ox, oy = self.transformation
         return sx, sy
 
-    def _set_scale(self, value: PairCollectionType[IntFloatType]) -> None:
+    def _set_scale(self, value: ScaleFactorPair) -> None:
         """Set the native component's scale.
 
         This is the environment implementation of the :attr:`BaseComponent.scale`

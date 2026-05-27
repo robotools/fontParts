@@ -22,12 +22,15 @@ from fontTools.misc import transform
 from fontParts.base.errors import FontPartsError
 from fontParts.base import normalizers
 from fontParts.base.annotations import (
+    InterpolationFactorLike,
+    SkewAngleLike,
+    SkewAnglePair,
+    ScaleFactorLike,
+    ScaleFactorPair,
     AffineTransformationLike,
     Coordinate,
     CoordinateLike,
-    PairCollectionType,
     IntFloatType,
-    TransformationType,
     InterpolatableType,
 )
 
@@ -152,7 +155,7 @@ class dynamicProperty:
 def interpolate(
     minValue: InterpolatableType,
     maxValue: InterpolatableType,
-    factor: TransformationType,
+    factor: InterpolationFactorLike,
 ) -> InterpolatableType:
     """Interpolate between two number-like objects.
 
@@ -1081,7 +1084,7 @@ class TransformationMixin(ABC):
 
     def scaleBy(
         self,
-        value: TransformationType,
+        value: ScaleFactorLike,
         origin: CoordinateLike | None = None,
     ) -> None:
         """Scale the object according to the given values.
@@ -1108,7 +1111,7 @@ class TransformationMixin(ABC):
 
     def _scaleBy(
         self,
-        value: PairCollectionType[IntFloatType],
+        value: ScaleFactorPair,
         origin: CoordinateLike,
         **kwargs: Any,
     ) -> None:
@@ -1186,7 +1189,7 @@ class TransformationMixin(ABC):
 
     def skewBy(
         self,
-        value: TransformationType,
+        value: SkewAngleLike,
         origin: CoordinateLike | None = None,
     ) -> None:
         """Skew the object by the given value.
@@ -1213,7 +1216,7 @@ class TransformationMixin(ABC):
 
     def _skewBy(
         self,
-        value: PairCollectionType[IntFloatType],
+        value: SkewAnglePair,
         origin: CoordinateLike,
         **kwargs: Any,
     ) -> None:

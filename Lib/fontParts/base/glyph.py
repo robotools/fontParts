@@ -28,16 +28,17 @@ from fontParts.base.compatibility import GlyphCompatibilityReporter
 from fontParts.base.color import Color
 from fontParts.base.deprecated import DeprecatedGlyph, RemovedGlyph
 from fontParts.base.annotations import (
+    InterpolationFactorLike,
+    InterpolationFactorPair,
+    ScaleFactorLike,
     AffineTransformationLike,
     BoundingBox,
     Coordinate,
     CoordinateLike,
-    PairCollectionType,
     RGBA,
     RGBALike,
     CollectionType,
     IntFloatType,
-    TransformationType,
     DiffType,
     PenType,
     PointPenType,
@@ -1482,7 +1483,7 @@ class BaseGlyph(
         self,
         baseGlyph: str | None = None,
         offset: CoordinateLike | None = None,
-        scale: TransformationType | None = None,
+        scale: ScaleFactorLike | None = None,
         component: BaseComponent | None = None,
     ) -> BaseComponent:
         """Append a component to the glyph.
@@ -2366,7 +2367,7 @@ class BaseGlyph(
 
     def scaleBy(
         self,
-        value: TransformationType,
+        value: ScaleFactorLike,
         origin: CoordinateLike | None = None,
         width: bool = False,
         height: bool = False,
@@ -2600,7 +2601,7 @@ class BaseGlyph(
         copied.note = mathGlyph.note
         return copied
 
-    def __mul__(self, factor: TransformationType) -> BaseGlyph:
+    def __mul__(self, factor: InterpolationFactorLike) -> BaseGlyph:
         """Multiply the current glyph by a given factor.
 
         :param factor: The factor by which to multiply the glyph as a
@@ -2623,7 +2624,7 @@ class BaseGlyph(
 
     __rmul__ = __mul__
 
-    def __truediv__(self, factor: TransformationType) -> BaseGlyph:
+    def __truediv__(self, factor: InterpolationFactorLike) -> BaseGlyph:
         """Divide the current glyph by a given factor.
 
         :param factor: The factor by which to divide the glyph as a
@@ -2690,7 +2691,7 @@ class BaseGlyph(
 
     def interpolate(
         self,
-        factor: TransformationType,
+        factor: InterpolationFactorLike,
         minGlyph: BaseGlyph,
         maxGlyph: BaseGlyph,
         round: bool = True,
@@ -2740,7 +2741,7 @@ class BaseGlyph(
 
     def _interpolate(
         self,
-        factor: PairCollectionType[IntFloatType],
+        factor: InterpolationFactorPair,
         minGlyph: BaseGlyph,
         maxGlyph: BaseGlyph,
         round: bool,
@@ -3270,7 +3271,7 @@ class BaseGlyph(
         self,
         path: str | None = None,
         data: bytes | None = None,
-        scale: TransformationType | None = None,
+        scale: ScaleFactorLike | None = None,
         position: CoordinateLike | None = None,
         color: RGBALike | None = None,
     ) -> BaseImage:

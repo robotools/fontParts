@@ -42,6 +42,21 @@ AffineTransformationLike = list[IntFloatType] | AffineTransformation
 KerningPair = tuple[str, str]
 KerningPairLike = list[str] | KerningPair
 
+# Scale factor — (sx, sy) multiplicative pair.
+ScaleFactor = tuple[float, float]
+ScaleFactorPair = list[IntFloatType] | ScaleFactor
+ScaleFactorLike = IntFloatType | ScaleFactorPair
+
+# Skew angle — (xAngle, yAngle) in degrees.
+SkewAngle = tuple[float, float]
+SkewAnglePair = list[IntFloatType] | SkewAngle
+SkewAngleLike = IntFloatType | SkewAnglePair
+
+# Interpolation factor — (xFactor, yFactor).
+InterpolationFactor = tuple[float, float]
+InterpolationFactorPair = list[IntFloatType] | InterpolationFactor
+InterpolationFactorLike = IntFloatType | InterpolationFactorPair
+
 # Compatibility
 DiffType = list[tuple[int, str | None, str | None]]
 
@@ -108,5 +123,5 @@ class Interpolatable(Protocol):
     ) -> InterpolatableType: ...
 
     def __mul__(
-        self: InterpolatableType, other: TransformationType
+        self: InterpolatableType, other: InterpolationFactorLike
     ) -> InterpolatableType: ...

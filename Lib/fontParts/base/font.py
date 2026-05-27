@@ -11,6 +11,8 @@ from fontParts.base import normalizers
 from fontParts.base.compatibility import FontCompatibilityReporter
 from fontParts.base.deprecated import DeprecatedFont, RemovedFont
 from fontParts.base.annotations import (
+    InterpolationFactorPair,
+    InterpolationFactorLike,
     RGBALike,
     RGBA,
     Coordinate,
@@ -18,7 +20,6 @@ from fontParts.base.annotations import (
     CharacterMappingType,
     CollectionType,
     IntFloatType,
-    TransformationType,
     KerningDictType,
     ReverseComponentMappingType,
 )
@@ -1933,7 +1934,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
 
     def interpolate(
         self,
-        factor: TransformationType,
+        factor: InterpolationFactorLike,
         minFont: BaseFont,
         maxFont: BaseFont,
         round: bool = True,
@@ -1982,7 +1983,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
 
     def _interpolate(
         self,
-        factor: TransformationType,
+        factor: InterpolationFactorPair,
         minFont: BaseFont,
         maxFont: BaseFont,
         round: bool,

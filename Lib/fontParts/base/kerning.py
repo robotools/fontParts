@@ -6,13 +6,15 @@ from typing import TYPE_CHECKING, Dict, List, Optional, TypeVar, Union
 
 from fontParts.base import normalizers
 from fontParts.base.annotations import (
+    InterpolationFactorLike,
+    InterpolationFactorPair,
+    ScaleFactorLike,
+    ScaleFactorPair,
     KerningPairLike,
     KerningPair,
     Coordinate,
     CoordinateLike,
     IntFloatType,
-    PairCollectionType,
-    TransformationType,
 )
 from fontParts.base.base import BaseDict, dynamicProperty, interpolate, reference
 from fontParts.base.deprecated import DeprecatedKerning, RemovedKerning
@@ -100,7 +102,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
     # Transformation
     # --------------
 
-    def scaleBy(self, factor: TransformationType) -> None:
+    def scaleBy(self, factor: ScaleFactorLike) -> None:
         """Scale all kerning values by the specified factor.
 
         :param factor: The factor by which to scale the kerning. The value may be a
@@ -118,7 +120,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         factor = normalizers.normalizeTransformationScale(factor)
         self._scale(factor)
 
-    def _scale(self, factor: PairCollectionType[IntFloatType]) -> None:
+    def _scale(self, factor: ScaleFactorPair) -> None:
         """Scale all native kerning values by the specified factor.
 
         This is the environment implementation of :meth:`BaseKerning.scaleBy`.
@@ -184,7 +186,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
 
     def interpolate(
         self,
-        factor: TransformationType,
+        factor: InterpolationFactorLike,
         minKerning: BaseKerningType,
         maxKerning: BaseKerningType,
         round: bool = True,
@@ -232,7 +234,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
 
     def _interpolate(
         self,
-        factor: PairCollectionType[IntFloatType],
+        factor: InterpolationFactorPair,
         minKerning: BaseKerning,
         maxKerning: BaseKerning,
         round: bool,
