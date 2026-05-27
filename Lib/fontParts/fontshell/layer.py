@@ -3,7 +3,11 @@ from typing import TYPE_CHECKING, Optional, Tuple, Dict, Any
 
 import defcon
 from fontParts.base import BaseLayer
-from fontParts.base.annotations import QuadrupleCollectionType, QuadrupleType, IntFloatType
+from fontParts.base.annotations import (
+    QuadrupleCollectionType,
+    QuadrupleType,
+    IntFloatType,
+)
 from fontParts.fontshell.base import RBaseObject
 from fontParts.fontshell.lib import RLib
 from fontParts.fontshell.glyph import RGlyph

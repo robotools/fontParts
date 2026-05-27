@@ -3442,7 +3442,9 @@ class BaseGlyph(
         """
         self.raiseNotImplementedError()
 
-    def _set_markColor(self, value: QuadrupleCollectionType[IntFloatType] | None) -> None:
+    def _set_markColor(
+        self, value: QuadrupleCollectionType[IntFloatType] | None
+    ) -> None:
         """Set the glyph's mark color.
 
         This is the environment implementation of
