@@ -3,11 +3,7 @@ from typing import TYPE_CHECKING, Optional, Tuple, Dict, Any
 
 import defcon
 from fontParts.base import BaseLayer
-from fontParts.base.annotations import (
-    RGBALike,
-    RGBA,
-    IntFloatType,
-)
+from fontParts.base.annotations import RGBALike, RGBA, IntFloatType
 from fontParts.fontshell.base import RBaseObject
 from fontParts.fontshell.lib import RLib
 from fontParts.fontshell.glyph import RGlyph
@@ -55,9 +51,7 @@ class RLayer(RBaseObject, BaseLayer):
             value = tuple(value)
         return value
 
-    def _set_color(
-        self, value: RGBALike | None, **kwargs: Any
-    ) -> None:
+    def _set_color(self, value: RGBALike | None, **kwargs: Any) -> None:
         self.naked().color = value
 
     # -----------------

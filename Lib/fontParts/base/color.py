@@ -13,9 +13,7 @@ class Color(tuple):
 
     """
 
-    def __new__(
-        cls, *args: IntFloatType | RGBALike
-    ) -> Color:
+    def __new__(cls, *args: IntFloatType | RGBALike) -> Color:
         value = args[0] if len(args) == 1 else args
         normalizedValue = normalizeColor(value)  # type: ignore[arg-type]
 

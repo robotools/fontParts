@@ -472,9 +472,7 @@ class BaseAnchor(
     # Transformation
     # --------------
 
-    def _transformBy(
-        self, matrix: AffineTransformationLike, **kwargs: Any
-    ) -> None:
+    def _transformBy(self, matrix: AffineTransformationLike, **kwargs: Any) -> None:
         r"""Transform the native anchor according to the given matrix.
 
         This is the environment implementation of :meth:`BaseAnchor.transformBy`.

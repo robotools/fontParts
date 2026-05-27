@@ -1000,9 +1000,7 @@ def normalizeY(value: IntFloatType) -> IntFloatType:
     return value
 
 
-def normalizeCoordinateTuple(
-    value: CoordinateLike,
-) -> Coordinate:
+def normalizeCoordinateTuple(value: CoordinateLike) -> Coordinate:
     """Normalize a coordinate tuple.
 
     :param value: The coordinate tuple to normalize as a :class:`list`
@@ -1027,9 +1025,7 @@ def normalizeCoordinateTuple(
     return (x, y)
 
 
-def normalizeBoundingBox(
-    value: BoundingBoxLike,
-) -> BoundingBox:
+def normalizeBoundingBox(value: BoundingBoxLike) -> BoundingBox:
     """Normalize a bounding box.
 
     :param value: The bounding box to normalize as a :class:`list`
@@ -1113,9 +1109,7 @@ def normalizeRotationAngle(value: IntFloatType) -> float:
 # Color
 
 
-def normalizeColor(
-    value: RGBALike,
-) -> RGBA:
+def normalizeColor(value: RGBALike) -> RGBA:
     """Normalize a color.
 
     :param value: The color to normalize as a :class:`list` or :class:`tuple`
@@ -1262,9 +1256,7 @@ def normalizeTransformationMatrix(
     return (float(a), float(b), float(c), float(d), float(e), float(f))
 
 
-def normalizeTransformationOffset(
-    value: CoordinateLike,
-) -> Coordinate:
+def normalizeTransformationOffset(value: CoordinateLike) -> Coordinate:
     """Normalize a transformation offset.
 
     :param value: The transformation offset to normalize as a :class:`list`

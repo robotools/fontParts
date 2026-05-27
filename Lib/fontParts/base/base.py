@@ -998,9 +998,7 @@ class TransformationMixin(ABC):
     # ---------------
 
     def transformBy(
-        self,
-        matrix: AffineTransformationLike,
-        origin: CoordinateLike | None = None,
+        self, matrix: AffineTransformationLike, origin: CoordinateLike | None = None
     ) -> None:
         """Transform the object according to the given matrix.
 
@@ -1028,9 +1026,7 @@ class TransformationMixin(ABC):
             matrix = tuple(t)
         self._transformBy(matrix)
 
-    def _transformBy(
-        self, matrix: AffineTransformationLike, **kwargs: Any
-    ) -> None:
+    def _transformBy(self, matrix: AffineTransformationLike, **kwargs: Any) -> None:
         r"""Transform the native object according to the given matrix.
 
         This is the environment implementation of :meth:`TransformationMixin.transformBy`.
@@ -1083,9 +1079,7 @@ class TransformationMixin(ABC):
         self.transformBy(tuple(t), **kwargs)
 
     def scaleBy(
-        self,
-        value: ScaleFactorLike,
-        origin: CoordinateLike | None = None,
+        self, value: ScaleFactorLike, origin: CoordinateLike | None = None
     ) -> None:
         """Scale the object according to the given values.
 
@@ -1110,10 +1104,7 @@ class TransformationMixin(ABC):
         self._scaleBy(value, origin=origin)
 
     def _scaleBy(
-        self,
-        value: ScaleFactorPair,
-        origin: CoordinateLike,
-        **kwargs: Any,
+        self, value: ScaleFactorPair, origin: CoordinateLike, **kwargs: Any
     ) -> None:
         r"""Scale the native object according to the given values.
 
@@ -1139,9 +1130,7 @@ class TransformationMixin(ABC):
         self.transformBy(tuple(t), origin=origin, **kwargs)
 
     def rotateBy(
-        self,
-        value: IntFloatType,
-        origin: CoordinateLike | None = None,
+        self, value: IntFloatType, origin: CoordinateLike | None = None
     ) -> None:
         """Rotate the object by the specified value.
 
@@ -1163,9 +1152,7 @@ class TransformationMixin(ABC):
         origin = normalizers.normalizeCoordinateTuple(origin)
         self._rotateBy(value, origin=origin)
 
-    def _rotateBy(
-        self, value: float, origin: CoordinateLike, **kwargs: Any
-    ) -> None:
+    def _rotateBy(self, value: float, origin: CoordinateLike, **kwargs: Any) -> None:
         r"""Rotate the native object by the specified value.
 
         This is the environment implementation of :meth:`TransformationMixin.rotateBy`.
@@ -1188,9 +1175,7 @@ class TransformationMixin(ABC):
         self.transformBy(tuple(t), origin=origin, **kwargs)
 
     def skewBy(
-        self,
-        value: SkewAngleLike,
-        origin: CoordinateLike | None = None,
+        self, value: SkewAngleLike, origin: CoordinateLike | None = None
     ) -> None:
         """Skew the object by the given value.
 
@@ -1215,10 +1200,7 @@ class TransformationMixin(ABC):
         self._skewBy(value, origin=origin)
 
     def _skewBy(
-        self,
-        value: SkewAnglePair,
-        origin: CoordinateLike,
-        **kwargs: Any,
+        self, value: SkewAnglePair, origin: CoordinateLike, **kwargs: Any
     ) -> None:
         r"""Skew the native object by the given value.
 

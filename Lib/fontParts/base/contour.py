@@ -454,9 +454,7 @@ class BaseContour(
     # Transformation
     # --------------
 
-    def _transformBy(
-        self, matrix: AffineTransformationLike, **kwargs: Any
-    ) -> None:
+    def _transformBy(self, matrix: AffineTransformationLike, **kwargs: Any) -> None:
         r"""Transform the contour according to the given matrix.
 
         This is the environment implementation of :meth:`BaseContour.transformBy`.

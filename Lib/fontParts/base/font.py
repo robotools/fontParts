@@ -1139,9 +1139,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
 
     # new
 
-    def newLayer(
-        self, name: str, color: RGBALike | None = None
-    ) -> BaseLayer:
+    def newLayer(self, name: str, color: RGBALike | None = None) -> BaseLayer:
         """Create a new layer in the font.
 
         :param name: The name of the new layer to create.
@@ -1167,10 +1165,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         return layer
 
     def _newLayer(  # type: ignore[return]
-        self,
-        name: str,
-        color: RGBALike | None,
-        **kwargs: Any,
+        self, name: str, color: RGBALike | None, **kwargs: Any
     ) -> BaseLayer:
         r"""Create a new layer in the native font.
 

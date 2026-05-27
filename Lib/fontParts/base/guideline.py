@@ -538,9 +538,7 @@ class BaseGuideline(
             value = Color(value)
         return value
 
-    def _set_base_color(
-        self, value: RGBALike | None
-    ) -> None:
+    def _set_base_color(self, value: RGBALike | None) -> None:
         if value is not None:
             value = normalizers.normalizeColor(value)
         self._set_color(value)
@@ -586,9 +584,7 @@ class BaseGuideline(
     # Transformation
     # --------------
 
-    def _transformBy(
-        self, matrix: AffineTransformationLike, **kwargs: Any
-    ) -> None:
+    def _transformBy(self, matrix: AffineTransformationLike, **kwargs: Any) -> None:
         r"""Transform the native guideline according to the given matrix.
 
         This is the environment implementation of :meth:`BaseGuideline.transformBy`.

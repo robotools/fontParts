@@ -3,11 +3,7 @@ from typing import Optional
 
 import defcon
 from fontParts.base import BaseAnchor
-from fontParts.base.annotations import (
-    RGBALike,
-    RGBA,
-    IntFloatType,
-)
+from fontParts.base.annotations import RGBALike, RGBA, IntFloatType
 from fontParts.fontshell.base import RBaseObject
 
 

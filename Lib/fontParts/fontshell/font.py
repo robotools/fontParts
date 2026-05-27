@@ -143,12 +143,7 @@ class RFont(RBaseObject, BaseFont):
 
     # new
 
-    def _newLayer(
-        self,
-        name: str,
-        color: RGBALike | None,
-        **kwargs: Any,
-    ) -> RLayer:
+    def _newLayer(self, name: str, color: RGBALike | None, **kwargs: Any) -> RLayer:
         layers = self.naked().layers
         layer = layers.newLayer(name)
         layer.color = color

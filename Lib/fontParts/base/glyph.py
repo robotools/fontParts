@@ -1075,9 +1075,7 @@ class BaseGlyph(
         normalizedOffset = normalizers.normalizeTransformationOffset(offset)
         self._appendGlyph(other, normalizedOffset)
 
-    def _appendGlyph(
-        self, other: BaseGlyph, offset: CoordinateLike
-    ) -> None:
+    def _appendGlyph(self, other: BaseGlyph, offset: CoordinateLike) -> None:
         """Append data from `other` to new objects in the native glyph.
 
         This is the environment implementation of :meth:`BaseGlyph.appendGlyph`.
@@ -1239,9 +1237,7 @@ class BaseGlyph(
         raise FontPartsError("The contour could not be found.")
 
     def appendContour(
-        self,
-        contour: BaseContour,
-        offset: CoordinateLike | None = None,
+        self, contour: BaseContour, offset: CoordinateLike | None = None
     ) -> BaseContour:
         """Append the given contour's data to the glyph.
 
@@ -1265,10 +1261,7 @@ class BaseGlyph(
         return self._appendContour(normalizedContour, normalizedOffset)
 
     def _appendContour(
-        self,
-        contour: BaseContour,
-        offset: CoordinateLike,
-        **kwargs: Any,
+        self, contour: BaseContour, offset: CoordinateLike, **kwargs: Any
     ) -> BaseContour:
         r"""Append the given contour's data to the native glyph.
 
@@ -2343,9 +2336,7 @@ class BaseGlyph(
     # Transformation
     # --------------
 
-    def _transformBy(
-        self, matrix: AffineTransformationLike, **kwargs: Any
-    ) -> None:
+    def _transformBy(self, matrix: AffineTransformationLike, **kwargs: Any) -> None:
         r"""Transform the glyph according to the given matrix.
 
         :param matrix: The :ref:`type-transformation` to apply.
@@ -3419,9 +3410,7 @@ class BaseGlyph(
             return None
         return Color(value)
 
-    def _set_base_markColor(
-        self, value: RGBALike | None
-    ) -> None:
+    def _set_base_markColor(self, value: RGBALike | None) -> None:
         if value is not None:
             value = normalizers.normalizeColor(value)
         self._set_markColor(value)
@@ -3445,9 +3434,7 @@ class BaseGlyph(
         """
         self.raiseNotImplementedError()
 
-    def _set_markColor(
-        self, value: RGBALike | None
-    ) -> None:
+    def _set_markColor(self, value: RGBALike | None) -> None:
         """Set the glyph's mark color.
 
         This is the environment implementation of

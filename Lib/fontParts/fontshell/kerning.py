@@ -26,7 +26,5 @@ class RKerning(RBaseObject, BaseKerning):
     def _delItem(self, key: str) -> None:
         del self.naked()[key]
 
-    def _find(
-        self, pair: KerningPairLike, default: int | float | None = 0
-    ) -> int:
+    def _find(self, pair: KerningPairLike, default: int | float | None = 0) -> int:
         return self.naked().find(pair, default)

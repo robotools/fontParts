@@ -840,9 +840,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
             value = Color(value)
         return value
 
-    def _set_base_color(
-        self, value: RGBALike | None
-    ) -> None:
+    def _set_base_color(self, value: RGBALike | None) -> None:
         if value is not None:
             value = normalizers.normalizeColor(value)
         self._set_color(value)
@@ -866,9 +864,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
         """
         self.raiseNotImplementedError()
 
-    def _set_color(
-        self, value: RGBALike | None, **kwargs: Any
-    ) -> None:
+    def _set_color(self, value: RGBALike | None, **kwargs: Any) -> None:
         r"""Get or set the color of the layer.
 
         This is the environment implementation of
