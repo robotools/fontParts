@@ -10,14 +10,7 @@ from fontTools.pens.pointPen import AbstractPointPen
 # Generic
 T = TypeVar("T")
 
-PairType = tuple[T, T]
-QuadrupleType = tuple[T, T, T, T]
-QuintupleType = tuple[T, T, T, T, T]
-SextupleType = tuple[T, T, T, T, T, T]
 CollectionType = list[T] | tuple[T, ...]
-PairCollectionType = list[T] | PairType[T]
-QuadrupleCollectionType = list[T] | QuadrupleType[T]
-SextupleCollectionType = list[T] | SextupleType[T]
 
 # Builtins
 IntFloatType = int | float
@@ -69,7 +62,7 @@ CharacterMappingType = dict[int, tuple[str, ...]]
 ReverseComponentMappingType = dict[str, tuple[str, ...]]
 
 # Kerning
-KerningDictType = dict[PairType[str], PairType[str]]
+KerningDictType = dict[KerningPair, KerningPair]
 
 # Lib
 LibValueType = (
@@ -103,9 +96,6 @@ class LibValue:
 
     """
 
-
-# Transformation
-TransformationType = IntFloatType | list[IntFloatType] | PairType[IntFloatType]
 
 # Interpolation
 InterpolatableType = TypeVar("InterpolatableType", bound="Interpolatable")
