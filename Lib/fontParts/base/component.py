@@ -19,8 +19,10 @@ from fontParts.base.base import (
 from fontParts.base.compatibility import ComponentCompatibilityReporter
 from fontParts.base.deprecated import DeprecatedComponent, RemovedComponent
 from fontParts.base.annotations import (
-    PairType,
+    Coordinate,
+    CoordinateLike,
     PairCollectionType,
+    PairType,
     QuadrupleType,
     SextupleType,
     SextupleCollectionType,
@@ -293,16 +295,16 @@ class BaseComponent(
         """,
     )
 
-    def _get_base_offset(self) -> PairType[IntFloatType]:
+    def _get_base_offset(self) -> Coordinate:
         value = self._get_offset()
         value = normalizers.normalizeTransformationOffset(value)
         return value
 
-    def _set_base_offset(self, value: PairCollectionType[IntFloatType]) -> None:
+    def _set_base_offset(self, value: CoordinateLike) -> None:
         value = normalizers.normalizeTransformationOffset(value)
         self._set_offset(value)
 
-    def _get_offset(self) -> PairType[IntFloatType]:
+    def _get_offset(self) -> Coordinate:
         """Get the native component's offset.
 
         This is the environment implementation of the :attr:`BaseComponent.offset`
@@ -320,7 +322,7 @@ class BaseComponent(
         sx, sxy, syx, sy, ox, oy = self.transformation
         return ox, oy
 
-    def _set_offset(self, value: PairCollectionType[IntFloatType]) -> None:
+    def _set_offset(self, value: CoordinateLike) -> None:
         """Set the native component's offset.
 
         This is the environment implementation of the :attr:`BaseComponent.offset`
@@ -680,7 +682,7 @@ class BaseComponent(
     # Data Queries
     # ------------
 
-    def pointInside(self, point: PairCollectionType[IntFloatType]) -> bool:
+    def pointInside(self, point: CoordinateLike) -> bool:
         """Check if `point` lies inside the filled area of the component.
 
         :param point: The point to check as a :ref:`type-coordinate`.
@@ -696,7 +698,7 @@ class BaseComponent(
         point = normalizers.normalizeCoordinateTuple(point)
         return self._pointInside(point)
 
-    def _pointInside(self, point: PairCollectionType[IntFloatType]) -> bool:
+    def _pointInside(self, point: CoordinateLike) -> bool:
         """Check if `point` lies inside the filled area of the native component.
 
         This is the environment implementation of :meth:`BaseComponent.pointInside`.

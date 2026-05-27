@@ -4,8 +4,9 @@ import os
 
 import defcon
 from fontParts.base.annotations import (
+    Coordinate,
+    CoordinateLike,
     CollectionType,
-    PairCollectionType,
     QuadrupleCollectionType,
     IntFloatType,
 )
@@ -181,7 +182,7 @@ class RFont(RBaseObject, BaseFont):
 
     def _appendGuideline(
         self,
-        position: PairCollectionType[IntFloatType],
+        position: CoordinateLike,
         angle: float | None,
         name: str | None = None,
         color: QuadrupleCollectionType[IntFloatType] | None = None,

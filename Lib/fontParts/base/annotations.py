@@ -21,6 +21,10 @@ SextupleCollectionType = list[T] | SextupleType[T]
 # Builtins
 IntFloatType = int | float
 
+# point / offset / anchor (bPoints)
+Coordinate = tuple[IntFloatType, IntFloatType]
+CoordinateLike = list[IntFloatType] | Coordinate
+
 # Compatibility
 DiffType = list[tuple[int, str | None, str | None]]
 

@@ -16,8 +16,9 @@ from fontParts.base import normalizers
 from fontParts.base.compatibility import ContourCompatibilityReporter
 from fontParts.base.deprecated import DeprecatedContour, RemovedContour
 from fontParts.base.annotations import (
+    Coordinate,
+    CoordinateLike,
     QuadrupleType,
-    PairCollectionType,
     CollectionType,
     SextupleCollectionType,
     IntFloatType,
@@ -34,7 +35,7 @@ if TYPE_CHECKING:
     from fontParts.base.font import BaseFont
 
 BaseContourType = TypeVar("BaseContourType", bound="BaseContour")
-PointCollectionType = CollectionType[PairCollectionType[IntFloatType]]
+PointCollectionType = CollectionType[CoordinateLike]
 
 
 class BaseContour(
@@ -685,7 +686,7 @@ class BaseContour(
     # Point and Contour Inside
     # ------------------------
 
-    def pointInside(self, point: PairCollectionType[IntFloatType]) -> bool:
+    def pointInside(self, point: CoordinateLike) -> bool:
         """Check if `point` is within the filled area of the contour.
 
         :param point: The point to check as a :ref:`type-coordinate`.
@@ -701,7 +702,7 @@ class BaseContour(
         point = normalizers.normalizeCoordinateTuple(point)
         return self._pointInside(point)
 
-    def _pointInside(self, point: PairCollectionType[IntFloatType]) -> bool:
+    def _pointInside(self, point: CoordinateLike) -> bool:
         """Check if `point` is within the filled area of the native contour.
 
          This is the environment implementation of :meth:`BaseContour.pointInside`.
@@ -1283,9 +1284,9 @@ class BaseContour(
     def appendBPoint(
         self,
         type: str | None = None,
-        anchor: PairCollectionType[IntFloatType] | None = None,
-        bcpIn: PairCollectionType[IntFloatType] | None = None,
-        bcpOut: PairCollectionType[IntFloatType] | None = None,
+        anchor: CoordinateLike | None = None,
+        bcpIn: CoordinateLike | None = None,
+        bcpOut: CoordinateLike | None = None,
         bPoint: BaseBPoint | None = None,
     ) -> None:
         """Append the given bPoint to the contour.
@@ -1331,9 +1332,9 @@ class BaseContour(
     def _appendBPoint(
         self,
         type: str,
-        anchor: PairCollectionType[IntFloatType],
-        bcpIn: PairCollectionType[IntFloatType],
-        bcpOut: PairCollectionType[IntFloatType],
+        anchor: CoordinateLike,
+        bcpIn: CoordinateLike,
+        bcpOut: CoordinateLike,
         **kwargs: Any,
     ) -> None:
         r"""Append the given bPoint to the native contour.
@@ -1365,9 +1366,9 @@ class BaseContour(
         self,
         index: int,
         type: str | None = None,
-        anchor: PairCollectionType[IntFloatType] | None = None,
-        bcpIn: PairCollectionType[IntFloatType] | None = None,
-        bcpOut: PairCollectionType[IntFloatType] | None = None,
+        anchor: CoordinateLike | None = None,
+        bcpIn: CoordinateLike | None = None,
+        bcpOut: CoordinateLike | None = None,
         bPoint: BaseBPoint | None = None,
     ) -> None:
         """Insert the given bPoint into the contour.
@@ -1421,9 +1422,9 @@ class BaseContour(
         self,
         index: int,
         type: str,
-        anchor: PairCollectionType[IntFloatType],
-        bcpIn: PairCollectionType[IntFloatType],
-        bcpOut: PairCollectionType[IntFloatType],
+        anchor: CoordinateLike,
+        bcpIn: CoordinateLike,
+        bcpOut: CoordinateLike,
         **kwargs: Any,
     ) -> None:
         r"""Insert the given bPoint into the native contour.
@@ -1604,7 +1605,7 @@ class BaseContour(
 
     def appendPoint(
         self,
-        position: PairCollectionType[IntFloatType] | None = None,
+        position: CoordinateLike | None = None,
         type: str = "line",
         smooth: bool = False,
         name: str | None = None,
@@ -1652,7 +1653,7 @@ class BaseContour(
     def insertPoint(
         self,
         index: int,
-        position: PairCollectionType[IntFloatType] | None = None,
+        position: CoordinateLike | None = None,
         type: str = "line",
         smooth: bool = False,
         name: str | None = None,
@@ -1714,7 +1715,7 @@ class BaseContour(
     def _insertPoint(
         self,
         index: int,
-        position: PairCollectionType[IntFloatType],
+        position: CoordinateLike,
         type: str,
         smooth: bool,
         name: str | None,

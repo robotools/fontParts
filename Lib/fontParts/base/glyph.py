@@ -28,10 +28,11 @@ from fontParts.base.compatibility import GlyphCompatibilityReporter
 from fontParts.base.color import Color
 from fontParts.base.deprecated import DeprecatedGlyph, RemovedGlyph
 from fontParts.base.annotations import (
-    PairType,
+    Coordinate,
+    CoordinateLike,
+    PairCollectionType,
     QuadrupleType,
     CollectionType,
-    PairCollectionType,
     QuadrupleCollectionType,
     SextupleCollectionType,
     IntFloatType,
@@ -1044,7 +1045,7 @@ class BaseGlyph(
             self.clearImage()
 
     def appendGlyph(
-        self, other: BaseGlyph, offset: PairCollectionType[IntFloatType] | None = None
+        self, other: BaseGlyph, offset: CoordinateLike | None = None
     ) -> None:
         """Append data from `other` to new objects in the glyph.
 
@@ -1073,7 +1074,7 @@ class BaseGlyph(
         self._appendGlyph(other, normalizedOffset)
 
     def _appendGlyph(
-        self, other: BaseGlyph, offset: PairCollectionType[IntFloatType]
+        self, other: BaseGlyph, offset: CoordinateLike
     ) -> None:
         """Append data from `other` to new objects in the native glyph.
 
@@ -1238,7 +1239,7 @@ class BaseGlyph(
     def appendContour(
         self,
         contour: BaseContour,
-        offset: PairCollectionType[IntFloatType] | None = None,
+        offset: CoordinateLike | None = None,
     ) -> BaseContour:
         """Append the given contour's data to the glyph.
 
@@ -1264,7 +1265,7 @@ class BaseGlyph(
     def _appendContour(
         self,
         contour: BaseContour,
-        offset: PairCollectionType[IntFloatType],
+        offset: CoordinateLike,
         **kwargs: Any,
     ) -> BaseContour:
         r"""Append the given contour's data to the native glyph.
@@ -1479,7 +1480,7 @@ class BaseGlyph(
     def appendComponent(
         self,
         baseGlyph: str | None = None,
-        offset: PairCollectionType[IntFloatType] | None = None,
+        offset: CoordinateLike | None = None,
         scale: TransformationType | None = None,
         component: BaseComponent | None = None,
     ) -> BaseComponent:
@@ -1756,7 +1757,7 @@ class BaseGlyph(
     def appendAnchor(
         self,
         name: str | None = None,
-        position: PairCollectionType[IntFloatType] | None = None,
+        position: CoordinateLike | None = None,
         color: QuadrupleCollectionType[IntFloatType] | None = None,
         anchor: BaseAnchor | None = None,
     ) -> BaseAnchor:
@@ -1812,7 +1813,7 @@ class BaseGlyph(
     def _appendAnchor(
         self,  # type: ignore[return]
         name: str,
-        position: PairCollectionType[IntFloatType] | None,
+        position: CoordinateLike | None,
         color: QuadrupleCollectionType[IntFloatType] | None,
         identifier: str | None,
         **kwargs: Any,
@@ -1999,7 +2000,7 @@ class BaseGlyph(
 
     def appendGuideline(
         self,
-        position: PairCollectionType[IntFloatType] | None = None,
+        position: CoordinateLike | None = None,
         angle: IntFloatType | None = None,
         name: str | None = None,
         color: QuadrupleCollectionType[IntFloatType] | None = None,
@@ -2070,7 +2071,7 @@ class BaseGlyph(
 
     def _appendGuideline(
         self,  # type: ignore[return]
-        position: PairCollectionType[IntFloatType],
+        position: CoordinateLike,
         angle: IntFloatType,
         name: str | None,
         color: QuadrupleCollectionType[IntFloatType] | None,
@@ -2365,7 +2366,7 @@ class BaseGlyph(
     def scaleBy(
         self,
         value: TransformationType,
-        origin: PairCollectionType[IntFloatType] | None = None,
+        origin: CoordinateLike | None = None,
         width: bool = False,
         height: bool = False,
     ) -> None:
@@ -2947,7 +2948,7 @@ class BaseGlyph(
     # Data Queries
     # ------------
 
-    def pointInside(self, point: PairCollectionType[IntFloatType]) -> bool:
+    def pointInside(self, point: CoordinateLike) -> bool:
         """Check if `point` lies inside the filled area of the glyph.
 
         :param point: The point to check as a :ref:`type-coordinate`.
@@ -2963,7 +2964,7 @@ class BaseGlyph(
         point = normalizers.normalizeCoordinateTuple(point)
         return self._pointInside(point)
 
-    def _pointInside(self, point: PairCollectionType[IntFloatType]) -> bool:
+    def _pointInside(self, point: CoordinateLike) -> bool:
         """Check if `point` lies inside the filled area of the native glyph.
 
         This is the environment implementation of :meth:`BaseGlyph.pointInside`.
@@ -3269,7 +3270,7 @@ class BaseGlyph(
         path: str | None = None,
         data: bytes | None = None,
         scale: TransformationType | None = None,
-        position: PairCollectionType[IntFloatType] | None = None,
+        position: CoordinateLike | None = None,
         color: QuadrupleCollectionType[IntFloatType] | None = None,
     ) -> BaseImage:
         """Set the image in the glyph.

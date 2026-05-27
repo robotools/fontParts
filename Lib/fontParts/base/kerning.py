@@ -6,6 +6,8 @@ from typing import TYPE_CHECKING, Dict, List, Optional, TypeVar, Union
 
 from fontParts.base import normalizers
 from fontParts.base.annotations import (
+    Coordinate,
+    CoordinateLike,
     IntFloatType,
     PairCollectionType,
     PairType,

@@ -14,8 +14,10 @@ from fontParts.base import normalizers
 from fontParts.base.color import Color
 from fontParts.base.deprecated import DeprecatedImage, RemovedImage
 from fontParts.base.annotations import (
-    PairType,
+    Coordinate,
+    CoordinateLike,
     PairCollectionType,
+    PairType,
     QuadrupleType,
     QuadrupleCollectionType,
     SextupleType,
@@ -229,16 +231,16 @@ class BaseImage(
         """,
     )
 
-    def _get_base_offset(self) -> PairType[IntFloatType]:
+    def _get_base_offset(self) -> Coordinate:
         value = self._get_offset()
         value = normalizers.normalizeTransformationOffset(value)
         return value
 
-    def _set_base_offset(self, value: PairCollectionType[IntFloatType]) -> None:
+    def _set_base_offset(self, value: CoordinateLike) -> None:
         value = normalizers.normalizeTransformationOffset(value)
         self._set_offset(value)
 
-    def _get_offset(self) -> PairType[IntFloatType]:
+    def _get_offset(self) -> Coordinate:
         """Get the native image's offset.
 
         This is the environment implementation of the :attr:`BaseImage.offset`
@@ -256,7 +258,7 @@ class BaseImage(
         sx, sxy, syx, sy, ox, oy = self.transformation
         return (ox, oy)
 
-    def _set_offset(self, value: PairCollectionType[IntFloatType]) -> None:
+    def _set_offset(self, value: CoordinateLike) -> None:
         """Set the native image's offset.
 
         This is the environment implementation of the :attr:`BaseImage.offset`

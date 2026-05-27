@@ -11,11 +11,12 @@ from fontParts.base import normalizers
 from fontParts.base.compatibility import FontCompatibilityReporter
 from fontParts.base.deprecated import DeprecatedFont, RemovedFont
 from fontParts.base.annotations import (
+    Coordinate,
+    CoordinateLike,
     CharacterMappingType,
     CollectionType,
     IntFloatType,
     QuadrupleCollectionType,
-    PairCollectionType,
     TransformationType,
     KerningDictType,
     ReverseComponentMappingType,
@@ -1761,7 +1762,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
 
     def appendGuideline(
         self,
-        position: PairCollectionType[IntFloatType] | None = None,
+        position: CoordinateLike | None = None,
         angle: IntFloatType | None = None,
         name: str | None = None,
         color: QuadrupleCollectionType[IntFloatType] | None = None,
@@ -1832,7 +1833,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
 
     def _appendGuideline(  # type: ignore[return]
         self,
-        position: PairCollectionType[IntFloatType],
+        position: CoordinateLike,
         angle: float | None,
         name: str | None,
         color: QuadrupleCollectionType[IntFloatType] | None,

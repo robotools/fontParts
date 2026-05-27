@@ -5,8 +5,9 @@ import defcon
 import booleanOperations
 from fontParts.base import BaseGlyph
 from fontParts.base.annotations import (
+    Coordinate,
+    CoordinateLike,
     CollectionType,
-    PairCollectionType,
     QuadrupleType,
     QuadrupleCollectionType,
     SextupleCollectionType,
@@ -195,7 +196,7 @@ class RGlyph(RBaseObject, BaseGlyph):
     def _appendAnchor(
         self,
         name: str,
-        position: PairCollectionType[IntFloatType] | None = None,
+        position: CoordinateLike | None = None,
         color: QuadrupleCollectionType[IntFloatType] | None = None,
         identifier: str | None = None,
         **kwargs: Any,
@@ -231,7 +232,7 @@ class RGlyph(RBaseObject, BaseGlyph):
 
     def _appendGuideline(
         self,
-        position: PairCollectionType[IntFloatType] | None,
+        position: CoordinateLike | None,
         angle: float,
         name: str | None = None,
         color: QuadrupleCollectionType[IntFloatType] | None = None,

@@ -7,6 +7,8 @@ from pathlib import Path
 import datetime
 
 from fontParts.base.annotations import (
+    Coordinate,
+    CoordinateLike,
     T,
     PairType,
     QuadrupleType,
@@ -991,8 +993,8 @@ def normalizeY(value: IntFloatType) -> IntFloatType:
 
 
 def normalizeCoordinateTuple(
-    value: PairCollectionType[IntFloatType],
-) -> PairType[IntFloatType]:
+    value: CoordinateLike,
+) -> Coordinate:
     """Normalize a coordinate tuple.
 
     :param value: The coordinate tuple to normalize as a :class:`list`
@@ -1253,8 +1255,8 @@ def normalizeTransformationMatrix(
 
 
 def normalizeTransformationOffset(
-    value: PairCollectionType[IntFloatType],
-) -> PairType[IntFloatType]:
+    value: CoordinateLike,
+) -> Coordinate:
     """Normalize a transformation offset.
 
     :param value: The transformation offset to normalize as a :class:`list`

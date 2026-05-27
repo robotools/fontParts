@@ -22,7 +22,8 @@ from fontTools.misc import transform
 from fontParts.base.errors import FontPartsError
 from fontParts.base import normalizers
 from fontParts.base.annotations import (
-    PairType,
+    Coordinate,
+    CoordinateLike,
     PairCollectionType,
     SextupleCollectionType,
     IntFloatType,
@@ -996,7 +997,7 @@ class TransformationMixin(ABC):
     def transformBy(
         self,
         matrix: SextupleCollectionType[IntFloatType],
-        origin: PairCollectionType[IntFloatType] | None = None,
+        origin: CoordinateLike | None = None,
     ) -> None:
         """Transform the object according to the given matrix.
 
@@ -1045,7 +1046,7 @@ class TransformationMixin(ABC):
         """
         self.raiseNotImplementedError()
 
-    def moveBy(self, value: PairCollectionType[IntFloatType]) -> None:
+    def moveBy(self, value: CoordinateLike) -> None:
         """Move the object according to the given coordinates.
 
         :param value: The x and y values to move the object by as
@@ -1059,7 +1060,7 @@ class TransformationMixin(ABC):
         value = normalizers.normalizeTransformationOffset(value)
         self._moveBy(value)
 
-    def _moveBy(self, value: PairCollectionType[IntFloatType], **kwargs: Any) -> None:
+    def _moveBy(self, value: CoordinateLike, **kwargs: Any) -> None:
         r"""Move the native object according to the given coordinates.
 
         This is the environment implementation of :meth:`BaseObject.moveBy`.
@@ -1081,7 +1082,7 @@ class TransformationMixin(ABC):
     def scaleBy(
         self,
         value: TransformationType,
-        origin: PairCollectionType[IntFloatType] | None = None,
+        origin: CoordinateLike | None = None,
     ) -> None:
         """Scale the object according to the given values.
 
@@ -1108,7 +1109,7 @@ class TransformationMixin(ABC):
     def _scaleBy(
         self,
         value: PairCollectionType[IntFloatType],
-        origin: PairCollectionType[IntFloatType],
+        origin: CoordinateLike,
         **kwargs: Any,
     ) -> None:
         r"""Scale the native object according to the given values.
@@ -1137,7 +1138,7 @@ class TransformationMixin(ABC):
     def rotateBy(
         self,
         value: IntFloatType,
-        origin: PairCollectionType[IntFloatType] | None = None,
+        origin: CoordinateLike | None = None,
     ) -> None:
         """Rotate the object by the specified value.
 
@@ -1160,7 +1161,7 @@ class TransformationMixin(ABC):
         self._rotateBy(value, origin=origin)
 
     def _rotateBy(
-        self, value: float, origin: PairCollectionType[IntFloatType], **kwargs: Any
+        self, value: float, origin: CoordinateLike, **kwargs: Any
     ) -> None:
         r"""Rotate the native object by the specified value.
 
@@ -1186,7 +1187,7 @@ class TransformationMixin(ABC):
     def skewBy(
         self,
         value: TransformationType,
-        origin: PairCollectionType[IntFloatType] | None = None,
+        origin: CoordinateLike | None = None,
     ) -> None:
         """Skew the object by the given value.
 
@@ -1213,7 +1214,7 @@ class TransformationMixin(ABC):
     def _skewBy(
         self,
         value: PairCollectionType[IntFloatType],
-        origin: PairCollectionType[IntFloatType],
+        origin: CoordinateLike,
         **kwargs: Any,
     ) -> None:
         r"""Skew the native object by the given value.
@@ -1424,16 +1425,16 @@ class PointPositionMixin(ABC):
         """,
     )
 
-    def _get_base_position(self) -> PairType[IntFloatType]:
+    def _get_base_position(self) -> Coordinate:
         value = self._get_position()
         value = normalizers.normalizeCoordinateTuple(value)
         return value
 
-    def _set_base_position(self, value: PairCollectionType[IntFloatType]) -> None:
+    def _set_base_position(self, value: CoordinateLike) -> None:
         value = normalizers.normalizeCoordinateTuple(value)
         self._set_position(value)
 
-    def _get_position(self) -> PairType[IntFloatType]:
+    def _get_position(self) -> Coordinate:
         """Get the point position of the object.
 
         This is the environment implementation of
@@ -1450,7 +1451,7 @@ class PointPositionMixin(ABC):
         """
         return (self.x, self.y)
 
-    def _set_position(self, value: PairCollectionType[IntFloatType]) -> None:
+    def _set_position(self, value: CoordinateLike) -> None:
         """Set the point position of the object.
 
         This is the environment implementation of
