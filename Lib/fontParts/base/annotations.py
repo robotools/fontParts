@@ -34,6 +34,10 @@ BoundingBoxLike = list[IntFloatType] | BoundingBox
 RGBA = tuple[float, float, float, float]
 RGBALike = list[IntFloatType] | RGBA
 
+# Affine transformation matrix — (xx, xy, yx, yy, dx, dy).
+AffineTransformation = tuple[float, float, float, float, float, float]
+AffineTransformationLike = list[IntFloatType] | AffineTransformation
+
 # Compatibility
 DiffType = list[tuple[int, str | None, str | None]]
 

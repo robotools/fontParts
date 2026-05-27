@@ -15,8 +15,8 @@ from fontParts.base.base import (
 from fontParts.base import normalizers
 from fontParts.base.deprecated import DeprecatedPoint, RemovedPoint
 from fontParts.base.annotations import (
+    AffineTransformationLike,
     QuintupleType,
-    SextupleCollectionType,
     IntFloatType,
 )
 
@@ -565,7 +565,7 @@ class BasePoint(
     # --------------
 
     def _transformBy(
-        self, matrix: SextupleCollectionType[IntFloatType], **kwargs: Any
+        self, matrix: AffineTransformationLike, **kwargs: Any
     ) -> None:
         r"""Transform the native point.
 

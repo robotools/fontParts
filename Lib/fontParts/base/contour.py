@@ -16,11 +16,11 @@ from fontParts.base import normalizers
 from fontParts.base.compatibility import ContourCompatibilityReporter
 from fontParts.base.deprecated import DeprecatedContour, RemovedContour
 from fontParts.base.annotations import (
+    AffineTransformationLike,
     BoundingBox,
     Coordinate,
     CoordinateLike,
     CollectionType,
-    SextupleCollectionType,
     IntFloatType,
     PenType,
     PointPenType,
@@ -455,7 +455,7 @@ class BaseContour(
     # --------------
 
     def _transformBy(
-        self, matrix: SextupleCollectionType[IntFloatType], **kwargs: Any
+        self, matrix: AffineTransformationLike, **kwargs: Any
     ) -> None:
         r"""Transform the contour according to the given matrix.
 

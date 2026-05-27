@@ -18,9 +18,9 @@ from fontParts.base.compatibility import AnchorCompatibilityReporter
 from fontParts.base.color import Color
 from fontParts.base.deprecated import DeprecatedAnchor, RemovedAnchor
 from fontParts.base.annotations import (
+    AffineTransformationLike,
     RGBALike,
     RGBA,
-    SextupleCollectionType,
     IntFloatType,
 )
 
@@ -473,7 +473,7 @@ class BaseAnchor(
     # --------------
 
     def _transformBy(
-        self, matrix: SextupleCollectionType[IntFloatType], **kwargs: Any
+        self, matrix: AffineTransformationLike, **kwargs: Any
     ) -> None:
         r"""Transform the native anchor according to the given matrix.
 

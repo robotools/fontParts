@@ -19,13 +19,13 @@ from fontParts.base.base import (
 from fontParts.base.compatibility import ComponentCompatibilityReporter
 from fontParts.base.deprecated import DeprecatedComponent, RemovedComponent
 from fontParts.base.annotations import (
+    AffineTransformationLike,
+    AffineTransformation,
     BoundingBox,
     Coordinate,
     CoordinateLike,
     PairCollectionType,
     PairType,
-    SextupleType,
-    SextupleCollectionType,
     IntFloatType,
     PenType,
     PointPenType,
@@ -234,18 +234,18 @@ class BaseComponent(
         """,
     )
 
-    def _get_base_transformation(self) -> SextupleType[float]:
+    def _get_base_transformation(self) -> AffineTransformation:
         value = self._get_transformation()
         value = normalizers.normalizeTransformationMatrix(value)
         return value
 
     def _set_base_transformation(
-        self, value: SextupleCollectionType[IntFloatType]
+        self, value: AffineTransformationLike
     ) -> None:
         value = normalizers.normalizeTransformationMatrix(value)
         self._set_transformation(value)
 
-    def _get_transformation(self) -> SextupleType[float]:
+    def _get_transformation(self) -> AffineTransformation:
         """Get the native component's transformation matrix.
 
         This is the environment implementation of the
@@ -264,7 +264,7 @@ class BaseComponent(
         """
         self.raiseNotImplementedError()
 
-    def _set_transformation(self, value: SextupleCollectionType[IntFloatType]) -> None:
+    def _set_transformation(self, value: AffineTransformationLike) -> None:
         """Set the native component's transformation matrix.
 
         This is the environment implementation of the
@@ -557,7 +557,7 @@ class BaseComponent(
     # --------------
 
     def _transformBy(
-        self, matrix: SextupleCollectionType[IntFloatType], **kwargs: Any
+        self, matrix: AffineTransformationLike, **kwargs: Any
     ) -> None:
         r"""Transform the component according to the given matrix.
 

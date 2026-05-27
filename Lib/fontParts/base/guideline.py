@@ -18,9 +18,9 @@ from fontParts.base.compatibility import GuidelineCompatibilityReporter
 from fontParts.base.color import Color
 from fontParts.base.deprecated import DeprecatedGuideline, RemovedGuideline
 from fontParts.base.annotations import (
+    AffineTransformationLike,
     RGBALike,
     RGBA,
-    SextupleCollectionType,
     IntFloatType,
 )
 
@@ -587,7 +587,7 @@ class BaseGuideline(
     # --------------
 
     def _transformBy(
-        self, matrix: SextupleCollectionType[IntFloatType], **kwargs: Any
+        self, matrix: AffineTransformationLike, **kwargs: Any
     ) -> None:
         r"""Transform the native guideline according to the given matrix.
 

@@ -7,6 +7,8 @@ from pathlib import Path
 import datetime
 
 from fontParts.base.annotations import (
+    AffineTransformationLike,
+    AffineTransformation,
     BoundingBox,
     BoundingBoxLike,
     Coordinate,
@@ -15,10 +17,8 @@ from fontParts.base.annotations import (
     RGBALike,
     T,
     PairType,
-    SextupleType,
     CollectionType,
     PairCollectionType,
-    SextupleCollectionType,
     IntFloatType,
     TransformationType,
     LibValueType,
@@ -1225,8 +1225,8 @@ def normalizeInterpolationFactor(value: TransformationType) -> PairType[float]:
 
 
 def normalizeTransformationMatrix(
-    value: SextupleCollectionType[IntFloatType],
-) -> SextupleType[float]:
+    value: AffineTransformationLike,
+) -> AffineTransformation:
     """Normalize a transformation matrix.
 
     :param value: The transformation matrix to normalize as a :class:`list`

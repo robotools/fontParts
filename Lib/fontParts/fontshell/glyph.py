@@ -5,13 +5,13 @@ import defcon
 import booleanOperations
 from fontParts.base import BaseGlyph
 from fontParts.base.annotations import (
+    AffineTransformationLike,
     RGBALike,
     RGBA,
     BoundingBox,
     Coordinate,
     CoordinateLike,
     CollectionType,
-    SextupleCollectionType,
     IntFloatType,
 )
 from fontParts.base.errors import FontPartsError
@@ -298,7 +298,7 @@ class RGlyph(RBaseObject, BaseGlyph):
     def _addImage(
         self,
         data: bytes,
-        transformation: SextupleCollectionType[IntFloatType] | None = None,
+        transformation: AffineTransformationLike | None = None,
         color: RGBALike | None = None,
     ) -> RImage:
         image = self.naked().image

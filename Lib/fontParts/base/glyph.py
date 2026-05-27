@@ -28,6 +28,7 @@ from fontParts.base.compatibility import GlyphCompatibilityReporter
 from fontParts.base.color import Color
 from fontParts.base.deprecated import DeprecatedGlyph, RemovedGlyph
 from fontParts.base.annotations import (
+    AffineTransformationLike,
     BoundingBox,
     Coordinate,
     CoordinateLike,
@@ -35,7 +36,6 @@ from fontParts.base.annotations import (
     RGBA,
     RGBALike,
     CollectionType,
-    SextupleCollectionType,
     IntFloatType,
     TransformationType,
     DiffType,
@@ -1559,7 +1559,7 @@ class BaseGlyph(
     def _appendComponent(
         self,
         baseGlyph: str,
-        transformation: SextupleCollectionType[IntFloatType] | None,
+        transformation: AffineTransformationLike | None,
         identifier: str | None,
         **kwargs: Any,
     ) -> BaseComponent:
@@ -2343,7 +2343,7 @@ class BaseGlyph(
     # --------------
 
     def _transformBy(
-        self, matrix: SextupleCollectionType[IntFloatType], **kwargs: Any
+        self, matrix: AffineTransformationLike, **kwargs: Any
     ) -> None:
         r"""Transform the glyph according to the given matrix.
 
@@ -3345,7 +3345,7 @@ class BaseGlyph(
     def _addImage(
         self,  # type: ignore[return]
         data: bytes,
-        transformation: SextupleCollectionType[IntFloatType] | None,
+        transformation: AffineTransformationLike | None,
         color: RGBALike | None,
     ) -> BaseImage:
         """Set the image in the native glyph.

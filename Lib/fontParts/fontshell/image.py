@@ -5,10 +5,10 @@ import defcon
 from fontTools.ufoLib.validators import pngValidator
 from fontParts.base import BaseImage, FontPartsError
 from fontParts.base.annotations import (
+    AffineTransformationLike,
+    AffineTransformation,
     RGBALike,
     RGBA,
-    SextupleType,
-    SextupleCollectionType,
     IntFloatType,
 )
 from fontParts.fontshell.base import RBaseObject
@@ -25,10 +25,10 @@ class RImage(RBaseObject, BaseImage):
 
     # Transformation
 
-    def _get_transformation(self) -> SextupleType[float]:
+    def _get_transformation(self) -> AffineTransformation:
         return self.naked().transformation
 
-    def _set_transformation(self, value: SextupleCollectionType[float]) -> None:
+    def _set_transformation(self, value: AffineTransformationLike) -> None:
         self.naked().transformation = value
 
     # Color

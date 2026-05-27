@@ -22,10 +22,10 @@ from fontTools.misc import transform
 from fontParts.base.errors import FontPartsError
 from fontParts.base import normalizers
 from fontParts.base.annotations import (
+    AffineTransformationLike,
     Coordinate,
     CoordinateLike,
     PairCollectionType,
-    SextupleCollectionType,
     IntFloatType,
     TransformationType,
     InterpolatableType,
@@ -996,7 +996,7 @@ class TransformationMixin(ABC):
 
     def transformBy(
         self,
-        matrix: SextupleCollectionType[IntFloatType],
+        matrix: AffineTransformationLike,
         origin: CoordinateLike | None = None,
     ) -> None:
         """Transform the object according to the given matrix.
@@ -1026,7 +1026,7 @@ class TransformationMixin(ABC):
         self._transformBy(matrix)
 
     def _transformBy(
-        self, matrix: SextupleCollectionType[IntFloatType], **kwargs: Any
+        self, matrix: AffineTransformationLike, **kwargs: Any
     ) -> None:
         r"""Transform the native object according to the given matrix.
 

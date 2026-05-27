@@ -15,9 +15,9 @@ from fontParts.base.errors import FontPartsError
 from fontParts.base import normalizers
 from fontParts.base.deprecated import DeprecatedBPoint, RemovedBPoint
 from fontParts.base.annotations import (
+    AffineTransformationLike,
     Coordinate,
     CoordinateLike,
-    SextupleCollectionType,
     IntFloatType,
 )
 
@@ -617,7 +617,7 @@ class BaseBPoint(
     # --------------
 
     def _transformBy(
-        self, matrix: SextupleCollectionType[IntFloatType], **kwargs: Any
+        self, matrix: AffineTransformationLike, **kwargs: Any
     ) -> None:
         r"""Transform the native bPoint.
 

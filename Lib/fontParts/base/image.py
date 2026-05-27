@@ -14,14 +14,14 @@ from fontParts.base import normalizers
 from fontParts.base.color import Color
 from fontParts.base.deprecated import DeprecatedImage, RemovedImage
 from fontParts.base.annotations import (
+    AffineTransformationLike,
+    AffineTransformation,
     Coordinate,
     CoordinateLike,
     PairCollectionType,
     PairType,
     RGBA,
     RGBALike,
-    SextupleType,
-    SextupleCollectionType,
     IntFloatType,
     TransformationType,
 )
@@ -166,18 +166,18 @@ class BaseImage(
         """,
     )
 
-    def _get_base_transformation(self) -> SextupleType[float]:
+    def _get_base_transformation(self) -> AffineTransformation:
         value = self._get_transformation()
         value = normalizers.normalizeTransformationMatrix(value)
         return value
 
     def _set_base_transformation(
-        self, value: SextupleCollectionType[IntFloatType]
+        self, value: AffineTransformationLike
     ) -> None:
         value = normalizers.normalizeTransformationMatrix(value)
         self._set_transformation(value)
 
-    def _get_transformation(self) -> SextupleType[float]:
+    def _get_transformation(self) -> AffineTransformation:
         """Get the native image's transformation matrix.
 
         This is the environment implementation of the
@@ -196,7 +196,7 @@ class BaseImage(
         """
         self.raiseNotImplementedError()
 
-    def _set_transformation(self, value: SextupleCollectionType[IntFloatType]) -> None:
+    def _set_transformation(self, value: AffineTransformationLike) -> None:
         """Set the native image's transformation matrix.
 
         This is the environment implementation of the
@@ -473,7 +473,7 @@ class BaseImage(
     # --------------
 
     def _transformBy(
-        self, matrix: SextupleCollectionType[IntFloatType], **kwargs: Any
+        self, matrix: AffineTransformationLike, **kwargs: Any
     ) -> None:
         r"""Transform the native image.
 
