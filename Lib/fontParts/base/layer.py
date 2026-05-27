@@ -20,6 +20,7 @@ from fontParts.base.annotations import (
     CharacterMappingType,
     CollectionType,
     QuadrupleCollectionType,
+    QuadrupleType,
     TransformationType,
     ReverseComponentMappingType,
     IntFloatType,
@@ -845,7 +846,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
             value = normalizers.normalizeColor(value)
         self._set_color(value)
 
-    def _get_color(self) -> QuadrupleCollectionType[IntFloatType] | None:  # type: ignore[return]
+    def _get_color(self) -> QuadrupleType[float] | None:  # type: ignore[return]
         """Get the color of the layer.
 
         This is the environment implementation of
