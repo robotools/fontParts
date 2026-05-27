@@ -41,7 +41,7 @@ Contributing with Issues
 
 There are three ways you can help with `issues <https://github.com/robofab-developers/fontParts/issues>`_.
 
-#. **Opening an issue for discussion.** Have you hit a bug? Does something not make sense? Is there a feature you would like so see? Open an `issue <https://github.com/robofab-developers/fontParts/issues>`_!
+#. **Opening an issue for discussion.** Have you hit a bug? Does something not make sense? Is there a feature you would like so see? Open an `issue <https://github.com/robotools/fontParts/issues/new>`_!
 
 #. **Helping out figuring out issues.** If you have experience with an issue, you can contribute further test cases or domain knowledge to the discussion to help move the issue along.
 
@@ -54,7 +54,7 @@ One can view all the issues that we’d love help with by searching for `Help Wa
 I just have a question!
 -----------------------
 
-If you have a question about fontParts that doesn’t make sense as an issue, then tweeting to `@fontparts <https://twitter.com/fontparts>`_ will get an answer. Please read the documentation first to see if your question is answered (as the documentation is still being written, it may not be).
+If you have a question about fontParts that doesn’t make sense as an issue, open a . Please read the documentation first to see if your question is answered (as the documentation is still being written, it may not be).
 
 
 ------------------
