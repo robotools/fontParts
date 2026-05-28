@@ -429,7 +429,7 @@ class BaseAnchor(
             value = normalizers.normalizeColor(value)
         self._set_color(value)
 
-    def _get_color(self) -> QuadrupleCollectionType[IntFloatType] | None:
+    def _get_color(self) -> QuadrupleType[float] | None:
         """Get the native anchor's color.
 
         This is the environment implementation of the :attr:`BaseAnchor.color`
@@ -448,7 +448,7 @@ class BaseAnchor(
         """
         self.raiseNotImplementedError()
 
-    def _set_color(self, value: QuadrupleType[float] | None) -> None:
+    def _set_color(self, value: QuadrupleCollectionType[IntFloatType] | None) -> None:
         """Set the native anchor's color.
 
         Description

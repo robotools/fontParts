@@ -1,6 +1,6 @@
 # pylint: disable=C0103, C0302, C0114, W0613
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, Optional, Union, List, Tuple, TypeVar
+from typing import TYPE_CHECKING, Any, TypeVar
 from collections.abc import Iterator
 from itertools import zip_longest
 from collections import Counter
@@ -2738,7 +2738,7 @@ class BaseGlyph(
 
     def _interpolate(
         self,
-        factor: tuple[IntFloatType, IntFloatType],
+        factor: PairCollectionType[IntFloatType],
         minGlyph: BaseGlyph,
         maxGlyph: BaseGlyph,
         round: bool,
@@ -2831,7 +2831,7 @@ class BaseGlyph(
 
 
         """
-        GuidelineListType = list[tuple[Optional[str], int]]
+        GuidelineListType = list[tuple[str | None, int]]
 
         glyph1 = self
         glyph2 = other
@@ -3000,13 +3000,13 @@ class BaseGlyph(
         """,
     )
 
-    def _get_base_bounds(self) -> QuadrupleType[IntFloatType] | None:
+    def _get_base_bounds(self) -> QuadrupleType[float] | None:
         value = self._get_bounds()
         if value is not None:
             value = normalizers.normalizeBoundingBox(value)
         return value
 
-    def _get_bounds(self) -> QuadrupleType[IntFloatType] | None:
+    def _get_bounds(self) -> QuadrupleType[float] | None:
         """Get the bounds of the native glyph.
 
         This is the environment implementation of the :attr:`BaseGlyph.bounds`
@@ -3424,7 +3424,7 @@ class BaseGlyph(
         self._set_markColor(value)
 
     # type: ignore[return]
-    def _get_markColor(self) -> QuadrupleCollectionType[IntFloatType] | None:
+    def _get_markColor(self) -> QuadrupleType[float] | None:
         """Get the glyph's mark color.
 
         This is the environment implementation of
@@ -3442,7 +3442,9 @@ class BaseGlyph(
         """
         self.raiseNotImplementedError()
 
-    def _set_markColor(self, value: QuadrupleType[float] | None) -> None:
+    def _set_markColor(
+        self, value: QuadrupleCollectionType[IntFloatType] | None
+    ) -> None:
         """Set the glyph's mark color.
 
         This is the environment implementation of

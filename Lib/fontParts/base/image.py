@@ -175,7 +175,7 @@ class BaseImage(
         value = normalizers.normalizeTransformationMatrix(value)
         self._set_transformation(value)
 
-    def _get_transformation(self) -> SextupleCollectionType[IntFloatType]:
+    def _get_transformation(self) -> SextupleType[float]:
         """Get the native image's transformation matrix.
 
         This is the environment implementation of the
@@ -238,7 +238,7 @@ class BaseImage(
         value = normalizers.normalizeTransformationOffset(value)
         self._set_offset(value)
 
-    def _get_offset(self) -> PairCollectionType[IntFloatType]:
+    def _get_offset(self) -> PairType[IntFloatType]:
         """Get the native image's offset.
 
         This is the environment implementation of the :attr:`BaseImage.offset`
@@ -256,7 +256,7 @@ class BaseImage(
         sx, sxy, syx, sy, ox, oy = self.transformation
         return (ox, oy)
 
-    def _set_offset(self, value: PairType[IntFloatType]) -> None:
+    def _set_offset(self, value: PairCollectionType[IntFloatType]) -> None:
         """Set the native image's offset.
 
         This is the environment implementation of the :attr:`BaseImage.offset`
@@ -302,7 +302,7 @@ class BaseImage(
         value = normalizers.normalizeTransformationScale(value)
         self._set_scale(value)
 
-    def _get_scale(self) -> TransformationType:
+    def _get_scale(self) -> PairType[float]:
         """Get the native image's scale.
 
         This is the environment implementation of the :attr:`BaseImage.scale`
@@ -320,7 +320,7 @@ class BaseImage(
         sx, sxy, syx, sy, ox, oy = self.transformation
         return (sx, sy)
 
-    def _set_scale(self, value: PairType[float]) -> None:
+    def _set_scale(self, value: PairCollectionType[IntFloatType]) -> None:
         """Set the native image's scale.
 
         This is the environment implementation of the :attr:`BaseImage.scale`
@@ -373,7 +373,7 @@ class BaseImage(
             value = normalizers.normalizeColor(value)
         self._set_color(value)
 
-    def _get_color(self) -> QuadrupleCollectionType[IntFloatType] | None:
+    def _get_color(self) -> QuadrupleType[float] | None:
         """Get the native image's color.
 
         This is the environment implementation of the :attr:`BaseImage.color`
@@ -392,7 +392,7 @@ class BaseImage(
         """
         self.raiseNotImplementedError()
 
-    def _set_color(self, value: QuadrupleType[float] | None) -> None:
+    def _set_color(self, value: QuadrupleCollectionType[IntFloatType] | None) -> None:
         """Set the native image's color.
 
         This is the environment implementation of the :attr:`BaseImage.color`
