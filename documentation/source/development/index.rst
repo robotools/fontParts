@@ -23,7 +23,7 @@ Want to suggest a new font part for FontParts? It's best to do this as an issue 
 Bug Reports
 ***********
 
-Notice a bug when using FontParts? Is it a bug in a specific application? If so, please report the bug to the application developer. If it's not specific to a particular application, please open an issue on GitHub or, if you really can't `open an issue on GitHub <https://github.com/robotools/fontParts/issues>`_, send a message to the `RoboFab mailing list <https://groups.google.com/forum/#!forum/robofab>`_
+Notice a bug when using FontParts? Is it a bug in a specific application? If so, please report the bug to the application developer. If it's not specific to a particular application, please open an issue on GitHub or, if you really can't `open an issue on GitHub <https://github.com/robotools/fontParts/issues>`_, start a `discussion <https://github.com/robotools/fontParts/discussions>`_.
 
 
 .. _developing-coding:
