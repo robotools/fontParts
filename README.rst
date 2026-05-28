@@ -61,11 +61,11 @@ environment, using the `venv <https://docs.python.org/3/library/venv.html>`__ mo
 Roadmap
 ~~~~~~~
 
-We are currently working towards the 1.0 release.
+We are still working on further tests, but are a stable 1.0 release.
 
-* **0.8** Initial releases. Python 2 & 3.
-* **0.9** Python 3 only.
-* **1.0** Documentation and testing complete.
+* **0.8** Initial releases. Python 2 & 3. (2018-09-21)
+* **0.9** Python 3 only. (2019-08-30)
+* **1.0** Documentation and testing mostly complete. Added typing. 2026-05-28
 * **1.5** Removal of ``Deprecated``. Released 1 year after 1.0.
 
 Testing
@@ -126,5 +126,5 @@ or the ``TOXENV`` environment variable:
 .. |Versions| image:: https://img.shields.io/pypi/pyversions/fontParts.svg
    :alt: Python Versions
    :target: https://pypi.org/project/fontParts
-.. |Coverage| image:: https://codecov.io/gh/robotools/fontParts/branch/master/graph/badge.svg
+.. |Coverage| image:: https://codecov.io/gh/robotools/fontParts/branch/main/graph/badge.svg
    :target: https://codecov.io/gh/robotools/fontParts
