@@ -1,3 +1,27 @@
+1.0.0 (released 2026-05-28)
+---------------------------
+
+The majority of the work has been done by Knut Nergaard, for which we are forever grateful!
+
+It adds:
+- types to the whole codebase
+- improved documentation
+- a `rename` option to `newGlyph` (#848)
+- view objects to `BaseLib` (#800)
+- `.ufoz` to know font file extensions in `world.py` (#681)
+- Base object memory identifiers are now hex (#832)
+- fixes naming of `_reverse` in the `Contour` objects (#798)
+- support for `pathlib.Path` in `normalizeFilePath` (#784)
+
+Breaking change:
+- the casing of `_getIdentifierforPoint` is now `_getIdentifierForPoint` (cap F) (#782)
+
+It is the culumnation of:
+#739, #755, #757, #760, #762, #763, #764, #768, #769, #770, #772, #776, #780, #782, #783, #784, #785, #786, #787, #789, #790, #791, #792, #793, #794, #796, #797, #800, #801, #802, #803, #804, #807, #808, #809, #810, #811, #812, #813, #814, #816, #817, #818, #819, #820, #821, #822, #823, #825, #826, #827, #836, #867, #868, #869, #870, #877, #882, #884, #885, #888, #890, #893, #897, #898, #899, #901, and #902
+
+And addressed issues:
+#896, #895, #892, #883, #878, #848, #847, #846, #832, #829, #825, #824, #798, #788, #781, #775, #774, #767, #754, #751, #748, #743, #741, and #681
+
 0.14.2 (released 2026-05-26)
 ---------------------------
 - `insertGlyph` bug fixed (#875), thank you @typemytype
