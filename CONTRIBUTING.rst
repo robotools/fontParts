@@ -39,7 +39,7 @@ Table of contents
 Contributing with Issues
 ------------------------
 
-There are three ways you can help with `issues <https://github.com/robofab-developers/fontParts/issues>`_.
+There are three ways you can help with `issues <https://github.com/robotools/fontParts/issues>`_.
 
 #. **Opening an issue for discussion.** Have you hit a bug? Does something not make sense? Is there a feature you would like so see? Open an `issue <https://github.com/robotools/fontParts/issues/new>`_!
 
@@ -47,14 +47,14 @@ There are three ways you can help with `issues <https://github.com/robofab-devel
 
 #. **Fixing the issue.** Either show that the issue isn’t a problem or contribute a pull request that fixes the issue.
 
-One can view all the issues that we’d love help with by searching for `Help Wanted <https://github.com/robofab-developers/fontParts/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22>`_ in the issues.
+One can view all the issues that we’d love help with by searching for `Help Wanted <https://github.com/robotools/fontParts/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22>`_ in the issues.
 
 
 -----------------------
 I just have a question!
 -----------------------
 
-If you have a question about fontParts that doesn’t make sense as an issue, open a . Please read the documentation first to see if your question is answered (as the documentation is still being written, it may not be).
+If you have a question about fontParts that doesn’t make sense as an issue, open a `discussion <https://github.com/robotools/fontParts/discussions/new/choose>`_. Please read the documentation first to see if your question is answered (as the documentation is still being written, it may not be).
 
 
 ------------------
@@ -63,15 +63,15 @@ Contributing Tests
 
 Oh man, thank you! Writing test cases is like kerning, sometimes it’s really soothing, sometimes it feels like it might just not end. Any test case that you want to contribute is one less that someone needs to write, so we really thank you for your interest here.
 
-To start, you’ll see a list of all that needs to be done on the `Tests Project <https://github.com/robofab-developers/fontParts/projects/1>`_ on GitHub. Each object that needs tests has an issue where one can discuss the tests, ask questions about what should be done, and (hopefully) where you will volunteer to take ownership of writing tests for that object.
+To start, you’ll see a list of all that needs to be done on the `Tests Project <https://github.com/robotools/fontParts/projects/1>`_ on GitHub. Each object that needs tests has an issue where one can discuss the tests, ask questions about what should be done, and (hopefully) where you will volunteer to take ownership of writing tests for that object.
 
 If you want to take ownership for testing an object, just say so on the issue and we’ll add you as a contributor and assign that issue to you.
 
 Our tests are written with Python’s unittest framework, if you’ve not used it before, browsing the `documentation for unittest <https://docs.python.org/2/library/unittest.html>`_ will be helpful to understand what’s going on.
 
-How to write tests for fontParts is covered in the fontParts documentation, in `Testing <http://fontparts.readthedocs.io/en/latest/development/testing.html>`_.
+How to write tests for fontParts is covered in the fontParts documentation, in `Testing <https://fontparts.robotools.dev/en/stable/development/testing.html>`_.
 
-A good place to start looking to see examples for how to write the tests is in the `test_glyph.py <https://github.com/robofab-developers/fontParts/blob/master/Lib/fontParts/test/test_glyph.py>`_ and `test_component.py <https://github.com/robofab-developers/fontParts/blob/master/Lib/fontParts/test/test_component.py>`_ files.
+A good place to start looking to see examples for how to write the tests is in the `test_glyph.py <https://github.com/robotools/fontParts/blob/master/Lib/fontParts/test/test_glyph.py>`_ and `test_component.py <https://github.com/robotools/fontParts/blob/master/Lib/fontParts/test/test_component.py>`_ files.
 
 
 What should I install to write tests?
@@ -98,8 +98,6 @@ After installing it, run: ::
 
 And a folder named **htmlcov** containing a bunch of files will be created. Open the file named **index.html** in that folder. This will allow you to get an update of the coverage before you push out a commit.
 
-You can also check if the tests run on Python 3 by using ``coverage3`` instead of ``coverage`` (the former invokes ``python3`` whereas the latter calls up ``python``).
-
 ``tox`` is also set up to run the coverage tests, so if you have Python 3.6 installed, each time you run ``tox`` it will update the **htmlcov** folder for you.
 
 **Note:** Coverage is great for showing what lines of code may be missed, and is a good yardstick to measure your progress. However, it can’t and doesn’t know everything that may go wrong, so you will need to think about the object you are writing tests for and have a logical plan for what might go wrong & what to then test.
@@ -107,9 +105,9 @@ You can also check if the tests run on Python 3 by using ``coverage3`` instead o
 How do I know what tests to write?
 ----------------------------------
 
-Check the `Codecov page for fontParts base <https://codecov.io/gh/robofab-developers/fontParts/tree/master/Lib/fontParts/base>`_ to see which lines of the code are still not being hit by tests.
+Check the `Codecov page for fontParts <https://app.codecov.io/gh/robotools/fontParts>`_ to see which lines of the code are still not being hit by tests.
 
-Because the automated tests are run in ``fontshell``, a good starting point for writing tests is to get coverage to 100% on the `fontshell version <https://codecov.io/gh/robofab-developers/fontParts/tree/master/Lib/fontParts/fontshell>`_ of the object, and then determine what other tests need to be added to get 100% on the base files.
+Because the automated tests are run in ``fontshell``, a good starting point for writing tests is to get coverage to 100% on the `fontshell version <https://app.codecov.io/gh/robotools/fontParts/tree/master/Lib%2FfontParts%2Ffontshell>`_ of the object, and then determine what other tests need to be added to get 100% on the base files.
 
 Do not worry about testing ``repr``.
 
@@ -120,7 +118,7 @@ Contributing Documentation
 
 We want fontParts to have clear, easy to follow documentation. This library is aimed at working typeface designers who want to script some of their work flow. Easy to follow documentation is a big part of making that as pleasant and easy as possible.
 
-Like Tests, there is a `Documentation <https://github.com/robofab-developers/fontParts/projects/2>`_ project on GitHub with a bunch of issues for specific things that need to be written. Each issue is where you can ask questions about writing documentation for that thing and hopefully volunteer to be in charge of writing the documentation for that issue. If you want to take ownership for writing a piece of the documentation, just say so on the issue and we’ll add you as a contributor and assign that issue to you.
+Like Tests, there is a `Documentation <https://github.com/robotools/fontParts/projects/2>`_ project on GitHub with a bunch of issues for specific things that need to be written. Each issue is where you can ask questions about writing documentation for that thing and hopefully volunteer to be in charge of writing the documentation for that issue. If you want to take ownership for writing a piece of the documentation, just say so on the issue and we’ll add you as a contributor and assign that issue to you.
 
 There are four types of things that we need help with in the documentation:
 
@@ -134,9 +132,9 @@ There are four types of things that we need help with in the documentation:
 
 Our documentation is written with reStructeredText markup. The `Quick reStructredText Primer <http://docutils.sourceforge.net/docs/user/rst/quickref.html>`_ is a good reference to the markup style.
 
-fontParts has a `style guide and howto <http://fontparts.readthedocs.io/en/latest/development/documenting.html>`_ for documentation, before starting please give it a read.
+fontParts has a `style guide and howto <https://fontparts.robotools.dev/en/latest/development/documenting.html>`_ for documentation, before starting please give it a read.
 
-A good example of the Object documentation can be found in the `Glyph <https://github.com/robofab-developers/fontParts/blob/master/Lib/fontParts/base/glyph.py>`_ object.
+A good example of the Object documentation can be found in the `Glyph <https://github.com/robotools/fontParts/blob/master/Lib/fontParts/base/glyph.py>`_ object.
 
 
 --------------------------------
@@ -157,7 +155,7 @@ Once you have a GitHub account, you’ll want to fork the project `on GitHub <ht
 
   git clone git@github.com:username/fontParts.git
   cd fontParts
-  git remote add upstream https://github.com/robofab-developers/fontParts.git
+  git remote add upstream https://github.com/robotools/fontParts.git
   git fetch upstream
 
 After doing this, it’s a good idea to at least install `tox <https://pypi.org/project/tox/>`_ for local testing. See “`What should I install to write tests?`_” for how to install ``tox``.
@@ -206,4 +204,4 @@ After doing so, it’s a good idea to then pull from the main repository to be s
 Style and other notes
 ---------------------
 
-The style guide and other notes about developing fontParts is found `here <http://fontparts.readthedocs.io/en/latest/development/index.html>`_ in the documentation.
+The style guide and other notes about developing fontParts is found `here <https://fontparts.robotools.dev/en/stable/development/index.html>`_ in the documentation.
