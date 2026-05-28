@@ -329,7 +329,7 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin, ABC):
         elif rename:
             existingGlyph = self._getItem(name)
             newName = self._generateReplacementName(name)
-            self[newName] = existingGlyph
+            existingGlyph.name = newName
             glyph = self._newGlyph(name)
         else:
             glyph = self._getItem(name)

@@ -106,6 +106,19 @@ class TestFont(unittest.TestCase):
         font["A"] = glyph
         self.assertEqual(font["A"].unicode, 123)
 
+    # add glyphs
+
+    def test_newGlyph_rename(self):
+        layer = self.getFont_glyphs()
+
+        layer.newGlyph("A", clear=False, rename=True)
+        layer.newGlyph("A", clear=False, rename=True)
+
+        self.assertIn("A", layer)
+        self.assertIn("A.1", layer)
+        self.assertIn("A.2", layer)
+
+
     # ----
     # flatKerning
     # ----
