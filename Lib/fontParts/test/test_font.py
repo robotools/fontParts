@@ -118,7 +118,6 @@ class TestFont(unittest.TestCase):
         self.assertIn("A.1", layer)
         self.assertIn("A.2", layer)
 
-
     # ----
     # flatKerning
     # ----
