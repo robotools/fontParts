@@ -1,5 +1,6 @@
-import unittest
 import collections
+import unittest
+
 from fontParts.base import FontPartsError
 
 
@@ -607,7 +608,7 @@ class TestComponent(unittest.TestCase):
         pointPen = DigestPointPen()
         glyph.drawPoints(pointPen)
         expected = (
-            ("beginPath", None),
+            "beginPath",
             ((0, 0), "line", False, "point 0"),
             ((0, 100), "line", False, "point 1"),
             ((100, 100), "line", False, "point 2"),
@@ -641,7 +642,7 @@ class TestComponent(unittest.TestCase):
         pointPen = DigestPointPen()
         glyph.drawPoints(pointPen)
         expected = (
-            ("beginPath", None),
+            "beginPath",
             ((0, 0), "line", False, "point 0"),
             ((0, 200), "line", False, "point 1"),
             ((200, 200), "line", False, "point 2"),
