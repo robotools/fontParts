@@ -17,11 +17,12 @@ from fontParts.base.compatibility import LayerCompatibilityReporter
 from fontParts.base.color import Color
 from fontParts.base.deprecated import DeprecatedLayer, RemovedLayer
 from fontParts.base.annotations import (
+    InterpolationFactorPair,
+    InterpolationFactorLike,
+    RGBALike,
+    RGBA,
     CharacterMappingType,
     CollectionType,
-    QuadrupleCollectionType,
-    QuadrupleType,
-    TransformationType,
     ReverseComponentMappingType,
     IntFloatType,
 )
@@ -833,20 +834,18 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
         """,
     )
 
-    def _get_base_color(self) -> QuadrupleCollectionType[IntFloatType] | None:
+    def _get_base_color(self) -> Color | None:
         value = self._get_color()
         if value is not None:
             value = Color(value)
         return value
 
-    def _set_base_color(
-        self, value: QuadrupleCollectionType[IntFloatType] | None
-    ) -> None:
+    def _set_base_color(self, value: RGBALike | None) -> None:
         if value is not None:
             value = normalizers.normalizeColor(value)
         self._set_color(value)
 
-    def _get_color(self) -> QuadrupleType[float] | None:  # type: ignore[return]
+    def _get_color(self) -> RGBA | None:  # type: ignore[return]
         """Get the color of the layer.
 
         This is the environment implementation of
@@ -865,9 +864,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
         """
         self.raiseNotImplementedError()
 
-    def _set_color(
-        self, value: QuadrupleCollectionType[IntFloatType] | None, **kwargs: Any
-    ) -> None:
+    def _set_color(self, value: RGBALike | None, **kwargs: Any) -> None:
         r"""Get or set the color of the layer.
 
         This is the environment implementation of
@@ -1035,7 +1032,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
 
     def interpolate(
         self,
-        factor: TransformationType,
+        factor: InterpolationFactorLike,
         minLayer: BaseLayer,
         maxLayer: BaseLayer,
         round: bool = True,
@@ -1084,7 +1081,7 @@ class BaseLayer(_BaseGlyphVendor, InterpolationMixin, DeprecatedLayer, RemovedLa
 
     def _interpolate(
         self,
-        factor: TransformationType,
+        factor: InterpolationFactorPair,
         minLayer: BaseLayer,
         maxLayer: BaseLayer,
         round: bool,

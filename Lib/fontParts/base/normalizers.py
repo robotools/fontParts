@@ -7,16 +7,26 @@ from pathlib import Path
 import datetime
 
 from fontParts.base.annotations import (
+    InterpolationFactorLike,
+    InterpolationFactor,
+    SkewAngleLike,
+    SkewAngle,
+    ScaleFactorLike,
+    ScaleFactorPair,
+    ScaleFactor,
+    KerningPairLike,
+    KerningPair,
+    AffineTransformationLike,
+    AffineTransformation,
+    BoundingBox,
+    BoundingBoxLike,
+    Coordinate,
+    CoordinateLike,
+    RGBA,
+    RGBALike,
     T,
-    PairType,
-    QuadrupleType,
-    SextupleType,
     CollectionType,
-    PairCollectionType,
-    QuadrupleCollectionType,
-    SextupleCollectionType,
     IntFloatType,
-    TransformationType,
     LibValueType,
 )
 
@@ -159,7 +169,7 @@ def normalizeGlyphOrder(value: CollectionType[str]) -> tuple[str, ...]:
 # -------
 
 
-def normalizeKerningKey(value: PairCollectionType[str]) -> PairType[str]:
+def normalizeKerningKey(value: KerningPairLike) -> KerningPair:
     """Normalize a kerning key.
 
     :param value: The kerning key to normalize as a :class:`tuple`
@@ -770,7 +780,7 @@ def normalizeComponent(value: BaseComponent) -> BaseComponent:
     return normalizeInternalObjectType(value, BaseComponent, "Component")
 
 
-def normalizeComponentScale(value: PairCollectionType[IntFloatType]) -> PairType[float]:
+def normalizeComponentScale(value: ScaleFactorPair) -> ScaleFactor:
     """Normalize a component scale.
 
     :param value: The component scale to normalize as a :class:`list`
@@ -990,9 +1000,7 @@ def normalizeY(value: IntFloatType) -> IntFloatType:
     return value
 
 
-def normalizeCoordinateTuple(
-    value: PairCollectionType[IntFloatType],
-) -> PairType[IntFloatType]:
+def normalizeCoordinateTuple(value: CoordinateLike) -> Coordinate:
     """Normalize a coordinate tuple.
 
     :param value: The coordinate tuple to normalize as a :class:`list`
@@ -1017,9 +1025,7 @@ def normalizeCoordinateTuple(
     return (x, y)
 
 
-def normalizeBoundingBox(
-    value: QuadrupleCollectionType[IntFloatType],
-) -> QuadrupleType[float]:
+def normalizeBoundingBox(value: BoundingBoxLike) -> BoundingBox:
     """Normalize a bounding box.
 
     :param value: The bounding box to normalize as a :class:`list`
@@ -1103,9 +1109,7 @@ def normalizeRotationAngle(value: IntFloatType) -> float:
 # Color
 
 
-def normalizeColor(
-    value: QuadrupleCollectionType[IntFloatType],
-) -> QuadrupleType[float]:
+def normalizeColor(value: RGBALike) -> RGBA:
     """Normalize a color.
 
     :param value: The color to normalize as a :class:`list` or :class:`tuple`
@@ -1179,7 +1183,7 @@ def normalizeFilePath(value: str | Path) -> str:
 # Interpolation
 
 
-def normalizeInterpolationFactor(value: TransformationType) -> PairType[float]:
+def normalizeInterpolationFactor(value: InterpolationFactorLike) -> InterpolationFactor:
     """Normalize an interpolation factor.
 
     :param value: The interpolation factor to normalize as a single :class:`int`
@@ -1221,8 +1225,8 @@ def normalizeInterpolationFactor(value: TransformationType) -> PairType[float]:
 
 
 def normalizeTransformationMatrix(
-    value: SextupleCollectionType[IntFloatType],
-) -> SextupleType[float]:
+    value: AffineTransformationLike,
+) -> AffineTransformation:
     """Normalize a transformation matrix.
 
     :param value: The transformation matrix to normalize as a :class:`list`
@@ -1252,9 +1256,7 @@ def normalizeTransformationMatrix(
     return (float(a), float(b), float(c), float(d), float(e), float(f))
 
 
-def normalizeTransformationOffset(
-    value: PairCollectionType[IntFloatType],
-) -> PairType[IntFloatType]:
+def normalizeTransformationOffset(value: CoordinateLike) -> Coordinate:
     """Normalize a transformation offset.
 
     :param value: The transformation offset to normalize as a :class:`list`
@@ -1270,7 +1272,7 @@ def normalizeTransformationOffset(
     return normalizeCoordinateTuple(value)
 
 
-def normalizeTransformationSkewAngle(value: TransformationType) -> PairType[float]:
+def normalizeTransformationSkewAngle(value: SkewAngleLike) -> SkewAngle:
     """Normalize a transformation skew angle.
 
     :param value: The skew angle to normalize as a single :class:`int`
@@ -1315,7 +1317,7 @@ def normalizeTransformationSkewAngle(value: TransformationType) -> PairType[floa
     return (normalized[0], normalized[1])
 
 
-def normalizeTransformationScale(value: TransformationType) -> PairType[float]:
+def normalizeTransformationScale(value: ScaleFactorLike) -> ScaleFactor:
     """Normalize a transformation scale.
 
     :param value: The scale to normalize as a single :class:`int`

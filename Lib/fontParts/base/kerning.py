@@ -6,10 +6,15 @@ from typing import TYPE_CHECKING, Dict, List, Optional, TypeVar, Union
 
 from fontParts.base import normalizers
 from fontParts.base.annotations import (
+    InterpolationFactorLike,
+    InterpolationFactorPair,
+    ScaleFactorLike,
+    ScaleFactorPair,
+    KerningPairLike,
+    KerningPair,
+    Coordinate,
+    CoordinateLike,
     IntFloatType,
-    PairCollectionType,
-    PairType,
-    TransformationType,
 )
 from fontParts.base.base import BaseDict, dynamicProperty, interpolate, reference
 from fontParts.base.deprecated import DeprecatedKerning, RemovedKerning
@@ -41,7 +46,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
 
     """
 
-    keyNormalizer: Callable[[PairCollectionType[str]], PairType[str]] = (
+    keyNormalizer: Callable[[KerningPairLike], KerningPair] = (
         normalizers.normalizeKerningKey
     )
     valueNormalizer: Callable[[IntFloatType], IntFloatType] = (
@@ -97,7 +102,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
     # Transformation
     # --------------
 
-    def scaleBy(self, factor: TransformationType) -> None:
+    def scaleBy(self, factor: ScaleFactorLike) -> None:
         """Scale all kerning values by the specified factor.
 
         :param factor: The factor by which to scale the kerning. The value may be a
@@ -115,7 +120,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         factor = normalizers.normalizeTransformationScale(factor)
         self._scale(factor)
 
-    def _scale(self, factor: PairCollectionType[IntFloatType]) -> None:
+    def _scale(self, factor: ScaleFactorPair) -> None:
         """Scale all native kerning values by the specified factor.
 
         This is the environment implementation of :meth:`BaseKerning.scaleBy`.
@@ -181,7 +186,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
 
     def interpolate(
         self,
-        factor: TransformationType,
+        factor: InterpolationFactorLike,
         minKerning: BaseKerningType,
         maxKerning: BaseKerningType,
         round: bool = True,
@@ -229,7 +234,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
 
     def _interpolate(
         self,
-        factor: PairCollectionType[IntFloatType],
+        factor: InterpolationFactorPair,
         minKerning: BaseKerning,
         maxKerning: BaseKerning,
         round: bool,
@@ -311,7 +316,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
     # RoboFab Compatibility
     # ---------------------
 
-    def remove(self, pair: PairCollectionType[str]) -> None:
+    def remove(self, pair: KerningPairLike) -> None:
         """Remove the specified pair from the Kerning.
 
         :param pair: The pair to remove as a :class:`tuple` of two :class:`str` values.
@@ -325,10 +330,9 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
             >>> myKerning.remove(("A", "V"))
 
         """
-        one, two = pair
-        del self[(one, two)]
+        del self[pair]
 
-    def asDict(self, returnIntegers: bool = True) -> dict[PairType[str], IntFloatType]:
+    def asDict(self, returnIntegers: bool = True) -> dict[KerningPair, IntFloatType]:
         """Return the kerning as a dictionary.
 
         :return A :class:`dict` reflecting the contents of the kerning.
@@ -351,7 +355,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
     # Inherited Functions
     # -------------------
 
-    def __contains__(self, pair: PairType[str]) -> bool:
+    def __contains__(self, pair: KerningPairLike) -> bool:
         """Check if the given pair exists in the kerning.
 
         :param pair: The kerning pair to check for existence as a :class:`tuple` of
@@ -367,7 +371,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         """
         return super().__contains__(pair)
 
-    def __delitem__(self, pair: PairType[str]) -> None:
+    def __delitem__(self, pair: KerningPairLike) -> None:
         """Remove the given pair from the kerning.
 
         :param pair: The pair to remove as a :class:`tuple` of two :class:`str` values.
@@ -379,7 +383,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         """
         super().__delitem__(pair)
 
-    def __getitem__(self, pair: PairType[str]) -> IntFloatType:
+    def __getitem__(self, pair: KerningPairLike) -> IntFloatType:
         """Get the value associated with the given kerning pair.
 
         :param pair: The pair to remove as a :class:`tuple` of two :class:`str` values.
@@ -403,7 +407,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         """
         return super().__getitem__(pair)
 
-    def __iter__(self) -> Iterator[PairType[str]]:
+    def __iter__(self) -> Iterator[KerningPair]:
         """Return an iterator over the pairs in the kerning.
 
         The iteration order is not fixed.
@@ -435,7 +439,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         """
         return super().__len__()
 
-    def __setitem__(self, pair: PairType[str], value: IntFloatType) -> None:
+    def __setitem__(self, pair: KerningPairLike, value: IntFloatType) -> None:
         """Set the value for the given kerning pair.
 
         :param pair: The pair to set as a :class:`tuple` of two :class:`str` values.
@@ -462,7 +466,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         super().clear()
 
     def get(
-        self, pair: PairCollectionType[str], default: IntFloatType | None = None
+        self, pair: KerningPairLike, default: IntFloatType | None = None
     ) -> IntFloatType | None:
         """Get the value for the given kerning pair.
 
@@ -492,7 +496,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         return super().get(pair, default)
 
     def find(
-        self, pair: PairCollectionType[str], default: IntFloatType | None = None
+        self, pair: KerningPairLike, default: IntFloatType | None = None
     ) -> IntFloatType | None:
         """Get the value for the given explicit or implicit kerning pair.
 
@@ -518,7 +522,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         return value
 
     def _find(
-        self, pair: PairCollectionType[str], default: IntFloatType | None = None
+        self, pair: KerningPairLike, default: IntFloatType | None = None
     ) -> IntFloatType | None:
         """Get the value for the given explicit or implicit native kerning pair.
 
@@ -540,7 +544,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         groups = font.groups
         return lookupKerningValue(pair, self, groups, fallback=default)
 
-    def items(self) -> BaseItems[PairType[str], IntFloatType]:
+    def items(self) -> BaseItems[KerningPair, IntFloatType]:
         """Return the kerning's items.
 
         Each item is represented as a :class:`tuple` of key-value pairs, where:
@@ -557,7 +561,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         """
         return super().items()
 
-    def keys(self) -> BaseKeys[PairType[str]]:
+    def keys(self) -> BaseKeys[KerningPair]:
         """Return the kerning's pairs (keys).
 
         :return: A :ref:`type-view` of the kerning's pairs as :class:`tuple` instances
@@ -585,7 +589,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         return super().values()
 
     def pop(
-        self, pair: PairType[str], default: IntFloatType | None = None
+        self, pair: KerningPairLike, default: IntFloatType | None = None
     ) -> IntFloatType | None:
         """Remove the specified kerning pair and return its associated value.
 
@@ -608,7 +612,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         """
         return super().pop(pair, default)
 
-    def update(self, otherKerning: MutableMapping[PairType[str], IntFloatType]) -> None:
+    def update(self, otherKerning: MutableMapping[KerningPair, IntFloatType]) -> None:
         """Update the current kerning with key-value pairs from another.
 
         For each pair in `otherKerning`:

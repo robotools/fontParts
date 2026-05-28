@@ -18,9 +18,9 @@ from fontParts.base.compatibility import AnchorCompatibilityReporter
 from fontParts.base.color import Color
 from fontParts.base.deprecated import DeprecatedAnchor, RemovedAnchor
 from fontParts.base.annotations import (
-    QuadrupleType,
-    QuadrupleCollectionType,
-    SextupleCollectionType,
+    AffineTransformationLike,
+    RGBALike,
+    RGBA,
     IntFloatType,
 )
 
@@ -424,12 +424,12 @@ class BaseAnchor(
             value = Color(value)
         return value
 
-    def _set_base_color(self, value: QuadrupleCollectionType[IntFloatType]) -> None:
+    def _set_base_color(self, value: RGBALike) -> None:
         if value is not None:
             value = normalizers.normalizeColor(value)
         self._set_color(value)
 
-    def _get_color(self) -> QuadrupleType[float] | None:
+    def _get_color(self) -> RGBA | None:
         """Get the native anchor's color.
 
         This is the environment implementation of the :attr:`BaseAnchor.color`
@@ -448,7 +448,7 @@ class BaseAnchor(
         """
         self.raiseNotImplementedError()
 
-    def _set_color(self, value: QuadrupleCollectionType[IntFloatType] | None) -> None:
+    def _set_color(self, value: RGBALike | None) -> None:
         """Set the native anchor's color.
 
         Description
@@ -472,9 +472,7 @@ class BaseAnchor(
     # Transformation
     # --------------
 
-    def _transformBy(
-        self, matrix: SextupleCollectionType[IntFloatType], **kwargs: Any
-    ) -> None:
+    def _transformBy(self, matrix: AffineTransformationLike, **kwargs: Any) -> None:
         r"""Transform the native anchor according to the given matrix.
 
         This is the environment implementation of :meth:`BaseAnchor.transformBy`.

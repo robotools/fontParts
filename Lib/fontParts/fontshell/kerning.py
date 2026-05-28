@@ -3,7 +3,7 @@ from typing import Any, Optional, Union
 from collections.abc import ItemsView
 
 import defcon
-from fontParts.base.annotations import PairCollectionType
+from fontParts.base.annotations import KerningPairLike
 from fontParts.base import BaseKerning
 from fontParts.fontshell.base import RBaseObject
 
@@ -26,7 +26,5 @@ class RKerning(RBaseObject, BaseKerning):
     def _delItem(self, key: str) -> None:
         del self.naked()[key]
 
-    def _find(
-        self, pair: PairCollectionType[str], default: int | float | None = 0
-    ) -> int:
+    def _find(self, pair: KerningPairLike, default: int | float | None = 0) -> int:
         return self.naked().find(pair, default)

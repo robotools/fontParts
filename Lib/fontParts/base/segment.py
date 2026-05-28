@@ -15,8 +15,8 @@ from fontParts.base import normalizers
 from fontParts.base.deprecated import DeprecatedSegment, RemovedSegment
 from fontParts.base.compatibility import SegmentCompatibilityReporter
 from fontParts.base.annotations import (
+    AffineTransformationLike,
     CollectionType,
-    SextupleCollectionType,
     IntFloatType,
 )
 
@@ -591,7 +591,7 @@ class BaseSegment(
     # Transformation
     # --------------
 
-    def _transformBy(self, matrix: SextupleCollectionType[IntFloatType], **kwargs: Any):
+    def _transformBy(self, matrix: AffineTransformationLike, **kwargs: Any):
         r"""Transform the native object according to the given matrix.
 
         This is the environment implementation of :meth:`TransformationMixin.transformBy`.

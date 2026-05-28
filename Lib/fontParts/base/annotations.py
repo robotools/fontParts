@@ -1,7 +1,8 @@
 # pylint: disable=C0103, C0114
 from __future__ import annotations
-from typing import Protocol, TypeVar
+
 import datetime
+from typing import Protocol, TypeVar
 
 from fontTools.pens.basePen import AbstractPen
 from fontTools.pens.pointPen import AbstractPointPen
@@ -9,17 +10,45 @@ from fontTools.pens.pointPen import AbstractPointPen
 # Generic
 T = TypeVar("T")
 
-PairType = tuple[T, T]
-QuadrupleType = tuple[T, T, T, T]
-QuintupleType = tuple[T, T, T, T, T]
-SextupleType = tuple[T, T, T, T, T, T]
 CollectionType = list[T] | tuple[T, ...]
-PairCollectionType = list[T] | PairType[T]
-QuadrupleCollectionType = list[T] | QuadrupleType[T]
-SextupleCollectionType = list[T] | SextupleType[T]
 
 # Builtins
 IntFloatType = int | float
+
+# Point / Offset / Anchor (bPoints)
+Coordinate = tuple[IntFloatType, IntFloatType]
+CoordinateLike = list[IntFloatType] | Coordinate
+
+# Bounding box — (xMin, yMin, xMax, yMax).
+BoundingBox = tuple[float, float, float, float]
+BoundingBoxLike = list[IntFloatType] | BoundingBox
+
+# RGBA color — (r, g, b, a) in [0, 1]
+RGBA = tuple[float, float, float, float]
+RGBALike = list[IntFloatType] | RGBA
+
+# Affine transformation matrix — (xx, xy, yx, yy, dx, dy).
+AffineTransformation = tuple[float, float, float, float, float, float]
+AffineTransformationLike = list[IntFloatType] | AffineTransformation
+
+# Kerning pair — (first, second) glyph or group names.
+KerningPair = tuple[str, str]
+KerningPairLike = list[str] | KerningPair
+
+# Scale factor — (sx, sy) multiplicative pair.
+ScaleFactor = tuple[float, float]
+ScaleFactorPair = list[IntFloatType] | ScaleFactor
+ScaleFactorLike = IntFloatType | ScaleFactorPair
+
+# Skew angle — (xAngle, yAngle) in degrees.
+SkewAngle = tuple[float, float]
+SkewAnglePair = list[IntFloatType] | SkewAngle
+SkewAngleLike = IntFloatType | SkewAnglePair
+
+# Interpolation factor — (xFactor, yFactor).
+InterpolationFactor = tuple[float, float]
+InterpolationFactorPair = list[IntFloatType] | InterpolationFactor
+InterpolationFactorLike = IntFloatType | InterpolationFactorPair
 
 # Compatibility
 DiffType = list[tuple[int, str | None, str | None]]
@@ -33,7 +62,7 @@ CharacterMappingType = dict[int, tuple[str, ...]]
 ReverseComponentMappingType = dict[str, tuple[str, ...]]
 
 # Kerning
-KerningDictType = dict[PairType[str], PairType[str]]
+KerningDictType = dict[KerningPair, KerningPair]
 
 # Lib
 LibValueType = (
@@ -68,9 +97,6 @@ class LibValue:
     """
 
 
-# Transformation
-TransformationType = IntFloatType | list[IntFloatType] | PairType[IntFloatType]
-
 # Interpolation
 InterpolatableType = TypeVar("InterpolatableType", bound="Interpolatable")
 
@@ -87,5 +113,5 @@ class Interpolatable(Protocol):
     ) -> InterpolatableType: ...
 
     def __mul__(
-        self: InterpolatableType, other: TransformationType
+        self: InterpolatableType, other: InterpolationFactorLike
     ) -> InterpolatableType: ...

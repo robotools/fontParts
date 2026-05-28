@@ -28,14 +28,17 @@ from fontParts.base.compatibility import GlyphCompatibilityReporter
 from fontParts.base.color import Color
 from fontParts.base.deprecated import DeprecatedGlyph, RemovedGlyph
 from fontParts.base.annotations import (
-    PairType,
-    QuadrupleType,
+    InterpolationFactorLike,
+    InterpolationFactorPair,
+    ScaleFactorLike,
+    AffineTransformationLike,
+    BoundingBox,
+    Coordinate,
+    CoordinateLike,
+    RGBA,
+    RGBALike,
     CollectionType,
-    PairCollectionType,
-    QuadrupleCollectionType,
-    SextupleCollectionType,
     IntFloatType,
-    TransformationType,
     DiffType,
     PenType,
     PointPenType,
@@ -1044,7 +1047,7 @@ class BaseGlyph(
             self.clearImage()
 
     def appendGlyph(
-        self, other: BaseGlyph, offset: PairCollectionType[IntFloatType] | None = None
+        self, other: BaseGlyph, offset: CoordinateLike | None = None
     ) -> None:
         """Append data from `other` to new objects in the glyph.
 
@@ -1072,9 +1075,7 @@ class BaseGlyph(
         normalizedOffset = normalizers.normalizeTransformationOffset(offset)
         self._appendGlyph(other, normalizedOffset)
 
-    def _appendGlyph(
-        self, other: BaseGlyph, offset: PairCollectionType[IntFloatType]
-    ) -> None:
+    def _appendGlyph(self, other: BaseGlyph, offset: CoordinateLike) -> None:
         """Append data from `other` to new objects in the native glyph.
 
         This is the environment implementation of :meth:`BaseGlyph.appendGlyph`.
@@ -1236,9 +1237,7 @@ class BaseGlyph(
         raise FontPartsError("The contour could not be found.")
 
     def appendContour(
-        self,
-        contour: BaseContour,
-        offset: PairCollectionType[IntFloatType] | None = None,
+        self, contour: BaseContour, offset: CoordinateLike | None = None
     ) -> BaseContour:
         """Append the given contour's data to the glyph.
 
@@ -1262,10 +1261,7 @@ class BaseGlyph(
         return self._appendContour(normalizedContour, normalizedOffset)
 
     def _appendContour(
-        self,
-        contour: BaseContour,
-        offset: PairCollectionType[IntFloatType],
-        **kwargs: Any,
+        self, contour: BaseContour, offset: CoordinateLike, **kwargs: Any
     ) -> BaseContour:
         r"""Append the given contour's data to the native glyph.
 
@@ -1479,8 +1475,8 @@ class BaseGlyph(
     def appendComponent(
         self,
         baseGlyph: str | None = None,
-        offset: PairCollectionType[IntFloatType] | None = None,
-        scale: TransformationType | None = None,
+        offset: CoordinateLike | None = None,
+        scale: ScaleFactorLike | None = None,
         component: BaseComponent | None = None,
     ) -> BaseComponent:
         """Append a component to the glyph.
@@ -1557,7 +1553,7 @@ class BaseGlyph(
     def _appendComponent(
         self,
         baseGlyph: str,
-        transformation: SextupleCollectionType[IntFloatType] | None,
+        transformation: AffineTransformationLike | None,
         identifier: str | None,
         **kwargs: Any,
     ) -> BaseComponent:
@@ -1756,8 +1752,8 @@ class BaseGlyph(
     def appendAnchor(
         self,
         name: str | None = None,
-        position: PairCollectionType[IntFloatType] | None = None,
-        color: QuadrupleCollectionType[IntFloatType] | None = None,
+        position: CoordinateLike | None = None,
+        color: RGBALike | None = None,
         anchor: BaseAnchor | None = None,
     ) -> BaseAnchor:
         """Append an anchor to the glyph.
@@ -1812,8 +1808,8 @@ class BaseGlyph(
     def _appendAnchor(
         self,  # type: ignore[return]
         name: str,
-        position: PairCollectionType[IntFloatType] | None,
-        color: QuadrupleCollectionType[IntFloatType] | None,
+        position: CoordinateLike | None,
+        color: RGBALike | None,
         identifier: str | None,
         **kwargs: Any,
     ) -> BaseAnchor:
@@ -1999,10 +1995,10 @@ class BaseGlyph(
 
     def appendGuideline(
         self,
-        position: PairCollectionType[IntFloatType] | None = None,
+        position: CoordinateLike | None = None,
         angle: IntFloatType | None = None,
         name: str | None = None,
-        color: QuadrupleCollectionType[IntFloatType] | None = None,
+        color: RGBALike | None = None,
         guideline: BaseGuideline | None = None,
     ) -> BaseGuideline:
         """Append a guideline to the glyph.
@@ -2070,10 +2066,10 @@ class BaseGlyph(
 
     def _appendGuideline(
         self,  # type: ignore[return]
-        position: PairCollectionType[IntFloatType],
+        position: CoordinateLike,
         angle: IntFloatType,
         name: str | None,
-        color: QuadrupleCollectionType[IntFloatType] | None,
+        color: RGBALike | None,
         identifier: str | None,
         **kwargs: Any,
     ) -> BaseGuideline:
@@ -2340,9 +2336,7 @@ class BaseGlyph(
     # Transformation
     # --------------
 
-    def _transformBy(
-        self, matrix: SextupleCollectionType[IntFloatType], **kwargs: Any
-    ) -> None:
+    def _transformBy(self, matrix: AffineTransformationLike, **kwargs: Any) -> None:
         r"""Transform the glyph according to the given matrix.
 
         :param matrix: The :ref:`type-transformation` to apply.
@@ -2364,8 +2358,8 @@ class BaseGlyph(
 
     def scaleBy(
         self,
-        value: TransformationType,
-        origin: PairCollectionType[IntFloatType] | None = None,
+        value: ScaleFactorLike,
+        origin: CoordinateLike | None = None,
         width: bool = False,
         height: bool = False,
     ) -> None:
@@ -2598,7 +2592,7 @@ class BaseGlyph(
         copied.note = mathGlyph.note
         return copied
 
-    def __mul__(self, factor: TransformationType) -> BaseGlyph:
+    def __mul__(self, factor: InterpolationFactorLike) -> BaseGlyph:
         """Multiply the current glyph by a given factor.
 
         :param factor: The factor by which to multiply the glyph as a
@@ -2621,7 +2615,7 @@ class BaseGlyph(
 
     __rmul__ = __mul__
 
-    def __truediv__(self, factor: TransformationType) -> BaseGlyph:
+    def __truediv__(self, factor: InterpolationFactorLike) -> BaseGlyph:
         """Divide the current glyph by a given factor.
 
         :param factor: The factor by which to divide the glyph as a
@@ -2688,7 +2682,7 @@ class BaseGlyph(
 
     def interpolate(
         self,
-        factor: TransformationType,
+        factor: InterpolationFactorLike,
         minGlyph: BaseGlyph,
         maxGlyph: BaseGlyph,
         round: bool = True,
@@ -2738,7 +2732,7 @@ class BaseGlyph(
 
     def _interpolate(
         self,
-        factor: PairCollectionType[IntFloatType],
+        factor: InterpolationFactorPair,
         minGlyph: BaseGlyph,
         maxGlyph: BaseGlyph,
         round: bool,
@@ -2947,7 +2941,7 @@ class BaseGlyph(
     # Data Queries
     # ------------
 
-    def pointInside(self, point: PairCollectionType[IntFloatType]) -> bool:
+    def pointInside(self, point: CoordinateLike) -> bool:
         """Check if `point` lies inside the filled area of the glyph.
 
         :param point: The point to check as a :ref:`type-coordinate`.
@@ -2963,7 +2957,7 @@ class BaseGlyph(
         point = normalizers.normalizeCoordinateTuple(point)
         return self._pointInside(point)
 
-    def _pointInside(self, point: PairCollectionType[IntFloatType]) -> bool:
+    def _pointInside(self, point: CoordinateLike) -> bool:
         """Check if `point` lies inside the filled area of the native glyph.
 
         This is the environment implementation of :meth:`BaseGlyph.pointInside`.
@@ -3000,13 +2994,13 @@ class BaseGlyph(
         """,
     )
 
-    def _get_base_bounds(self) -> QuadrupleType[float] | None:
+    def _get_base_bounds(self) -> BoundingBox | None:
         value = self._get_bounds()
         if value is not None:
             value = normalizers.normalizeBoundingBox(value)
         return value
 
-    def _get_bounds(self) -> QuadrupleType[float] | None:
+    def _get_bounds(self) -> BoundingBox | None:
         """Get the bounds of the native glyph.
 
         This is the environment implementation of the :attr:`BaseGlyph.bounds`
@@ -3268,9 +3262,9 @@ class BaseGlyph(
         self,
         path: str | None = None,
         data: bytes | None = None,
-        scale: TransformationType | None = None,
-        position: PairCollectionType[IntFloatType] | None = None,
-        color: QuadrupleCollectionType[IntFloatType] | None = None,
+        scale: ScaleFactorLike | None = None,
+        position: CoordinateLike | None = None,
+        color: RGBALike | None = None,
     ) -> BaseImage:
         """Set the image in the glyph.
 
@@ -3343,8 +3337,8 @@ class BaseGlyph(
     def _addImage(
         self,  # type: ignore[return]
         data: bytes,
-        transformation: SextupleCollectionType[IntFloatType] | None,
-        color: QuadrupleCollectionType[IntFloatType] | None,
+        transformation: AffineTransformationLike | None,
+        color: RGBALike | None,
     ) -> BaseImage:
         """Set the image in the native glyph.
 
@@ -3416,15 +3410,13 @@ class BaseGlyph(
             return None
         return Color(value)
 
-    def _set_base_markColor(
-        self, value: QuadrupleCollectionType[IntFloatType] | None
-    ) -> None:
+    def _set_base_markColor(self, value: RGBALike | None) -> None:
         if value is not None:
             value = normalizers.normalizeColor(value)
         self._set_markColor(value)
 
     # type: ignore[return]
-    def _get_markColor(self) -> QuadrupleType[float] | None:
+    def _get_markColor(self) -> RGBA | None:
         """Get the glyph's mark color.
 
         This is the environment implementation of
@@ -3442,9 +3434,7 @@ class BaseGlyph(
         """
         self.raiseNotImplementedError()
 
-    def _set_markColor(
-        self, value: QuadrupleCollectionType[IntFloatType] | None
-    ) -> None:
+    def _set_markColor(self, value: RGBALike | None) -> None:
         """Set the glyph's mark color.
 
         This is the environment implementation of

@@ -5,11 +5,13 @@ import defcon
 import booleanOperations
 from fontParts.base import BaseGlyph
 from fontParts.base.annotations import (
+    AffineTransformationLike,
+    RGBALike,
+    RGBA,
+    BoundingBox,
+    Coordinate,
+    CoordinateLike,
     CollectionType,
-    PairCollectionType,
-    QuadrupleType,
-    QuadrupleCollectionType,
-    SextupleCollectionType,
     IntFloatType,
 )
 from fontParts.base.errors import FontPartsError
@@ -112,7 +114,7 @@ class RGlyph(RBaseObject, BaseGlyph):
     # Bounds
     # ------
 
-    def _get_bounds(self) -> QuadrupleType[float] | None:
+    def _get_bounds(self) -> BoundingBox | None:
         return self.naked().bounds
 
     # ----
@@ -195,8 +197,8 @@ class RGlyph(RBaseObject, BaseGlyph):
     def _appendAnchor(
         self,
         name: str,
-        position: PairCollectionType[IntFloatType] | None = None,
-        color: QuadrupleCollectionType[IntFloatType] | None = None,
+        position: CoordinateLike | None = None,
+        color: RGBALike | None = None,
         identifier: str | None = None,
         **kwargs: Any,
     ) -> RAnchor:
@@ -231,10 +233,10 @@ class RGlyph(RBaseObject, BaseGlyph):
 
     def _appendGuideline(
         self,
-        position: PairCollectionType[IntFloatType] | None,
+        position: CoordinateLike | None,
         angle: float,
         name: str | None = None,
-        color: QuadrupleCollectionType[IntFloatType] | None = None,
+        color: RGBALike | None = None,
         identifier: str | None = None,
         **kwargs: Any,
     ) -> RGuideline:
@@ -296,8 +298,8 @@ class RGlyph(RBaseObject, BaseGlyph):
     def _addImage(
         self,
         data: bytes,
-        transformation: SextupleCollectionType[IntFloatType] | None = None,
-        color: QuadrupleCollectionType[IntFloatType] | None = None,
+        transformation: AffineTransformationLike | None = None,
+        color: RGBALike | None = None,
     ) -> RImage:
         image = self.naked().image
         image = self.imageClass(image)
@@ -316,15 +318,13 @@ class RGlyph(RBaseObject, BaseGlyph):
 
     # Mark
 
-    def _get_markColor(self) -> QuadrupleType[float] | None:
+    def _get_markColor(self) -> RGBA | None:
         value = self.naked().markColor
         if value is not None:
             value = tuple(value)
         return value
 
-    def _set_markColor(
-        self, value: QuadrupleCollectionType[IntFloatType] | None
-    ) -> None:
+    def _set_markColor(self, value: RGBALike | None) -> None:
         self.naked().markColor = value
 
     # Note

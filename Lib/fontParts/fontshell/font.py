@@ -4,9 +4,11 @@ import os
 
 import defcon
 from fontParts.base.annotations import (
+    RGBALike,
+    RGBA,
+    Coordinate,
+    CoordinateLike,
     CollectionType,
-    PairCollectionType,
-    QuadrupleCollectionType,
     IntFloatType,
 )
 from fontParts.base import BaseFont
@@ -141,12 +143,7 @@ class RFont(RBaseObject, BaseFont):
 
     # new
 
-    def _newLayer(
-        self,
-        name: str,
-        color: QuadrupleCollectionType[IntFloatType] | None,
-        **kwargs: Any,
-    ) -> RLayer:
+    def _newLayer(self, name: str, color: RGBALike | None, **kwargs: Any) -> RLayer:
         layers = self.naked().layers
         layer = layers.newLayer(name)
         layer.color = color
@@ -181,10 +178,10 @@ class RFont(RBaseObject, BaseFont):
 
     def _appendGuideline(
         self,
-        position: PairCollectionType[IntFloatType],
+        position: CoordinateLike,
         angle: float | None,
         name: str | None = None,
-        color: QuadrupleCollectionType[IntFloatType] | None = None,
+        color: RGBALike | None = None,
         identifier: str | None = None,
         **kwargs: Any,
     ) -> RGuideline:

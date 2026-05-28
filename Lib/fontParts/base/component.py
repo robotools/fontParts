@@ -19,11 +19,13 @@ from fontParts.base.base import (
 from fontParts.base.compatibility import ComponentCompatibilityReporter
 from fontParts.base.deprecated import DeprecatedComponent, RemovedComponent
 from fontParts.base.annotations import (
-    PairType,
-    PairCollectionType,
-    QuadrupleType,
-    SextupleType,
-    SextupleCollectionType,
+    ScaleFactorPair,
+    ScaleFactor,
+    AffineTransformationLike,
+    AffineTransformation,
+    BoundingBox,
+    Coordinate,
+    CoordinateLike,
     IntFloatType,
     PenType,
     PointPenType,
@@ -232,18 +234,16 @@ class BaseComponent(
         """,
     )
 
-    def _get_base_transformation(self) -> SextupleType[float]:
+    def _get_base_transformation(self) -> AffineTransformation:
         value = self._get_transformation()
         value = normalizers.normalizeTransformationMatrix(value)
         return value
 
-    def _set_base_transformation(
-        self, value: SextupleCollectionType[IntFloatType]
-    ) -> None:
+    def _set_base_transformation(self, value: AffineTransformationLike) -> None:
         value = normalizers.normalizeTransformationMatrix(value)
         self._set_transformation(value)
 
-    def _get_transformation(self) -> SextupleType[float]:
+    def _get_transformation(self) -> AffineTransformation:
         """Get the native component's transformation matrix.
 
         This is the environment implementation of the
@@ -262,7 +262,7 @@ class BaseComponent(
         """
         self.raiseNotImplementedError()
 
-    def _set_transformation(self, value: SextupleCollectionType[IntFloatType]) -> None:
+    def _set_transformation(self, value: AffineTransformationLike) -> None:
         """Set the native component's transformation matrix.
 
         This is the environment implementation of the
@@ -293,16 +293,16 @@ class BaseComponent(
         """,
     )
 
-    def _get_base_offset(self) -> PairType[IntFloatType]:
+    def _get_base_offset(self) -> Coordinate:
         value = self._get_offset()
         value = normalizers.normalizeTransformationOffset(value)
         return value
 
-    def _set_base_offset(self, value: PairCollectionType[IntFloatType]) -> None:
+    def _set_base_offset(self, value: CoordinateLike) -> None:
         value = normalizers.normalizeTransformationOffset(value)
         self._set_offset(value)
 
-    def _get_offset(self) -> PairType[IntFloatType]:
+    def _get_offset(self) -> Coordinate:
         """Get the native component's offset.
 
         This is the environment implementation of the :attr:`BaseComponent.offset`
@@ -320,7 +320,7 @@ class BaseComponent(
         sx, sxy, syx, sy, ox, oy = self.transformation
         return ox, oy
 
-    def _set_offset(self, value: PairCollectionType[IntFloatType]) -> None:
+    def _set_offset(self, value: CoordinateLike) -> None:
         """Set the native component's offset.
 
         This is the environment implementation of the :attr:`BaseComponent.offset`
@@ -353,16 +353,16 @@ class BaseComponent(
         """,
     )
 
-    def _get_base_scale(self) -> PairType[float]:
+    def _get_base_scale(self) -> ScaleFactor:
         value = self._get_scale()
         value = normalizers.normalizeComponentScale(value)
         return value
 
-    def _set_base_scale(self, value: PairCollectionType[IntFloatType]) -> None:
+    def _set_base_scale(self, value: ScaleFactorPair) -> None:
         value = normalizers.normalizeComponentScale(value)
         self._set_scale(value)
 
-    def _get_scale(self) -> PairType[float]:
+    def _get_scale(self) -> ScaleFactor:
         """Get the native component's scale.
 
         This is the environment implementation of the :attr:`BaseComponent.scale`
@@ -380,7 +380,7 @@ class BaseComponent(
         sx, sxy, syx, sy, ox, oy = self.transformation
         return sx, sy
 
-    def _set_scale(self, value: PairCollectionType[IntFloatType]) -> None:
+    def _set_scale(self, value: ScaleFactorPair) -> None:
         """Set the native component's scale.
 
         This is the environment implementation of the :attr:`BaseComponent.scale`
@@ -554,9 +554,7 @@ class BaseComponent(
     # Transformation
     # --------------
 
-    def _transformBy(
-        self, matrix: SextupleCollectionType[IntFloatType], **kwargs: Any
-    ) -> None:
+    def _transformBy(self, matrix: AffineTransformationLike, **kwargs: Any) -> None:
         r"""Transform the component according to the given matrix.
 
         This is the environment implementation of :meth:`BaseComponent.transformBy`.
@@ -680,7 +678,7 @@ class BaseComponent(
     # Data Queries
     # ------------
 
-    def pointInside(self, point: PairCollectionType[IntFloatType]) -> bool:
+    def pointInside(self, point: CoordinateLike) -> bool:
         """Check if `point` lies inside the filled area of the component.
 
         :param point: The point to check as a :ref:`type-coordinate`.
@@ -696,7 +694,7 @@ class BaseComponent(
         point = normalizers.normalizeCoordinateTuple(point)
         return self._pointInside(point)
 
-    def _pointInside(self, point: PairCollectionType[IntFloatType]) -> bool:
+    def _pointInside(self, point: CoordinateLike) -> bool:
         """Check if `point` lies inside the filled area of the native component.
 
         This is the environment implementation of :meth:`BaseComponent.pointInside`.
@@ -733,13 +731,13 @@ class BaseComponent(
         """,
     )
 
-    def _get_base_bounds(self) -> QuadrupleType[float]:
+    def _get_base_bounds(self) -> BoundingBox:
         value = self._get_bounds()
         if value is not None:
             value = normalizers.normalizeBoundingBox(value)
         return value
 
-    def _get_bounds(self) -> QuadrupleType[float]:
+    def _get_bounds(self) -> BoundingBox:
         """Get the bounds of the component.
 
          This is the environment implementation of the :attr:`BaseComponent.bounds`

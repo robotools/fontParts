@@ -5,10 +5,10 @@ import defcon
 from fontTools.ufoLib.validators import pngValidator
 from fontParts.base import BaseImage, FontPartsError
 from fontParts.base.annotations import (
-    QuadrupleType,
-    SextupleType,
-    QuadrupleCollectionType,
-    SextupleCollectionType,
+    AffineTransformationLike,
+    AffineTransformation,
+    RGBALike,
+    RGBA,
     IntFloatType,
 )
 from fontParts.fontshell.base import RBaseObject
@@ -17,7 +17,7 @@ from fontParts.fontshell.base import RBaseObject
 class RImage(RBaseObject, BaseImage):
     wrapClass = defcon.Image
     _orphanData: bytes | None = None
-    _orphanColor: QuadrupleCollectionType[IntFloatType] | None = None
+    _orphanColor: RGBALike | None = None
 
     # ----------
     # Attributes
@@ -25,15 +25,15 @@ class RImage(RBaseObject, BaseImage):
 
     # Transformation
 
-    def _get_transformation(self) -> SextupleType[float]:
+    def _get_transformation(self) -> AffineTransformation:
         return self.naked().transformation
 
-    def _set_transformation(self, value: SextupleCollectionType[float]) -> None:
+    def _set_transformation(self, value: AffineTransformationLike) -> None:
         self.naked().transformation = value
 
     # Color
 
-    def _get_color(self) -> QuadrupleType[float] | None:
+    def _get_color(self) -> RGBA | None:
         if self.font is None and self._orphanColor is not None:
             r, g, b, a = self._orphanColor
             return (r, g, b, a)
@@ -42,7 +42,7 @@ class RImage(RBaseObject, BaseImage):
             value = tuple(value)
         return value
 
-    def _set_color(self, value: QuadrupleCollectionType[IntFloatType] | None) -> None:
+    def _set_color(self, value: RGBALike | None) -> None:
         if self.font is None:
             self._orphanColor = value
         else:

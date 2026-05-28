@@ -4,8 +4,8 @@ from typing import Optional, Type
 import defcon
 from fontParts.base import BaseComponent
 from fontParts.base.annotations import (
-    SextupleType,
-    SextupleCollectionType,
+    AffineTransformationLike,
+    AffineTransformation,
     IntFloatType,
 )
 from fontParts.fontshell.base import RBaseObject
@@ -31,13 +31,13 @@ class RComponent(RBaseObject, BaseComponent):
 
     # transformation
 
-    def _get_transformation(self) -> SextupleType[float]:
+    def _get_transformation(self) -> AffineTransformation:
         component = self.naked()
         if component is None:
             raise ValueError("Component cannot be None.")
         return component.transformation
 
-    def _set_transformation(self, value: SextupleCollectionType[IntFloatType]) -> None:
+    def _set_transformation(self, value: AffineTransformationLike) -> None:
         component = self.naked()
         if component is not None:
             component.transformation = value
