@@ -700,7 +700,7 @@ class TestComponent(unittest.TestCase):
         pointPen = DigestPointPen()
         glyph.drawPoints(pointPen)
         expected = (
-            ('beginPath', None),
+            'beginPath',
             ((0, 0), u'line', False, 'point 0'),
             ((0, 100), u'line', False, 'point 1'),
             ((100, 100), u'line', False, 'point 2'),
@@ -739,7 +739,7 @@ class TestComponent(unittest.TestCase):
         pointPen = DigestPointPen()
         glyph.drawPoints(pointPen)
         expected = (
-            ('beginPath', None),
+            'beginPath',
             ((0, 0), u'line', False, 'point 0'),
             ((0, 200), u'line', False, 'point 1'),
             ((200, 200), u'line', False, 'point 2'),
