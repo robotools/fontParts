@@ -30,6 +30,9 @@ exclude_lines =
     # don't complain if non-runnable code isn't run
     if __name__ == .__main__.:
 
+    # don't complain about type-checking-only imports/blocks
+    if TYPE_CHECKING:
+
 # ignore source code that can’t be found
 ignore_errors = True
 

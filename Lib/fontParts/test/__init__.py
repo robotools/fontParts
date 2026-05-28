@@ -1,4 +1,3 @@
-from __future__ import print_function
 import sys
 import unittest
 from fontParts.test import test_normalizers
@@ -43,7 +42,7 @@ def testEnvironment(objectGenerator, inApp=False, verbosity=1, testNormalizers=T
         test_guideline,
         test_deprecated,
         test_color,
-        test_world
+        test_world,
     ]
     if testNormalizers:
         modules.append(test_normalizers)

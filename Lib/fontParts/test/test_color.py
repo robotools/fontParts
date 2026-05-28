@@ -3,7 +3,6 @@ from fontParts.base.color import Color
 
 
 class TestComponent(unittest.TestCase):
-
     def test_color_r(self):
         color = Color((1.0, 0, 0, 0))
         self.assertEqual(color.r, 1.0)

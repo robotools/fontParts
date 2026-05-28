@@ -5,11 +5,11 @@ FontParts
 
 An API for interacting with the parts of fonts during the font
 development process. FontParts is the replacement for
-`RoboFab <http://robofab.com>`__. The project has a
+`RoboFab <https://github.com/robotools/robofab>`__. The project has a
 `MIT open-source licence <LICENSE>`__.
 
 The documentation is at
-`fontparts.readthedocs.io <http://fontparts.readthedocs.io/en/latest/>`__.
+`fontparts.robotools.dev <https://fontparts.robotools.dev>`__.
 
 *This is a work in progress. We are still working out the API, abstract
 implementation, example implementation, test suite and documentation.*
@@ -17,7 +17,7 @@ implementation, example implementation, test suite and documentation.*
 Want to contribute?
 -------------------
 
-Thank you! Please see the `CONTRIBUTING.rst <https://github.com/robofab-developers/fontParts/blob/master/CONTRIBUTING.rst>`_ file for a guide on how to help.
+Thank you! Please see the `CONTRIBUTING.rst <https://github.com/robotools/fontParts/blob/main/CONTRIBUTING.rst>`_ file for a guide on how to help.
 
 Also, feedback is very much welcome, please open an issue when you run
 into something that you wish fontParts did/didn't do.
@@ -26,7 +26,7 @@ into something that you wish fontParts did/didn't do.
 Installation
 ~~~~~~~~~~~~
 
-FontParts requires `Python <http://www.python.org/download/>`__ 3.8 or later.
+FontParts requires `Python <http://www.python.org/download/>`__ 3.10 or later.
 
 The package is listed in the Python Package Index (PyPI), so you can
 install it with `pip <https://pip.pypa.io>`__:
@@ -38,16 +38,16 @@ install it with `pip <https://pip.pypa.io>`__:
 If you would like to contribute to its development, you can clone the
 repository from Github, install the package in 'editable' mode and
 modify the source code in place. We recommend creating a virtual
-environment, using `virtualenv <https://virtualenv.pypa.io>`__ or `venv <https://docs.python.org/3/library/venv.html>`__ module.
+environment, using the `venv <https://docs.python.org/3/library/venv.html>`__ module.
 
 .. code:: sh
 
     # download the source code to 'fontParts' folder
-    git clone https://github.com/robofab-developers/fontParts.git
+    git clone https://github.com/robotools/fontParts.git
     cd fontParts
 
     # create new virtual environment called e.g. 'fontParts-venv', or anything you like
-    python -m virtualenv fontParts-venv
+    python -m venv fontParts-venv
 
     # source the `activate` shell script to enter the environment (Un\*x); to exit, just type `deactivate`
     . fontParts-venv/bin/activate
@@ -75,12 +75,12 @@ Testing is setup so that each environment that includes fontParts
 can provides the objects needed to run a common set of tests.
 This makes testing very easy for environments that use fontParts (for
 example, see the fontshell
-`test.py <https://github.com/robofab-developers/fontParts/blob/master/Lib/fontParts/fontshell/test.py>`__
+`test.py <https://github.com/robotools/fontParts/blob/master/Lib/fontParts/fontshell/test.py>`__
 script), but it means testing is different than other python packages.
 
 Automated testing of the package is done in the fontshell environment.
 fontshell is fontParts for the commandline, implemented with
-`defcon <https://github.com/typesupply/defcon>`__ and is included
+`defcon <https://github.com/robotools/defcon>`__ and is included
 as part of the fontParts package.
 
 Before you can run the test suite you’ll need to install the test dependencies:
@@ -108,7 +108,7 @@ environments.
 
 Note that when you run ``tox`` without arguments, the tests are executed
 for all the environments listed in tox.ini's ``envlist``. In our case,
-this is Python 3.6, so for this to work the ``python3.6`` executables must
+this is Python 3.10, so for this to work the ``python3.10`` executables must
 be available in your ``PATH``.
 
 You can specify an alternative environment list via the ``-e`` option,
@@ -116,14 +116,15 @@ or the ``TOXENV`` environment variable:
 
 .. code:: sh
 
-    tox -e py39-nocov
-    TOXENV="py36-cov,htmlcov" tox
+    tox -e py310-nocov
+    TOXENV="py310-cov,htmlcov" tox
 
 .. |CI Build Status| image:: https://github.com/robotools/fontParts/workflows/Tests/badge.svg
    :target: https://github.com/robotools/fontParts/actions?query=workflow%3ATests
 .. |PyPI| image:: https://img.shields.io/pypi/v/fontParts.svg
    :target: https://pypi.org/project/fontParts
-.. |Versions| image:: https://img.shields.io/badge/python-3.8%2C%203.9%2C%203.10%2C%203.11-blue.svg
+.. |Versions| image:: https://img.shields.io/pypi/pyversions/fontParts.svg
    :alt: Python Versions
+   :target: https://pypi.org/project/fontParts
 .. |Coverage| image:: https://codecov.io/gh/robotools/fontParts/branch/master/graph/badge.svg
    :target: https://codecov.io/gh/robotools/fontParts
