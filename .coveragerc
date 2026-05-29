@@ -15,8 +15,6 @@ omit =
 [paths]
 source =
     Lib/fontParts
-    .tox/*/lib/python*/site-packages/fontParts
-    .tox/pypy*/site-packages/fontParts
 
 [report]
 # Regexes for lines to exclude from consideration
