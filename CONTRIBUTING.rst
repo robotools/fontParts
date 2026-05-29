@@ -77,15 +77,7 @@ A good place to start looking to see examples for how to write the tests is in t
 What should I install to write tests?
 -------------------------------------
 
-Having both ``tox`` and ``coverage`` installed locally are great aids to writing tests.
-
-`Tox <https://pypi.org/project/tox/>`_ is installed via: ::
-
-  pip install tox
-
-Once ``tox`` is installed, you can run the tests for fontParts by just typing ``tox`` on the command line when you are in the fontParts directory.
-
-``tox`` is set up to test fontParts in Python 2.7, 3.5, 3.6, and PyPy. It’s likely that you don’t have all of those versions installed on your machine (looking at you pypy). Don’t worry about testing errors for python versions that aren’t installed. If you don’t have a version of Python 3 installed, you should install version 3.6. On the MacOS, it’s easiest to do via `Homebrew <https://brew.sh>`_, but whatever you are most comfortable with will likely be OK.
+Having ``coverage`` installed locally is a great aid to writing tests.
 
 `Coverage <https://pypi.org/project/coverage/>`_ is installed via: ::
 
@@ -97,8 +89,6 @@ After installing it, run: ::
     coverage html
 
 And a folder named **htmlcov** containing a bunch of files will be created. Open the file named **index.html** in that folder. This will allow you to get an update of the coverage before you push out a commit.
-
-``tox`` is also set up to run the coverage tests, so if you have Python 3.6 installed, each time you run ``tox`` it will update the **htmlcov** folder for you.
 
 **Note:** Coverage is great for showing what lines of code may be missed, and is a good yardstick to measure your progress. However, it can’t and doesn’t know everything that may go wrong, so you will need to think about the object you are writing tests for and have a logical plan for what might go wrong & what to then test.
 
@@ -158,7 +148,6 @@ Once you have a GitHub account, you’ll want to fork the project `on GitHub <ht
   git remote add upstream https://github.com/robotools/fontParts.git
   git fetch upstream
 
-After doing this, it’s a good idea to at least install `tox <https://pypi.org/project/tox/>`_ for local testing. See “`What should I install to write tests?`_” for how to install ``tox``.
 
 Creating a branch
 -----------------
