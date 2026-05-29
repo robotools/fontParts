@@ -408,7 +408,7 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin, ABC):
 
         .. deprecated:: 0.8
 
-            This method is deprecated. Use ``font[name] = glyph`` instead.
+            Will be removed in version 1.5. Use ``font[name] = glyph`` instead.
 
         This method will not insert a glyph directly, but rather create
         a new :class:`BaseGlyph` instance containing the data from
