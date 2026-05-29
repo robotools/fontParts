@@ -97,7 +97,10 @@ jobs:
           with:
             python-version: ${{ matrix.python-version }}
         - name: Install packages
-          run: pip install -r requirements-dev.txt
+          run: |
+            pip install --upgrade pip
+            pip install -r requirements-dev.txt
+            pip install -e .
         - name: Run tests and collect coverage
           run: pytest --cov Lib/fontParts/fontshell/test.py
         - name: Upload coverage to Codecov
