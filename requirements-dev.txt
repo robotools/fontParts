@@ -1,4 +1,4 @@
 -r requirements.txt
+pytest-cov
 virtualenv>=15.0
 unittest2>=1.1.0
-coverage>=4.5.4

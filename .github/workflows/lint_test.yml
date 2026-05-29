@@ -98,18 +98,13 @@ jobs:
             python-version: ${{ matrix.python-version }}
         - name: Install packages
           run: pip install -r requirements-dev.txt
-        - name: Run Tox
-          run: tox -e py-cov
-        - name: Produce coverage files
-          run: |
-            coverage combine
-            coverage xml
+        - name: Run tests and collect coverage
+          run: pytest --cov Lib/fontParts/fontshell/test.py
         - name: Upload coverage to Codecov
           if: github.repository == 'robotools/fontparts'
           uses: codecov/codecov-action@v5
           with:
-            files: coverage.xml
             flags: unittests
-            name: codecov-umbrella
             fail_ci_if_error: true
             token: ${{ secrets.CODECOV_TOKEN }}
+            verbose: true

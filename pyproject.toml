@@ -60,6 +60,10 @@ where = ["Lib"]
 write_to = 'Lib/fontParts/_version.py'
 write_to_template = '__version__ = "{version}"'
 
+[tool.pytest]
+minversion = "9.0"
+addopts = ["-ra", "-q"]
+
 [tool.ruff]
 target-version = "py310"
 
