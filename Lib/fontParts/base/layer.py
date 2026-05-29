@@ -406,9 +406,9 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin, ABC):
     def insertGlyph(self, glyph: BaseGlyph, name: str | None = None) -> BaseGlyph:
         """Insert a specified glyph into the layer.
 
-        .. deprecated::
+        .. deprecated:: 0.8
 
-            This method is deprecated. Use :meth:`BaseFont.__setitem__` instead.
+            This method is deprecated. Use ``font[name] = glyph`` instead.
 
         This method will not insert a glyph directly, but rather create
         a new :class:`BaseGlyph` instance containing the data from
