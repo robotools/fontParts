@@ -204,23 +204,45 @@ a.headerlink:visited {
   visibility: hidden;
 }
 
-.note {
+.admonition {
   padding: 1rem;
   border-radius: 0.5rem;
-  background-color: rgba(0, 98, 255, 0.1);
-  border: rgba(0, 98, 255, 0.5) solid 1px;
+  border: solid 1px;
 }
 @media (min-width: 800px) {
-  .note {
+  .admonition {
     margin-left: -1rem;
   }
 }
-.note p {
+.admonition p {
   margin: 0;
 }
-.note .admonition-title {
-  color: #0062FF;
+.admonition .admonition-title {
   margin-bottom: 0;
+}
+
+:root {
+  --note-color: 0, 98, 255;
+  --important-color: 255, 170, 0;
+  --deprecated-color: 147, 51, 234;
+}
+
+.note {
+  background-color: rgba(var(--note-color), 0.1);
+  border-color: rgba(var(--note-color), 0.5);
+}
+
+.note .admonition-title {
+  color: rgb(var(--note-color));
+}
+
+.important {
+  background-color: rgba(var(--important-color), 0.1);
+  border-color: rgba(var(--important-color), 0.5);
+}
+
+.important .admonition-title {
+  color: rgb(var(--important-color));
 }
 
 .highlight {
