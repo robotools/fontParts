@@ -1483,7 +1483,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
 
         .. deprecated:: 0.8
 
-            Will be removed in version 1.5. Use ``del font[name]`` instead.
+            Will be removed in version 1.5. Use :meth:`BaseFont.__delitem__` instead.
 
         This is the environment implementation of
         :meth:`BaseFont.removeGlyph`.
