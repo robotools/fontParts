@@ -81,11 +81,11 @@ Having ``coverage`` installed locally is a great aid to writing tests.
 
 `Coverage <https://pypi.org/project/coverage/>`_ is installed via: ::
 
-    pip install coverage
+    pip install coverage[toml]
 
 After installing it, run: ::
 
-    coverage run Lib/fontParts/fontshell/test.py
+    coverage run
     coverage html
 
 And a folder named **htmlcov** containing a bunch of files will be created. Open the file named **index.html** in that folder. This will allow you to get an update of the coverage before you push out a commit.
