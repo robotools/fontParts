@@ -56,6 +56,11 @@ include-package-data = true
 [tool.setuptools.packages.find]
 where = ["Lib"]
 
+[tool.coverage.run]
+branch = true
+parallel= true
+command_line = "Lib/fontParts/fontshell/test.py"
+
 [tool.setuptools_scm]
 write_to = 'Lib/fontParts/_version.py'
 write_to_template = '__version__ = "{version}"'

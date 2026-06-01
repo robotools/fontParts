@@ -102,7 +102,7 @@ jobs:
             pip install -r requirements-dev.txt
             pip install -e .
         - name: Run tests and collect coverage
-          run: coverage run --parallel-mode Lib/fontParts/fontshell/test.py
+          run: coverage run
         - name: Upload coverage to Codecov
           if: github.repository == 'robotools/fontparts'
           uses: codecov/codecov-action@v5
