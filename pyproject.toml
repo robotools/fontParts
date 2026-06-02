@@ -87,7 +87,6 @@ exclude_lines = [
 ignore_errors = true
 show_missing = true
 
-
 [tool.setuptools_scm]
 write_to = 'Lib/fontParts/_version.py'
 write_to_template = '__version__ = "{version}"'
