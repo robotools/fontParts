@@ -97,27 +97,6 @@ To run the test suite you can do:
 
 To test in other environments, run the test script provided by that environment.
 
-You can also use `tox <https://testrun.org/tox/latest/>`__ to
-automatically run tests on different Python versions in isolated virtual
-environments.
-
-.. code:: sh
-
-    pip install tox
-    tox
-
-Note that when you run ``tox`` without arguments, the tests are executed
-for all the environments listed in tox.ini's ``envlist``. In our case,
-this is Python 3.10, so for this to work the ``python3.10`` executables must
-be available in your ``PATH``.
-
-You can specify an alternative environment list via the ``-e`` option,
-or the ``TOXENV`` environment variable:
-
-.. code:: sh
-
-    tox -e py310-nocov
-    TOXENV="py310-cov,htmlcov" tox
 
 .. |CI Build Status| image:: https://github.com/robotools/fontParts/workflows/Tests/badge.svg
    :target: https://github.com/robotools/fontParts/actions?query=workflow%3ATests
