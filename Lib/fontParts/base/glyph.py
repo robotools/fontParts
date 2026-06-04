@@ -2976,7 +2976,7 @@ class BaseGlyph(
         return pen.getResult()
 
     bounds: dynamicProperty = dynamicProperty(
-        "bounds",
+        "base_bounds",
         """Get the bounds of the glyph.
 
         This property is read-only.
@@ -3021,7 +3021,7 @@ class BaseGlyph(
         return pen.bounds
 
     area: dynamicProperty = dynamicProperty(
-        "area",
+        "base_area",
         """Get the area of the glyph
 
         This property is read-only.
