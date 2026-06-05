@@ -1481,9 +1481,9 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
     def _removeGlyph(self, name: str, **kwargs: Any) -> None:
         r"""Remove the specified glyph from the default layer.
 
-        .. deprecated::
+        .. deprecated:: 0.8
 
-            Use :meth:`BaseFont.__delitem__` instead.
+            Will be removed in version 1.5. Use :meth:`BaseFont.__delitem__` instead.
 
         This is the environment implementation of
         :meth:`BaseFont.removeGlyph`.
