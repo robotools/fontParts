@@ -761,7 +761,7 @@ class BaseContour(
     # ---------------
 
     bounds: dynamicProperty = dynamicProperty(
-        "bounds",
+        "base_bounds",
         """Get the bounds of the contour.
 
         This property is read-only.
@@ -809,7 +809,7 @@ class BaseContour(
         return pen.bounds
 
     area: dynamicProperty = dynamicProperty(
-        "area",
+        "base_area",
         """Get the area of the contour
 
         This property is read-only.

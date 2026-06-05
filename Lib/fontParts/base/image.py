@@ -411,7 +411,7 @@ class BaseImage(
     # Data
 
     data: dynamicProperty = dynamicProperty(
-        "data",
+        "base_data",
         """Get or set the image's raw byte data.
         
         The possible formats are defined by each environment.
