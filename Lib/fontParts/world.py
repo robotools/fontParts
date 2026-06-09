@@ -2,7 +2,7 @@
 from __future__ import annotations
 import os
 import glob
-from typing import TYPE_CHECKING, Optional, Union
+from typing import TYPE_CHECKING, Union
 from collections.abc import Callable, Iterable
 from collections.abc import Generator
 from types import FunctionType
@@ -20,7 +20,7 @@ if TYPE_CHECKING:
     from fontParts.base.anchor import BaseAnchor
     from fontParts.base.guideline import BaseGuideline
 
-SortOptionType = Union[str, FunctionType, CollectionType[Union[str, FunctionType]]]
+SortOptionType = str | FunctionType | CollectionType[str | FunctionType]
 BaseTypes = Union[
     "BaseFont",
     "BaseGlyph",
@@ -33,8 +33,9 @@ BaseTypes = Union[
     "BaseGuideline",
     "BaseFontList",
 ]
-RegistryType = dict[str, Optional[Callable[[], BaseTypes]]]
-InfoType = Union[str, int, float, bool]
+
+RegistryType = dict[str, Callable[[], BaseTypes] | None]
+InfoType = str | int | float | bool
 
 
 def OpenFonts(
