@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any
 from collections.abc import Callable, Generator
 
 from fontParts.base.errors import FontPartsError
@@ -17,7 +17,6 @@ from fontParts.base.compatibility import SegmentCompatibilityReporter
 from fontParts.base.annotations import (
     AffineTransformationLike,
     CollectionType,
-    IntFloatType,
 )
 
 if TYPE_CHECKING:

@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Tuple, List, Optional, Union
+from typing import TYPE_CHECKING
 from collections.abc import Callable
 
 from fontParts.base.base import BaseObject, dynamicProperty, reference

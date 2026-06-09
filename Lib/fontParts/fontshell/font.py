@@ -1,15 +1,12 @@
 from __future__ import annotations
-from typing import Any, Optional, Tuple, Union
+from typing import Any
 import os
 
 import defcon
 from fontParts.base.annotations import (
     RGBALike,
-    RGBA,
-    Coordinate,
     CoordinateLike,
     CollectionType,
-    IntFloatType,
 )
 from fontParts.base import BaseFont
 from fontParts.fontshell.base import RBaseObject

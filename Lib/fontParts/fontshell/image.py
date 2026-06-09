@@ -1,5 +1,4 @@
 from __future__ import annotations
-from typing import Optional
 
 import defcon
 from fontTools.ufoLib.validators import pngValidator
@@ -9,7 +8,6 @@ from fontParts.base.annotations import (
     AffineTransformation,
     RGBALike,
     RGBA,
-    IntFloatType,
 )
 from fontParts.fontshell.base import RBaseObject
 

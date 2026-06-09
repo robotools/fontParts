@@ -1,6 +1,6 @@
 # pylint: disable=C0103, C0302, C0114, W0613
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, TypeVar
+from typing import TYPE_CHECKING, Any
 from collections.abc import Iterator
 from itertools import zip_longest
 from collections import Counter
@@ -33,7 +33,6 @@ from fontParts.base.annotations import (
     ScaleFactorLike,
     AffineTransformationLike,
     BoundingBox,
-    Coordinate,
     CoordinateLike,
     RGBA,
     RGBALike,

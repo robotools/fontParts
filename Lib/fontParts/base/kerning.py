@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Iterator, MutableMapping
-from typing import TYPE_CHECKING, Dict, List, Optional, TypeVar, Union
+from typing import TYPE_CHECKING, TypeVar
 
 from fontParts.base import normalizers
 from fontParts.base.annotations import (
@@ -12,8 +12,6 @@ from fontParts.base.annotations import (
     ScaleFactorPair,
     KerningPairLike,
     KerningPair,
-    Coordinate,
-    CoordinateLike,
     IntFloatType,
 )
 from fontParts.base.base import BaseDict, dynamicProperty, interpolate, reference
