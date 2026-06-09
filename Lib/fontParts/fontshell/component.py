@@ -2,10 +2,7 @@ from __future__ import annotations
 
 import defcon
 from fontParts.base import BaseComponent
-from fontParts.base.annotations import (
-    AffineTransformationLike,
-    AffineTransformation,
-)
+from fontParts.base.annotations import AffineTransformationLike, AffineTransformation
 from fontParts.fontshell.base import RBaseObject
 
 

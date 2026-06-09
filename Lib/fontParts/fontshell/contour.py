@@ -3,10 +3,7 @@ from typing import TYPE_CHECKING, Any
 
 import defcon
 from fontParts.base import BaseContour
-from fontParts.base.annotations import (
-    BoundingBox,
-    CoordinateLike,
-)
+from fontParts.base.annotations import BoundingBox, CoordinateLike
 from fontParts.fontshell.base import RBaseObject
 from fontParts.fontshell.point import RPoint
 from fontParts.fontshell.segment import RSegment
