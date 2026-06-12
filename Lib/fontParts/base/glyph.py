@@ -1270,7 +1270,7 @@ class BaseGlyph(
     def _insertContour(
         self, index: int, contour: BaseContour, offset: CoordinateLike, **kwargs: Any
     ) -> BaseContour:
-        """Insert the given native contour's data at the specified index.
+        r"""Insert the given native contour's data at the specified index.
 
         This is the environment implementation of :meth:`BaseGlyph.insertContour`.
 
@@ -1284,6 +1284,7 @@ class BaseGlyph(
             :ref:`type-coordinate`, or :obj:`None` representing an offset of ``(0, 0)``.
             Defaults to None. The value will have been normalized with
             :func:`normalizers.normalizeTransformationOffset`
+        :param \**kwargs: Additional keyword arguments.
         :return: A :class:`BaseContour` instance containing the inserted data.
 
         .. note::
