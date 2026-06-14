@@ -1,7 +1,7 @@
 # pylint: disable=C0103, W0613
 from __future__ import annotations
 import os
-from typing import TYPE_CHECKING, Any, Generic, List, Optional, Tuple, Type, Union
+from typing import TYPE_CHECKING, Any
 
 from fontTools import ufoLib
 from fontParts.base.errors import FontPartsError
@@ -14,8 +14,6 @@ from fontParts.base.annotations import (
     InterpolationFactorPair,
     InterpolationFactorLike,
     RGBALike,
-    RGBA,
-    Coordinate,
     CoordinateLike,
     CharacterMappingType,
     CollectionType,

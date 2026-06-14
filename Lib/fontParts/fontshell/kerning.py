@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Any, Optional, Union
+from typing import Any
 from collections.abc import ItemsView
 
 import defcon

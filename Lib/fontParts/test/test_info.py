@@ -83,7 +83,6 @@ class TestInfo(unittest.TestCase):
     # ------
 
     def test_update(self):
-        from fontTools.ufoLib import fontInfoAttributesVersion3ValueData
 
         info1 = self.getInfo_generic()
         info1.familyName = "test1"

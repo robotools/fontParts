@@ -1,5 +1,4 @@
 from __future__ import annotations
-from typing import Union
 
 from fontParts.base.normalizers import normalizeColor
 from fontParts.base.annotations import IntFloatType, RGBALike

@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, Optional, Union, List, Tuple
+from typing import TYPE_CHECKING, Any
 from collections.abc import Callable
 
 from fontTools.misc import transform
