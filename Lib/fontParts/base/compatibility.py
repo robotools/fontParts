@@ -1,7 +1,6 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, List
+from typing import TYPE_CHECKING, Any
 from collections.abc import Sequence
-from _collections_abc import Callable
 
 from fontParts.base.base import dynamicProperty
 from fontParts.base.annotations import DiffType

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable
-from typing import TYPE_CHECKING, Any, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any
 
 from fontTools.misc import transform
 
@@ -20,9 +20,6 @@ from fontParts.base.deprecated import DeprecatedPoint, RemovedPoint
 
 if TYPE_CHECKING:
     from fontParts.base.contour import BaseContour
-    from fontParts.base.font import BaseFont
-    from fontParts.base.glyph import BaseGlyph
-    from fontParts.base.lib import BaseLib
 
 
 class BasePoint(

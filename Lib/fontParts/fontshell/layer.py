@@ -1,9 +1,9 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Optional, Tuple, Dict, Any
+from typing import TYPE_CHECKING, Any
 
 import defcon
 from fontParts.base import BaseLayer
-from fontParts.base.annotations import RGBALike, RGBA, IntFloatType
+from fontParts.base.annotations import RGBALike, RGBA
 from fontParts.fontshell.base import RBaseObject
 from fontParts.fontshell.lib import RLib
 from fontParts.fontshell.glyph import RGlyph

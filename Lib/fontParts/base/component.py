@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any
 from collections.abc import Callable
 
 from fontTools.misc import transform
@@ -27,7 +27,6 @@ from fontParts.base.annotations import (
     BoundingBox,
     Coordinate,
     CoordinateLike,
-    IntFloatType,
     PenType,
     PointPenType,
 )

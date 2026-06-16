@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Optional, Union
+from typing import TYPE_CHECKING
 
 from fontParts.world import _EnvironmentDispatcher
 from fontParts.base.annotations import CollectionType
@@ -9,7 +9,7 @@ if TYPE_CHECKING:
 
 
 def AskString(
-    message: str, value: Optional[str] = None, title: Optional[str] = "FontParts"
+    message: str, value: str | None = None, title: str | None = "FontParts"
 ) -> str:
     """Display a dialog to ask for a string input.
 
@@ -30,9 +30,9 @@ def AskString(
 
 def AskYesNoCancel(
     message: str,
-    title: Optional[str] = "FontParts",
-    default: Optional[int] = 0,
-    informativeText: Optional[str] = None,
+    title: str | None = "FontParts",
+    default: int | None = 0,
+    informativeText: str | None = None,
 ) -> str:
     """Display a dialog to ask a yes, no, or cancel question.
 
@@ -77,12 +77,12 @@ def FindGlyph(
 
 
 def GetFile(
-    message: Optional[str] = None,
-    title: Optional[str] = None,
-    directory: Optional[str] = None,
-    fileName: Optional[str] = None,
+    message: str | None = None,
+    title: str | None = None,
+    directory: str | None = None,
+    fileName: str | None = None,
     allowsMultipleSelection: bool = False,
-    fileTypes: Optional[str] = None,
+    fileTypes: str | None = None,
 ) -> str:
     """Display a dialog to get a file path.
 
@@ -116,13 +116,13 @@ def GetFile(
 
 
 def GetFileOrFolder(
-    message: Optional[str] = None,
-    title: Optional[str] = None,
-    directory: Optional[str] = None,
-    fileName: Optional[str] = None,
+    message: str | None = None,
+    title: str | None = None,
+    directory: str | None = None,
+    fileName: str | None = None,
     allowsMultipleSelection: bool = False,
-    fileTypes: Optional[str] = None,
-) -> Union[str, CollectionType[str]]:
+    fileTypes: str | None = None,
+) -> str | CollectionType[str]:
     """Display a dialog to get file or folder paths.
 
     :param message: The optional message to display in the dialog as a :class:`str`.
@@ -156,9 +156,7 @@ def GetFileOrFolder(
 
 
 def Message(
-    message: str,
-    title: Optional[str] = "FontParts",
-    informativeText: Optional[str] = None,
+    message: str, title: str | None = "FontParts", informativeText: str | None = None
 ) -> None:
     """Display a message dialog.
 
@@ -178,7 +176,7 @@ def Message(
     )
 
 
-def PutFile(message: Optional[str] = None, fileName: Optional[str] = None) -> str:
+def PutFile(message: str | None = None, fileName: str | None = None) -> str:
     """Display a dialog to put a file.
 
     :param message: The optional message to display in the dialog as a :class:`str`.
@@ -197,8 +195,8 @@ def PutFile(message: Optional[str] = None, fileName: Optional[str] = None) -> st
 
 def SearchList(
     items: CollectionType[str],
-    message: Optional[str] = "Select an item:",
-    title: Optional[str] = "FontParts",
+    message: str | None = "Select an item:",
+    title: str | None = "FontParts",
 ) -> str:
     """Display a dialog to search a given list.
 
@@ -218,9 +216,9 @@ def SearchList(
 
 
 def SelectFont(
-    message: Optional[str] = "Select a font:",
-    title: Optional[str] = "FontParts",
-    allFonts: Optional[CollectionType[str]] = None,
+    message: str | None = "Select a font:",
+    title: str | None = "FontParts",
+    allFonts: CollectionType[str] | None = None,
 ) -> str:
     """Display a dialog to select a font from all open fonts.
 
@@ -242,8 +240,8 @@ def SelectFont(
 
 def SelectGlyph(
     aFont: BaseFont,
-    message: Optional[str] = "Select a glyph:",
-    title: Optional[str] = "FontParts",
+    message: str | None = "Select a glyph:",
+    title: str | None = "FontParts",
 ) -> str:
     """Display a dialog to select a glyph from a given font.
 
@@ -263,9 +261,7 @@ def SelectGlyph(
 
 
 def ProgressBar(
-    title: Optional[str] = "RoboFab...",
-    ticks: Optional[int] = None,
-    label: Optional[str] = None,
+    title: str | None = "RoboFab...", ticks: int | None = None, label: str | None = None
 ) -> None:
     """Display a progress bar dialog.
 

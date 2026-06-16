@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Dict, List, Optional, Union
+from typing import TYPE_CHECKING
 from collections.abc import Callable, Iterator
 from collections.abc import MutableMapping
 
