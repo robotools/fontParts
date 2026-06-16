@@ -19,6 +19,7 @@ from fontParts.test import test_lib
 from fontParts.test import test_guideline
 from fontParts.test import test_deprecated
 from fontParts.test import test_color
+from fontParts.test import test_bounds
 from fontParts.test import test_world
 
 
@@ -42,6 +43,7 @@ def testEnvironment(objectGenerator, inApp=False, verbosity=1, testNormalizers=T
         test_guideline,
         test_deprecated,
         test_color,
+        test_bounds,
         test_world,
     ]
     if testNormalizers:
