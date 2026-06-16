@@ -148,6 +148,33 @@ class TestContour(unittest.TestCase):
         contour = glyph.appendContour(contour)
         self.assertEqual(layer, contour.layer)
 
+    # ----
+    # Pens
+    # ----
+
+    def test_drawPoints_oldProtocol(self):
+        contour = self.getContour_bounds()
+
+        class OldProtocolPen:
+            def __init__(self):
+                self.calls = []
+
+            def beginPath(self):
+                self.calls.append(("beginPath",))
+
+            def addPoint(self, pt, segmentType=None, smooth=False, name=None):
+                self.calls.append(("addPoint", pt, segmentType, smooth, name))
+
+            def endPath(self):
+                self.calls.append(("endPath",))
+
+        pen = OldProtocolPen()
+        contour.drawPoints(pen)
+
+        self.assertEqual(len(pen.calls), 6)
+        self.assertEqual(pen.calls[0], ("beginPath",))
+        self.assertEqual(pen.calls[-1], ("endPath",))
+
     # -------------
     # Normalization
     # -------------
