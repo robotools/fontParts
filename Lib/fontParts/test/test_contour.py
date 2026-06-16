@@ -629,6 +629,22 @@ class TestContour(unittest.TestCase):
         self.assertEqual(len(segments), len(contour.segments))
         self.assertEqual([segment.type for segment in segments], ["line"] * 4)
 
+    def test_appendSegment_points(self):
+        contour = self.getContour_bounds()
+        initialLength = len(contour)
+        points = ((50, 50),)
+        contour.appendSegment(type="line", points=points)
+        self.assertEqual(len(contour), initialLength + 1)
+
+    def test_appendSegment_segment(self):
+        contour1 = self.getContour_bounds()
+        initialLength = len(contour1)
+        contour2, _ = self.objectGenerator("contour")
+        contour2.appendPoint((50, 50), "line")
+        segment = contour2.segments[0]
+        contour1.appendSegment(segment=segment)
+        self.assertEqual(len(contour1), initialLength + 1)
+
     # ------
     # points
     # ------
