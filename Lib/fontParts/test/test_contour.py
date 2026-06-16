@@ -788,6 +788,57 @@ class TestContour(unittest.TestCase):
         contour.removeSegment(segment)
         self.assertEqual(len(contour), initialLength - 1)
 
+    # -------
+    # bPoints
+    # -------
+
+    def test_insertBPoint_values(self):
+        contour = self.getContour_bounds()
+        initialLength = len(contour.bPoints)
+        contour.insertBPoint(0, type="curve", anchor=(50, 50))
+        self.assertEqual(len(contour.bPoints), initialLength + 1)
+        self.assertEqual(contour.bPoints[1].anchor, (50, 50))
+
+    def test_insertBPoint_bPoint(self):
+        contour1 = self.getContour_bounds()
+        initialLength = len(contour1)
+        contour2, _ = self.objectGenerator("contour")
+        contour2.appendPoint((50, 50), "line")
+        bPoint = contour2.bPoints[0]
+        contour1.insertBPoint(0, bPoint=bPoint)
+        self.assertEqual(len(contour1.bPoints), initialLength + 1)
+        self.assertEqual(contour1.bPoints[1].type, "corner")
+        self.assertEqual(contour1.bPoints[1].anchor, (50, 50))
+
+    def test_insertBPoint_overrides(self):
+        contour1 = self.getContour_bounds()
+        initialLength = len(contour1)
+        contour2, _ = self.objectGenerator("contour")
+        contour2.appendPoint((50, 50), "line")
+        bPoint = contour2.bPoints[0]
+        contour1.insertBPoint(
+            0,
+            type="curve",
+            anchor=(0, 0),
+            bcpIn=(10, 10),
+            bcpOut=(20, 20),
+            bPoint=bPoint,
+        )
+        self.assertEqual(len(contour1.bPoints), initialLength + 1)
+        self.assertEqual(contour1.bPoints[1].type, "curve")
+        self.assertEqual(contour1.bPoints[1].anchor, (0, 0))
+        self.assertEqual(contour1.bPoints[1].bcpIn, (10, 10))
+        self.assertEqual(contour1.bPoints[1].bcpOut, (20, 20))
+
+    def test_insertBPoint_raises(self):
+        contour = self.getContour_bounds()
+        with self.assertRaises(TypeError):
+            contour.insertBPoint(None, type="corner", anchor=(50, 50))
+        with self.assertRaises(TypeError):
+            contour.insertBPoint(0, type=None, anchor=(50, 50))
+        with self.assertRaises(TypeError):
+            contour.insertBPoint(0, type="corner", anchor=None)
+
     # ------
     # points
     # ------
