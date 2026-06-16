@@ -1237,6 +1237,70 @@ class BaseGlyph(
                 return i
         raise FontPartsError("The contour could not be found.")
 
+    def insertContour(
+        self, index: int, contour: BaseContour, offset: CoordinateLike | None = None
+    ) -> BaseContour:
+        """Insert the given contour's data at the specified index.
+
+        An `index` value of ``0`` or smaller will prepend the `contour`, while a value
+        of ``len(glyph)`` or larger will append it.
+
+        :param index: The index of the contour before which to insert as an
+            :class:`int`.
+        :param contour: The :class:`BaseContour` instance containing the source data to
+            insert.
+        :param offset: The x and y shift values to be applied to the appended data as a
+            :ref:`type-coordinate`, or :obj:`None` representing an offset of ``(0, 0)``.
+            Defaults to None.
+        :return: A :class:`BaseContour` instance containing the inserted data.
+
+        Example::
+
+            >>> contour = glyph.insertContour(contour, 1, (100, 0))
+
+        """
+        normalizedIndex = normalizers.normalizeIndex(index)
+        if normalizedIndex is None:
+            raise ValueError("Index cannot be None.")
+        normalizedContour = normalizers.normalizeContour(contour)
+        if offset is None:
+            offset = (0, 0)
+        normalizedOffset = normalizers.normalizeTransformationOffset(offset)
+        return self._insertContour(normalizedIndex, normalizedContour, normalizedOffset)
+
+    def _insertContour(
+        self, index: int, contour: BaseContour, offset: CoordinateLike, **kwargs: Any
+    ) -> BaseContour:
+        r"""Insert the given native contour's data at the specified index.
+
+        This is the environment implementation of :meth:`BaseGlyph.insertContour`.
+
+        :param index: The index of the contour before which to insert as an
+            :class:`int`. The value will have been normalized with
+            :func:`normalizers.normalizeIndex`
+        :param contour: The :class:`BaseContour` instance containing the source data to
+            insert. The value will have been normalized with
+            :func:`normalizers.normalizeContour`.
+        :param offset: The x and y shift values to be applied to the appended data as a
+            :ref:`type-coordinate`, or :obj:`None` representing an offset of ``(0, 0)``.
+            Defaults to None. The value will have been normalized with
+            :func:`normalizers.normalizeTransformationOffset`
+        :param \**kwargs: Additional keyword arguments.
+        :return: A :class:`BaseContour` instance containing the inserted data.
+
+        .. note::
+
+            Subclasses may override this method.
+
+        """
+        contourList = list(self.contours)
+        contourList.insert(index, contour)
+        self.clearContours()
+        for i, contour in enumerate(contourList):
+            currentOffset = offset if i == index else (0, 0)
+            self._appendContour(contour, currentOffset)
+        return self[index]
+
     def appendContour(
         self, contour: BaseContour, offset: CoordinateLike | None = None
     ) -> BaseContour:
