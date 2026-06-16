@@ -13,6 +13,7 @@ from fontTools.pens.pointInsidePen import PointInsidePen
 from fontTools.pens.areaPen import AreaPen
 from fontTools.pens.boundsPen import BoundsPen
 
+from fontParts.base.bounds import Bounds
 from fontParts.base.errors import FontPartsError
 from fontParts.base.base import (
     BaseObject,
@@ -2981,24 +2982,23 @@ class BaseGlyph(
 
         This property is read-only.
 
-        :return: A :class:`tuple` of four :class:`int` or :class:`float` values
-            in the form ``(x minimum, y minimum, x maximum, y maximum)``
-            representing the bounds of the glyph, or :obj:`None` if the glyph
-            is empty.
+        :return: The :class:`Bounds` instance representing the the glyph's bounds,
+            or :obj:`None` if the component is empty.
 
         Example::
 
             >>> glyph.bounds
-            (10, 30, 765, 643)
+            Bounds(xMin=10, yMin=30, xMax=765, yMax=643)
 
         """,
     )
 
-    def _get_base_bounds(self) -> BoundingBox | None:
+    def _get_base_bounds(self) -> Bounds | None:
         value = self._get_bounds()
-        if value is not None:
-            value = normalizers.normalizeBoundingBox(value)
-        return value
+        if value is None:
+            return None
+        value = normalizers.normalizeBoundingBox(value)
+        return Bounds(value)
 
     def _get_bounds(self) -> BoundingBox | None:
         """Get the bounds of the native glyph.
@@ -3009,7 +3009,8 @@ class BaseGlyph(
         :return: A :class:`tuple` of four :class:`int` or :class:`float` values
             in the form ``(x minimum, y minimum, x maximum, y maximum)``
             representing the bounds of the glyph, or :obj:`None` if the glyph
-            is empty.
+            is empty. The value will be normalized
+             with :func:`normalizers.normalizeBoundingBox`.
 
         .. note::
 
