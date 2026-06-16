@@ -758,6 +758,31 @@ class TestContour(unittest.TestCase):
         contour.removeSegment(segment)
         self.assertEqual(len(contour), initialLength - 1)
 
+    # -------
+    # bPoints
+    # -------
+
+    def test_insertBPoint_values(self):
+        contour = self.getContour_bounds()
+        initialLength = len(contour.bPoints)
+        contour.insertBPoint(
+            0, type="corner", anchor=(0, 0), bcpIn=(0, 0), bcpOut=(0, 0)
+        )
+        self.assertEqual(len(contour.bPoints), initialLength + 1)
+        self.assertEqual(contour.bPoints[0].type, "corner")
+        self.assertEqual(contour.bPoints[0].anchor, (0, 0))
+
+    def test_insertBPoint_bPoint(self):
+        contour1 = self.getContour_bounds()
+        initialLength = len(contour1)
+        contour2, _ = self.objectGenerator("contour")
+        contour2.appendPoint((50, 50), "line")
+        bPoint = contour2.bPoints[0]
+        contour1.insertBPoint(0, bPoint=bPoint)
+        self.assertEqual(len(contour1.bPoints), initialLength + 1)
+        self.assertEqual(contour1.bPoints[0].type, "corner")
+        self.assertEqual(contour1.bPoints[0].anchor, (0, 0))
+
     # ------
     # points
     # ------
