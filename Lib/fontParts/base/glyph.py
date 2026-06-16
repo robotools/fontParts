@@ -1307,7 +1307,7 @@ class BaseGlyph(
             index = self._getContourIndex(contour)
         normalizedIndex = normalizers.normalizeIndex(index)
         # Avoid mypy conflict with normalizeIndex -> Optional[int]
-        if normalizedIndex is None:
+        if normalizedIndex is None:  # pragma: no cover
             return
         if normalizedIndex >= len(self):
             raise ValueError(f"No contour located at index {normalizedIndex}.")
@@ -1600,7 +1600,7 @@ class BaseGlyph(
             index = self._getComponentIndex(component)
         normalizedIndex = normalizers.normalizeIndex(index)
         # Avoid mypy conflict with normalizeIndex -> Optional[int]
-        if normalizedIndex is None:
+        if normalizedIndex is None:  # pragma: no cover
             return
         if normalizedIndex >= self._len__components():
             raise ValueError(f"No component located at index {normalizedIndex}.")
@@ -1857,7 +1857,7 @@ class BaseGlyph(
             index = self._getAnchorIndex(anchor)
         normalizedIndex = normalizers.normalizeIndex(index)
         # Avoid mypy conflict with normalizeIndex -> Optional[int]
-        if normalizedIndex is None:
+        if normalizedIndex is None:  # pragma: no cover
             return
         if normalizedIndex >= self._len__anchors():
             raise ValueError(f"No anchor located at index {normalizedIndex}.")
@@ -2118,7 +2118,7 @@ class BaseGlyph(
         else:
             index = self._getGuidelineIndex(guideline)
         normalizedIndex = normalizers.normalizeIndex(index)
-        if normalizedIndex is None:
+        if normalizedIndex is None:  # pragma: no cover
             return
         if normalizedIndex >= self._len__guidelines():
             raise ValueError(f"No guideline located at index {normalizedIndex}.")
@@ -3749,7 +3749,7 @@ class BaseGlyph(
             if isinstance(contour, int):
                 normalizedIndex = normalizers.normalizeIndex(contour)
                 # Avoid mypy conflict with normalizeIndex -> Optional[int]
-                if normalizedIndex is None:
+                if normalizedIndex is None:  # pragma: no cover
                     continue
                 normalizedContour = normalizedIndex
             else:
@@ -3834,7 +3834,7 @@ class BaseGlyph(
             if isinstance(component, int):
                 normalizedIndex = normalizers.normalizeIndex(component)
                 # Avoid mypy conflict with normalizeIndex -> Optional[int]
-                if normalizedIndex is None:
+                if normalizedIndex is None:  # pragma: no cover
                     continue
                 normalizedComponent = normalizedIndex
             else:
@@ -3921,7 +3921,7 @@ class BaseGlyph(
             if isinstance(anchor, int):
                 normalizedIndex = normalizers.normalizeIndex(anchor)
                 # Avoid mypy conflict with normalizeIndex -> Optional[int]
-                if normalizedIndex is None:
+                if normalizedIndex is None:  # pragma: no cover
                     continue
                 normalizedAnchor = normalizedIndex
             else:
@@ -4006,7 +4006,7 @@ class BaseGlyph(
             if isinstance(guideline, int):
                 normalizedIndex = normalizers.normalizeIndex(guideline)
                 # Avoid mypy conflict with normalizeIndex -> Optional[int]
-                if normalizedIndex is None:
+                if normalizedIndex is None:  # pragma: no cover
                     continue
                 normalizedGuideline = normalizedIndex
             else:
