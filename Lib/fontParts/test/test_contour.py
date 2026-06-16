@@ -1,6 +1,7 @@
 import unittest
 import collections
 from fontParts.base import FontPartsError
+from fontParts.base.compatibility import SegmentCompatibilityReporter
 
 
 class TestContour(unittest.TestCase):
@@ -188,6 +189,73 @@ class TestContour(unittest.TestCase):
         contour.round()
         result = self.getContour_bounds()
         self.assertEqual(contour.bounds, result.bounds)
+
+    # -------------
+    # Interpolation
+    # -------------
+
+    def test_isCompatible_sameContours(self):
+        contour1 = self.getContour_bounds()
+        contour2 = self.getContour_bounds()
+        compatible, report = contour1.isCompatible(contour2)
+        self.assertTrue(compatible)
+        self.assertFalse(report.fatal)
+        self.assertFalse(report.warning)
+
+    def test_isCompatible_differentSegmentCount(self):
+        contour1 = self.getContour_bounds()
+        contour2, _ = self.objectGenerator("contour")
+        contour2.appendPoint((0, 0), "line")
+        contour2.appendPoint((50, 100), "line")
+        contour2.appendPoint((100, 0), "line")
+        compatible, report = contour1.isCompatible(contour2)
+        self.assertFalse(compatible)
+        self.assertTrue(report.fatal)
+        self.assertTrue(report.segmentCountDifference)
+
+    def test_isCompatible_differentOpenClosed(self):
+        contour1 = self.getContour_bounds()
+        contour2, _ = self.objectGenerator("contour")
+        contour2.appendPoint((0, 0), "move")
+        contour2.appendPoint((0, 100), "line")
+        contour2.appendPoint((100, 100), "line")
+        contour2.appendPoint((100, 0), "line")
+        compatible, report = contour1.isCompatible(contour2)
+        self.assertFalse(compatible)
+        self.assertTrue(report.openDifference)
+        self.assertTrue(report.fatal)
+
+    def test_isCompatible_differentDirection(self):
+        contour1 = self.getContour_bounds()
+        contour2 = self.getContour_bounds()
+        contour2.reverse()
+        compatible, report = contour1.isCompatible(contour2)
+        self.assertTrue(compatible)
+        self.assertFalse(report.fatal)
+        self.assertFalse(report.warning)
+        self.assertTrue(report.directionDifference)
+
+    def test_isCompatible_incompatibleSegments(self):
+        contour1 = self.getContour_bounds()
+        contour2 = self.getContour_bounds()
+        contour2[0].type = "qcurve"
+        compatible, report = contour1.isCompatible(contour2)
+        self.assertFalse(compatible)
+        self.assertTrue(report.fatal)
+        self.assertTrue(len(report.segments) > 0)
+
+    def test_isCompatible_multipleIssues(self):
+        contour1 = self.getContour_bounds()
+        contour2, _ = self.objectGenerator("contour")
+        contour2.appendPoint((0, 0), "move")
+        contour2.appendPoint((0, 100), "line")
+        contour2.appendPoint((100, 100), "line")
+        contour2.appendPoint((100, 0), "line")
+        contour2[1].type = "qcurve"
+        compatible, report = contour1.isCompatible(contour2)
+        self.assertFalse(compatible)
+        self.assertTrue(report.openDifference)
+        self.assertTrue(report.fatal)
 
     # -----
     # Index
