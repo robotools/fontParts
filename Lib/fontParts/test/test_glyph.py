@@ -344,6 +344,23 @@ class TestGlyph(unittest.TestCase):
             # No contour located at index 5
             glyph[5]
 
+    def test_insertContour_offset_valid(self):
+        glyph = self.getGlyph_generic()
+        contour = self.get_generic_object("contour")
+        index = 1
+        contour.insertPoint(0, position=(0, 0))
+        contour.insertPoint(1, position=(100, 100))
+        contour.insertPoint(2, position=(0, 100))
+
+        self.assertEqual(len(glyph), 2)
+        newcontour = glyph.insertContour(index, contour, (45, 50))
+        self.assertEqual(len(glyph), 3)
+
+        self.assertEqual(newcontour, glyph[index])
+        self.assertEqual(len(newcontour.points), 3)
+        self.assertEqual(newcontour.points[0].x, 45)
+        self.assertEqual(newcontour.points[0].y, 50)
+
     def test_appendContour_offset_valid(self):
         glyph = self.getGlyph_generic()
         contour = self.get_generic_object("contour")
