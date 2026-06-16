@@ -740,6 +740,24 @@ class TestContour(unittest.TestCase):
         contour1.appendSegment(segment=segment)
         self.assertEqual(len(contour1), initialLength + 1)
 
+    def test_removeSegment_index(self):
+        contour = self.getContour_bounds()
+        initialLength = len(contour)
+        contour.removeSegment(0)
+        self.assertEqual(len(contour), initialLength - 1)
+
+    def test_removeSegment_index_out_of_range(self):
+        contour = self.getContour_bounds()
+        with self.assertRaises(ValueError):
+            contour.removeSegment(10)
+
+    def test_removeSegment_segment(self):
+        contour = self.getContour_bounds()
+        initialLength = len(contour)
+        segment = contour.segments[0]
+        contour.removeSegment(segment)
+        self.assertEqual(len(contour), initialLength - 1)
+
     # ------
     # points
     # ------
