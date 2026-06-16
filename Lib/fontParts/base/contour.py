@@ -13,6 +13,7 @@ from fontParts.base.base import (
     reference,
 )
 from fontParts.base import normalizers
+from fontParts.base.bounds import Bounds
 from fontParts.base.compatibility import ContourCompatibilityReporter
 from fontParts.base.deprecated import DeprecatedContour, RemovedContour
 from fontParts.base.annotations import (
@@ -766,25 +767,24 @@ class BaseContour(
 
         This property is read-only.
 
-        :return: A :class:`tuple` of four :class:`int` or :class:`float` values
-            in the form ``(x minimum, y minimum, x maximum, y maximum)``
-            representing the bounds of the contour, or :obj:`None` if the contour
-            is open.
+        :return: The :class:`Bounds` instance representing the the contour's bounds,
+            or :obj:`None` if the component is empty.
 
         Example::
 
             >>> contour.bounds
-            (10, 30, 765, 643)
+            Bounds(xMin=10, yMin=30, xMax=765, yMax=643)
 
 
         """,
     )
 
-    def _get_base_bounds(self) -> BoundingBox | None:
+    def _get_base_bounds(self) -> Bounds | None:
         value = self._get_bounds()
-        if value is not None:
-            value = normalizers.normalizeBoundingBox(value)
-        return value
+        if value is None:
+            return None
+        value = normalizers.normalizeBoundingBox(value)
+        return Bounds(value)
 
     def _get_bounds(self) -> BoundingBox | None:
         """Get the bounds of the contour.
