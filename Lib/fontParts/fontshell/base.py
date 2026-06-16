@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Generic, Optional, Type, TypeVar
+from typing import Generic, TypeVar
 
 RBaseObjectType = TypeVar("RBaseObjectType", bound="RBaseObject")
 

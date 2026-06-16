@@ -1,5 +1,4 @@
 from __future__ import annotations
-from typing import Tuple, Dict
 from collections.abc import ItemsView
 
 import defcon
