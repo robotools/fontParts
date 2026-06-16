@@ -82,7 +82,10 @@ exclude_lines = [
     "if __name__ == .__main__.:",
 
     # don't complain about type-checking-only imports/blocks
-    "if TYPE_CHECKING:"
+    "if TYPE_CHECKING:",
+
+    # skip coverage of typing overloads
+    "@overload"
 ]
 ignore_errors = true
 show_missing = true

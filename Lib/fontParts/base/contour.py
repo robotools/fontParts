@@ -13,6 +13,7 @@ from fontParts.base.base import (
     reference,
 )
 from fontParts.base import normalizers
+from fontParts.base.bounds import Bounds
 from fontParts.base.compatibility import ContourCompatibilityReporter
 from fontParts.base.deprecated import DeprecatedContour, RemovedContour
 from fontParts.base.annotations import (
@@ -212,7 +213,7 @@ class BaseContour(
         if glyph is None:
             raise FontPartsError("The contour does not belong to a glyph.")
         normalizedValue = normalizers.normalizeIndex(value)
-        if normalizedValue is None:
+        if normalizedValue is None:  # pragma: no cover
             return
         contourCount = len(glyph.contours)
         if normalizedValue < 0:
@@ -764,25 +765,24 @@ class BaseContour(
 
         This property is read-only.
 
-        :return: A :class:`tuple` of four :class:`int` or :class:`float` values
-            in the form ``(x minimum, y minimum, x maximum, y maximum)``
-            representing the bounds of the contour, or :obj:`None` if the contour
-            is open.
+        :return: The :class:`Bounds` instance representing the the contour's bounds,
+            or :obj:`None` if the component is empty.
 
         Example::
 
             >>> contour.bounds
-            (10, 30, 765, 643)
+            Bounds(xMin=10, yMin=30, xMax=765, yMax=643)
 
 
         """,
     )
 
-    def _get_base_bounds(self) -> BoundingBox | None:
+    def _get_base_bounds(self) -> Bounds | None:
         value = self._get_bounds()
-        if value is not None:
-            value = normalizers.normalizeBoundingBox(value)
-        return value
+        if value is None:
+            return None
+        value = normalizers.normalizeBoundingBox(value)
+        return Bounds(value)
 
     def _get_bounds(self) -> BoundingBox | None:
         """Get the bounds of the contour.
@@ -1082,7 +1082,7 @@ class BaseContour(
                 points = [(point.x, point.y) for point in segment.points]
             smooth = segment.smooth
         normalizedIndex = normalizers.normalizeIndex(index)
-        if normalizedIndex is None:
+        if normalizedIndex is None:  # pragma: no cover
             raise TypeError("Index cannot be None.")
         if type is None:
             raise TypeError("Type cannot be None.")
@@ -1163,7 +1163,7 @@ class BaseContour(
         if not isinstance(segment, int):
             index = self.segments.index(segment)
         normalizedIndex = normalizers.normalizeIndex(index)
-        if normalizedIndex is None:
+        if normalizedIndex is None:  # pragma: no cover
             return
         if normalizedIndex >= self._len__segments():
             raise ValueError(f"No segment located at index {normalizedIndex}.")
@@ -1396,7 +1396,7 @@ class BaseContour(
             if bcpOut is None:
                 bcpOut = bPoint.bcpOut
         normalizedIndex = normalizers.normalizeIndex(index)
-        if normalizedIndex is None:
+        if normalizedIndex is None:  # pragma: no cover
             raise TypeError("Index cannot be None.")
         if type is None:
             raise TypeError("Type cannot be None.")
@@ -1481,7 +1481,7 @@ class BaseContour(
         index = bPoint.index if not isinstance(bPoint, int) else bPoint
         normalizedIndex = normalizers.normalizeIndex(index)
         # Avoid mypy conflict with normalizeIndex -> Optional[int]
-        if normalizedIndex is None:
+        if normalizedIndex is None:  # pragma: no cover
             return
         if normalizedIndex >= self._len__points():
             raise ValueError(f"No bPoint located at index {normalizedIndex}.")
@@ -1688,7 +1688,7 @@ class BaseContour(
             if identifier is not None:
                 identifier = point.identifier
         normalizedIndex = normalizers.normalizeIndex(index)
-        if normalizedIndex is None:
+        if normalizedIndex is None:  # pragma: no cover
             raise TypeError("Index cannot be None.")
         if position is None:
             raise TypeError("Position cannot be None.")
@@ -1775,7 +1775,7 @@ class BaseContour(
         index = self.points.index(point) if not isinstance(point, int) else point
         normalizedIndex = normalizers.normalizeIndex(index)
         # Avoid mypy conflict with normalizeIndex -> Optional[int]
-        if normalizedIndex is None:
+        if normalizedIndex is None:  # pragma: no cover
             return
         if normalizedIndex >= self._len__points():
             raise ValueError(f"No point located at index {normalizedIndex}.")
@@ -1930,7 +1930,7 @@ class BaseContour(
             if isinstance(segment, int):
                 normalizedIndex = normalizers.normalizeIndex(segment)
                 # Avoid mypy conflict with normalizeIndex -> Optional[int]
-                if normalizedIndex is None:
+                if normalizedIndex is None:  # pragma: no cover
                     continue
                 normalizedSegment = normalizedIndex
             else:
@@ -2016,7 +2016,7 @@ class BaseContour(
             if isinstance(point, int):
                 normalizedIndex = normalizers.normalizeIndex(point)
                 # Avoid mypy conflict with normalizeIndex -> Optional[int]
-                if normalizedIndex is None:
+                if normalizedIndex is None:  # pragma: no cover
                     continue
                 normalizedPoint = normalizedIndex
             else:
@@ -2105,7 +2105,7 @@ class BaseContour(
             if isinstance(bPoint, int):
                 normalizedIndex = normalizers.normalizeIndex(bPoint)
                 # Avoid mypy conflict with normalizeIndex -> Optional[int]
-                if normalizedIndex is None:
+                if normalizedIndex is None:  # pragma: no cover
                     continue
                 normalizedBPoint = normalizedIndex
             else:

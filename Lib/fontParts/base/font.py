@@ -1874,7 +1874,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
             index = self._getGuidelineIndex(guideline)
         normalizedIndex = normalizers.normalizeIndex(index)
         # Avoid mypy conflict with normalizeIndex -> Optional[int]
-        if normalizedIndex is None:
+        if normalizedIndex is None:  # pragma: no cover
             return
         if normalizedIndex >= self._len__guidelines():
             raise ValueError(f"No guideline located at index {normalizedIndex}.")
@@ -2403,7 +2403,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
             if isinstance(guideline, int):
                 normalizedIndex = normalizers.normalizeIndex(guideline)
                 # Avoid mypy conflict with normalizeIndex -> Optional[int]
-                if normalizedIndex is None:
+                if normalizedIndex is None:  # pragma: no cover
                     continue
                 normalizedGuideline = normalizedIndex
             else:
