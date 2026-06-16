@@ -148,6 +148,20 @@ class TestContour(unittest.TestCase):
         contour = glyph.appendContour(contour)
         self.assertEqual(layer, contour.layer)
 
+    # -------------
+    # Normalization
+    # -------------
+
+    def test_round(self):
+        contour, _ = self.objectGenerator("contour")
+        contour.appendPoint((0, 0), "line")
+        contour.appendPoint((0, 99.5), "line")
+        contour.appendPoint((99.6, 100.4), "line")
+        contour.appendPoint((100, 0), "line")
+        contour.round()
+        result = self.getContour_bounds()
+        self.assertEqual(contour.bounds, result.bounds)
+
     # -----
     # Index
     # -----
