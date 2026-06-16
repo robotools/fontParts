@@ -1160,7 +1160,9 @@ class BaseContour(
             >>> contour.removeSegment(2, preserveCurve=True)
 
         """
-        if not isinstance(segment, int):
+        if isinstance(segment, int):
+            index = segment
+        else:
             index = self.segments.index(segment)
         normalizedIndex = normalizers.normalizeIndex(index)
         if normalizedIndex is None:  # pragma: no cover
