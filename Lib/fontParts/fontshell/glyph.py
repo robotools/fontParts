@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Optional, Any, Union
+from typing import TYPE_CHECKING, Any
 
 import defcon
 import booleanOperations
@@ -9,7 +9,6 @@ from fontParts.base.annotations import (
     RGBALike,
     RGBA,
     BoundingBox,
-    Coordinate,
     CoordinateLike,
     CollectionType,
     IntFloatType,
@@ -29,7 +28,6 @@ from fontTools.ufoLib.glifLib import (
 )
 
 if TYPE_CHECKING:
-    from fontParts.base.image import BaseImage
     from fontTools.pens.pointPen import SegmentToPointPen
     from defcon.pens.glyphObjectPointPen import (
         GlyphObjectPointPen,

@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any
 from collections.abc import Callable
 
 from fontTools.misc import transform
@@ -23,7 +23,6 @@ from fontParts.base.annotations import (
     CoordinateLike,
     RGBA,
     RGBALike,
-    IntFloatType,
 )
 
 if TYPE_CHECKING:
