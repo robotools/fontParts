@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Optional, Tuple, Type, Union
+from typing import TYPE_CHECKING
 from collections import Counter
 from fontTools.misc.fixedTools import otRound
 from pathlib import Path

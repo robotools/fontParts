@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, cast, Any, List, Optional, Tuple, Type, TypeVar, Union
+from typing import TYPE_CHECKING, cast, Any, TypeVar
 from collections.abc import Callable, Iterator
 
 from fontParts.base.errors import FontPartsError
@@ -19,10 +19,8 @@ from fontParts.base.deprecated import DeprecatedContour, RemovedContour
 from fontParts.base.annotations import (
     AffineTransformationLike,
     BoundingBox,
-    Coordinate,
     CoordinateLike,
     CollectionType,
-    IntFloatType,
     PenType,
     PointPenType,
 )
