@@ -621,6 +621,14 @@ class TestContour(unittest.TestCase):
         self.assertEqual(contour.points[0].type, "curve")
         self.assertEqual((contour.points[0].x, contour.points[0].y), (100, 50))
 
+    def test_iterSegment(self):
+        contour = self.getContour_bounds()
+        iterator = iter(contour)
+        self.assertIsInstance(iterator, collections.abc.Iterator)
+        segments = list(iterator)
+        self.assertEqual(len(segments), len(contour.segments))
+        self.assertEqual([segment.type for segment in segments], ["line"] * 4)
+
     # ------
     # points
     # ------
