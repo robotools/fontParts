@@ -1604,7 +1604,7 @@ class BaseContour(
     def appendPoint(
         self,
         position: CoordinateLike | None = None,
-        type: str = "line",
+        type: str | None = None,
         smooth: bool = False,
         name: str | None = None,
         identifier: str | None = None,
@@ -1612,32 +1612,37 @@ class BaseContour(
     ) -> None:
         """Append the given point to the contour.
 
-        If `position`, `type` or `name` are specified, those values will be used
-        instead of the values in the given `segment` object. The specified
-        `smooth` state will be applied if ``point=None``.
+        If `position`, `type`, `name` or identifier are specified, those values will be
+        used instead of the values in the given `point` object.
 
-        :param position: An optional position to be applied to the point as
-            a :ref:`type-coordinate`. Defaults to :obj:`None`.
-        :param type: An optional :attr:`BasePoint.type` to be applied to
-            the point as a :class:`str`. Defaults to ``'line'``.
-        :param smooth: The :attr:`BasePoint.smooth` state to be applied to the
-            point as a :class:`bool`. Defaults to :obj:`False`.
-        :param name: An optional :attr:`BasePoint.name` to be applied to the
+        If `type` is still not resolved (i.e., ``type=None`` and no `point` is given),
+        it defaults to ``"line"``.
+
+        The specified `smooth` state will be applied if ``point=None``.
+
+        :param position: An optional position to be applied to the point as a
+            :ref:`type-coordinate`. Defaults to :obj:`None`.
+        :param type: An optional :attr:`BasePoint.type` to be applied to the point as a
+            :class:`str`. Defaults to :obj:`None`.
+        :param smooth: The :attr:`BasePoint.smooth` state to be applied to the point as
+            a :class:`bool`. Defaults to :obj:`False`.
+        :param name: An optional :attr:`BasePoint.name` to be applied to the point as a
+            :class:`str`. Defaults to :obj:`None`.
+        :param identifier: An optional :attr:`BasePoint.identifier` to be applied to the
             point as a :class:`str`. Defaults to :obj:`None`.
-        :param identifier: An optional :attr:`BasePoint.identifier` to be
-            applied to the point as a :class:`str`. Defaults to :obj:`None`.
-        :param point: An optional :class:`BasePoint` instance from which
-            attribute values will be copied. Defualts to :obj:`None`.
+        :param point: An optional :class:`BasePoint` instance from which attribute
+            values will be copied. Defualts to :obj:`None`.
 
         """
         if point is not None:
             if position is None:
                 position = point.position
-            type = point.type
+            if type is None:
+                type = point.type if point.type is not None else "line"
             smooth = point.smooth
             if name is None:
                 name = point.name
-            if identifier is not None:
+            if identifier is None:
                 identifier = point.identifier
         self.insertPoint(
             len(self.points),
@@ -1652,7 +1657,7 @@ class BaseContour(
         self,
         index: int,
         position: CoordinateLike | None = None,
-        type: str = "line",
+        type: str | None = None,
         smooth: bool = False,
         name: str | None = None,
         identifier: str | None = None,
@@ -1660,34 +1665,39 @@ class BaseContour(
     ) -> None:
         """Insert the given point into the contour.
 
-        If `position`, `type` or `name` are specified, those values will be used
-        instead of the values in the given `segment` object. The specified
-        `smooth` state will be applied if ``point=None``.
+        If `position`, `type`, `name` or `identifier` are specified, those values will
+        be used instead of the values in the given `point` object.
 
-        :param index: The :attr:`BasePoint.index` to be applied to the point
-            as an :class:`int`.
-        :param position: An optional position to be applied to the point as
-            a :ref:`type-coordinate`. Defaults to :obj:`None`.
-        :param type: An optional :attr:`BasePoint.type` to be applied to
-            the point as a :class:`str`. Defaults to ``'line'``.
-        :param smooth: The :attr:`BasePoint.smooth` state to be applied to the
-            point as a :class:`bool`. Defaults to :obj:`False`.
-        :param name: An optional :attr:`BasePoint.name` to be applied to the
+        If `type` is still not resolved (i.e., ``type=None`` and no `point` is given),
+        it defaults to ``"line"``.
+
+        The specified `smooth` state will be applied if ``point=None``.
+
+        :param index: The :attr:`BasePoint.index` to be applied to the point as an
+            :class:`int`.
+        :param position: An optional position to be applied to the point as a
+            :ref:`type-coordinate`. Defaults to :obj:`None`.
+        :param type: An optional :attr:`BasePoint.type` to be applied to the point as a
+            :class:`str`. Defaults to :obj:`None`.
+        :param smooth: The :attr:`BasePoint.smooth` state to be applied to the point as
+            a :class:`bool`. Defaults to :obj:`False`.
+        :param name: An optional :attr:`BasePoint.name` to be applied to the point as a
+            :class:`str`. Defaults to :obj:`None`.
+        :param identifier: An optional :attr:`BasePoint.identifier` to be applied to the
             point as a :class:`str`. Defaults to :obj:`None`.
-        :param identifier: An optional :attr:`BasePoint.identifier` to be
-            applied to the point as a :class:`str`. Defaults to :obj:`None`.
-        :param point: An optional :class:`BasePoint` instance from which
-            attribute values will be copied. Defualts to :obj:`None`.
+        :param point: An optional :class:`BasePoint` instance from which attribute
+            values will be copied. Defaults to :obj:`None`.
 
         """
         if point is not None:
             if position is None:
                 position = point.position
-            type = point.type
+            if type is None:
+                type = point.type
             smooth = point.smooth
             if name is None:
                 name = point.name
-            if identifier is not None:
+            if identifier is None:
                 identifier = point.identifier
         normalizedIndex = normalizers.normalizeIndex(index)
         if normalizedIndex is None:
@@ -1695,6 +1705,7 @@ class BaseContour(
         if position is None:
             raise TypeError("Position cannot be None.")
         position = normalizers.normalizeCoordinateTuple(position)
+        type = "line" if type is None else type
         type = normalizers.normalizePointType(type)
         smooth = normalizers.normalizeBoolean(smooth)
         if name is not None:
