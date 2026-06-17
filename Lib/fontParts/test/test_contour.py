@@ -817,6 +817,36 @@ class TestContour(unittest.TestCase):
         self.assertEqual(contour1.bPoints[0].type, "corner")
         self.assertEqual(contour1.bPoints[0].anchor, (0, 0))
 
+    def test_removeBPoint_index(self):
+        contour = self.getContour_bounds()
+        initialLength = len(contour.bPoints)
+        contour.removeBPoint(0)
+        self.assertEqual(len(contour.bPoints), initialLength - 1)
+
+    def test_removeBPoint_index_out_of_range(self):
+        contour = self.getContour_bounds()
+        with self.assertRaises(ValueError):
+            contour.removeBPoint(10)
+
+    def test_removeBPoint_bPoint(self):
+        contour = self.getContour_bounds()
+        initialLength = len(contour)
+        bPoint = contour.bPoints[0]
+        contour.removeBPoint(bPoint)
+        self.assertEqual(len(contour.bPoints), initialLength - 1)
+
+    def test_removeBPoint_offcurves(self):
+        contour, _ = self.objectGenerator("contour")
+        contour.appendPoint((0, 0), "curve")
+        contour.appendPoint((0, 50), "offcurve")
+        contour.appendPoint((50, 100), "offcurve")
+        contour.appendPoint((100, 100), "curve")
+        contour.appendPoint((150, 100), "offcurve")
+        contour.appendPoint((200, 50), "offcurve")
+        initialLength = len(contour.bPoints)
+        contour.removeBPoint(-2)
+        self.assertEqual(len(contour.bPoints), initialLength - 1)
+
     # ------
     # points
     # ------
