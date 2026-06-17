@@ -1462,9 +1462,9 @@ class BaseContour(
             # so take the last bPoint
             index = -1
         bPoint = bPoints[index]
+        bPoint.type = type
         bPoint.bcpIn = bcpIn
         bPoint.bcpOut = bcpOut
-        bPoint.type = type
 
     def removeBPoint(self, bPoint: BaseBPoint | int) -> None:
         """Remove the given bPoint from the contour.
