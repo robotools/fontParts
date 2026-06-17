@@ -213,7 +213,7 @@ class BaseContour(
         if glyph is None:
             raise FontPartsError("The contour does not belong to a glyph.")
         normalizedValue = normalizers.normalizeIndex(value)
-        if normalizedValue is None:  # pragma: no cover
+        if normalizedValue is None:
             return
         contourCount = len(glyph.contours)
         if normalizedValue < 0:
@@ -1082,7 +1082,7 @@ class BaseContour(
                 points = [(point.x, point.y) for point in segment.points]
             smooth = segment.smooth
         normalizedIndex = normalizers.normalizeIndex(index)
-        if normalizedIndex is None:  # pragma: no cover
+        if normalizedIndex is None:
             raise TypeError("Index cannot be None.")
         if type is None:
             raise TypeError("Type cannot be None.")
@@ -1290,7 +1290,7 @@ class BaseContour(
         """Append the given bPoint to the contour.
 
         If `type`, `anchor`, `bcpIn` or `bcpOut` are specified, those values
-        will be used instead of the values in the given `segment` object.
+        will be used instead of the values in the given `bPoint` object.
 
         :param type: An optional :attr:`BaseBPoint.type` to be applied to
             the bPoint as a :class:`str`. Defaults to :obj:`None`.
@@ -1372,7 +1372,7 @@ class BaseContour(
         """Insert the given bPoint into the contour.
 
         If `type`, `anchor`, `bcpIn` or `bcpOut` are specified, those values
-        will be used instead of the values in the given `segment` object.
+        will be used instead of the values in the given `bPoint` object.
 
         :param index: The :attr:`BaseBPoint.index` to be applied to the bPoint
             as an :class:`int`.
@@ -1398,7 +1398,7 @@ class BaseContour(
             if bcpOut is None:
                 bcpOut = bPoint.bcpOut
         normalizedIndex = normalizers.normalizeIndex(index)
-        if normalizedIndex is None:  # pragma: no cover
+        if normalizedIndex is None:
             raise TypeError("Index cannot be None.")
         if type is None:
             raise TypeError("Type cannot be None.")
@@ -1690,7 +1690,7 @@ class BaseContour(
             if identifier is not None:
                 identifier = point.identifier
         normalizedIndex = normalizers.normalizeIndex(index)
-        if normalizedIndex is None:  # pragma: no cover
+        if normalizedIndex is None:
             raise TypeError("Index cannot be None.")
         if position is None:
             raise TypeError("Position cannot be None.")
