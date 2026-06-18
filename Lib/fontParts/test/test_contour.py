@@ -268,6 +268,25 @@ class TestContour(unittest.TestCase):
         contour.clockwise = False
         self.assertFalse(contour.clockwise)
 
+    # ------------------------
+    # Point and Contour Inside
+    # ------------------------
+
+    def test_pointInside(self):
+        contour = self.getContour_bounds()
+        self.assertTrue(contour.pointInside((50, 50)))
+        self.assertFalse(contour.pointInside((200, 200)))
+
+    def test_contourInside(self):
+        outerContour = self.getContour_bounds()
+        innerContour, _ = self.objectGenerator("contour")
+        innerContour.appendPoint((25, 25), "line")
+        innerContour.appendPoint((25, 75), "line")
+        innerContour.appendPoint((75, 75), "line")
+        innerContour.appendPoint((75, 25), "line")
+        self.assertTrue(outerContour.contourInside(innerContour))
+        self.assertFalse(innerContour.contourInside(outerContour))
+
     # -----
     # Index
     # -----
