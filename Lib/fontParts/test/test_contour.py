@@ -744,7 +744,7 @@ class TestContour(unittest.TestCase):
             [(0, 0), (2, 2), (3, 3), (4, 4), (1, 1), (5, 5)],
         )
 
-    def test_setStartSegment(self):
+    def test_setStartSegment_index(self):
         contour, _ = self.objectGenerator("contour")
         contour.appendPoint((50, 0), "curve")
         contour.appendPoint((75, 0), "offcurve")
@@ -761,6 +761,19 @@ class TestContour(unittest.TestCase):
         contour.setStartSegment(1)
         self.assertEqual(contour.points[0].type, "curve")
         self.assertEqual((contour.points[0].x, contour.points[0].y), (100, 50))
+
+    def test_setStartSegment_segment(self):
+        contour = self.getContour_bounds()
+        targetSegment = contour.segments[1]
+        contour.setStartSegment(targetSegment)
+        self.assertEqual(contour.points[0].position, (0, 100))
+
+    def test_setStartSegment_index_out_of_range(self):
+        contour, _ = self.objectGenerator("contour")
+        contour.appendPoint((0, 0), "line")
+        contour.appendPoint((100, 0), "line")
+        with self.assertRaises(ValueError):
+            contour.setStartSegment(5)
 
     def test_iterSegment(self):
         contour = self.getContour_bounds()
