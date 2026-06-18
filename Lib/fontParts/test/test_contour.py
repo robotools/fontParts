@@ -316,6 +316,9 @@ class TestContour(unittest.TestCase):
         self.assertEqual(contour2.index, 0)
         self.assertEqual(contour3.index, 2)
 
+        contour1.index = 3
+        self.assertEqual(contour1.index, 2)
+
     # --------------
     # Identification
     # --------------
