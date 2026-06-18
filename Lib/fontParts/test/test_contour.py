@@ -371,6 +371,18 @@ class TestContour(unittest.TestCase):
         self.assertIsNone(contour.bounds)
 
     # ----
+    # Area
+    # ----
+
+    def test_area(self):
+        contour = self.getContour_bounds()
+        self.assertEqual(contour.area, 10000)
+
+    def test_empty_area(self):
+        contour, _ = self.objectGenerator("contour")
+        self.assertEqual(contour.area, 0.0)
+
+    # ----
     # Hash
     # ----
 
