@@ -816,6 +816,42 @@ class TestContour(unittest.TestCase):
         with self.assertRaises(TypeError):
             contour.appendSegment(type="line", points=None)
 
+    def test_insertSegment_segment(self):
+        contour1 = self.getContour_bounds()
+        initialLength = len(contour1)
+        contour2, _ = self.objectGenerator("contour")
+        contour2.appendPoint((50, 50), "line")
+        contour2.appendPoint((60, 60), "offcurve")
+        segment = contour2.segments[0]
+        contour1.insertSegment(0, segment=segment)
+        insertedPoints = [p.position for p in contour1.segments[0].points]
+        originalPoints = [p.position for p in segment.points]
+        self.assertEqual(len(contour1), initialLength + 1)
+        self.assertEqual(insertedPoints, originalPoints)
+        self.assertEqual(contour1.segments[0].type, "line")
+
+    def test_insertSegment_overrides(self):
+        contour1 = self.getContour_bounds()
+        initialLength = len(contour1)
+        contour2, _ = self.objectGenerator("contour")
+        contour2.appendPoint((50, 50))
+        segment = contour2.segments[0]
+        overridePoints = [(120, 120)]
+        contour1.insertSegment(0, type="curve", segment=segment, points=overridePoints)
+        insertedPoints = [p.position for p in contour1.segments[0].points]
+        self.assertEqual(len(contour1), initialLength + 1)
+        self.assertEqual(insertedPoints, overridePoints)
+        self.assertEqual(contour1.segments[0].type, "curve")
+
+    def test_insertSegment_raises(self):
+        contour = self.getContour_bounds()
+        with self.assertRaises(TypeError):
+            contour.insertSegment(None, type="line", points=[(50, 50)])
+        with self.assertRaises(TypeError):
+            contour.insertSegment(0, type=None, points=[(50, 50)])
+        with self.assertRaises(TypeError):
+            contour.insertSegment(0, type="line", points=None)
+
     def test_removeSegment_index(self):
         contour = self.getContour_bounds()
         initialLength = len(contour)
