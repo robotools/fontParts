@@ -952,6 +952,40 @@ class TestContour(unittest.TestCase):
             [(2, 2), (3, 3), (0, 0), (1, 1)],
         )
 
+    def test_appendPoint_position(self):
+        contour = self.getContour_bounds()
+        initialLength = len(contour.points)
+        contour.appendPoint(position=(10, 10))
+        self.assertEqual(len(contour.bPoints), initialLength + 1)
+        self.assertEqual(contour.points[-1].position, (10, 10))
+        self.assertEqual(contour.points[-1].type, "line")
+
+    def test_appendPoint_bPoint(self):
+        contour1 = self.getContour_bounds()
+        initialLength = len(contour1)
+        contour2, _ = self.objectGenerator("contour")
+        contour2.appendPoint((50, 50), "curve")
+        point = contour2.points[0]
+        contour1.appendPoint(point=point)
+        self.assertEqual(len(contour1.points), initialLength + 1)
+        self.assertEqual(contour1.points[-1].position, (50, 50))
+        self.assertEqual(contour1.points[-1].type, "curve")
+
+    def test_appendPoint_overrides(self):
+        contour1 = self.getContour_bounds()
+        initialLength = len(contour1)
+        contour2, _ = self.objectGenerator("contour")
+        contour2.appendPoint((50, 50), "curve")
+        point = contour2.points[0]
+        contour1.appendPoint(
+            position=(10, 10), type="line", name="test", identifier="test", point=point
+        )
+        self.assertEqual(len(contour1.points), initialLength + 1)
+        self.assertEqual(contour1.points[-1].position, (10, 10))
+        self.assertEqual(contour1.points[-1].type, "line")
+        self.assertEqual(contour1.points[-1].name, "test")
+        self.assertEqual(contour1.points[-1].identifier, "test")
+
     def test_insertPoint_position(self):
         contour = self.getContour_bounds()
         initialLength = len(contour.points)
