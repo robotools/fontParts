@@ -366,6 +366,10 @@ class TestContour(unittest.TestCase):
         with self.assertRaises(FontPartsError):
             contour.bounds = (1, 2, 3, 4)
 
+    def test_empty_bounds(self):
+        contour, _ = self.objectGenerator("contour")
+        self.assertIsNone(contour.bounds)
+
     # ----
     # Hash
     # ----
