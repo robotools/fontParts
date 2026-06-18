@@ -257,6 +257,17 @@ class TestContour(unittest.TestCase):
         self.assertTrue(report.openDifference)
         self.assertTrue(report.fatal)
 
+    # ---------
+    # Direction
+    # ---------
+
+    def test_set_clockwise(self):
+        contour = self.getContour_bounds()
+        contour.clockwise = True
+        self.assertTrue(contour.clockwise)
+        contour.clockwise = False
+        self.assertFalse(contour.clockwise)
+
     # -----
     # Index
     # -----
