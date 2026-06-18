@@ -1077,7 +1077,7 @@ class BaseContour(
 
         """
         if segment is not None:
-            if type is not None:
+            if type is None:
                 type = segment.type
             if points is None:
                 points = [(point.x, point.y) for point in segment.points]
