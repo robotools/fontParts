@@ -421,6 +421,10 @@ class TestFont(unittest.TestCase):
         font.selectedGuidelines = []
         self.assertEqual(font.selectedGuidelines, ())
 
+    # ---------------
+    # File Operations
+    # ---------------
+
     # save
 
     def _saveFontPath(self, ext):
