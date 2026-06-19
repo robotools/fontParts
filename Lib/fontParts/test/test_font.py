@@ -490,6 +490,11 @@ class TestFont(unittest.TestCase):
 
             self._save(testCases, fileStructure=fileStructure)
 
+    def test_save_path_none(self):
+        font = self.getFont_glyphs()
+        with self.assertRaises(OSError):
+            font.save(path=None)
+
     # copy
 
     def test_copy(self):
