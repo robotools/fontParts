@@ -1024,3 +1024,8 @@ class TestContour(unittest.TestCase):
         self.assertEqual(contour1.points[0].type, "line")
         self.assertEqual(contour1.points[0].name, "test")
         self.assertEqual(contour1.points[0].identifier, "test")
+
+    def test_removePoint_index_out_of_range(self):
+        contour = self.getContour_bounds()
+        with self.assertRaises(ValueError):
+            contour.removePoint(10)
