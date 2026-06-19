@@ -21,6 +21,15 @@ class TestFont(unittest.TestCase):
         with self.assertRaises(ValueError):
             font.getLayer("There is no layer with this name.")
 
+    def test_removeLayer(self):
+        font, _ = self.objectGenerator("font")
+        layer = font.newLayer("testLayer")
+        self.assertIn(layer, font.layers)
+        font.removeLayer("testLayer")
+        self.assertNotIn(layer, font.layers)
+        with self.assertRaises(ValueError):
+            font.removeLayer("testLayer")
+
     # ------
     # Glyphs
     # ------
