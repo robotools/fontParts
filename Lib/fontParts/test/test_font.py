@@ -3,6 +3,7 @@ import collections
 import tempfile
 import os
 import shutil
+from unittest.mock import PropertyMock, patch
 
 
 class TestFont(unittest.TestCase):
@@ -530,6 +531,106 @@ class TestFont(unittest.TestCase):
             with self.subTest(format=fmt):
                 result = font.generateFormatToExtension(fmt, fallbackFormat=".fallback")
                 self.assertEqual(result, expected_ext)
+
+    def test_generate_format_none(self):
+        font = self.getFont_glyphs()
+        with self.assertRaises(ValueError):
+            font.generate(format=None)
+
+    def test_generate_invalid_format_type(self):
+        font = self.getFont_glyphs()
+        with self.assertRaises(TypeError):
+            font.generate(format=0)
+
+    def test_generate_valid_environmentOption(self):
+        import warnings
+
+        font = self.getFont_glyphs()
+        with (
+            patch.object(
+                type(font), "_isValidGenerateEnvironmentOption"
+            ) as mockValidate,
+            patch.object(type(font), "_generate") as mockGenerate,
+        ):
+            mockValidate.return_value = True
+            with warnings.catch_warnings():
+                warnings.simplefilter("error", UserWarning)
+                font.generate("otfcff", path="/mock/path.otf", valid_opt="value")
+
+            mockGenerate.assert_called_once_with(
+                format="otfcff",
+                path="/mock/path.otf",
+                environmentOptions={"valid_opt": "value"},
+            )
+
+    def test_generate_invalid_environmentOption(self):
+        font = self.getFont_glyphs()
+        with (
+            patch.object(
+                type(font), "_isValidGenerateEnvironmentOption"
+            ) as mockValidate,
+            patch.object(type(font), "_generate") as mockGenerate,
+        ):
+            mockValidate.return_value = False
+            with self.assertWarns(UserWarning):
+                font.generate("otfcff", path="/mock/path.otf", invalid_opt="value")
+
+            mockGenerate.assert_called_once_with(
+                format="otfcff",
+                path="/mock/path.otf",
+                environmentOptions={"invalid_opt": "value"},
+            )
+
+    def test_generate_path_none_and_self_path_none(self):
+        font = self.getFont_glyphs()
+        with patch.object(
+            type(font), "_isValidGenerateEnvironmentOption"
+        ) as mockValidate:
+            mockValidate.return_value = True
+            with self.assertRaises(OSError):
+                font.generate("otfcff", path=None)
+
+    def test_generate_path_none(self):
+        font = self.getFont_glyphs()
+        with (
+            patch.object(type(font), "path", new_callable=PropertyMock) as mockPath,
+            patch.object(type(font), "_generate") as mockGenerate,
+        ):
+            mockPath.return_value = "/src/myfont.otf"
+            font.generate("otfcff", path=None)
+            expectedPath = os.path.abspath("/src/myfont.otf")
+            mockGenerate.assert_called_once()
+            actualPath = mockGenerate.call_args[1]["path"]
+            self.assertEqual(
+                os.path.normpath(actualPath), os.path.normpath(expectedPath)
+            )
+
+    def test_generate_path_is_dir_and_self_path_none(self):
+        font = self.getFont_glyphs()
+        with (
+            patch.object(type(font), "path", new_callable=PropertyMock) as mockPath,
+            patch.object(os.path, "isdir") as mockIsDir,
+        ):
+            mockPath.return_value = None
+            mockIsDir.return_value = True
+            with self.assertRaises(OSError):
+                font.generate("otfcff", path="/output/dir")
+
+    def test_generate_path_is_dir(self):
+        font = self.getFont_glyphs()
+        with (
+            patch.object(type(font), "path", new_callable=PropertyMock) as mockPath,
+            patch.object(os.path, "isdir") as mockIsDir,
+            patch.object(type(font), "_generate") as mockGenerate,
+        ):
+            mockPath.return_value = "/src/myfont.ufo"
+            mockIsDir.return_value = True
+            font.generate("otfcff", path="/output/dir")
+            expectedPath = os.path.abspath(os.path.join("/output/dir", "myfont.otf"))
+            actualPath = mockGenerate.call_args[1]["path"]
+            self.assertEqual(
+                os.path.normpath(actualPath), os.path.normpath(expectedPath)
+            )
 
     # -------------
     # Interpolation
