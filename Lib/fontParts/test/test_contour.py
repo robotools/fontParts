@@ -952,6 +952,16 @@ class TestContour(unittest.TestCase):
             [(2, 2), (3, 3), (0, 0), (1, 1)],
         )
 
+    def test_setStartPoint_index_zero(self):
+        contour = self.getContour_bounds()
+        contour.setStartPoint(0)
+        self.assertEqual(contour.points[0].position, (0, 0))
+
+    def test_setStartPoint_index_out_of_range(self):
+        contour = self.getContour_bounds()
+        with self.assertRaises(ValueError):
+            contour.setStartPoint(10)
+
     def test_appendPoint_position(self):
         contour = self.getContour_bounds()
         initialLength = len(contour.points)
