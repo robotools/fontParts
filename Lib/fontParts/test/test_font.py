@@ -512,6 +512,25 @@ class TestFont(unittest.TestCase):
         copy = font.copy()
         self.assertEqual(copy.selectedGuidelines, font.selectedGuidelines)
 
+    # generate
+
+    def test_generateFormatToExtension(self):
+        font, _ = self.objectGenerator("font")
+        cases = [
+            ("macttf", ".ttf"),
+            ("macttdfont", ".dfont"),
+            ("otfcff", ".otf"),
+            ("otfttf", ".ttf"),
+            ("ufo1", ".ufo"),
+            ("ufo2", ".ufo"),
+            ("ufo3", ".ufo"),
+            ("unixascii", ".pfa"),
+        ]
+        for fmt, expected_ext in cases:
+            with self.subTest(format=fmt):
+                result = font.generateFormatToExtension(fmt, fallbackFormat=".fallback")
+                self.assertEqual(result, expected_ext)
+
     # -------------
     # Interpolation
     # -------------
