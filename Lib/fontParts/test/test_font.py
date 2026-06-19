@@ -31,6 +31,30 @@ class TestFont(unittest.TestCase):
         with self.assertRaises(ValueError):
             font.removeLayer("testLayer")
 
+    def test_insertLayer(self):
+        font, _ = self.objectGenerator("font")
+        layer, _ = self.objectGenerator("layer")
+        layer.name = "oldName"
+        insertedLayer = font.insertLayer(layer, name="newName")
+        self.assertEqual(insertedLayer.name, "newName")
+        self.assertIn("newName", font.layerOrder)
+
+    def test_insertLayer_name_none(self):
+        font, _ = self.objectGenerator("font")
+        layer, _ = self.objectGenerator("layer")
+        layer.name = "testLayer"
+        font.insertLayer(layer, name=None)
+        self.assertIn(layer.name, font.layerOrder)
+
+    def test_insertLayer_name_exists(self):
+        font, _ = self.objectGenerator("font")
+        existingLayer = font.newLayer("existingLayer")
+        self.assertIn(existingLayer.name, font.layerOrder)
+        newLayer, _ = self.objectGenerator("layer")
+        newLayer.name = "newLayer"
+        font.insertLayer(newLayer, name=existingLayer.name)
+        self.assertIn(existingLayer.name, font.layerOrder)
+
     # ------
     # Glyphs
     # ------
