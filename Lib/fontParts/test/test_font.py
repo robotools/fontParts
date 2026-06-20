@@ -4,6 +4,7 @@ import tempfile
 import os
 import shutil
 from unittest.mock import PropertyMock, patch
+from fontTools.ufoLib import DEFAULT_LAYER_NAME
 
 
 class TestFont(unittest.TestCase):
@@ -220,6 +221,11 @@ class TestFont(unittest.TestCase):
         font = self.getFont_guidelines()
         with self.assertRaises(ValueError):
             font.appendGuideline(position=None)
+
+    def test_clearGuideline(self):
+        font = self.getFont_guidelines()
+        font.clearGuidelines()
+        self.assertEqual(font.guidelines, ())
 
     # ----
     # flatKerning
@@ -749,6 +755,56 @@ class TestFont(unittest.TestCase):
     # -------------
     # Interpolation
     # -------------
+
+    def test_interpolate(self):
+        dstFont, _ = self.objectGenerator("font")
+        minFont, _ = self.objectGenerator("font")
+        maxFont, _ = self.objectGenerator("font")
+        minFont.info.ascender = 100
+        minFont.kerning[("A", "V")] = -20
+        minLayer = minFont.getLayer(minFont.defaultLayer.name)
+        minGlyph = minLayer.newGlyph("A")
+        minGlyph.width = 100
+        maxFont.info.ascender = 200
+        maxFont.kerning[("A", "V")] = -120
+        maxLayer = maxFont.getLayer(maxFont.defaultLayer.name)
+        maxGlyph = maxLayer.newGlyph("A")
+        maxGlyph.width = 200
+        dstFont.interpolate(0.5, minFont, maxFont, round=True)
+        self.assertEqual(dstFont.info.ascender, 150)
+        self.assertEqual(dstFont.kerning[("A", "V")], -70)
+        self.assertIn("A", dstFont)
+        self.assertEqual(dstFont["A"].width, 150)
+
+    def test_interpolate_invalid_types(self):
+        dstFont, _ = self.objectGenerator("font")
+        srcFont, _ = self.objectGenerator("font")
+        maxFont, _ = self.objectGenerator("font")
+        testCases = [
+            (0.5, srcFont, "ivalidFontObject"),
+            (0.5, "ivalidFontObject", srcFont),
+        ]
+        for factor, minFont, maxFont in testCases:
+            with self.assertRaises(TypeError):
+                dstFont.interpolate(factor, minFont, maxFont)
+
+    def test_interpolate_asymmetric_layers(self):
+        dstFont, _ = self.objectGenerator("font")
+        minFont, _ = self.objectGenerator("font")
+        maxFont, _ = self.objectGenerator("font")
+        minFont.newLayer("testLayer")
+        dstFont.interpolate(0.5, minFont, maxFont)
+        self.assertNotIn("testLayer", dstFont.layerOrder)
+        self.assertIn(DEFAULT_LAYER_NAME, dstFont.layerOrder)
+
+    @patch("fontParts.base.font.ufoLib.DEFAULT_LAYER_NAME", "invalid.default.layer")
+    def test_interpolate_missing_default_layer(self):
+        dstFont, _ = self.objectGenerator("font")
+        minFont, _ = self.objectGenerator("font")
+        maxFont, _ = self.objectGenerator("font")
+        dstFont.newLayer("testLayer")
+        dstFont.interpolate(0.5, minFont, maxFont)
+        self.assertEqual(dstFont.defaultLayer.name, dstFont.layerOrder[0])
 
     def test_interpolate_global_guidelines(self):
         interpolated_font, _ = self.objectGenerator("font")
