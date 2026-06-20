@@ -691,6 +691,24 @@ class TestFont(unittest.TestCase):
                 os.path.normpath(actualPath), os.path.normpath(expectedPath)
             )
 
+    # -----------------
+    # Global Operations
+    # -----------------
+
+    def test_round(self):
+        font, _ = self.objectGenerator("font")
+        font.info.xHeight = 450.6
+        font.kerning[("A", "V")] = -20.3
+        guideline = font.appendGuideline((100.4, 200.7), 0)
+        defaultLayer = font.defaultLayer
+        glyph = defaultLayer.newGlyph("A")
+        glyph.width = 600.8
+        font.round()
+        self.assertEqual(font.info.xHeight, 451)
+        self.assertEqual(font.kerning[("A", "V")], -20)
+        self.assertEqual(guideline.position, (100, 201))
+        self.assertEqual(glyph.width, 601)
+
     # -------------
     # Interpolation
     # -------------
