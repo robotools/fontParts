@@ -194,7 +194,7 @@ class TestContour(unittest.TestCase):
     # Interpolation
     # -------------
 
-    def test_isCompatible_sameContours(self):
+    def test_isCompatible_same_contours(self):
         contour1 = self.getContour_bounds()
         contour2 = self.getContour_bounds()
         compatible, report = contour1.isCompatible(contour2)
@@ -202,7 +202,7 @@ class TestContour(unittest.TestCase):
         self.assertFalse(report.fatal)
         self.assertFalse(report.warning)
 
-    def test_isCompatible_differentSegmentCount(self):
+    def test_isCompatible_different_segment_count(self):
         contour1 = self.getContour_bounds()
         contour2, _ = self.objectGenerator("contour")
         contour2.appendPoint((0, 0), "line")
@@ -213,7 +213,7 @@ class TestContour(unittest.TestCase):
         self.assertTrue(report.fatal)
         self.assertTrue(report.segmentCountDifference)
 
-    def test_isCompatible_differentOpenClosed(self):
+    def test_isCompatible_different_open_closed(self):
         contour1 = self.getContour_bounds()
         contour2, _ = self.objectGenerator("contour")
         contour2.appendPoint((0, 0), "move")
@@ -225,7 +225,7 @@ class TestContour(unittest.TestCase):
         self.assertTrue(report.openDifference)
         self.assertTrue(report.fatal)
 
-    def test_isCompatible_differentDirection(self):
+    def test_isCompatible_different_direction(self):
         contour1 = self.getContour_bounds()
         contour2 = self.getContour_bounds()
         contour2.reverse()
@@ -235,7 +235,7 @@ class TestContour(unittest.TestCase):
         self.assertFalse(report.warning)
         self.assertTrue(report.directionDifference)
 
-    def test_isCompatible_incompatibleSegments(self):
+    def test_isCompatible_incompatible_segments(self):
         contour1 = self.getContour_bounds()
         contour2 = self.getContour_bounds()
         contour2[0].type = "qcurve"
@@ -244,7 +244,7 @@ class TestContour(unittest.TestCase):
         self.assertTrue(report.fatal)
         self.assertTrue(len(report.segments) > 0)
 
-    def test_isCompatible_multipleIssues(self):
+    def test_isCompatible_multiple_issues(self):
         contour1 = self.getContour_bounds()
         contour2, _ = self.objectGenerator("contour")
         contour2.appendPoint((0, 0), "move")
