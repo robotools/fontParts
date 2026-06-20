@@ -55,6 +55,25 @@ class TestFont(unittest.TestCase):
         font.insertLayer(newLayer, name=existingLayer.name)
         self.assertIn(existingLayer.name, font.layerOrder)
 
+    def test_dublicateLayer(self):
+        font, _ = self.objectGenerator("font")
+        existingLayer = font.newLayer("testLayer")
+        self.assertIn(existingLayer.name, font.layerOrder)
+        duplicatedLayer = font.duplicateLayer(existingLayer.name, "duplicateLayer")
+        self.assertIn(duplicatedLayer.name, font.layerOrder)
+
+    def test_duplicateLayer_layerName_missing(self):
+        font, _ = self.objectGenerator("font")
+        with self.assertRaises(ValueError):
+            font.duplicateLayer("missingName", "duplicateLayer")
+
+    def test_duplicateLayer_newLayerName_exists(self):
+        font, _ = self.objectGenerator("font")
+        existingLayer = font.newLayer("testLayer")
+        duplicateLayer = font.newLayer("duplicateLayer")
+        with self.assertRaises(ValueError):
+            font.duplicateLayer(existingLayer.name, duplicateLayer.name)
+
     # ------
     # Glyphs
     # ------
