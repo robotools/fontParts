@@ -74,6 +74,22 @@ class TestFont(unittest.TestCase):
         with self.assertRaises(ValueError):
             font.duplicateLayer(existingLayer.name, duplicateLayer.name)
 
+    def test_swapLayerNames(self):
+        font, _ = self.objectGenerator("font")
+        layer1 = font.newLayer("layer1")
+        layer2 = font.newLayer("layer2")
+        font.swapLayerNames(layer1.name, layer2.name)
+        self.assertEqual(layer1.name, "layer2")
+        self.assertEqual(layer2.name, "layer1")
+
+    def test_swapLayerNames_names_missing(self):
+        font, _ = self.objectGenerator("font")
+        layer = font.newLayer("testLayer")
+        testCases = [("missingLayer", layer.name), (layer.name, "missingLayer")]
+        for name1, name2 in testCases:
+            with self.assertRaises(ValueError):
+                font.swapLayerNames(name1, name2)
+
     # ------
     # Glyphs
     # ------
