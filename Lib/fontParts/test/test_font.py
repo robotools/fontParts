@@ -187,6 +187,40 @@ class TestFont(unittest.TestCase):
         self.assertIn("A.1", layer)
         self.assertIn("A.2", layer)
 
+    # ----------
+    # Guidelines
+    # ----------
+
+    def test_appendGuideline_position(self):
+        font = self.getFont_guidelines()
+        initialLength = len(font.guidelines)
+        font.appendGuideline(position=(0, 0))
+        self.assertEqual(len(font.guidelines), initialLength + 1)
+        self.assertEqual(font.guidelines[-1].position, (0, 0))
+
+    def test_appendGuideline_overrides(self):
+        font = self.getFont_guidelines()
+        guideline, _ = self.objectGenerator("guideline")
+        guideline.position = (0, 0)
+        initialLength = len(font.guidelines)
+        font.appendGuideline(
+            position=(10, 10),
+            angle=1,
+            name="test",
+            color=(1, 1, 1, 1),
+            guideline=guideline,
+        )
+        self.assertEqual(len(font.guidelines), initialLength + 1)
+        self.assertEqual(font.guidelines[-1].position, (10, 10))
+        self.assertEqual(font.guidelines[-1].angle, 1)
+        self.assertEqual(font.guidelines[-1].name, "test")
+        self.assertEqual(font.guidelines[-1].color, (1, 1, 1, 1))
+
+    def test_appendGuideline_raises(self):
+        font = self.getFont_guidelines()
+        with self.assertRaises(ValueError):
+            font.appendGuideline(position=None)
+
     # ----
     # flatKerning
     # ----
@@ -708,6 +742,9 @@ class TestFont(unittest.TestCase):
         self.assertEqual(font.kerning[("A", "V")], -20)
         self.assertEqual(guideline.position, (100, 201))
         self.assertEqual(glyph.width, 601)
+
+    def test_autoUnicodes(self):
+        pass
 
     # -------------
     # Interpolation
