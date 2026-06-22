@@ -1,14 +1,9 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Optional, Any
+from typing import TYPE_CHECKING, Any
 
 import defcon
 from fontParts.base import BaseContour
-from fontParts.base.annotations import (
-    BoundingBox,
-    Coordinate,
-    CoordinateLike,
-    IntFloatType,
-)
+from fontParts.base.annotations import BoundingBox, CoordinateLike
 from fontParts.fontshell.base import RBaseObject
 from fontParts.fontshell.point import RPoint
 from fontParts.fontshell.segment import RSegment

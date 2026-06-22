@@ -1,6 +1,14 @@
+1.0.1 (released 2026-06-2)
+--------------------------
+Tweaks to setup and documentation.
+
+- Removed `tox` (#908)
+- Updates to documentation (#906, #904, #903)
+- Updated pyproject.toml with a build-backend (#905)
+
+
 1.0.0 (released 2026-05-28)
 ---------------------------
-
 The majority of the work has been done by Knut Nergaard, for which we are forever grateful!
 
 It adds:

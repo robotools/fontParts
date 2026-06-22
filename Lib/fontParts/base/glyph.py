@@ -1,6 +1,6 @@
 # pylint: disable=C0103, C0302, C0114, W0613
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, TypeVar
+from typing import TYPE_CHECKING, Any
 from collections.abc import Iterator
 from itertools import zip_longest
 from collections import Counter
@@ -13,6 +13,7 @@ from fontTools.pens.pointInsidePen import PointInsidePen
 from fontTools.pens.areaPen import AreaPen
 from fontTools.pens.boundsPen import BoundsPen
 
+from fontParts.base.bounds import Bounds
 from fontParts.base.errors import FontPartsError
 from fontParts.base.base import (
     BaseObject,
@@ -33,7 +34,6 @@ from fontParts.base.annotations import (
     ScaleFactorLike,
     AffineTransformationLike,
     BoundingBox,
-    Coordinate,
     CoordinateLike,
     RGBA,
     RGBALike,
@@ -1236,6 +1236,70 @@ class BaseGlyph(
                 return i
         raise FontPartsError("The contour could not be found.")
 
+    def insertContour(
+        self, index: int, contour: BaseContour, offset: CoordinateLike | None = None
+    ) -> BaseContour:
+        """Insert the given contour's data at the specified index.
+
+        An `index` value of ``0`` or smaller will prepend the `contour`, while a value
+        of ``len(glyph)`` or larger will append it.
+
+        :param index: The index of the contour before which to insert as an
+            :class:`int`.
+        :param contour: The :class:`BaseContour` instance containing the source data to
+            insert.
+        :param offset: The x and y shift values to be applied to the appended data as a
+            :ref:`type-coordinate`, or :obj:`None` representing an offset of ``(0, 0)``.
+            Defaults to None.
+        :return: A :class:`BaseContour` instance containing the inserted data.
+
+        Example::
+
+            >>> contour = glyph.insertContour(contour, 1, (100, 0))
+
+        """
+        normalizedIndex = normalizers.normalizeIndex(index)
+        if normalizedIndex is None:
+            raise ValueError("Index cannot be None.")
+        normalizedContour = normalizers.normalizeContour(contour)
+        if offset is None:
+            offset = (0, 0)
+        normalizedOffset = normalizers.normalizeTransformationOffset(offset)
+        return self._insertContour(normalizedIndex, normalizedContour, normalizedOffset)
+
+    def _insertContour(
+        self, index: int, contour: BaseContour, offset: CoordinateLike, **kwargs: Any
+    ) -> BaseContour:
+        r"""Insert the given native contour's data at the specified index.
+
+        This is the environment implementation of :meth:`BaseGlyph.insertContour`.
+
+        :param index: The index of the contour before which to insert as an
+            :class:`int`. The value will have been normalized with
+            :func:`normalizers.normalizeIndex`
+        :param contour: The :class:`BaseContour` instance containing the source data to
+            insert. The value will have been normalized with
+            :func:`normalizers.normalizeContour`.
+        :param offset: The x and y shift values to be applied to the appended data as a
+            :ref:`type-coordinate`, or :obj:`None` representing an offset of ``(0, 0)``.
+            Defaults to None. The value will have been normalized with
+            :func:`normalizers.normalizeTransformationOffset`
+        :param \**kwargs: Additional keyword arguments.
+        :return: A :class:`BaseContour` instance containing the inserted data.
+
+        .. note::
+
+            Subclasses may override this method.
+
+        """
+        contourList = list(self.contours)
+        contourList.insert(index, contour)
+        self.clearContours()
+        for i, contour in enumerate(contourList):
+            currentOffset = offset if i == index else (0, 0)
+            self._appendContour(contour, currentOffset)
+        return self[index]
+
     def appendContour(
         self, contour: BaseContour, offset: CoordinateLike | None = None
     ) -> BaseContour:
@@ -1306,7 +1370,7 @@ class BaseGlyph(
             index = self._getContourIndex(contour)
         normalizedIndex = normalizers.normalizeIndex(index)
         # Avoid mypy conflict with normalizeIndex -> Optional[int]
-        if normalizedIndex is None:
+        if normalizedIndex is None:  # pragma: no cover
             return
         if normalizedIndex >= len(self):
             raise ValueError(f"No contour located at index {normalizedIndex}.")
@@ -1599,7 +1663,7 @@ class BaseGlyph(
             index = self._getComponentIndex(component)
         normalizedIndex = normalizers.normalizeIndex(index)
         # Avoid mypy conflict with normalizeIndex -> Optional[int]
-        if normalizedIndex is None:
+        if normalizedIndex is None:  # pragma: no cover
             return
         if normalizedIndex >= self._len__components():
             raise ValueError(f"No component located at index {normalizedIndex}.")
@@ -1856,7 +1920,7 @@ class BaseGlyph(
             index = self._getAnchorIndex(anchor)
         normalizedIndex = normalizers.normalizeIndex(index)
         # Avoid mypy conflict with normalizeIndex -> Optional[int]
-        if normalizedIndex is None:
+        if normalizedIndex is None:  # pragma: no cover
             return
         if normalizedIndex >= self._len__anchors():
             raise ValueError(f"No anchor located at index {normalizedIndex}.")
@@ -2117,7 +2181,7 @@ class BaseGlyph(
         else:
             index = self._getGuidelineIndex(guideline)
         normalizedIndex = normalizers.normalizeIndex(index)
-        if normalizedIndex is None:
+        if normalizedIndex is None:  # pragma: no cover
             return
         if normalizedIndex >= self._len__guidelines():
             raise ValueError(f"No guideline located at index {normalizedIndex}.")
@@ -2976,29 +3040,28 @@ class BaseGlyph(
         return pen.getResult()
 
     bounds: dynamicProperty = dynamicProperty(
-        "bounds",
+        "base_bounds",
         """Get the bounds of the glyph.
 
         This property is read-only.
 
-        :return: A :class:`tuple` of four :class:`int` or :class:`float` values
-            in the form ``(x minimum, y minimum, x maximum, y maximum)``
-            representing the bounds of the glyph, or :obj:`None` if the glyph
-            is empty.
+        :return: The :class:`Bounds` instance representing the the glyph's bounds,
+            or :obj:`None` if the component is empty.
 
         Example::
 
             >>> glyph.bounds
-            (10, 30, 765, 643)
+            Bounds(xMin=10, yMin=30, xMax=765, yMax=643)
 
         """,
     )
 
-    def _get_base_bounds(self) -> BoundingBox | None:
+    def _get_base_bounds(self) -> Bounds | None:
         value = self._get_bounds()
-        if value is not None:
-            value = normalizers.normalizeBoundingBox(value)
-        return value
+        if value is None:
+            return None
+        value = normalizers.normalizeBoundingBox(value)
+        return Bounds(value)
 
     def _get_bounds(self) -> BoundingBox | None:
         """Get the bounds of the native glyph.
@@ -3009,7 +3072,8 @@ class BaseGlyph(
         :return: A :class:`tuple` of four :class:`int` or :class:`float` values
             in the form ``(x minimum, y minimum, x maximum, y maximum)``
             representing the bounds of the glyph, or :obj:`None` if the glyph
-            is empty.
+            is empty. The value will be normalized
+             with :func:`normalizers.normalizeBoundingBox`.
 
         .. note::
 
@@ -3021,7 +3085,7 @@ class BaseGlyph(
         return pen.bounds
 
     area: dynamicProperty = dynamicProperty(
-        "area",
+        "base_area",
         """Get the area of the glyph
 
         This property is read-only.
@@ -3748,7 +3812,7 @@ class BaseGlyph(
             if isinstance(contour, int):
                 normalizedIndex = normalizers.normalizeIndex(contour)
                 # Avoid mypy conflict with normalizeIndex -> Optional[int]
-                if normalizedIndex is None:
+                if normalizedIndex is None:  # pragma: no cover
                     continue
                 normalizedContour = normalizedIndex
             else:
@@ -3833,7 +3897,7 @@ class BaseGlyph(
             if isinstance(component, int):
                 normalizedIndex = normalizers.normalizeIndex(component)
                 # Avoid mypy conflict with normalizeIndex -> Optional[int]
-                if normalizedIndex is None:
+                if normalizedIndex is None:  # pragma: no cover
                     continue
                 normalizedComponent = normalizedIndex
             else:
@@ -3920,7 +3984,7 @@ class BaseGlyph(
             if isinstance(anchor, int):
                 normalizedIndex = normalizers.normalizeIndex(anchor)
                 # Avoid mypy conflict with normalizeIndex -> Optional[int]
-                if normalizedIndex is None:
+                if normalizedIndex is None:  # pragma: no cover
                     continue
                 normalizedAnchor = normalizedIndex
             else:
@@ -4005,7 +4069,7 @@ class BaseGlyph(
             if isinstance(guideline, int):
                 normalizedIndex = normalizers.normalizeIndex(guideline)
                 # Avoid mypy conflict with normalizeIndex -> Optional[int]
-                if normalizedIndex is None:
+                if normalizedIndex is None:  # pragma: no cover
                     continue
                 normalizedGuideline = normalizedIndex
             else:

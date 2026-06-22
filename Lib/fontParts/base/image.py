@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Any, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any
 from collections.abc import Callable
 
 from fontTools.misc import transform
@@ -23,7 +23,6 @@ from fontParts.base.annotations import (
     CoordinateLike,
     RGBA,
     RGBALike,
-    IntFloatType,
 )
 
 if TYPE_CHECKING:
@@ -411,7 +410,7 @@ class BaseImage(
     # Data
 
     data: dynamicProperty = dynamicProperty(
-        "data",
+        "base_data",
         """Get or set the image's raw byte data.
         
         The possible formats are defined by each environment.

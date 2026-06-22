@@ -1,7 +1,7 @@
 # pylint: disable=C0103, C0302, C0114, W0613
 from __future__ import annotations
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Any, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any
 from collections.abc import Callable, Iterator
 import collections
 
@@ -24,7 +24,6 @@ from fontParts.base.annotations import (
     CharacterMappingType,
     CollectionType,
     ReverseComponentMappingType,
-    IntFloatType,
 )
 
 if TYPE_CHECKING:

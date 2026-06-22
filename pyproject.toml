@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=42", "wheel", "setuptools_scm[toml]>=3.4,<10", "vcs-versioning"]
+requires = ["setuptools>=42", "wheel", "setuptools_scm[toml]>=9.2.2", "vcs-versioning"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -55,6 +55,40 @@ include-package-data = true
 
 [tool.setuptools.packages.find]
 where = ["Lib"]
+
+[tool.coverage.run]
+branch = true
+parallel = true
+source = ["fontParts"]
+omit = [
+    "*/__init__.py",
+    "*/test/*",
+    "*/test.py"
+]
+command_line = "Lib/fontParts/fontshell/test.py"
+
+[tool.coverage.paths]
+source = ["Lib/fontParts"]
+
+[tool.coverage.report]
+exclude_lines = [
+    # keywords to use in inline comments to skip coverage
+    "pragma: no cover",
+
+    # don't complain if tests don't hit defensive assertion code
+    "(raise|except)(\\s)?NotImplementedError",
+
+    # don't complain if non-runnable code isn't run
+    "if __name__ == .__main__.:",
+
+    # don't complain about type-checking-only imports/blocks
+    "if TYPE_CHECKING:",
+
+    # skip coverage of typing overloads
+    "@overload"
+]
+ignore_errors = true
+show_missing = true
 
 [tool.setuptools_scm]
 write_to = 'Lib/fontParts/_version.py'

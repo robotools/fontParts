@@ -1,13 +1,8 @@
 from __future__ import annotations
-from typing import Optional, Type
 
 import defcon
 from fontParts.base import BaseComponent
-from fontParts.base.annotations import (
-    AffineTransformationLike,
-    AffineTransformation,
-    IntFloatType,
-)
+from fontParts.base.annotations import AffineTransformationLike, AffineTransformation
 from fontParts.fontshell.base import RBaseObject
 
 
