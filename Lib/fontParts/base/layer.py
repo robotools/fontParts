@@ -369,6 +369,11 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin, ABC):
     def removeGlyph(self, name: str) -> None:
         """Remove the specified glyph from the layer.
 
+        .. deprecated:: 0.8
+
+            Will be removed in version 1.5. Use :meth:`BaseLayer.__delitem__` or
+            :meth:`BaseFont.__delitem__` instead.
+
         This method removes the glyph with the given `name` from the
         layer. When called from a :class:`BaseFont` instance, it
         removes the glyph from the default layer. When called from
@@ -382,43 +387,41 @@ class _BaseGlyphVendor(BaseObject, SelectionMixin, ABC):
             >>> layer.removeGlyph("A")
 
         """
-        del self[name]
+        self._removeGlyph(name)
 
     def _removeGlyph(self, name: str, **kwargs: Any) -> None:
         r"""Remove the specified glyph from the native layer.
 
-        This is the environment implementation of
-        :meth:`BaseLayer.removeGlyph` and :meth:`BaseFont.removeGlyph`.
+        This is the environment implementation of :meth:`BaseLayer.__delitem__`.
 
-        :param name: The name of the glyph to remove. The value will
-            have been normalized with :func:`normalizers.normalizeGlyphName`.
+        :param name: The name of the glyph to remove. The value will have been
+            normalized with :func:`normalizers.normalizeGlyphName`.
         :param \**kwargs: Additional keyword arguments.
-        :raises NotImplementedError: If the method has not been
-            overridden by a subclass.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
 
         .. important::
 
             Subclasses must override this method.
 
         """
-        self.raiseNotImplementedError()
+        del self[name]
 
     def insertGlyph(self, glyph: BaseGlyph, name: str | None = None) -> BaseGlyph:
         """Insert a specified glyph into the layer.
 
         .. deprecated:: 0.8
 
-            Will be removed in version 1.5. Use :meth:`BaseLayer.__setitem__` instead.
+            Will be removed in version 1.5. Use :meth:`BaseLayer.__setitem__` or
+            :meth:`BaseFont.__setitem__` instead.
 
-        This method will not insert a glyph directly, but rather create
-        a new :class:`BaseGlyph` instance containing the data from
-        `glyph`. The data inserted from `glyph` is the same data as
-        documented in :meth:`BaseGlyph.copy`.
+        This method will not insert a glyph directly, but rather create a new
+        :class:`BaseGlyph` instance containing the data from `glyph`. The data inserted
+        from `glyph` is the same data as documented in :meth:`BaseGlyph.copy`.
 
         :param glyph: The :class:`BaseGlyph` instance to insert.
-        :param name: The name to assign to the new layer after
-            insertion. If value is :obj:`None`, the origninal name will
-            be used. Defaults to :obj:`None`.
+        :param name: The name to assign to the new layer after insertion. If value is
+            :obj:`None`, the origninal name will be used. Defaults to :obj:`None`.
         :return: The newly inserted :class:`BaseGlyph` instance.
 
         Example::

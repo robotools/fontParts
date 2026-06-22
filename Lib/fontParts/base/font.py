@@ -1481,15 +1481,10 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
     def _removeGlyph(self, name: str, **kwargs: Any) -> None:
         r"""Remove the specified glyph from the default layer.
 
-        .. deprecated:: 0.8
+        This is the environment implementation of :meth:`BaseFont.__delitem__`.
 
-            Will be removed in version 1.5. Use :meth:`BaseFont.__delitem__` instead.
-
-        This is the environment implementation of
-        :meth:`BaseFont.removeGlyph`.
-
-        :param name: The name of the glyph to remove. The value will be
-            normalized with :func:`normalizers.normalizeGlyphName`.
+        :param name: The name of the glyph to remove. The value will be normalized with
+            :func:`normalizers.normalizeGlyphName`.
         :param \**kwargs: Additional keyword arguments.
 
         .. note::
@@ -1498,27 +1493,25 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
 
         """
         layer = self.defaultLayer
-        layer.removeGlyph(name)
+        del layer[name]
 
     def __setitem__(self, name: str, glyph: BaseGlyph) -> BaseGlyph:
         """Insert the specified glyph into the font.
 
-        Example::
-
-            >>> glyph = font["A"] = otherGlyph
-
-        This will not insert a glyph directly, but rather create
-        a new :class:`BaseGlyph` instance containing the data from
-        `glyph`. The data inserted from `glyph` is the same data as
-        documented in :meth:`BaseGlyph.copy`.
+        This will not insert a glyph directly, but rather create a new
+        :class:`BaseGlyph` instance containing the data from `glyph`. The data inserted
+        from `glyph` is the same data as documented in :meth:`BaseGlyph.copy`.
 
         On a font level, :attr:`.glyphOrder` will be preserved if
             the `name` is already present.
 
-        :param name: The name to assign to the new glyph after
-            insertion.
+        :param name: The name to assign to the new glyph after insertion.
         :param glyph: The layer :class:`BaseGlyph` instance to insert.
         :return: The newly inserted :class:`BaseGlyph` instance.
+
+        Example::
+
+            >>> glyph = font["A"] = otherGlyph
 
         """
         name = normalizers.normalizeGlyphName(name)
