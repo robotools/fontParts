@@ -224,7 +224,6 @@ a.headerlink:visited {
 :root {
   --note-color: 0, 98, 255;
   --important-color: 255, 170, 0;
-  --deprecated-color: 147, 51, 234;
 }
 
 .note {
@@ -243,6 +242,10 @@ a.headerlink:visited {
 
 .important .admonition-title {
   color: rgb(var(--important-color));
+}
+
+.versionmodified {
+  font-style: italic;
 }
 
 .highlight {
