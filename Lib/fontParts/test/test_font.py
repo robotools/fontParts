@@ -428,6 +428,48 @@ class TestFont(unittest.TestCase):
         font.selectedLayers = []
         self.assertEqual(font.selectedLayers, ())
 
+    # Layer names
+
+    def test_selectedLayerNames_default(self):
+        font = self.getFont_layers()
+        try:
+            font.defaultLayer.selected = False
+        except NotImplementedError:
+            return
+        self.assertEqual(font.selectedLayers, ())
+
+    def test_selectedLayerNames_setSubObject(self):
+        font = self.getFont_layers()
+        try:
+            font.defaultLayer.selected = False
+        except NotImplementedError:
+            return
+        layer1 = font.getLayer("layer A")
+        layer2 = font.getLayer("layer B")
+        layer1.selected = True
+        layer2.selected = True
+        self.assertEqual(tuple(sorted(font.selectedLayerNames)), ("layer A", "layer B"))
+
+    def test_selectedLayerNames_setFilledList(self):
+        font = self.getFont_layers()
+        try:
+            font.defaultLayer.selected = False
+        except NotImplementedError:
+            return
+        font.selectedLayerNames = ["layer C", "layer D"]
+        self.assertEqual(tuple(sorted(font.selectedLayerNames)), ("layer C", "layer D"))
+
+    def test_selectedLayerNames_setEmptyList(self):
+        font = self.getFont_layers()
+        try:
+            font.defaultLayer.selected = False
+        except NotImplementedError:
+            return
+        layer1 = font.getLayer("layer A")
+        layer1.selected = True
+        font.selectedLayerNames = []
+        self.assertEqual(font.selectedLayerNames, ())
+
     # Glyphs
 
     def test_selectedGlyphs_default(self):
