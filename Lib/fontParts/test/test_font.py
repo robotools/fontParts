@@ -23,6 +23,21 @@ class TestFont(unittest.TestCase):
         with self.assertRaises(ValueError):
             font.getLayer("There is no layer with this name.")
 
+    def test_newLayer_layer_exists(self):
+        font = self.getFont_layers()
+        font.newLayer("testLayer")
+        self.assertIn("testLayer", font.layerOrder)
+        font.newLayer("testLayer")
+        self.assertIn("testLayer", font.layerOrder)
+
+    def test_newLayer_colored_layer_exists(self):
+        font = self.getFont_layers()
+        font.newLayer("testLayer", (1, 1, 1, 1))
+        self.assertIn("testLayer", font.layerOrder)
+        layer = font.newLayer("testLayer", (0, 1, 1, 0))
+        self.assertIn("testLayer", font.layerOrder)
+        self.assertEqual(layer.color, (0, 1, 1, 0))
+
     def test_removeLayer(self):
         font, _ = self.objectGenerator("font")
         layer = font.newLayer("testLayer")
