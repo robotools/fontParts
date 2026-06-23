@@ -275,6 +275,17 @@ class TestFont(unittest.TestCase):
         }
         self.assertEqual(font.getFlatKerning(), expected)
 
+    # -------
+    # TempLib
+    # -------
+
+    def test_font_tempLib(self):
+        font, _ = self.objectGenerator("font")
+        tempLib = font.tempLib
+        tempLib["test.key"] = "test.value"
+        self.assertEqual(tempLib["test.key"], "test.value")
+        self.assertEqual(tempLib.font, font)
+
     # ----
     # Hash
     # ----
