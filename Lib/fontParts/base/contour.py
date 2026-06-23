@@ -847,6 +847,8 @@ class BaseContour(
 
         pen = AreaPen(self.layer)
         self.draw(pen)
+        if not pen.value:
+            return None
         return abs(pen.value)
 
     # --------
