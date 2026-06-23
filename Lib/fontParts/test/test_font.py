@@ -116,6 +116,13 @@ class TestFont(unittest.TestCase):
             font.newGlyph(name)
         return font
 
+    def getFont_components(self):
+        font = self.getFont_glyphs()
+        composite = font.newGlyph("compositeGlyph")
+        for baseName in "ABCD":
+            composite.appendComponent(baseName)
+        return font
+
     def getFont_guidelines(self):
         font, _ = self.objectGenerator("font")
         font.appendGuideline((1, 2), 0, "Test Guideline 1")
@@ -916,3 +923,14 @@ class TestFont(unittest.TestCase):
         self.assertTrue(compatible)
         self.assertFalse(report.fatal)
         self.assertTrue(report.warning)
+
+    # -------
+    # Mapping
+    # -------
+
+    def test_getReverseComponentMapping(self):
+        font = self.getFont_components()
+        fontMapping = font.getReverseComponentMapping()
+        layerMapping = font.defaultLayer.getReverseComponentMapping()
+        self.assertEqual(fontMapping, layerMapping)
+        self.assertIn("A", fontMapping)
