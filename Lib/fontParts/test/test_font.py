@@ -817,3 +817,70 @@ class TestFont(unittest.TestCase):
         )
         self.assertEqual(len(interpolated_font.guidelines), 1)
         self.assertEqual(interpolated_font.guidelines[0].position, (100, 100))
+
+    def test_isCompatible_guideline_counts_differ(self):
+        font1 = self.getFont_guidelines()
+        font2 = self.getFont_guidelines()
+        font2.appendGuideline((10, 10))
+        compatible, report = font1.isCompatible(font2)
+        self.assertTrue(compatible)
+        self.assertTrue(report.warning)
+        self.assertTrue(report.guidelineCountDifference)
+
+    def test_isCompatible_guidelines_differ(self):
+        font1 = self.getFont_guidelines()
+        font2 = self.getFont_guidelines()
+        font2.guidelines[0].name = "otherGuideline"
+        compatible, report = font1.isCompatible(font2)
+        self.assertTrue(compatible)
+        self.assertTrue(report.warning)
+        self.assertTrue(report.guidelinesMissingInFont1)
+
+    def test_isCompatible_layer_counts_differ(self):
+        font1 = self.getFont_glyphs()
+        font2 = self.getFont_glyphs()
+        font2.newLayer("testLayer")
+        compatible, report = font1.isCompatible(font2)
+        self.assertTrue(compatible)
+        self.assertTrue(report.warning)
+        self.assertTrue(report.layerCountDifference)
+
+    def test_isCompatible_layers_differ(self):
+        font1 = self.getFont_glyphs()
+        font2 = self.getFont_glyphs()
+        font2.layers[0].name = "otherLayer"
+        compatible, report = font1.isCompatible(font2)
+        self.assertTrue(compatible)
+        self.assertTrue(report.warning)
+        self.assertTrue(report.layersMissingFromFont2)
+
+    def test_isCompatible_layer_fatal_only(self):
+        font1 = self.getFont_glyphs()
+        font2 = self.getFont_glyphs()
+        glyph1 = font1.newGlyph("A")
+        glyph2 = font2.newGlyph("A")
+        pen1 = glyph1.getPointPen()
+        pen1.beginPath()
+        pen1.addPoint((0, 0), segmentType="line")
+        pen1.endPath()
+        pen2 = glyph2.getPointPen()
+        pen2.beginPath()
+        pen2.addPoint((0, 0), segmentType="line")
+        pen2.addPoint((100, 100), segmentType="line")
+        pen2.endPath()
+        compatible, report = font1.isCompatible(font2)
+        self.assertFalse(compatible)
+        self.assertTrue(report.fatal)
+        self.assertFalse(report.warning)
+
+    def test_isCompatible_layer_warning_only(self):
+        font1 = self.getFont_glyphs()
+        font2 = self.getFont_glyphs()
+        glyph1 = font1.newGlyph("A")
+        glyph2 = font2.newGlyph("A")
+        glyph1.appendAnchor("top", (50, 50))
+        glyph2.appendAnchor("bottom", (50, 50))
+        compatible, report = font1.isCompatible(font2)
+        self.assertTrue(compatible)
+        self.assertFalse(report.fatal)
+        self.assertTrue(report.warning)
