@@ -612,6 +612,12 @@ class TestFont(unittest.TestCase):
         copy = font.copy()
         self.assertEqual(copy.selectedGuidelines, font.selectedGuidelines)
 
+    def test_copyData_source_layer_not_in_layerOrder(self):
+        source = self.getFont_layers()
+        font, _ = self.objectGenerator("font")
+        font.copyData(source)
+        self.assertIn("layer A", font.layerOrder)
+
     # generate
 
     def test_generateFormatToExtension(self):
