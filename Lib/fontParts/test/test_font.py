@@ -934,3 +934,12 @@ class TestFont(unittest.TestCase):
         layerMapping = font.defaultLayer.getReverseComponentMapping()
         self.assertEqual(fontMapping, layerMapping)
         self.assertIn("A", fontMapping)
+
+    def test_characterMapping(self):
+        font = self.getFont_glyphs()
+        for i, glyph in enumerate(font):
+            glyph.unicode = i % 2
+        fontMapping = font.getCharacterMapping()
+        layerMapping = font.defaultLayer.getCharacterMapping()
+        self.assertEqual(fontMapping, layerMapping)
+        self.assertIn(1, fontMapping)
