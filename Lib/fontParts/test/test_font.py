@@ -23,12 +23,12 @@ class TestFont(unittest.TestCase):
         font, _ = self.objectGenerator("font")
         font.info.familyName = "testFamily"
         font.info.styleName = "testStyle"
-        path = self._saveFontPath(".ufo")
-        font.save(path)
-        result = font._reprContents()
-        self.assertEqual(len(result), 2)
-        self.assertIn("'testFamily testStyle'", result)
-        self.assertIn(f"path='{path}'", result)
+        with patch.object(type(font), "path", new_callable=PropertyMock) as mock_path:
+            mock_path.return_value = "path/to/font.ufo"
+            result = font._reprContents()
+            self.assertEqual(len(result), 2)
+            self.assertIn("'testFamily testStyle'", result)
+            self.assertIn("path='path/to/font.ufo'", result)
 
     # ------
     # Layers
