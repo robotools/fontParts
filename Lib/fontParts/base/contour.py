@@ -1016,7 +1016,7 @@ class BaseContour(
             raise TypeError("Type cannot be None.")
         type = normalizers.normalizeSegmentType(type)
         if points is None:
-            raise ValueError("Points cannot be None.")
+            raise TypeError("Points cannot be None.")
         normalizedPoints = [normalizers.normalizeCoordinateTuple(p) for p in points]
         # Avoid mypy invariant List error.
         castPoints = cast(PointCollectionType, normalizedPoints)
@@ -1091,7 +1091,7 @@ class BaseContour(
             raise TypeError("Type cannot be None.")
         type = normalizers.normalizeSegmentType(type)
         if points is None:
-            raise ValueError("Points cannot be None.")
+            raise TypeError("Points cannot be None.")
         normalizedPoints = [normalizers.normalizeCoordinateTuple(p) for p in points]
         # Avoid mypy invariant List error.
         castPoints = cast(PointCollectionType, normalizedPoints)
