@@ -8,6 +8,28 @@ from fontTools.ufoLib import DEFAULT_LAYER_NAME
 
 
 class TestFont(unittest.TestCase):
+    # ----
+    # repr
+    # ----
+    def test_reprContents(self):
+        font, _ = self.objectGenerator("font")
+        font.info.familyName = "testFamily"
+        font.info.styleName = "testStyle"
+        result = font._reprContents()
+        self.assertEqual(len(result), 1)
+        self.assertIn("'testFamily testStyle'", result)
+
+    def test_reprContents_path(self):
+        font, _ = self.objectGenerator("font")
+        font.info.familyName = "testFamily"
+        font.info.styleName = "testStyle"
+        path = self._saveFontPath(".ufo")
+        font.save(path)
+        result = font._reprContents()
+        self.assertEqual(len(result), 2)
+        self.assertIn("'testFamily testStyle'", result)
+        self.assertIn(f"path='{path}'", result)
+
     # ------
     # Layers
     # ------
