@@ -1338,7 +1338,8 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
 
         """
         newLayer = self.getLayer(layerName).copy()
-        return self.insertLayer(newLayer, newLayerName)
+        newLayer.name = newLayerName
+        return self.insertLayer(newLayer)
 
     def swapLayerNames(self, layerName: str, otherLayerName: str) -> None:
         """Swap the names of two specific layers in the font.
