@@ -1251,7 +1251,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         if name is None:
             name = layer.name
         normalizedName = normalizers.normalizeLayerName(name)
-        if normalizedName in self:
+        if normalizedName in self.layerOrder:
             self.removeLayer(normalizedName)
         return self._insertLayer(layer, name=normalizedName)
 
