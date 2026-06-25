@@ -116,35 +116,6 @@ class TestFont(unittest.TestCase):
             font.newGlyph(name)
         return font
 
-    def getFont_components(self):
-        font = self.getFont_glyphs()
-        composite = font.newGlyph("compositeGlyph")
-        for baseName in "ABCD":
-            composite.appendComponent(baseName)
-        return font
-
-    def getFont_guidelines(self):
-        font, _ = self.objectGenerator("font")
-        font.appendGuideline((1, 2), 0, "Test Guideline 1")
-        font.appendGuideline((3, 4), 90, "Test Guideline 2")
-        return font
-
-    def test_appendGuideline_valid_object(self):
-        font, _ = self.objectGenerator("font")
-        src, _ = self.objectGenerator("guideline")
-        src.position = (1, 2)
-        src.angle = 123
-        src.name = "test"
-        src.color = (1, 1, 1, 1)
-        src.getIdentifier()
-        dst = font.appendGuideline(guideline=src)
-        self.assertNotEqual(src, dst)
-        self.assertEqual(src.position, dst.position)
-        self.assertEqual(src.angle, dst.angle)
-        self.assertEqual(src.name, dst.name)
-        self.assertEqual(src.color, dst.color)
-        self.assertEqual(src.identifier, dst.identifier)
-
     # glyphOrder
 
     def test_glyphOrder(self):
@@ -213,6 +184,28 @@ class TestFont(unittest.TestCase):
     # ----------
     # Guidelines
     # ----------
+
+    def getFont_guidelines(self):
+        font, _ = self.objectGenerator("font")
+        font.appendGuideline((1, 2), 0, "Test Guideline 1")
+        font.appendGuideline((3, 4), 90, "Test Guideline 2")
+        return font
+
+    def test_appendGuideline_valid_object(self):
+        font, _ = self.objectGenerator("font")
+        src, _ = self.objectGenerator("guideline")
+        src.position = (1, 2)
+        src.angle = 123
+        src.name = "test"
+        src.color = (1, 1, 1, 1)
+        src.getIdentifier()
+        dst = font.appendGuideline(guideline=src)
+        self.assertNotEqual(src, dst)
+        self.assertEqual(src.position, dst.position)
+        self.assertEqual(src.angle, dst.angle)
+        self.assertEqual(src.name, dst.name)
+        self.assertEqual(src.color, dst.color)
+        self.assertEqual(src.identifier, dst.identifier)
 
     def test_appendGuideline_position(self):
         font = self.getFont_guidelines()
@@ -969,6 +962,13 @@ class TestFont(unittest.TestCase):
     # -------
     # Mapping
     # -------
+
+    def getFont_components(self):
+        font = self.getFont_glyphs()
+        composite = font.newGlyph("compositeGlyph")
+        for baseName in "ABCD":
+            composite.appendComponent(baseName)
+        return font
 
     def test_getReverseComponentMapping(self):
         font = self.getFont_components()
