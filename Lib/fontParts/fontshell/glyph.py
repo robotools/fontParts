@@ -120,7 +120,10 @@ class RGlyph(RBaseObject, BaseGlyph):
     # ----
 
     def _get_area(self) -> float | None:
-        return self.naked().area
+        value = self.naked().area
+        if not value:
+            return None
+        return value
 
     # ----
     # Pens
