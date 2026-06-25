@@ -669,10 +669,36 @@ class TestContour(unittest.TestCase):
             [segment.type for segment in segments], ["curve", "line", "curve"]
         )
 
+    def test_segments_start_move_offcurves_end(self):
+        contour, _ = self.objectGenerator("contour")
+        contour.appendPoint((84, 28), "move")
+        contour.appendPoint((0, 0), "line")
+        contour.appendPoint((0, 28), "offcurve")
+        contour.appendPoint((10, 64), "offcurve")
+        contour.appendPoint((46, 64), "curve")
+        contour.appendPoint((76, 64), "offcurve")
+
+        segments = contour.segments
+        self.assertEqual(
+            [segment.type for segment in segments], ["move", "line", "curve"]
+        )
+
     def test_segments_empty(self):
         contour, _ = self.objectGenerator("contour")
         segments = contour.segments
         self.assertEqual(segments, ())
+
+    def test_segments_segmentClass_none(self):
+        contour, _ = self.objectGenerator("contour")
+        contour.appendPoint((0, 0), "line")
+        conntourClass = type(contour)
+        originalClass = conntourClass.segmentClass
+        try:
+            conntourClass.segmentClass = None
+            with self.assertRaises(TypeError):
+                contour.segments
+        finally:
+            conntourClass.segmentClass = originalClass
 
     def test_segment_insert_open(self):
         # at index 0
