@@ -259,6 +259,17 @@ class TestFont(unittest.TestCase):
         with self.assertRaises(ValueError):
             font.appendGuideline(position=None)
 
+    def test_removeGuideline_index(self):
+        font = self.getFont_guidelines()
+        initialLength = len(font.guidelines)
+        font.removeGuideline(0)
+        self.assertEqual(len(font.guidelines), initialLength - 1)
+
+    def test_removeGuideline_index_out_of_range(self):
+        font = self.getFont_guidelines()
+        with self.assertRaises(ValueError):
+            font.appendGuideline(position=None)
+
     def test_clearGuideline(self):
         font = self.getFont_guidelines()
         font.clearGuidelines()
