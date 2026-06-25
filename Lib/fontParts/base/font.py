@@ -1277,11 +1277,9 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
             Subclasses may override this method.
 
         """
-        if name != layer.name and layer.name in self.layerOrder:
-            layer = layer.copy()
-            layer.name = name
         dest = self.newLayer(name)
         dest.copyData(layer)
+        dest.name = name
         return dest
 
     # duplicate
