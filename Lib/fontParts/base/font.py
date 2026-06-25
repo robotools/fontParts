@@ -2335,8 +2335,9 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
             Subclasses may override this method.
 
         """
-        select = [self.layers(name) for name in value]
-        self.selectedLayers = select
+
+        layerMap = {layer.name: layer for layer in self.layers}
+        self.selectedLayers = [layerMap[name] for name in value]
 
     # guidelines
 
