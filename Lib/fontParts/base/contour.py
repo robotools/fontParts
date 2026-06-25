@@ -1048,7 +1048,7 @@ class BaseContour(
 
         """
         self._insertSegment(
-            len(self), type=type, points=points, smooth=smooth, **kwargs
+            len(self) - 1, type=type, points=points, smooth=smooth, **kwargs
         )
 
     def insertSegment(
