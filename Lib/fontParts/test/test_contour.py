@@ -318,6 +318,30 @@ class TestContour(unittest.TestCase):
         contour1.index = 3
         self.assertEqual(contour1.index, 2)
 
+    def test_set_index_orphan_contour(self):
+        contour = self.getContour_bounds()
+        with self.assertRaises(FontPartsError):
+            contour.index = 1
+
+    def test_set_index_negative_value(self):
+        glyph, _ = self.objectGenerator("glyph")
+        contour1 = glyph.appendContour(self.getContour_bounds())
+        contour2 = glyph.appendContour(self.getContour_bounds())
+        contour1.index = -1
+        self.assertEqual(contour1.index, 0)
+        self.assertEqual(contour2.index, 1)
+        contour1.index = -11
+        self.assertEqual(contour1.index, 0)
+        self.assertEqual(contour2.index, 1)
+
+    def test_set_index_none(self):
+        glyph, _ = self.objectGenerator("glyph")
+        contour1 = glyph.appendContour(self.getContour_bounds())
+        contour2 = glyph.appendContour(self.getContour_bounds())
+        contour1.index = None
+        self.assertEqual(contour1.index, 0)
+        self.assertEqual(contour2.index, 1)
+
     # --------------
     # Identification
     # --------------
