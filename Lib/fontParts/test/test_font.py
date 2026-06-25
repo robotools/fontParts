@@ -663,6 +663,24 @@ class TestFont(unittest.TestCase):
         with self.assertRaises(OSError):
             font.save(path=None)
 
+    # close
+
+    def test_close(self):
+        font, _ = self.objectGenerator("font")
+        with patch.object(type(font), "_close") as mock_close:
+            font.close(save=False)
+            mock_close.assert_called_once()
+
+    def test_save_and_close(self):
+        font, _ = self.objectGenerator("font")
+        with (
+            patch.object(type(font), "save") as mock_save,
+            patch.object(type(font), "_close") as mock_close,
+        ):
+            font.close(save=True)
+            mock_close.assert_called_once()
+            mock_save.assert_called_once()
+
     # copy
 
     def test_copy(self):
