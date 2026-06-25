@@ -944,6 +944,18 @@ class TestContour(unittest.TestCase):
     # bPoints
     # -------
 
+    def test_bPoints_bPointClass_none(self):
+        contour, _ = self.objectGenerator("contour")
+        contour.appendPoint((0, 0))
+        contourClass = type(contour)
+        originalClass = contourClass.bPointClass
+        try:
+            contourClass.bPointClass = None
+            with self.assertRaises(TypeError):
+                contour.bPoints
+        finally:
+            contourClass.bPointClass = originalClass
+
     def test_appendBPoint_values(self):
         contour = self.getContour_bounds()
         initialLength = len(contour.bPoints)
