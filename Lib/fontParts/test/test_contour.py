@@ -1179,3 +1179,8 @@ class TestContour(unittest.TestCase):
             contour.insertPoint(None, type="line", position=(50, 50))
         with self.assertRaises(TypeError):
             contour.insertPoint(0, type="line", position=None)
+
+    def test_removePoint_index_out_of_range(self):
+        contour = self.getContour_bounds()
+        with self.assertRaises(ValueError):
+            contour.removePoint(10)
