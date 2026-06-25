@@ -472,6 +472,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
                     "the file does not have a path."
                 )
             fileName = os.path.basename(self.path)
+            fileName = os.path.splitext(fileName)[0]
             fileName += ext
             path = os.path.join(path, fileName)
         path = normalizers.normalizeFilePath(path)
