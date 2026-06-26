@@ -35,6 +35,19 @@ class TestKerning(unittest.TestCase):
         )
         return kerning
 
+    # ----
+    # repr
+    # ----
+
+    def test_reprContents(self):
+        kerning = self.getKerning_generic()
+        self.assertIn("for font", kerning._reprContents())
+
+    def test_reprContents_no_font(self):
+        kerning, _ = self.objectGenerator("kerning")
+        kerning[("A", "V")] = -50
+        self.assertEqual(len(kerning._reprContents()), 0)
+
     # ---
     # len
     # ---
