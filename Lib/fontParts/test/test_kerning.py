@@ -76,17 +76,36 @@ class TestKerning(unittest.TestCase):
         self.assertEqual(kerning._font(), font)
 
     def test_set_font_different_value(self):
+        font1, _ = self.objectGenerator("font")
+        font2, _ = self.objectGenerator("font")
+        kerning, _ = self.objectGenerator("kerning")
+        kerning._font = lambda: font1
         with self.assertRaises(AssertionError):
-            font1, _ = self.objectGenerator("font")
-            font2, _ = self.objectGenerator("font")
-            kerning, _ = self.objectGenerator("kerning")
-            kerning._font = lambda: font1
             kerning.font = font2
 
     def test_set_font_value_none(self):
         kerning, _ = self.objectGenerator("kerning")
         kerning.font = None
         self.assertIsNone(kerning._font)
+
+    # --------------
+    # Transformation
+    # --------------
+
+    def test_scaleBy_int(self):
+        kerning = self.getKerning_generic()
+        kerning.scaleBy(2)
+        self.assertEqual(kerning[("A", "A")], 206)
+
+    def test_scaleBy_float(self):
+        kerning = self.getKerning_generic()
+        kerning.scaleBy(1.5)
+        self.assertEqual(kerning[("A", "A")], 154.5)
+
+    def test_scaleBy_factor(self):
+        kerning = self.getKerning_generic()
+        kerning.scaleBy((2, 3.5))
+        self.assertEqual(kerning[("A", "A")], 206)
 
     # ---
     # len
