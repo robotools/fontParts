@@ -825,9 +825,7 @@ class TestFont(unittest.TestCase):
             expectedPath = os.path.abspath("/src/myfont.otf")
             mockGenerate.assert_called_once()
             actualPath = mockGenerate.call_args[1]["path"]
-            self.assertEqual(
-                os.path.normpath(actualPath), os.path.normpath(expectedPath)
-            )
+            self.assertEqual(os.path.abspath(actualPath), os.path.abspath(expectedPath))
 
     def test_generate_path_is_dir_and_self_path_none(self):
         font = self.getFont_glyphs()
@@ -852,9 +850,7 @@ class TestFont(unittest.TestCase):
             font.generate("otfcff", path="/output/dir")
             expectedPath = os.path.abspath(os.path.join("/output/dir", "myfont.otf"))
             actualPath = mockGenerate.call_args[1]["path"]
-            self.assertEqual(
-                os.path.normpath(actualPath), os.path.normpath(expectedPath)
-            )
+            self.assertEqual(os.path.abspath(actualPath), os.path.abspath(expectedPath))
 
     # -----------------
     # Global Operations
