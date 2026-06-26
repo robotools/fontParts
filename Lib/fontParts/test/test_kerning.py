@@ -48,6 +48,46 @@ class TestKerning(unittest.TestCase):
         kerning[("A", "V")] = -50
         self.assertEqual(len(kerning._reprContents()), 0)
 
+    # -------
+    # Parents
+    # -------
+
+    def test_get_font(self):
+        font, _ = self.objectGenerator("font")
+        kerning, _ = self.objectGenerator("kerning")
+        kerning._font = lambda: font
+        self.assertEqual(kerning.font, font)
+
+    def test_get_font_orphan_font(self):
+        kerning, _ = self.objectGenerator("kerning")
+        self.assertIsNone(kerning.font)
+
+    def test_set_font(self):
+        font, _ = self.objectGenerator("font")
+        kerning, _ = self.objectGenerator("kerning")
+        kerning.font = font
+        self.assertEqual(kerning._font(), font)
+
+    def test_set_font_same_value(self):
+        font, _ = self.objectGenerator("font")
+        kerning, _ = self.objectGenerator("kerning")
+        kerning._font = lambda: font
+        kerning.font = font
+        self.assertEqual(kerning._font(), font)
+
+    def test_set_font_different_value(self):
+        with self.assertRaises(AssertionError):
+            font1, _ = self.objectGenerator("font")
+            font2, _ = self.objectGenerator("font")
+            kerning, _ = self.objectGenerator("kerning")
+            kerning._font = lambda: font1
+            kerning.font = font2
+
+    def test_set_font_value_none(self):
+        kerning, _ = self.objectGenerator("kerning")
+        kerning.font = None
+        self.assertIsNone(kerning._font)
+
     # ---
     # len
     # ---
