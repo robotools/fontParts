@@ -107,6 +107,56 @@ class TestKerning(unittest.TestCase):
         kerning.scaleBy((2, 3.5))
         self.assertEqual(kerning[("A", "A")], 206)
 
+    # -------------
+    # Normalization
+    # -------------
+
+    def test_round_multiple_1(self):
+        kerning = self.getKerning_generic()
+        kerning[("A", "V")] = 1.4
+        kerning[("V", "A")] = 1.5
+        kerning[("L", "T")] = 1.6
+        kerning.round(1)
+        self.assertEqual(kerning[("A", "V")], 1.0)
+        self.assertEqual(kerning[("V", "A")], 2.0)
+        self.assertEqual(kerning[("L", "T")], 2.0)
+
+    def test_round_multiple_2(self):
+        kerning = self.getKerning_generic()
+        kerning[("A", "V")] = 11
+        kerning[("V", "A")] = 15
+        kerning[("L", "T")] = 16
+        kerning.round(2)
+        self.assertEqual(kerning[("A", "V")], 12)
+        self.assertEqual(kerning[("V", "A")], 16)
+        self.assertEqual(kerning[("L", "T")], 16)
+
+    def test_round_negative_values(self):
+        kerning = self.getKerning_generic()
+        kerning[("A", "V")] = -1.4
+        kerning[("V", "A")] = -1.5
+        kerning.round(1)
+        self.assertEqual(kerning[("A", "V")], -1.0)
+        self.assertEqual(kerning[("V", "A")], -1.0)
+
+    def test_round_large_multiple(self):
+        kerning = self.getKerning_generic()
+        kerning[("A", "V")] = 13
+        kerning[("V", "A")] = 17
+        kerning.round(5)
+        self.assertEqual(kerning[("A", "V")], 15)
+        self.assertEqual(kerning[("V", "A")], 15)
+
+    def test_round_multiple_zero(self):
+        kerning = self.getKerning_generic()
+        with self.assertRaises(ZeroDivisionError):
+            kerning.round(0)
+
+    def test_round_multiple_invalid_type(self):
+        kerning = self.getKerning_generic()
+        with self.assertRaises(TypeError):
+            kerning.round(2.5)
+
     # ---
     # len
     # ---
