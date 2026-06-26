@@ -157,6 +157,26 @@ class TestKerning(unittest.TestCase):
         with self.assertRaises(TypeError):
             kerning.round(2.5)
 
+    # -------------
+    # Interpolation
+    # -------------
+
+    def test_interpolate_without_rounding(self):
+        interpolated = self.getKerning_generic()
+        kerning_min = self.getKerning_generic()
+        kerning_max = self.getKerning_font2()
+        interpolated.interpolate(0.515, kerning_min, kerning_max, round=False)
+
+        self.assertEqual(interpolated[("public.kern1.X", "public.kern2.X")], 151.5)
+
+    def test_interpolate_with_rounding(self):
+        interpolated = self.getKerning_generic()
+        kerning_min = self.getKerning_generic()
+        kerning_max = self.getKerning_font2()
+        interpolated.interpolate(0.515, kerning_min, kerning_max, round=True)
+
+        self.assertEqual(interpolated[("public.kern1.X", "public.kern2.X")], 152)
+
     # ---
     # len
     # ---
@@ -311,23 +331,3 @@ class TestKerning(unittest.TestCase):
         kerning_two = self.getKerning_generic()
         a = kerning_one
         self.assertNotEqual(kerning_two, a)
-
-    # -------------
-    # Interpolation
-    # -------------
-
-    def test_interpolation_without_rounding(self):
-        interpolated = self.getKerning_generic()
-        kerning_min = self.getKerning_generic()
-        kerning_max = self.getKerning_font2()
-        interpolated.interpolate(0.515, kerning_min, kerning_max, round=False)
-
-        self.assertEqual(interpolated[("public.kern1.X", "public.kern2.X")], 151.5)
-
-    def test_interpolation_with_rounding(self):
-        interpolated = self.getKerning_generic()
-        kerning_min = self.getKerning_generic()
-        kerning_max = self.getKerning_font2()
-        interpolated.interpolate(0.515, kerning_min, kerning_max, round=True)
-
-        self.assertEqual(interpolated[("public.kern1.X", "public.kern2.X")], 152)
