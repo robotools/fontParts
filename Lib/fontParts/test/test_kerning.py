@@ -163,19 +163,56 @@ class TestKerning(unittest.TestCase):
 
     def test_interpolate_without_rounding(self):
         interpolated = self.getKerning_generic()
-        kerning_min = self.getKerning_generic()
-        kerning_max = self.getKerning_font2()
-        interpolated.interpolate(0.515, kerning_min, kerning_max, round=False)
-
+        minKerning = self.getKerning_generic()
+        maxKerning = self.getKerning_font2()
+        interpolated.interpolate(0.515, minKerning, maxKerning, round=False)
         self.assertEqual(interpolated[("public.kern1.X", "public.kern2.X")], 151.5)
 
     def test_interpolate_with_rounding(self):
         interpolated = self.getKerning_generic()
-        kerning_min = self.getKerning_generic()
-        kerning_max = self.getKerning_font2()
-        interpolated.interpolate(0.515, kerning_min, kerning_max, round=True)
-
+        minKerning = self.getKerning_generic()
+        maxKerning = self.getKerning_font2()
+        interpolated.interpolate(0.515, minKerning, maxKerning, round=True)
         self.assertEqual(interpolated[("public.kern1.X", "public.kern2.X")], 152)
+
+    def test_interpolate_minKerning_invalid_type(self):
+        interpolated = self.getKerning_generic()
+        minKerning = self.getKerning_generic()
+        with self.assertRaises(TypeError):
+            interpolated.interpolate(0.515, minKerning, "kerningMax")
+
+    def test_interpolate_maxKerning_invalid_type(self):
+        interpolated = self.getKerning_generic()
+        maxKerning = self.getKerning_generic()
+        with self.assertRaises(TypeError):
+            interpolated.interpolate(0.515, "minKerning", maxKerning)
+
+    def test_interpolate_incompatible_keys_raise(self):
+        interpolated = self.getKerning_generic()
+        minKerning = self.getKerning_generic()
+        maxKerning = self.getKerning_font2()
+        del maxKerning.font.groups["public.kern1.X"]
+        maxKerning.font.groups["public.kern1.DIFFERENT"] = ["A", "B", "C"]
+        with self.assertRaises(ValueError):
+            interpolated.interpolate(0.515, minKerning, maxKerning, suppressError=False)
+            self.assertEqual(len(interpolated), 0)
+
+    def test_interpolate_incompatible_keys_supressError(self):
+        interpolated = self.getKerning_generic()
+        minKerning = self.getKerning_generic()
+        maxKerning = self.getKerning_font2()
+        del maxKerning.font.groups["public.kern1.X"]
+        maxKerning.font.groups["public.kern1.DIFFERENT"] = ["A", "B", "C"]
+        interpolated.interpolate(0.515, minKerning, maxKerning, suppressError=True)
+        self.assertEqual(len(interpolated), 0)
+
+    def test_interpolate_incompatible_contents_supressError(self):
+        interpolated = self.getKerning_generic()
+        minKerning = self.getKerning_generic()
+        maxKerning = self.getKerning_font2()
+        maxKerning.font.groups["public.kern1.X"] = ["A", "B", "Z"]
+        interpolated.interpolate(0.515, minKerning, maxKerning, suppressError=True)
+        self.assertEqual(len(interpolated), 0)
 
     # ---
     # len
