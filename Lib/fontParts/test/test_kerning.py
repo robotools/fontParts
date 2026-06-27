@@ -1,5 +1,6 @@
 import unittest
 import collections
+from unittest.mock import patch
 
 
 class TestKerning(unittest.TestCase):
@@ -213,6 +214,16 @@ class TestKerning(unittest.TestCase):
         maxKerning.font.groups["public.kern1.X"] = ["A", "B", "Z"]
         interpolated.interpolate(0.515, minKerning, maxKerning, suppressError=True)
         self.assertEqual(len(interpolated), 0)
+
+    # ---------------------
+    # RoboFab Compatibility
+    # ---------------------
+
+    def test_remove(self):
+        kerning = self.getKerning_generic()
+        with patch.object(type(kerning), "__delitem__") as mock_del:
+            kerning.remove([("A", "A")])
+            mock_del.assert_called_once()
 
     # ---
     # len
