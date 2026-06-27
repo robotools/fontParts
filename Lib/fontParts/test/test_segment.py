@@ -207,6 +207,12 @@ class TestSegment(unittest.TestCase):
         a = segment_one
         self.assertNotEqual(segment_two, a)
 
+    def test_equal_invalid_type(self):
+        segment_one = self.getSegment_line()
+        segment_two = "invalidType"
+        result = segment_one.__eq__(segment_two)
+        self.assertEqual(result, NotImplemented)
+
     # ---------
     # Selection
     # ---------
