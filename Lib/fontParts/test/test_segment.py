@@ -1,5 +1,6 @@
 import unittest
 import collections
+from fontParts.base import FontPartsError
 
 
 class TestSegment(unittest.TestCase):
@@ -9,6 +10,15 @@ class TestSegment(unittest.TestCase):
         contour.appendPoint((0, 0), "move")
         contour.appendPoint((101, 202), "line")
         segment = contour[1]
+        return segment
+
+    def getSegment_offcurves(self):
+        contour, _ = self.objectGenerator("contour")
+        contour.appendPoint((0, 0), "offcurve")
+        contour.appendPoint((100, 0), "offcurve")
+        contour.appendPoint((100, 100), "offcurve")
+        contour.appendPoint((0, 100), "offcurve")
+        segment = contour[0]
         return segment
 
     # ----
@@ -121,18 +131,27 @@ class TestSegment(unittest.TestCase):
             segment.type = 123
 
     def test_offCurve_only_segment(self):
-        contour, unrequested = self.objectGenerator("contour")
-        unrequested.append(contour)
-        contour.appendPoint((0, 0), "offcurve")
-        contour.appendPoint((100, 0), "offcurve")
-        contour.appendPoint((100, 100), "offcurve")
-        contour.appendPoint((0, 100), "offcurve")
-        segment = contour[0]
-        self.assertEqual(len(contour), 1)
+        segment = self.getSegment_offcurves()
+        self.assertEqual(len(segment.contour), 1)
         # onCurve is a dummy None value, telling this is an on-curve-less quad blob
         self.assertIsNone(segment.onCurve)
         self.assertEqual(segment.points, segment.offCurve)
         self.assertEqual(segment.type, "qcurve")
+
+    def test_set_type_no_oncurve(self):
+        segment = self.getSegment_offcurves()
+        segment.type = "line"
+        self.assertEqual(segment.type, "qcurve")
+
+    def test_set_type_orphan_segment(self):
+        segment, _ = self.objectGenerator("segment")
+        with self.assertRaises(FontPartsError):
+            segment.type = "move"
+
+    def test_set_type_same_value(self):
+        segment = self.getSegment_line()
+        segment.type = "line"
+        self.assertEqual(segment.type, "line")
 
     # ----
     # Hash
