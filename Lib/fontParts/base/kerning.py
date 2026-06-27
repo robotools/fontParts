@@ -334,6 +334,9 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
     def asDict(self, returnIntegers: bool = True) -> dict[KerningPair, IntFloatType]:
         """Return the kerning as a dictionary.
 
+        :param returnIntegers: Whether to round :class:`float` kerning values to the
+            nearest :class:`int`.
+
         :return A :class:`dict` reflecting the contents of the kerning.
 
         .. note::
