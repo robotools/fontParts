@@ -225,6 +225,26 @@ class TestKerning(unittest.TestCase):
             kerning.remove([("A", "A")])
             mock_del.assert_called_once()
 
+    def test_asDict_returnIntegers_true(self):
+        kerning, _ = self.objectGenerator("kerning")
+        kerning[("A", "A")] = 10.5
+        result = kerning.asDict(returnIntegers=True)
+        self.assertIsInstance(result, dict)
+        self.assertEqual(result[("A", "A")], 11)
+
+    def test_asDict_returnIntegers_false(self):
+        kerning, _ = self.objectGenerator("kerning")
+        kerning[("A", "A")] = 10.5
+        result = kerning.asDict(returnIntegers=False)
+        self.assertIsInstance(result, dict)
+        self.assertEqual(result[("A", "A")], 10.5)
+
+    def test_asDict_returnIntegers_empty(self):
+        kerning, _ = self.objectGenerator("kerning")
+        result = kerning.asDict()
+        self.assertIsInstance(result, dict)
+        self.assertEqual(result, {})
+
     # ---
     # len
     # ---
