@@ -153,6 +153,28 @@ class TestSegment(unittest.TestCase):
         segment.type = "line"
         self.assertEqual(segment.type, "line")
 
+    # ------
+    # Smooth
+    # ------
+
+    def test_get_smooth(self):
+        segment = self.getSegment_line()
+        self.assertFalse(segment.smooth)
+
+    def test_get_smooth_no_oncurve(self):
+        segment = self.getSegment_offcurves()
+        self.assertTrue(segment.smooth)
+
+    def test_set_smooth(self):
+        segment = self.getSegment_line()
+        segment.smooth = False
+        self.assertFalse(segment.smooth)
+
+    def test_set_smooth_no_oncurve(self):
+        segment = self.getSegment_offcurves()
+        segment.smooth = False
+        self.assertTrue(segment.smooth)
+
     # ----
     # Hash
     # ----
