@@ -207,8 +207,10 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         :param suppressError: A :class:`bool` indicating whether to ignore
             incompatible data or raise an error when such
             incompatibilities are found. Defaults to :obj:`True`.
-        :raises TypeError: If `minGlyph` or `maxGlyph` are not instances
+        :raises TypeError: If `minKerning` or `maxKerning` are not instances
             of :class:`BaseKerning`.
+        :raises ValueError: If `minKerning` and `maxKerning` are not compatible and
+            `supressError` is :obj:`True`.
 
         Example::
 
@@ -255,6 +257,8 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         :param suppressError: A :class:`bool` indicating whether to ignore
             incompatible data or raise an error when such
             incompatibilities are found.
+        :raises ValueError: If `minKerning` and `maxKerning` are not compatible and
+            `supressError` is :obj:`True`.
 
         .. note::
 
