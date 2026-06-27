@@ -210,7 +210,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         :raises TypeError: If `minKerning` or `maxKerning` are not instances
             of :class:`BaseKerning`.
         :raises ValueError: If `minKerning` and `maxKerning` are not compatible and
-            `supressError` is :obj:`True`.
+            `supressError` is :obj:`False`.
 
         Example::
 
@@ -258,7 +258,7 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
             incompatible data or raise an error when such
             incompatibilities are found.
         :raises ValueError: If `minKerning` and `maxKerning` are not compatible and
-            `supressError` is :obj:`True`.
+            `supressError` is :obj:`False`.
 
         .. note::
 
