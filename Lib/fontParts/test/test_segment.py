@@ -119,6 +119,18 @@ class TestSegment(unittest.TestCase):
         segment, _ = self.objectGenerator("segment")
         self.assertIsNone(segment.font)
 
+    # -----
+    # Index
+    # -----
+
+    def test_get_index(self):
+        segment = self.getSegment_line()
+        self.assertEqual(segment.index, 1)
+
+    def test_get_index_orphan_segment(self):
+        segment, _ = self.objectGenerator("segment")
+        self.assertIsNone(segment.index)
+
     # ----
     # Type
     # ----
