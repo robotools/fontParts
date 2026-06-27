@@ -12,6 +12,21 @@ class TestSegment(unittest.TestCase):
         return segment
 
     # ----
+    # Repr
+    # ----
+
+    def test_reprContents(self):
+        segment = self.getSegment_line()
+        result = segment._reprContents()
+        self.assertIn(segment.type, result)
+        self.assertIn(f"index={segment.index}", result)
+
+    def test_reprContents_no_index(self):
+        segment, _ = self.objectGenerator("segment")
+        result = segment._reprContents()
+        self.assertIn(segment.type, result)
+
+    # ----
     # Type
     # ----
 
