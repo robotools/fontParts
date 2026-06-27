@@ -48,6 +48,77 @@ class TestSegment(unittest.TestCase):
         segment, _ = self.objectGenerator("segment")
         self.assertIsNone(segment.index)
 
+    # -------
+    # Parents
+    # -------
+
+    def getGlyph_contour(self):
+        glyph, _ = self.objectGenerator("glyph")
+        pen = glyph.getPen()
+        pen.moveTo((100, -10))
+        pen.lineTo((100, 100))
+        pen.lineTo((200, 100))
+        pen.lineTo((200, 0))
+        pen.closePath()
+        return glyph
+
+    def test_get_contour(self):
+        contour, _ = self.objectGenerator("contour")
+        segment, _ = self.objectGenerator("segment")
+        segment._contour = lambda: contour
+        self.assertEqual(segment.contour, contour)
+
+    def test_get_contour_orphan_segment(self):
+        segment, _ = self.objectGenerator("segment")
+        self.assertIsNone(segment.contour)
+
+    def test_set_conotur(self):
+        contour, _ = self.objectGenerator("contour")
+        segment, _ = self.objectGenerator("segment")
+        segment.contour = contour
+        self.assertEqual(segment._contour(), contour)
+
+    def test_set_contour_value_set(self):
+        contour, _ = self.objectGenerator("contour")
+        segment, _ = self.objectGenerator("segment")
+        segment._contour = contour
+        with self.assertRaises(AssertionError):
+            segment.contour = contour
+
+    def test_set_contour_value_none(self):
+        segment, _ = self.objectGenerator("segment")
+        segment.contour = None
+        self.assertIsNone(segment._contour)
+
+    def test_get_glyph(self):
+        glyph = self.getGlyph_contour()
+        segment = glyph[0][0]
+        self.assertEqual(segment.glyph, glyph)
+
+    def test_get_glyph_orphan_segment(self):
+        segment, _ = self.objectGenerator("segment")
+        self.assertIsNone(segment.glyph)
+
+    def test_get_layer(self):
+        layer, _ = self.objectGenerator("layer")
+        layer["A"] = self.getGlyph_contour()
+        segment = layer["A"][0][0]
+        self.assertEqual(segment.layer, layer)
+
+    def test_get_layer_orphan_segment(self):
+        segment, _ = self.objectGenerator("segment")
+        self.assertIsNone(segment.layer)
+
+    def test_get_font(self):
+        font, _ = self.objectGenerator("font")
+        font["A"] = self.getGlyph_contour()
+        segment = font["A"][0][0]
+        self.assertEqual(segment.font, font)
+
+    def test_get_font_orphan_segment(self):
+        segment, _ = self.objectGenerator("segment")
+        self.assertIsNone(segment.font)
+
     # ----
     # Type
     # ----
