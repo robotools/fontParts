@@ -255,3 +255,37 @@ class TestSegment(unittest.TestCase):
         except NotImplementedError:
             return
         self.assertEqual(segment.selected, False)
+
+    # -------------
+    # Interpolation
+    # -------------
+
+    def test_isCompatible(self):
+        segment1 = self.getSegment_line()
+        segment2 = self.getSegment_line()
+        segment2.type = "curve"
+        compatible, report = segment1.isCompatible(segment2)
+        self.assertTrue(compatible)
+        self.assertFalse(report.fatal)
+        self.assertFalse(report.typeDifference)
+
+    def test_isCompatible_inconvertible_types(self):
+        segment1 = self.getSegment_line()
+        segment2 = self.getSegment_offcurves()
+        compatible, report = segment1.isCompatible(segment2)
+        self.assertFalse(compatible)
+        self.assertTrue(report.fatal)
+        self.assertTrue(report.typeDifference)
+
+    # -----
+    # Round
+    # -----
+
+    def test_round(self):
+        contour, _ = self.objectGenerator("contour")
+        contour.appendPoint((0, 10.4), "move")
+        contour.appendPoint((10.5, 10.6), "line")
+        segment = contour[1]
+        segment.round()
+        points = segment[0]
+        self.assertEqual(points.position, (11, 11))
