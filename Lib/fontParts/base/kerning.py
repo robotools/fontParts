@@ -207,8 +207,10 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         :param suppressError: A :class:`bool` indicating whether to ignore
             incompatible data or raise an error when such
             incompatibilities are found. Defaults to :obj:`True`.
-        :raises TypeError: If `minGlyph` or `maxGlyph` are not instances
+        :raises TypeError: If `minKerning` or `maxKerning` are not instances
             of :class:`BaseKerning`.
+        :raises ValueError: If `minKerning` and `maxKerning` are not compatible and
+            `supressError` is :obj:`False`.
 
         Example::
 
@@ -255,6 +257,8 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
         :param suppressError: A :class:`bool` indicating whether to ignore
             incompatible data or raise an error when such
             incompatibilities are found.
+        :raises ValueError: If `minKerning` and `maxKerning` are not compatible and
+            `supressError` is :obj:`False`.
 
         .. note::
 
@@ -289,26 +293,27 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
     ) -> bool:
         minGroups = minKerning.font.groups
         maxGroups = maxKerning.font.groups
-        match = True
-        while match:
-            for _, sideAttr in (
-                ("side 1", "side1KerningGroups"),
-                ("side 2", "side2KerningGroups"),
-            ):
-                minSideGroups = getattr(minGroups, sideAttr)
-                maxSideGroups = getattr(maxGroups, sideAttr)
-                if minSideGroups.keys() != maxSideGroups.keys():
-                    match = False
-                else:
-                    for name in minSideGroups.keys():
-                        minGroup = minSideGroups[name]
-                        maxGroup = maxSideGroups[name]
-                        if set(minGroup) != set(maxGroup):
-                            match = False
-            break
-        if not match and not suppressError:
-            raise ValueError("The kerning groups must be exactly the same.")
-        return match
+        for _, sideAttr in (
+            ("side 1", "side1KerningGroups"),
+            ("side 2", "side2KerningGroups"),
+        ):
+            minSideGroups = getattr(minGroups, sideAttr)
+            maxSideGroups = getattr(maxGroups, sideAttr)
+            if minSideGroups.keys() != maxSideGroups.keys():
+                if not suppressError:
+                    raise ValueError("The kerning groups must be exactly the same.")
+                return False
+            else:
+                for name in minSideGroups.keys():
+                    minGroup = minSideGroups[name]
+                    maxGroup = maxSideGroups[name]
+                    if set(minGroup) != set(maxGroup):
+                        if not suppressError:
+                            raise ValueError(
+                                "The kerning groups must be exactly the same."
+                            )
+                        return False
+        return True
 
     # ---------------------
     # RoboFab Compatibility
@@ -332,6 +337,9 @@ class BaseKerning(BaseDict, DeprecatedKerning, RemovedKerning):
 
     def asDict(self, returnIntegers: bool = True) -> dict[KerningPair, IntFloatType]:
         """Return the kerning as a dictionary.
+
+        :param returnIntegers: Whether to round :class:`float` kerning values to the
+            nearest :class:`int`.
 
         :return A :class:`dict` reflecting the contents of the kerning.
 
