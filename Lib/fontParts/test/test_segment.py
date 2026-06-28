@@ -1,5 +1,5 @@
 import unittest
-import collections
+from collections.abc import Hashable, Iterator
 from fontParts.base import FontPartsError
 
 
@@ -176,12 +176,34 @@ class TestSegment(unittest.TestCase):
         self.assertTrue(segment.smooth)
 
     # ----
+    # Iter
+    # ----
+
+    def test_iter(self):
+        segment = self.getSegment_line()
+        points = [p.position for p in segment]
+        self.assertIsInstance(iter(segment), Iterator)
+        self.assertEqual(points, [(101, 202)])
+
+    # ---
+    # Len
+    # ---
+
+    def test_len(self):
+        segment = self.getSegment_line()
+        self.assertEqual(len(segment), 1)
+
+    def test_len_orphan_segment(self):
+        segment, _ = self.objectGenerator("segment")
+        self.assertEqual(len(segment), 0)
+
+    # ----
     # Hash
     # ----
 
     def test_hash(self):
         segment = self.getSegment_line()
-        self.assertEqual(isinstance(segment, collections.abc.Hashable), False)
+        self.assertEqual(isinstance(segment, Hashable), False)
 
     # --------
     # Equality
