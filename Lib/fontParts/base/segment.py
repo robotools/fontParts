@@ -42,7 +42,7 @@ class BaseSegment(
     def _reprContents(self) -> list[str]:
         contents = [f"{self.type}"]
         if self.index is not None:
-            contents.append(f"index='{self.index!r}'")
+            contents.append(f"index={self.index}")
         return contents
 
     # this class should not be used in hashable
