@@ -175,6 +175,19 @@ class TestSegment(unittest.TestCase):
         segment.smooth = False
         self.assertTrue(segment.smooth)
 
+    # -------
+    # OnCurve
+    # -------
+
+    def test_get_onCurve(self):
+        segment = self.getSegment_line()
+        result = segment.onCurve.position
+        self.assertEqual(result, (101, 202))
+
+    def test_get_onCurve_no_points(self):
+        segment, _ = self.objectGenerator("segment")
+        self.assertIsNone(segment.onCurve)
+
     # ----
     # Iter
     # ----
