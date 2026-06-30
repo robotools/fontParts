@@ -303,6 +303,9 @@ class BaseSegment(
             Subclasses may override this method.
 
         """
+        contour = self.contour
+        if contour is None:
+            raise FontPartsError("The segment does not belong to a contour.")
         oldType = self.type
         if oldType == newType:
             return
@@ -310,9 +313,6 @@ class BaseSegment(
             # special case with a single qcurve segment
             # and only offcurves, don't convert
             return
-        contour = self.contour
-        if contour is None:
-            raise FontPartsError("The segment does not belong to a contour.")
         # converting line <-> move
         if newType in ("move", "line") and oldType in ("move", "line"):
             pass
@@ -547,7 +547,10 @@ class BaseSegment(
             Subclasses may override this method.
 
         """
-        value = self.points[-1]
+        points = self.points
+        if not points:
+            return None
+        value = points[-1]
         if value.type == "offcurve":
             return None
         return value
