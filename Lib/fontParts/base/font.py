@@ -1251,7 +1251,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         if name is None:
             name = layer.name
         normalizedName = normalizers.normalizeLayerName(name)
-        if normalizedName in self:
+        if normalizedName in self.layerOrder:
             self.removeLayer(normalizedName)
         return self._insertLayer(layer, name=normalizedName)
 
@@ -1277,11 +1277,9 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
             Subclasses may override this method.
 
         """
-        if name != layer.name and layer.name in self.layerOrder:
-            layer = layer.copy()
-            layer.name = name
         dest = self.newLayer(name)
         dest.copyData(layer)
+        dest.name = name
         return dest
 
     # duplicate
@@ -1340,7 +1338,8 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
 
         """
         newLayer = self.getLayer(layerName).copy()
-        return self.insertLayer(newLayer, newLayerName)
+        newLayer.name = newLayerName
+        return self.insertLayer(newLayer)
 
     def swapLayerNames(self, layerName: str, otherLayerName: str) -> None:
         """Swap the names of two specific layers in the font.
@@ -2336,8 +2335,9 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
             Subclasses may override this method.
 
         """
-        select = [self.layers(name) for name in value]
-        self.selectedLayers = select
+
+        layerMap = {layer.name: layer for layer in self.layers}
+        self.selectedLayers = [layerMap[name] for name in value]
 
     # guidelines
 

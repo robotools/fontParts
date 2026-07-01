@@ -3,9 +3,33 @@ import collections
 import tempfile
 import os
 import shutil
+from unittest.mock import PropertyMock, patch
+from fontTools.ufoLib import DEFAULT_LAYER_NAME
 
 
 class TestFont(unittest.TestCase):
+    # ----
+    # repr
+    # ----
+    def test_reprContents(self):
+        font, _ = self.objectGenerator("font")
+        font.info.familyName = "testFamily"
+        font.info.styleName = "testStyle"
+        result = font._reprContents()
+        self.assertEqual(len(result), 1)
+        self.assertIn("'testFamily testStyle'", result)
+
+    def test_reprContents_path(self):
+        font, _ = self.objectGenerator("font")
+        font.info.familyName = "testFamily"
+        font.info.styleName = "testStyle"
+        with patch.object(type(font), "path", new_callable=PropertyMock) as mock_path:
+            mock_path.return_value = "path/to/font.ufo"
+            result = font._reprContents()
+            self.assertEqual(len(result), 2)
+            self.assertIn("'testFamily testStyle'", result)
+            self.assertIn("path='path/to/font.ufo'", result)
+
     # ------
     # Layers
     # ------
@@ -21,6 +45,89 @@ class TestFont(unittest.TestCase):
         with self.assertRaises(ValueError):
             font.getLayer("There is no layer with this name.")
 
+    def test_newLayer_layer_exists(self):
+        font = self.getFont_layers()
+        font.newLayer("testLayer")
+        self.assertIn("testLayer", font.layerOrder)
+        font.newLayer("testLayer")
+        self.assertIn("testLayer", font.layerOrder)
+
+    def test_newLayer_colored_layer_exists(self):
+        font = self.getFont_layers()
+        font.newLayer("testLayer", (1, 1, 1, 1))
+        self.assertIn("testLayer", font.layerOrder)
+        layer = font.newLayer("testLayer", (0, 1, 1, 0))
+        self.assertIn("testLayer", font.layerOrder)
+        self.assertEqual(layer.color, (0, 1, 1, 0))
+
+    def test_removeLayer(self):
+        font, _ = self.objectGenerator("font")
+        layer = font.newLayer("testLayer")
+        self.assertIn(layer, font.layers)
+        font.removeLayer("testLayer")
+        self.assertNotIn(layer, font.layers)
+        with self.assertRaises(ValueError):
+            font.removeLayer("testLayer")
+
+    def test_insertLayer(self):
+        font, _ = self.objectGenerator("font")
+        layer, _ = self.objectGenerator("layer")
+        layer.name = "oldName"
+        insertedLayer = font.insertLayer(layer, name="newName")
+        self.assertEqual(insertedLayer.name, "newName")
+        self.assertIn("newName", font.layerOrder)
+
+    def test_insertLayer_name_none(self):
+        font, _ = self.objectGenerator("font")
+        layer, _ = self.objectGenerator("layer")
+        layer.name = "testLayer"
+        font.insertLayer(layer, name=None)
+        self.assertIn(layer.name, font.layerOrder)
+
+    def test_insertLayer_name_exists(self):
+        font, _ = self.objectGenerator("font")
+        existingLayer = font.newLayer("existingLayer")
+        self.assertIn(existingLayer.name, font.layerOrder)
+        newLayer, _ = self.objectGenerator("layer")
+        newLayer.name = "newLayer"
+        font.insertLayer(newLayer, name=existingLayer.name)
+        self.assertIn(existingLayer.name, font.layerOrder)
+
+    def test_dublicateLayer(self):
+        font, _ = self.objectGenerator("font")
+        existingLayer = font.newLayer("testLayer")
+        self.assertIn(existingLayer.name, font.layerOrder)
+        duplicatedLayer = font.duplicateLayer(existingLayer.name, "duplicateLayer")
+        self.assertIn(duplicatedLayer.name, font.layerOrder)
+
+    def test_duplicateLayer_layerName_missing(self):
+        font, _ = self.objectGenerator("font")
+        with self.assertRaises(ValueError):
+            font.duplicateLayer("missingName", "duplicateLayer")
+
+    def test_duplicateLayer_newLayerName_exists(self):
+        font, _ = self.objectGenerator("font")
+        existingLayer = font.newLayer("testLayer")
+        duplicateLayer = font.newLayer("duplicateLayer")
+        with self.assertRaises(ValueError):
+            font.duplicateLayer(existingLayer.name, duplicateLayer.name)
+
+    def test_swapLayerNames(self):
+        font, _ = self.objectGenerator("font")
+        layer1 = font.newLayer("layer1")
+        layer2 = font.newLayer("layer2")
+        font.swapLayerNames(layer1.name, layer2.name)
+        self.assertEqual(layer1.name, "layer2")
+        self.assertEqual(layer2.name, "layer1")
+
+    def test_swapLayerNames_names_missing(self):
+        font, _ = self.objectGenerator("font")
+        layer = font.newLayer("testLayer")
+        testCases = [("missingLayer", layer.name), (layer.name, "missingLayer")]
+        for name1, name2 in testCases:
+            with self.assertRaises(ValueError):
+                font.swapLayerNames(name1, name2)
+
     # ------
     # Glyphs
     # ------
@@ -30,28 +137,6 @@ class TestFont(unittest.TestCase):
         for name in "ABCD":
             font.newGlyph(name)
         return font
-
-    def getFont_guidelines(self):
-        font, _ = self.objectGenerator("font")
-        font.appendGuideline((1, 2), 0, "Test Guideline 1")
-        font.appendGuideline((3, 4), 90, "Test Guideline 2")
-        return font
-
-    def test_appendGuideline_valid_object(self):
-        font, _ = self.objectGenerator("font")
-        src, _ = self.objectGenerator("guideline")
-        src.position = (1, 2)
-        src.angle = 123
-        src.name = "test"
-        src.color = (1, 1, 1, 1)
-        src.getIdentifier()
-        dst = font.appendGuideline(guideline=src)
-        self.assertNotEqual(src, dst)
-        self.assertEqual(src.position, dst.position)
-        self.assertEqual(src.angle, dst.angle)
-        self.assertEqual(src.name, dst.name)
-        self.assertEqual(src.color, dst.color)
-        self.assertEqual(src.identifier, dst.identifier)
 
     # glyphOrder
 
@@ -118,6 +203,78 @@ class TestFont(unittest.TestCase):
         self.assertIn("A.1", layer)
         self.assertIn("A.2", layer)
 
+    # ----------
+    # Guidelines
+    # ----------
+
+    def getFont_guidelines(self):
+        font, _ = self.objectGenerator("font")
+        font.appendGuideline((1, 2), 0, "Test Guideline 1")
+        font.appendGuideline((3, 4), 90, "Test Guideline 2")
+        return font
+
+    def test_appendGuideline_valid_object(self):
+        font, _ = self.objectGenerator("font")
+        src, _ = self.objectGenerator("guideline")
+        src.position = (1, 2)
+        src.angle = 123
+        src.name = "test"
+        src.color = (1, 1, 1, 1)
+        src.getIdentifier()
+        dst = font.appendGuideline(guideline=src)
+        self.assertNotEqual(src, dst)
+        self.assertEqual(src.position, dst.position)
+        self.assertEqual(src.angle, dst.angle)
+        self.assertEqual(src.name, dst.name)
+        self.assertEqual(src.color, dst.color)
+        self.assertEqual(src.identifier, dst.identifier)
+
+    def test_appendGuideline_position(self):
+        font = self.getFont_guidelines()
+        initialLength = len(font.guidelines)
+        font.appendGuideline(position=(0, 0))
+        self.assertEqual(len(font.guidelines), initialLength + 1)
+        self.assertEqual(font.guidelines[-1].position, (0, 0))
+
+    def test_appendGuideline_overrides(self):
+        font = self.getFont_guidelines()
+        guideline, _ = self.objectGenerator("guideline")
+        guideline.position = (0, 0)
+        initialLength = len(font.guidelines)
+        font.appendGuideline(
+            position=(10, 10),
+            angle=1,
+            name="test",
+            color=(1, 1, 1, 1),
+            guideline=guideline,
+        )
+        self.assertEqual(len(font.guidelines), initialLength + 1)
+        self.assertEqual(font.guidelines[-1].position, (10, 10))
+        self.assertEqual(font.guidelines[-1].angle, 1)
+        self.assertEqual(font.guidelines[-1].name, "test")
+        self.assertEqual(font.guidelines[-1].color, (1, 1, 1, 1))
+
+    def test_appendGuideline_raises(self):
+        font = self.getFont_guidelines()
+        with self.assertRaises(ValueError):
+            font.appendGuideline(position=None)
+
+    def test_removeGuideline_index(self):
+        font = self.getFont_guidelines()
+        initialLength = len(font.guidelines)
+        font.removeGuideline(0)
+        self.assertEqual(len(font.guidelines), initialLength - 1)
+
+    def test_removeGuideline_index_out_of_range(self):
+        font = self.getFont_guidelines()
+        with self.assertRaises(ValueError):
+            font.appendGuideline(position=None)
+
+    def test_clearGuideline(self):
+        font = self.getFont_guidelines()
+        font.clearGuidelines()
+        self.assertEqual(font.guidelines, ())
+
     # ----
     # flatKerning
     # ----
@@ -165,6 +322,17 @@ class TestFont(unittest.TestCase):
             ("V", "A"): -200,
         }
         self.assertEqual(font.getFlatKerning(), expected)
+
+    # -------
+    # TempLib
+    # -------
+
+    def test_font_tempLib(self):
+        font, _ = self.objectGenerator("font")
+        tempLib = font.tempLib
+        tempLib["test.key"] = "test.value"
+        self.assertEqual(tempLib["test.key"], "test.value")
+        self.assertEqual(tempLib.font, font)
 
     # ----
     # Hash
@@ -285,6 +453,48 @@ class TestFont(unittest.TestCase):
         layer1.selected = True
         font.selectedLayers = []
         self.assertEqual(font.selectedLayers, ())
+
+    # Layer names
+
+    def test_selectedLayerNames_default(self):
+        font = self.getFont_layers()
+        try:
+            font.defaultLayer.selected = False
+        except NotImplementedError:
+            return
+        self.assertEqual(font.selectedLayers, ())
+
+    def test_selectedLayerNames_setSubObject(self):
+        font = self.getFont_layers()
+        try:
+            font.defaultLayer.selected = False
+        except NotImplementedError:
+            return
+        layer1 = font.getLayer("layer A")
+        layer2 = font.getLayer("layer B")
+        layer1.selected = True
+        layer2.selected = True
+        self.assertEqual(tuple(sorted(font.selectedLayerNames)), ("layer A", "layer B"))
+
+    def test_selectedLayerNames_setFilledList(self):
+        font = self.getFont_layers()
+        try:
+            font.defaultLayer.selected = False
+        except NotImplementedError:
+            return
+        font.selectedLayerNames = ["layer C", "layer D"]
+        self.assertEqual(tuple(sorted(font.selectedLayerNames)), ("layer C", "layer D"))
+
+    def test_selectedLayerNames_setEmptyList(self):
+        font = self.getFont_layers()
+        try:
+            font.defaultLayer.selected = False
+        except NotImplementedError:
+            return
+        layer1 = font.getLayer("layer A")
+        layer1.selected = True
+        font.selectedLayerNames = []
+        self.assertEqual(font.selectedLayerNames, ())
 
     # Glyphs
 
@@ -421,6 +631,10 @@ class TestFont(unittest.TestCase):
         font.selectedGuidelines = []
         self.assertEqual(font.selectedGuidelines, ())
 
+    # ---------------
+    # File Operations
+    # ---------------
+
     # save
 
     def _saveFontPath(self, ext):
@@ -477,6 +691,29 @@ class TestFont(unittest.TestCase):
 
             self._save(testCases, fileStructure=fileStructure)
 
+    def test_save_path_none(self):
+        font = self.getFont_glyphs()
+        with self.assertRaises(OSError):
+            font.save(path=None)
+
+    # close
+
+    def test_close(self):
+        font, _ = self.objectGenerator("font")
+        with patch.object(type(font), "_close") as mock_close:
+            font.close(save=False)
+            mock_close.assert_called_once()
+
+    def test_save_and_close(self):
+        font, _ = self.objectGenerator("font")
+        with (
+            patch.object(type(font), "save") as mock_save,
+            patch.object(type(font), "_close") as mock_close,
+        ):
+            font.close(save=True)
+            mock_close.assert_called_once()
+            mock_save.assert_called_once()
+
     # copy
 
     def test_copy(self):
@@ -494,9 +731,198 @@ class TestFont(unittest.TestCase):
         copy = font.copy()
         self.assertEqual(copy.selectedGuidelines, font.selectedGuidelines)
 
+    def test_copyData_source_layer_not_in_layerOrder(self):
+        source = self.getFont_layers()
+        font, _ = self.objectGenerator("font")
+        font.copyData(source)
+        self.assertIn("layer A", font.layerOrder)
+
+    # generate
+
+    def test_generateFormatToExtension(self):
+        font, _ = self.objectGenerator("font")
+        cases = [
+            ("macttf", ".ttf"),
+            ("macttdfont", ".dfont"),
+            ("otfcff", ".otf"),
+            ("otfttf", ".ttf"),
+            ("ufo1", ".ufo"),
+            ("ufo2", ".ufo"),
+            ("ufo3", ".ufo"),
+            ("unixascii", ".pfa"),
+        ]
+        for fmt, expected_ext in cases:
+            with self.subTest(format=fmt):
+                result = font.generateFormatToExtension(fmt, fallbackFormat=".fallback")
+                self.assertEqual(result, expected_ext)
+
+    def test_generate_format_none(self):
+        font = self.getFont_glyphs()
+        with self.assertRaises(ValueError):
+            font.generate(format=None)
+
+    def test_generate_invalid_format_type(self):
+        font = self.getFont_glyphs()
+        with self.assertRaises(TypeError):
+            font.generate(format=0)
+
+    def test_generate_valid_environmentOption(self):
+        import warnings
+
+        font = self.getFont_glyphs()
+        with (
+            patch.object(
+                type(font), "_isValidGenerateEnvironmentOption"
+            ) as mockValidate,
+            patch.object(type(font), "_generate") as mockGenerate,
+        ):
+            mockValidate.return_value = True
+            with warnings.catch_warnings():
+                warnings.simplefilter("error", UserWarning)
+                font.generate("otfcff", path="/mock/path.otf", valid_opt="value")
+
+            mockGenerate.assert_called_once_with(
+                format="otfcff",
+                path="/mock/path.otf",
+                environmentOptions={"valid_opt": "value"},
+            )
+
+    def test_generate_invalid_environmentOption(self):
+        font = self.getFont_glyphs()
+        with (
+            patch.object(
+                type(font), "_isValidGenerateEnvironmentOption"
+            ) as mockValidate,
+            patch.object(type(font), "_generate") as mockGenerate,
+        ):
+            mockValidate.return_value = False
+            with self.assertWarns(UserWarning):
+                font.generate("otfcff", path="/mock/path.otf", invalid_opt="value")
+
+            mockGenerate.assert_called_once_with(
+                format="otfcff",
+                path="/mock/path.otf",
+                environmentOptions={"invalid_opt": "value"},
+            )
+
+    def test_generate_path_none_and_self_path_none(self):
+        font = self.getFont_glyphs()
+        with patch.object(
+            type(font), "_isValidGenerateEnvironmentOption"
+        ) as mockValidate:
+            mockValidate.return_value = True
+            with self.assertRaises(OSError):
+                font.generate("otfcff", path=None)
+
+    def test_generate_path_none(self):
+        font = self.getFont_glyphs()
+        with (
+            patch.object(type(font), "path", new_callable=PropertyMock) as mockPath,
+            patch.object(type(font), "_generate") as mockGenerate,
+        ):
+            mockPath.return_value = "/src/myfont.otf"
+            font.generate("otfcff", path=None)
+            expectedPath = os.path.abspath("/src/myfont.otf")
+            mockGenerate.assert_called_once()
+            actualPath = mockGenerate.call_args[1]["path"]
+            self.assertEqual(os.path.abspath(actualPath), os.path.abspath(expectedPath))
+
+    def test_generate_path_is_dir_and_self_path_none(self):
+        font = self.getFont_glyphs()
+        with (
+            patch.object(type(font), "path", new_callable=PropertyMock) as mockPath,
+            patch.object(os.path, "isdir") as mockIsDir,
+        ):
+            mockPath.return_value = None
+            mockIsDir.return_value = True
+            with self.assertRaises(OSError):
+                font.generate("otfcff", path="/output/dir")
+
+    def test_generate_path_is_dir(self):
+        font = self.getFont_glyphs()
+        with (
+            patch.object(type(font), "path", new_callable=PropertyMock) as mockPath,
+            patch.object(os.path, "isdir") as mockIsDir,
+            patch.object(type(font), "_generate") as mockGenerate,
+        ):
+            mockPath.return_value = "/src/myfont.ufo"
+            mockIsDir.return_value = True
+            font.generate("otfcff", path="/output/dir")
+            expectedPath = os.path.abspath(os.path.join("/output/dir", "myfont.otf"))
+            actualPath = mockGenerate.call_args[1]["path"]
+            self.assertEqual(os.path.abspath(actualPath), os.path.abspath(expectedPath))
+
+    # -----------------
+    # Global Operations
+    # -----------------
+
+    def test_round(self):
+        font, _ = self.objectGenerator("font")
+        font.info.xHeight = 450.6
+        font.kerning[("A", "V")] = -20.3
+        guideline = font.appendGuideline((100.4, 200.7), 0)
+        defaultLayer = font.defaultLayer
+        glyph = defaultLayer.newGlyph("A")
+        glyph.width = 600.8
+        font.round()
+        self.assertEqual(font.info.xHeight, 451)
+        self.assertEqual(font.kerning[("A", "V")], -20)
+        self.assertEqual(guideline.position, (100, 201))
+        self.assertEqual(glyph.width, 601)
+
     # -------------
     # Interpolation
     # -------------
+
+    def test_interpolate(self):
+        dstFont, _ = self.objectGenerator("font")
+        minFont, _ = self.objectGenerator("font")
+        maxFont, _ = self.objectGenerator("font")
+        minFont.info.ascender = 100
+        minFont.kerning[("A", "V")] = -20
+        minLayer = minFont.getLayer(minFont.defaultLayer.name)
+        minGlyph = minLayer.newGlyph("A")
+        minGlyph.width = 100
+        maxFont.info.ascender = 200
+        maxFont.kerning[("A", "V")] = -120
+        maxLayer = maxFont.getLayer(maxFont.defaultLayer.name)
+        maxGlyph = maxLayer.newGlyph("A")
+        maxGlyph.width = 200
+        dstFont.interpolate(0.5, minFont, maxFont, round=True)
+        self.assertEqual(dstFont.info.ascender, 150)
+        self.assertEqual(dstFont.kerning[("A", "V")], -70)
+        self.assertIn("A", dstFont)
+        self.assertEqual(dstFont["A"].width, 150)
+
+    def test_interpolate_invalid_types(self):
+        dstFont, _ = self.objectGenerator("font")
+        srcFont, _ = self.objectGenerator("font")
+        maxFont, _ = self.objectGenerator("font")
+        testCases = [
+            (0.5, srcFont, "ivalidFontObject"),
+            (0.5, "ivalidFontObject", srcFont),
+        ]
+        for factor, minFont, maxFont in testCases:
+            with self.assertRaises(TypeError):
+                dstFont.interpolate(factor, minFont, maxFont)
+
+    def test_interpolate_asymmetric_layers(self):
+        dstFont, _ = self.objectGenerator("font")
+        minFont, _ = self.objectGenerator("font")
+        maxFont, _ = self.objectGenerator("font")
+        minFont.newLayer("testLayer")
+        dstFont.interpolate(0.5, minFont, maxFont)
+        self.assertNotIn("testLayer", dstFont.layerOrder)
+        self.assertIn(DEFAULT_LAYER_NAME, dstFont.layerOrder)
+
+    @patch("fontParts.base.font.ufoLib.DEFAULT_LAYER_NAME", "invalid.default.layer")
+    def test_interpolate_missing_default_layer(self):
+        dstFont, _ = self.objectGenerator("font")
+        minFont, _ = self.objectGenerator("font")
+        maxFont, _ = self.objectGenerator("font")
+        dstFont.newLayer("testLayer")
+        dstFont.interpolate(0.5, minFont, maxFont)
+        self.assertEqual(dstFont.defaultLayer.name, dstFont.layerOrder[0])
 
     def test_interpolate_global_guidelines(self):
         interpolated_font, _ = self.objectGenerator("font")
@@ -509,3 +935,97 @@ class TestFont(unittest.TestCase):
         )
         self.assertEqual(len(interpolated_font.guidelines), 1)
         self.assertEqual(interpolated_font.guidelines[0].position, (100, 100))
+
+    def test_isCompatible_guideline_counts_differ(self):
+        font1 = self.getFont_guidelines()
+        font2 = self.getFont_guidelines()
+        font2.appendGuideline((10, 10))
+        compatible, report = font1.isCompatible(font2)
+        self.assertTrue(compatible)
+        self.assertTrue(report.warning)
+        self.assertTrue(report.guidelineCountDifference)
+
+    def test_isCompatible_guidelines_differ(self):
+        font1 = self.getFont_guidelines()
+        font2 = self.getFont_guidelines()
+        font2.guidelines[0].name = "otherGuideline"
+        compatible, report = font1.isCompatible(font2)
+        self.assertTrue(compatible)
+        self.assertTrue(report.warning)
+        self.assertTrue(report.guidelinesMissingInFont1)
+
+    def test_isCompatible_layer_counts_differ(self):
+        font1 = self.getFont_glyphs()
+        font2 = self.getFont_glyphs()
+        font2.newLayer("testLayer")
+        compatible, report = font1.isCompatible(font2)
+        self.assertTrue(compatible)
+        self.assertTrue(report.warning)
+        self.assertTrue(report.layerCountDifference)
+
+    def test_isCompatible_layers_differ(self):
+        font1 = self.getFont_glyphs()
+        font2 = self.getFont_glyphs()
+        font2.layers[0].name = "otherLayer"
+        compatible, report = font1.isCompatible(font2)
+        self.assertTrue(compatible)
+        self.assertTrue(report.warning)
+        self.assertTrue(report.layersMissingFromFont2)
+
+    def test_isCompatible_layer_fatal_only(self):
+        font1 = self.getFont_glyphs()
+        font2 = self.getFont_glyphs()
+        glyph1 = font1.newGlyph("A")
+        glyph2 = font2.newGlyph("A")
+        pen1 = glyph1.getPointPen()
+        pen1.beginPath()
+        pen1.addPoint((0, 0), segmentType="line")
+        pen1.endPath()
+        pen2 = glyph2.getPointPen()
+        pen2.beginPath()
+        pen2.addPoint((0, 0), segmentType="line")
+        pen2.addPoint((100, 100), segmentType="line")
+        pen2.endPath()
+        compatible, report = font1.isCompatible(font2)
+        self.assertFalse(compatible)
+        self.assertTrue(report.fatal)
+        self.assertFalse(report.warning)
+
+    def test_isCompatible_layer_warning_only(self):
+        font1 = self.getFont_glyphs()
+        font2 = self.getFont_glyphs()
+        glyph1 = font1.newGlyph("A")
+        glyph2 = font2.newGlyph("A")
+        glyph1.appendAnchor("top", (50, 50))
+        glyph2.appendAnchor("bottom", (50, 50))
+        compatible, report = font1.isCompatible(font2)
+        self.assertTrue(compatible)
+        self.assertFalse(report.fatal)
+        self.assertTrue(report.warning)
+
+    # -------
+    # Mapping
+    # -------
+
+    def getFont_components(self):
+        font = self.getFont_glyphs()
+        composite = font.newGlyph("compositeGlyph")
+        for baseName in "ABCD":
+            composite.appendComponent(baseName)
+        return font
+
+    def test_getReverseComponentMapping(self):
+        font = self.getFont_components()
+        fontMapping = font.getReverseComponentMapping()
+        layerMapping = font.defaultLayer.getReverseComponentMapping()
+        self.assertEqual(fontMapping, layerMapping)
+        self.assertIn("A", fontMapping)
+
+    def test_characterMapping(self):
+        font = self.getFont_glyphs()
+        for i, glyph in enumerate(font):
+            glyph.unicode = i % 2
+        fontMapping = font.getCharacterMapping()
+        layerMapping = font.defaultLayer.getCharacterMapping()
+        self.assertEqual(fontMapping, layerMapping)
+        self.assertIn(1, fontMapping)
