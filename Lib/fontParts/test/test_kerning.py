@@ -1,5 +1,6 @@
 import unittest
 import collections
+from unittest.mock import patch
 
 
 class TestKerning(unittest.TestCase):
@@ -34,6 +35,215 @@ class TestKerning(unittest.TestCase):
             }
         )
         return kerning
+
+    # ----
+    # repr
+    # ----
+
+    def test_reprContents(self):
+        kerning = self.getKerning_generic()
+        self.assertIn("for font", kerning._reprContents())
+
+    def test_reprContents_no_font(self):
+        kerning, _ = self.objectGenerator("kerning")
+        kerning[("A", "V")] = -50
+        self.assertEqual(len(kerning._reprContents()), 0)
+
+    # -------
+    # Parents
+    # -------
+
+    def test_get_font(self):
+        font, _ = self.objectGenerator("font")
+        kerning, _ = self.objectGenerator("kerning")
+        kerning._font = lambda: font
+        self.assertEqual(kerning.font, font)
+
+    def test_get_font_orphan_font(self):
+        kerning, _ = self.objectGenerator("kerning")
+        self.assertIsNone(kerning.font)
+
+    def test_set_font(self):
+        font, _ = self.objectGenerator("font")
+        kerning, _ = self.objectGenerator("kerning")
+        kerning.font = font
+        self.assertEqual(kerning._font(), font)
+
+    def test_set_font_same_value(self):
+        font, _ = self.objectGenerator("font")
+        kerning, _ = self.objectGenerator("kerning")
+        kerning._font = lambda: font
+        kerning.font = font
+        self.assertEqual(kerning._font(), font)
+
+    def test_set_font_different_value(self):
+        font1, _ = self.objectGenerator("font")
+        font2, _ = self.objectGenerator("font")
+        kerning, _ = self.objectGenerator("kerning")
+        kerning._font = lambda: font1
+        with self.assertRaises(AssertionError):
+            kerning.font = font2
+
+    def test_set_font_value_none(self):
+        kerning, _ = self.objectGenerator("kerning")
+        kerning.font = None
+        self.assertIsNone(kerning._font)
+
+    # --------------
+    # Transformation
+    # --------------
+
+    def test_scaleBy_int(self):
+        kerning = self.getKerning_generic()
+        kerning.scaleBy(2)
+        self.assertEqual(kerning[("A", "A")], 206)
+
+    def test_scaleBy_float(self):
+        kerning = self.getKerning_generic()
+        kerning.scaleBy(1.5)
+        self.assertEqual(kerning[("A", "A")], 154.5)
+
+    def test_scaleBy_factor(self):
+        kerning = self.getKerning_generic()
+        kerning.scaleBy((2, 3.5))
+        self.assertEqual(kerning[("A", "A")], 206)
+
+    # -------------
+    # Normalization
+    # -------------
+
+    def test_round_multiple_1(self):
+        kerning = self.getKerning_generic()
+        kerning[("A", "V")] = 1.4
+        kerning[("V", "A")] = 1.5
+        kerning[("L", "T")] = 1.6
+        kerning.round(1)
+        self.assertEqual(kerning[("A", "V")], 1.0)
+        self.assertEqual(kerning[("V", "A")], 2.0)
+        self.assertEqual(kerning[("L", "T")], 2.0)
+
+    def test_round_multiple_2(self):
+        kerning = self.getKerning_generic()
+        kerning[("A", "V")] = 11
+        kerning[("V", "A")] = 15
+        kerning[("L", "T")] = 16
+        kerning.round(2)
+        self.assertEqual(kerning[("A", "V")], 12)
+        self.assertEqual(kerning[("V", "A")], 16)
+        self.assertEqual(kerning[("L", "T")], 16)
+
+    def test_round_negative_values(self):
+        kerning = self.getKerning_generic()
+        kerning[("A", "V")] = -1.4
+        kerning[("V", "A")] = -1.5
+        kerning.round(1)
+        self.assertEqual(kerning[("A", "V")], -1.0)
+        self.assertEqual(kerning[("V", "A")], -1.0)
+
+    def test_round_large_multiple(self):
+        kerning = self.getKerning_generic()
+        kerning[("A", "V")] = 13
+        kerning[("V", "A")] = 17
+        kerning.round(5)
+        self.assertEqual(kerning[("A", "V")], 15)
+        self.assertEqual(kerning[("V", "A")], 15)
+
+    def test_round_multiple_zero(self):
+        kerning = self.getKerning_generic()
+        with self.assertRaises(ZeroDivisionError):
+            kerning.round(0)
+
+    def test_round_multiple_invalid_type(self):
+        kerning = self.getKerning_generic()
+        with self.assertRaises(TypeError):
+            kerning.round(2.5)
+
+    # -------------
+    # Interpolation
+    # -------------
+
+    def test_interpolate_without_rounding(self):
+        interpolated = self.getKerning_generic()
+        minKerning = self.getKerning_generic()
+        maxKerning = self.getKerning_font2()
+        interpolated.interpolate(0.515, minKerning, maxKerning, round=False)
+        self.assertEqual(interpolated[("public.kern1.X", "public.kern2.X")], 151.5)
+
+    def test_interpolate_with_rounding(self):
+        interpolated = self.getKerning_generic()
+        minKerning = self.getKerning_generic()
+        maxKerning = self.getKerning_font2()
+        interpolated.interpolate(0.515, minKerning, maxKerning, round=True)
+        self.assertEqual(interpolated[("public.kern1.X", "public.kern2.X")], 152)
+
+    def test_interpolate_minKerning_invalid_type(self):
+        interpolated = self.getKerning_generic()
+        minKerning = self.getKerning_generic()
+        with self.assertRaises(TypeError):
+            interpolated.interpolate(0.515, minKerning, "kerningMax")
+
+    def test_interpolate_maxKerning_invalid_type(self):
+        interpolated = self.getKerning_generic()
+        maxKerning = self.getKerning_generic()
+        with self.assertRaises(TypeError):
+            interpolated.interpolate(0.515, "minKerning", maxKerning)
+
+    def test_interpolate_incompatible_keys_raise(self):
+        interpolated = self.getKerning_generic()
+        minKerning = self.getKerning_generic()
+        maxKerning = self.getKerning_font2()
+        del maxKerning.font.groups["public.kern1.X"]
+        maxKerning.font.groups["public.kern1.DIFFERENT"] = ["A", "B", "C"]
+        with self.assertRaises(ValueError):
+            interpolated.interpolate(0.515, minKerning, maxKerning, suppressError=False)
+            self.assertEqual(len(interpolated), 0)
+
+    def test_interpolate_incompatible_keys_supressError(self):
+        interpolated = self.getKerning_generic()
+        minKerning = self.getKerning_generic()
+        maxKerning = self.getKerning_font2()
+        del maxKerning.font.groups["public.kern1.X"]
+        maxKerning.font.groups["public.kern1.DIFFERENT"] = ["A", "B", "C"]
+        interpolated.interpolate(0.515, minKerning, maxKerning, suppressError=True)
+        self.assertEqual(len(interpolated), 0)
+
+    def test_interpolate_incompatible_contents_supressError(self):
+        interpolated = self.getKerning_generic()
+        minKerning = self.getKerning_generic()
+        maxKerning = self.getKerning_font2()
+        maxKerning.font.groups["public.kern1.X"] = ["A", "B", "Z"]
+        interpolated.interpolate(0.515, minKerning, maxKerning, suppressError=True)
+        self.assertEqual(len(interpolated), 0)
+
+    # ---------------------
+    # RoboFab Compatibility
+    # ---------------------
+
+    def test_remove(self):
+        kerning = self.getKerning_generic()
+        with patch.object(type(kerning), "__delitem__") as mock_del:
+            kerning.remove([("A", "A")])
+            mock_del.assert_called_once()
+
+    def test_asDict_returnIntegers_true(self):
+        kerning, _ = self.objectGenerator("kerning")
+        kerning[("A", "A")] = 10.5
+        result = kerning.asDict(returnIntegers=True)
+        self.assertIsInstance(result, dict)
+        self.assertEqual(result[("A", "A")], 11)
+
+    def test_asDict_returnIntegers_false(self):
+        kerning, _ = self.objectGenerator("kerning")
+        kerning[("A", "A")] = 10.5
+        result = kerning.asDict(returnIntegers=False)
+        self.assertIsInstance(result, dict)
+        self.assertEqual(result[("A", "A")], 10.5)
+
+    def test_asDict_returnIntegers_empty(self):
+        kerning, _ = self.objectGenerator("kerning")
+        result = kerning.asDict()
+        self.assertIsInstance(result, dict)
+        self.assertEqual(result, {})
 
     # ---
     # len
@@ -189,23 +399,3 @@ class TestKerning(unittest.TestCase):
         kerning_two = self.getKerning_generic()
         a = kerning_one
         self.assertNotEqual(kerning_two, a)
-
-    # -------------
-    # Interpolation
-    # -------------
-
-    def test_interpolation_without_rounding(self):
-        interpolated = self.getKerning_generic()
-        kerning_min = self.getKerning_generic()
-        kerning_max = self.getKerning_font2()
-        interpolated.interpolate(0.515, kerning_min, kerning_max, round=False)
-
-        self.assertEqual(interpolated[("public.kern1.X", "public.kern2.X")], 151.5)
-
-    def test_interpolation_with_rounding(self):
-        interpolated = self.getKerning_generic()
-        kerning_min = self.getKerning_generic()
-        kerning_max = self.getKerning_font2()
-        interpolated.interpolate(0.515, kerning_min, kerning_max, round=True)
-
-        self.assertEqual(interpolated[("public.kern1.X", "public.kern2.X")], 152)
