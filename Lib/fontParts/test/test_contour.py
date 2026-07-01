@@ -148,6 +148,144 @@ class TestContour(unittest.TestCase):
         contour = glyph.appendContour(contour)
         self.assertEqual(layer, contour.layer)
 
+    # ----
+    # Pens
+    # ----
+
+    def test_drawPoints_oldProtocol(self):
+        contour = self.getContour_bounds()
+
+        class OldProtocolPen:
+            def __init__(self):
+                self.calls = []
+
+            def beginPath(self):
+                self.calls.append(("beginPath",))
+
+            def addPoint(self, pt, segmentType=None, smooth=False, name=None):
+                self.calls.append(("addPoint", pt, segmentType, smooth, name))
+
+            def endPath(self):
+                self.calls.append(("endPath",))
+
+        pen = OldProtocolPen()
+        contour.drawPoints(pen)
+
+        self.assertEqual(len(pen.calls), 6)
+        self.assertEqual(pen.calls[0], ("beginPath",))
+        self.assertEqual(pen.calls[-1], ("endPath",))
+
+    # -------------
+    # Normalization
+    # -------------
+
+    def test_round(self):
+        contour, _ = self.objectGenerator("contour")
+        contour.appendPoint((0, 0), "line")
+        contour.appendPoint((0, 99.5), "line")
+        contour.appendPoint((99.6, 100.4), "line")
+        contour.appendPoint((100, 0), "line")
+        contour.round()
+        result = self.getContour_bounds()
+        self.assertEqual(contour.bounds, result.bounds)
+
+    # -------------
+    # Interpolation
+    # -------------
+
+    def test_isCompatible_same_contours(self):
+        contour1 = self.getContour_bounds()
+        contour2 = self.getContour_bounds()
+        compatible, report = contour1.isCompatible(contour2)
+        self.assertTrue(compatible)
+        self.assertFalse(report.fatal)
+        self.assertFalse(report.warning)
+
+    def test_isCompatible_different_segment_count(self):
+        contour1 = self.getContour_bounds()
+        contour2, _ = self.objectGenerator("contour")
+        contour2.appendPoint((0, 0), "line")
+        contour2.appendPoint((50, 100), "line")
+        contour2.appendPoint((100, 0), "line")
+        compatible, report = contour1.isCompatible(contour2)
+        self.assertFalse(compatible)
+        self.assertTrue(report.fatal)
+        self.assertTrue(report.segmentCountDifference)
+
+    def test_isCompatible_different_open_closed(self):
+        contour1 = self.getContour_bounds()
+        contour2, _ = self.objectGenerator("contour")
+        contour2.appendPoint((0, 0), "move")
+        contour2.appendPoint((0, 100), "line")
+        contour2.appendPoint((100, 100), "line")
+        contour2.appendPoint((100, 0), "line")
+        compatible, report = contour1.isCompatible(contour2)
+        self.assertFalse(compatible)
+        self.assertTrue(report.openDifference)
+        self.assertTrue(report.fatal)
+
+    def test_isCompatible_different_direction(self):
+        contour1 = self.getContour_bounds()
+        contour2 = self.getContour_bounds()
+        contour2.reverse()
+        compatible, report = contour1.isCompatible(contour2)
+        self.assertTrue(compatible)
+        self.assertFalse(report.fatal)
+        self.assertFalse(report.warning)
+        self.assertTrue(report.directionDifference)
+
+    def test_isCompatible_incompatible_segments(self):
+        contour1 = self.getContour_bounds()
+        contour2 = self.getContour_bounds()
+        contour2[0].type = "qcurve"
+        compatible, report = contour1.isCompatible(contour2)
+        self.assertFalse(compatible)
+        self.assertTrue(report.fatal)
+        self.assertTrue(len(report.segments) > 0)
+
+    def test_isCompatible_multiple_issues(self):
+        contour1 = self.getContour_bounds()
+        contour2, _ = self.objectGenerator("contour")
+        contour2.appendPoint((0, 0), "move")
+        contour2.appendPoint((0, 100), "line")
+        contour2.appendPoint((100, 100), "line")
+        contour2.appendPoint((100, 0), "line")
+        contour2[1].type = "qcurve"
+        compatible, report = contour1.isCompatible(contour2)
+        self.assertFalse(compatible)
+        self.assertTrue(report.openDifference)
+        self.assertTrue(report.fatal)
+
+    # ---------
+    # Direction
+    # ---------
+
+    def test_set_clockwise(self):
+        contour = self.getContour_bounds()
+        contour.clockwise = True
+        self.assertTrue(contour.clockwise)
+        contour.clockwise = False
+        self.assertFalse(contour.clockwise)
+
+    # ------------------------
+    # Point and Contour Inside
+    # ------------------------
+
+    def test_pointInside(self):
+        contour = self.getContour_bounds()
+        self.assertTrue(contour.pointInside((50, 50)))
+        self.assertFalse(contour.pointInside((200, 200)))
+
+    def test_contourInside(self):
+        outerContour = self.getContour_bounds()
+        innerContour, _ = self.objectGenerator("contour")
+        innerContour.appendPoint((25, 25), "line")
+        innerContour.appendPoint((25, 75), "line")
+        innerContour.appendPoint((75, 75), "line")
+        innerContour.appendPoint((75, 25), "line")
+        self.assertTrue(outerContour.contourInside(innerContour))
+        self.assertFalse(innerContour.contourInside(outerContour))
+
     # -----
     # Index
     # -----
@@ -176,6 +314,33 @@ class TestContour(unittest.TestCase):
         self.assertEqual(contour1.index, 1)
         self.assertEqual(contour2.index, 0)
         self.assertEqual(contour3.index, 2)
+
+        contour1.index = 3
+        self.assertEqual(contour1.index, 2)
+
+    def test_set_index_orphan_contour(self):
+        contour = self.getContour_bounds()
+        with self.assertRaises(FontPartsError):
+            contour.index = 1
+
+    def test_set_index_negative_value(self):
+        glyph, _ = self.objectGenerator("glyph")
+        contour1 = glyph.appendContour(self.getContour_bounds())
+        contour2 = glyph.appendContour(self.getContour_bounds())
+        contour1.index = -1
+        self.assertEqual(contour1.index, 0)
+        self.assertEqual(contour2.index, 1)
+        contour1.index = -11
+        self.assertEqual(contour1.index, 0)
+        self.assertEqual(contour2.index, 1)
+
+    def test_set_index_none(self):
+        glyph, _ = self.objectGenerator("glyph")
+        contour1 = glyph.appendContour(self.getContour_bounds())
+        contour2 = glyph.appendContour(self.getContour_bounds())
+        contour1.index = None
+        self.assertEqual(contour1.index, 0)
+        self.assertEqual(contour2.index, 1)
 
     # --------------
     # Identification
@@ -226,6 +391,22 @@ class TestContour(unittest.TestCase):
         contour = self.getContour_bounds()
         with self.assertRaises(FontPartsError):
             contour.bounds = (1, 2, 3, 4)
+
+    def test_empty_bounds(self):
+        contour, _ = self.objectGenerator("contour")
+        self.assertIsNone(contour.bounds)
+
+    # ----
+    # Area
+    # ----
+
+    def test_area(self):
+        contour = self.getContour_bounds()
+        self.assertEqual(contour.area, 10000)
+
+    def test_empty_area(self):
+        contour, _ = self.objectGenerator("contour")
+        self.assertIsNone(contour.area)
 
     # ----
     # Hash
@@ -488,10 +669,36 @@ class TestContour(unittest.TestCase):
             [segment.type for segment in segments], ["curve", "line", "curve"]
         )
 
+    def test_segments_start_move_offcurves_end(self):
+        contour, _ = self.objectGenerator("contour")
+        contour.appendPoint((84, 28), "move")
+        contour.appendPoint((0, 0), "line")
+        contour.appendPoint((0, 28), "offcurve")
+        contour.appendPoint((10, 64), "offcurve")
+        contour.appendPoint((46, 64), "curve")
+        contour.appendPoint((76, 64), "offcurve")
+
+        segments = contour.segments
+        self.assertEqual(
+            [segment.type for segment in segments], ["move", "line", "curve"]
+        )
+
     def test_segments_empty(self):
         contour, _ = self.objectGenerator("contour")
         segments = contour.segments
         self.assertEqual(segments, ())
+
+    def test_segments_segmentClass_none(self):
+        contour, _ = self.objectGenerator("contour")
+        contour.appendPoint((0, 0), "line")
+        conntourClass = type(contour)
+        originalClass = conntourClass.segmentClass
+        try:
+            conntourClass.segmentClass = None
+            with self.assertRaises(TypeError):
+                contour.segments
+        finally:
+            conntourClass.segmentClass = originalClass
 
     def test_segment_insert_open(self):
         # at index 0
@@ -589,7 +796,7 @@ class TestContour(unittest.TestCase):
             [(0, 0), (2, 2), (3, 3), (4, 4), (1, 1), (5, 5)],
         )
 
-    def test_setStartSegment(self):
+    def test_setStartSegment_index(self):
         contour, _ = self.objectGenerator("contour")
         contour.appendPoint((50, 0), "curve")
         contour.appendPoint((75, 0), "offcurve")
@@ -607,6 +814,260 @@ class TestContour(unittest.TestCase):
         self.assertEqual(contour.points[0].type, "curve")
         self.assertEqual((contour.points[0].x, contour.points[0].y), (100, 50))
 
+    def test_setStartSegment_segment(self):
+        contour = self.getContour_bounds()
+        targetSegment = contour.segments[1]
+        contour.setStartSegment(targetSegment)
+        self.assertEqual(contour.points[0].position, (0, 100))
+
+    def test_setStartSegment_index_out_of_range(self):
+        contour, _ = self.objectGenerator("contour")
+        contour.appendPoint((0, 0), "line")
+        contour.appendPoint((100, 0), "line")
+        with self.assertRaises(ValueError):
+            contour.setStartSegment(5)
+
+    def test_setStartSegment_open_contour(self):
+        contour, _ = self.objectGenerator("contour")
+        with self.assertRaises(FontPartsError):
+            contour.setStartSegment(1)
+
+    def test_iterSegment(self):
+        contour = self.getContour_bounds()
+        iterator = iter(contour)
+        self.assertIsInstance(iterator, collections.abc.Iterator)
+        segments = list(iterator)
+        self.assertEqual(len(segments), len(contour.segments))
+        self.assertEqual([segment.type for segment in segments], ["line"] * 4)
+
+    def test_appendSegment_points(self):
+        contour, _ = self.objectGenerator("contour")
+        contour.appendPoint((0, 0), "move")
+        contour.appendPoint((10, 0), "line")
+        initialLength = len(contour)
+        points = [(50, 50)]
+        contour.appendSegment(type="line", points=points)
+        appendedPoints = [p.position for p in contour.segments[-1].points]
+        self.assertEqual(len(contour), initialLength + 1)
+        self.assertEqual(appendedPoints, points)
+
+    def test_appendSegment_segment(self):
+        contour1, _ = self.objectGenerator("contour")
+        contour1.appendPoint((0, 0), "move")
+        contour1.appendPoint((10, 0), "line")
+        initialLength = len(contour1)
+        contour2, _ = self.objectGenerator("contour")
+        contour2.appendPoint((50, 50), "line")
+        segment = contour2.segments[0]
+        points = [p.position for p in segment]
+        contour1.appendSegment(segment=segment)
+        appendedPoints = [p.position for p in contour1.segments[-1].points]
+        self.assertEqual(len(contour1), initialLength + 1)
+        self.assertEqual(appendedPoints, points)
+
+    def test_appendSegment_overrides(self):
+        contour1, _ = self.objectGenerator("contour")
+        contour1.appendPoint((0, 0), "move")
+        contour1.appendPoint((10, 0), "line")
+        initialLength = len(contour1)
+        contour2, _ = self.objectGenerator("contour")
+        contour2.appendPoint((50, 50))
+        segment = contour2.segments[0]
+        overridePoints = [(120, 120)]
+        contour1.appendSegment(type="curve", segment=segment, points=overridePoints)
+        appendedPoints = [p.position for p in contour1.segments[-1].points]
+        self.assertEqual(len(contour1), initialLength + 1)
+        self.assertEqual(appendedPoints, overridePoints)
+
+    def test_appendSegment_raises(self):
+        contour = self.getContour_bounds()
+        with self.assertRaises(TypeError):
+            contour.appendSegment(type=None, points=[(50, 50)])
+        with self.assertRaises(TypeError):
+            contour.appendSegment(type="line", points=None)
+
+    def test_insertSegment_segment(self):
+        contour1 = self.getContour_bounds()
+        initialLength = len(contour1)
+        contour2, _ = self.objectGenerator("contour")
+        contour2.appendPoint((50, 50), "line")
+        contour2.appendPoint((60, 60), "offcurve")
+        segment = contour2.segments[0]
+        contour1.insertSegment(0, segment=segment)
+        insertedPoints = [p.position for p in contour1.segments[0].points]
+        originalPoints = [p.position for p in segment.points]
+        self.assertEqual(len(contour1), initialLength + 1)
+        self.assertEqual(insertedPoints, originalPoints)
+        self.assertEqual(contour1.segments[0].type, "line")
+
+    def test_insertSegment_overrides(self):
+        contour1 = self.getContour_bounds()
+        initialLength = len(contour1)
+        contour2, _ = self.objectGenerator("contour")
+        contour2.appendPoint((50, 50))
+        segment = contour2.segments[0]
+        overridePoints = [(120, 120)]
+        contour1.insertSegment(0, type="curve", segment=segment, points=overridePoints)
+        insertedPoints = [p.position for p in contour1.segments[0].points]
+        self.assertEqual(len(contour1), initialLength + 1)
+        self.assertEqual(insertedPoints, overridePoints)
+        self.assertEqual(contour1.segments[0].type, "curve")
+
+    def test_insertSegment_raises(self):
+        contour = self.getContour_bounds()
+        with self.assertRaises(TypeError):
+            contour.insertSegment(None, type="line", points=[(50, 50)])
+        with self.assertRaises(TypeError):
+            contour.insertSegment(0, type=None, points=[(50, 50)])
+        with self.assertRaises(TypeError):
+            contour.insertSegment(0, type="line", points=None)
+
+    def test_removeSegment_index(self):
+        contour = self.getContour_bounds()
+        initialLength = len(contour)
+        contour.removeSegment(0)
+        self.assertEqual(len(contour), initialLength - 1)
+
+    def test_removeSegment_index_out_of_range(self):
+        contour = self.getContour_bounds()
+        with self.assertRaises(ValueError):
+            contour.removeSegment(10)
+
+    def test_removeSegment_segment(self):
+        contour = self.getContour_bounds()
+        initialLength = len(contour)
+        segment = contour.segments[0]
+        contour.removeSegment(segment)
+        self.assertEqual(len(contour), initialLength - 1)
+
+    # -------
+    # bPoints
+    # -------
+
+    def test_bPoints_bPointClass_none(self):
+        contour, _ = self.objectGenerator("contour")
+        contour.appendPoint((0, 0))
+        contourClass = type(contour)
+        originalClass = contourClass.bPointClass
+        try:
+            contourClass.bPointClass = None
+            with self.assertRaises(TypeError):
+                contour.bPoints
+        finally:
+            contourClass.bPointClass = originalClass
+
+    def test_appendBPoint_values(self):
+        contour = self.getContour_bounds()
+        initialLength = len(contour.bPoints)
+        contour.appendBPoint(type="corner", anchor=(0, 0))
+        self.assertEqual(len(contour.bPoints), initialLength + 1)
+        self.assertEqual(contour.bPoints[-1].type, "corner")
+        self.assertEqual(contour.bPoints[-1].anchor, (0, 0))
+
+    def test_appendBPoint_bPoint(self):
+        contour1 = self.getContour_bounds()
+        initialLength = len(contour1)
+        contour2, _ = self.objectGenerator("contour")
+        contour2.appendPoint((50, 50), "line")
+        bPoint = contour2.bPoints[0]
+        contour1.appendBPoint(bPoint=bPoint)
+        self.assertEqual(len(contour1.bPoints), initialLength + 1)
+        self.assertEqual(contour1.bPoints[-1].type, "corner")
+        self.assertEqual(contour1.bPoints[-1].anchor, (50, 50))
+
+    def test_appendBPoint_overrides(self):
+        contour1 = self.getContour_bounds()
+        initialLength = len(contour1)
+        contour2, _ = self.objectGenerator("contour")
+        contour2.appendPoint((50, 50), "line")
+        bPoint = contour2.bPoints[0]
+        contour1.appendBPoint(
+            type="curve", anchor=(0, 0), bcpIn=(10, 10), bcpOut=(20, 20), bPoint=bPoint
+        )
+        self.assertEqual(len(contour1.bPoints), initialLength + 1)
+        self.assertEqual(contour1.bPoints[-1].type, "curve")
+        self.assertEqual(contour1.bPoints[-1].anchor, (0, 0))
+        self.assertEqual(contour1.bPoints[-1].bcpIn, (10, 10))
+        self.assertEqual(contour1.bPoints[-1].bcpOut, (20, 20))
+
+    def test_insertBPoint_values(self):
+        contour = self.getContour_bounds()
+        initialLength = len(contour.bPoints)
+        contour.insertBPoint(0, type="curve", anchor=(50, 50))
+        self.assertEqual(len(contour.bPoints), initialLength + 1)
+        self.assertEqual(contour.bPoints[1].anchor, (50, 50))
+
+    def test_insertBPoint_bPoint(self):
+        contour1 = self.getContour_bounds()
+        initialLength = len(contour1)
+        contour2, _ = self.objectGenerator("contour")
+        contour2.appendPoint((50, 50), "line")
+        bPoint = contour2.bPoints[0]
+        contour1.insertBPoint(0, bPoint=bPoint)
+        self.assertEqual(len(contour1.bPoints), initialLength + 1)
+        self.assertEqual(contour1.bPoints[1].type, "corner")
+        self.assertEqual(contour1.bPoints[1].anchor, (50, 50))
+
+    def test_insertBPoint_overrides(self):
+        contour1 = self.getContour_bounds()
+        initialLength = len(contour1)
+        contour2, _ = self.objectGenerator("contour")
+        contour2.appendPoint((50, 50), "line")
+        bPoint = contour2.bPoints[0]
+        contour1.insertBPoint(
+            0,
+            type="curve",
+            anchor=(0, 0),
+            bcpIn=(10, 10),
+            bcpOut=(20, 20),
+            bPoint=bPoint,
+        )
+        self.assertEqual(len(contour1.bPoints), initialLength + 1)
+        self.assertEqual(contour1.bPoints[1].type, "curve")
+        self.assertEqual(contour1.bPoints[1].anchor, (0, 0))
+        self.assertEqual(contour1.bPoints[1].bcpIn, (10, 10))
+        self.assertEqual(contour1.bPoints[1].bcpOut, (20, 20))
+
+    def test_insertBPoint_raises(self):
+        contour = self.getContour_bounds()
+        with self.assertRaises(TypeError):
+            contour.insertBPoint(None, type="corner", anchor=(50, 50))
+        with self.assertRaises(TypeError):
+            contour.insertBPoint(0, type=None, anchor=(50, 50))
+        with self.assertRaises(TypeError):
+            contour.insertBPoint(0, type="corner", anchor=None)
+
+    def test_removeBPoint_index(self):
+        contour = self.getContour_bounds()
+        initialLength = len(contour.bPoints)
+        contour.removeBPoint(0)
+        self.assertEqual(len(contour.bPoints), initialLength - 1)
+        self.assertEqual(contour.bPoints[0].anchor, (0, 100))
+
+    def test_removeBPoint_index_out_of_range(self):
+        contour = self.getContour_bounds()
+        with self.assertRaises(ValueError):
+            contour.removeBPoint(10)
+
+    def test_removeBPoint_bPoint(self):
+        contour = self.getContour_bounds()
+        initialLength = len(contour)
+        bPoint = contour.bPoints[0]
+        contour.removeBPoint(bPoint)
+        self.assertEqual(len(contour.bPoints), initialLength - 1)
+
+    def test_removeBPoint_offcurves(self):
+        contour, _ = self.objectGenerator("contour")
+        contour.appendPoint((0, 0), "curve")
+        contour.appendPoint((0, 50), "offcurve")
+        contour.appendPoint((50, 100), "offcurve")
+        contour.appendPoint((100, 100), "curve")
+        contour.appendPoint((150, 100), "offcurve")
+        contour.appendPoint((200, 50), "offcurve")
+        initialLength = len(contour.bPoints)
+        contour.removeBPoint(-2)
+        self.assertEqual(len(contour.bPoints), initialLength - 1)
+
     # ------
     # points
     # ------
@@ -623,3 +1084,103 @@ class TestContour(unittest.TestCase):
             [(point.x, point.y) for point in contour.points],
             [(2, 2), (3, 3), (0, 0), (1, 1)],
         )
+
+    def test_setStartPoint_index_zero(self):
+        contour = self.getContour_bounds()
+        contour.setStartPoint(0)
+        self.assertEqual(contour.points[0].position, (0, 0))
+
+    def test_setStartPoint_index_out_of_range(self):
+        contour = self.getContour_bounds()
+        with self.assertRaises(ValueError):
+            contour.setStartPoint(10)
+
+    def test_setStartPoint_open_contour(self):
+        contour, _ = self.objectGenerator("contour")
+        with self.assertRaises(FontPartsError):
+            contour.setStartPoint(0)
+
+    def test_appendPoint_position(self):
+        contour = self.getContour_bounds()
+        initialLength = len(contour.points)
+        contour.appendPoint(position=(10, 10))
+        self.assertEqual(len(contour.bPoints), initialLength + 1)
+        self.assertEqual(contour.points[-1].position, (10, 10))
+        self.assertEqual(contour.points[-1].type, "line")
+
+    def test_appendPoint_bPoint(self):
+        contour1 = self.getContour_bounds()
+        initialLength = len(contour1)
+        contour2, _ = self.objectGenerator("contour")
+        contour2.appendPoint((50, 50), "curve")
+        point = contour2.points[0]
+        contour1.appendPoint(point=point)
+        self.assertEqual(len(contour1.points), initialLength + 1)
+        self.assertEqual(contour1.points[-1].position, (50, 50))
+        self.assertEqual(contour1.points[-1].type, "curve")
+
+    def test_appendPoint_overrides(self):
+        contour1 = self.getContour_bounds()
+        initialLength = len(contour1)
+        contour2, _ = self.objectGenerator("contour")
+        contour2.appendPoint((50, 50), "curve")
+        point = contour2.points[0]
+        contour1.appendPoint(
+            position=(10, 10), type="line", name="test", identifier="test", point=point
+        )
+        self.assertEqual(len(contour1.points), initialLength + 1)
+        self.assertEqual(contour1.points[-1].position, (10, 10))
+        self.assertEqual(contour1.points[-1].type, "line")
+        self.assertEqual(contour1.points[-1].name, "test")
+        self.assertEqual(contour1.points[-1].identifier, "test")
+
+    def test_insertPoint_position(self):
+        contour = self.getContour_bounds()
+        initialLength = len(contour.points)
+        contour.insertPoint(0, position=(10, 10))
+        self.assertEqual(len(contour.bPoints), initialLength + 1)
+        self.assertEqual(contour.points[0].position, (10, 10))
+        self.assertEqual(contour.points[0].type, "line")
+
+    def test_insertPoint_point(self):
+        contour1 = self.getContour_bounds()
+        initialLength = len(contour1)
+        contour2, _ = self.objectGenerator("contour")
+        contour2.appendPoint((50, 50), "curve")
+        point = contour2.points[0]
+        contour1.insertPoint(0, point=point)
+        self.assertEqual(len(contour1.points), initialLength + 1)
+        self.assertEqual(contour1.points[0].position, (50, 50))
+        self.assertEqual(contour1.points[0].type, "curve")
+
+    def test_insertPoint_overrides(self):
+        contour1 = self.getContour_bounds()
+        initialLength = len(contour1)
+        contour2, _ = self.objectGenerator("contour")
+        contour2.appendPoint((50, 50), "curve")
+        point = contour2.points[0]
+        contour1.insertPoint(
+            0,
+            position=(10, 10),
+            type="line",
+            name="test",
+            identifier="test",
+            point=point,
+        )
+        self.assertEqual(len(contour1.points), initialLength + 1)
+        self.assertEqual(contour1.points[0].position, (10, 10))
+        self.assertEqual(contour1.points[0].type, "line")
+        self.assertEqual(contour1.points[0].name, "test")
+        self.assertEqual(contour1.points[0].identifier, "test")
+
+    def test_insertPoint_raises(self):
+        contour = self.getContour_bounds()
+        with self.assertRaises(TypeError):
+            contour.insertPoint(None, type="line", position=(50, 50))
+        with self.assertRaises(TypeError):
+            contour.insertPoint(0, type="line", position=None)
+
+    def test_removePoint_index_out_of_range(self):
+        contour = self.getContour_bounds()
+        with self.assertRaises(ValueError):
+            contour.removePoint(10)
