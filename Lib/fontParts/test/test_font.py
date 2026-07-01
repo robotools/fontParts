@@ -870,9 +870,6 @@ class TestFont(unittest.TestCase):
         self.assertEqual(guideline.position, (100, 201))
         self.assertEqual(glyph.width, 601)
 
-    def test_autoUnicodes(self):
-        pass
-
     # -------------
     # Interpolation
     # -------------
