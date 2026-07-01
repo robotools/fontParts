@@ -23,11 +23,16 @@ jobs:
   deploy:
 
     runs-on: ubuntu-latest
+    environment:
+      name: publish-to-pypi
+      url: https://pypi.org/p/fontParts
+    permissions:
+      id-token: write # IMPORTANT: mandatory for trusted publishing.
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v6.0.1
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v6.1.0
       with:
         python-version: '3.x'
     - name: Install dependencies
@@ -35,9 +40,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install setuptools wheel twine
     - name: Build and publish
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
         python setup.py sdist bdist_wheel
         twine upload dist/*

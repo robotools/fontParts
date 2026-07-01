@@ -1,4 +1,5 @@
 .. highlight:: python
+.. _fontParts.world:
 
 ################
 fontParts.world
@@ -12,6 +13,7 @@ fontParts.world
 .. autofunction:: AllFonts
 .. autofunction:: NewFont
 .. autofunction:: OpenFont
+.. autofunction:: OpenFonts
 .. autofunction:: CurrentFont
 .. autofunction:: CurrentLayer
 .. autofunction:: CurrentGlyph
@@ -21,3 +23,5 @@ fontParts.world
 .. autofunction:: CurrentComponents
 .. autofunction:: CurrentAnchors
 .. autofunction:: CurrentGuidelines
+.. autofunction:: FontList
+.. autoclass:: BaseFontList

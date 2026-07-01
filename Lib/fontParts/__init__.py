@@ -3,6 +3,7 @@ try:
 except ImportError:
     try:
         from setuptools_scm import get_version
+
         __version__ = get_version()
     except ImportError:
-        __version__ = 'unknown'
+        __version__ = "unknown"

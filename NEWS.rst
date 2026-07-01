@@ -1,3 +1,148 @@
+1.0.1 (released 2026-06-2)
+--------------------------
+Tweaks to setup and documentation.
+
+- Removed `tox` (#908)
+- Updates to documentation (#906, #904, #903)
+- Updated pyproject.toml with a build-backend (#905)
+
+
+1.0.0 (released 2026-05-28)
+---------------------------
+The majority of the work has been done by Knut Nergaard, for which we are forever grateful!
+
+It adds:
+- types to the whole codebase
+- improved documentation
+- a `rename` option to `newGlyph` (#848)
+- view objects to `BaseLib` (#800)
+- `.ufoz` to know font file extensions in `world.py` (#681)
+- Base object memory identifiers are now hex (#832)
+- fixes naming of `_reverse` in the `Contour` objects (#798)
+- support for `pathlib.Path` in `normalizeFilePath` (#784)
+
+Breaking change:
+- the casing of `_getIdentifierforPoint` is now `_getIdentifierForPoint` (cap F) (#782)
+
+It is the culumnation of:
+#739, #755, #757, #760, #762, #763, #764, #768, #769, #770, #772, #776, #780, #782, #783, #784, #785, #786, #787, #789, #790, #791, #792, #793, #794, #796, #797, #800, #801, #802, #803, #804, #807, #808, #809, #810, #811, #812, #813, #814, #816, #817, #818, #819, #820, #821, #822, #823, #825, #826, #827, #836, #867, #868, #869, #870, #877, #882, #884, #885, #888, #890, #893, #897, #898, #899, #901, and #902
+
+And addressed issues:
+#896, #895, #892, #883, #878, #848, #847, #846, #832, #829, #825, #824, #798, #788, #781, #775, #774, #767, #754, #751, #748, #743, #741, and #681
+
+0.14.2 (released 2026-05-26)
+---------------------------
+- `insertGlyph` bug fixed (#875), thank you @typemytype
+
+0.14.1 (released 2026-02-24)
+---------------------------
+- `glyph.round` fixed, thank you @adbac
+
+0.14.0 (released 2026-01-30)
+---------------------------
+- `glyph.round` now rounds image offset
+
+0.13.4 (released 2026-01-20)
+---------------------------
+- Update dependencies to fix issue with tests of `booleanOperations`
+
+0.13.3 (released 2025-08-14)
+---------------------------
+- Fix `.fromMathGlyph` for the issue of a guideline color coming from defcon, thanks @LettError. #851 #850
+
+0.13.2 (released 2025-07-21)
+---------------------------
+- Fixed python syntax warning errors due to doc strings, thanks @bgermann. #849
+
+0.13.1 (released 2025-06-11)
+---------------------------
+- `insertGlyph` will return the inserted glyph object. #727 & #841
+
+0.12.8 (released 2025-06-04)
+---------------------------
+- Fix bug in `copyData`, #839. Thanks @knutergaard
+
+0.12.7 (released 2025-05-30)
+---------------------------
+- Fix getting `color` and `name` in _fromMathGlyph`
+
+0.12.6 (released 2025-05-27)
+---------------------------
+- Fix guideline normalization when value is `None`. See #834. Thanks @typemytype!
+
+0.12.5 (released 2025-04-28)
+---------------------------
+- Upgrade `BaseDict` normalization. See #831
+
+0.12.4 (released 2025-04-08)
+---------------------------
+- Mark `base.kerning` docstrings raw to avoid `SyntaxWarning`. See #830
+
+0.12.3 (released 2024-11-08)
+---------------------------
+- Fixed `copyData` to copy, not link, subdata. See #758
+
+0.12.2 (released 2024-08-07)
+---------------------------
+- Replace remaining usage of assertEquals with assertEqual. See #720
+- Fixes/tweaks to documentation
+- Get guidelines from the mathInfo object directly. See #738
+
+0.12.1 (released 2023-10-30)
+---------------------------
+- Tweak to logic of `setStartSegment`
+
+0.12.0 (released 2023-10-30)
+---------------------------
+- Fixes to `setStartSegment` so that it keeps the start point on-curve and prevents setting a setting a start segment on an open contour (issues #709 and #412). Thanks @typesupply!
+- Fixes to docs and test setup. Boring things.
+
+0.11.0 (released 2022-12-09)
+---------------------------
+- Expose the `mathGlyph` options. Thanks @typesupply! See #672
+- Set defaultLayer to "public.default" when its available. Fixes issue #674. Thanks @typemytype! See #675.
+- Add `info.update` to the info object. Thanks @typesupply! See #676
+
+0.10.8 (released 2022-09-03)
+---------------------------
+- Adds `setStartPoint` to the contour object. Thanks @typemytype! See #668.
+
+0.10.7 (released 2022-07-11)
+---------------------------
+- Small documentation update and fix for scm tools.
+
+0.10.6 (released 2022-06-21)
+---------------------------
+- Adds `openFonts` (more than one font). Issue #545. (thanks @typesupply!)
+
+0.10.5 (released 2022-05-10)
+---------------------------
+- Adds `glyph.autoContourOrder`. Issue #645. (thanks @roberto-arista!)
+- Adds `FuzzyNumber` to `base.py`. Needed for the above, copied from defcon. (thanks @typemytype!)
+
+0.10.4 (released 2022-03-17)
+---------------------------
+- Fixes issue with setting glyph name when copying. Issue #633. (thanks @typemytype!)
+
+0.10.3 (released 2022-02-24)
+---------------------------
+- Fixes issue with `defaultLayer` and copying a `font`. Issue #630. (thanks @typemytype!)
+
+0.10.2 (released 2022-01-05)
+---------------------------
+- Add vaidate kwarg to _loadFromGlyph #623. (thanks @ctrlcctrlv)
+
+0.10.1 (released 2021-12-28)
+---------------------------
+- Update to use Collections.abc.Hashable by @benkiel in #622
+- Start testing Python 3.10 by @benkiel in #619
+
+0.10.0 (released 2021-12-28)
+---------------------------
+- 2021-12-28: Drops support for Python 3.6
+- 2021-12-14: Adds tempLib, #615 (thanks @typemytype!)
+- Improved docs with #605 and #607. Thanks @driehuis and @arrowtype!
+
 0.9.11 (released 2021-08-06)
 ---------------------------
 - 2021-08-06: Fixes inserting a segment with an open contour, #601 (thanks @typemytype!)
@@ -8,20 +153,20 @@
 
 0.9.9 (released 2021-02-13)
 ---------------------------
-- 2021-02-13: Fixed import of version. (#573, thanks @gyscos!) 
+- 2021-02-13: Fixed import of version. (#573, thanks @gyscos!)
 
 0.9.8 (released 2021-02-12)
 ---------------------------
-- 2021-02-11: Add support for quadratic curves with no on-curve points in Contour and Segment. (#572, thanks @typemytype!) 
+- 2021-02-11: Add support for quadratic curves with no on-curve points in Contour and Segment. (#572, thanks @typemytype!)
 
 0.9.7 (released 2020-12-23)
 ---------------------------
-- 2020-12-23: Change to github actions for CI and release. 
+- 2020-12-23: Change to github actions for CI and release.
 - 2020-12-18: fontShell returns `None` when referenced file name doesn't exist for an `Image` (#567, thanks @typemytype)
 
 0.9.6 (released 2020-09-06)
 ---------------------------
-- 2020-09-06: fontShell has `changed()` implemented now 
+- 2020-09-06: fontShell has `changed()` implemented now
 
 0.9.5 (released 2020-09-04)
 ---------------------------

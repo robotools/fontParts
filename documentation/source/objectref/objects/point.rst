@@ -13,10 +13,10 @@ Description
 
 ::
 
-	glyph = CurrentGlyph()
-	for contour in glyph:
-		for point in contour.points:
-			print point
+    glyph = CurrentGlyph()
+    for contour in glyph:
+        for point in contour.points:
+            print(point)
 
 ********
 Overview
@@ -101,6 +101,8 @@ Environment
 *********
 Reference
 *********
+
+.. autoclass:: BasePoint
 
 Copy
 ====

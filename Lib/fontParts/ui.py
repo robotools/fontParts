@@ -1,177 +1,282 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
 from fontParts.world import _EnvironmentDispatcher
+from fontParts.base.annotations import CollectionType
+
+if TYPE_CHECKING:
+    from fontParts.base.font import BaseFont
 
 
-def AskString(message, value='', title='FontParts'):
-    """
-    An ask a string dialog, a `message` is required.
-    Optionally a `value` and `title` can be provided.
+def AskString(
+    message: str, value: str | None = None, title: str | None = "FontParts"
+) -> str:
+    """Display a dialog to ask for a string input.
 
-    ::
+    :param message: The message to display in the dialog as a :class:`str`.
+    :param value: The optional default value to display in the input field as
+        a :class:`str`. Defaults to :obj:`None`.
+    :param title: The optional title of the dialog window as a :class:`str`.
+        Defaults to ``"FontParts"``.
+    :return: A :class:`str` representing the input provided by the user.
 
-        from fontParts.ui import AskString
-        print(AskString("who are you?"))
+    Example::
+
+        >>> AskString("What glyph is your darling?")
 
     """
     return dispatcher["AskString"](message=message, value=value, title=title)
 
 
-def AskYesNoCancel(message, title='FontParts', default=0, informativeText=""):
+def AskYesNoCancel(
+    message: str,
+    title: str | None = "FontParts",
+    default: int | None = 0,
+    informativeText: str | None = None,
+) -> str:
+    """Display a dialog to ask a yes, no, or cancel question.
+
+    :param message: The message to display in the dialog as a :class:`str`.
+    :param title: The optional title of the dialog window as a :class:`str`.
+        Defaults to ``"FontParts"``.
+    :param default: The optional default button as an :class:`int`.
+        Defaults to ``0``.
+    :param informativeText: The optional additional informative text to display in the
+        dialog as  a :class:`str`. Defaults to :obj:`None`.
+    :return: A :class:`str` representing the user's response: ``"Yes"``, ``"No"``, or
+        ``"Cancel"``.
+
+    Example::
+
+        >>> AskYesNoCancel("Do you want to continue?")
+
     """
-    An ask yes, no or cancel dialog, a `message` is required.
-    Optionally a `title`, `default` and `informativeText` can be provided.
-    The `default` option is to indicate which button is the default button.
-
-    ::
-
-        from fontParts.ui import AskYesNoCancel
-        print(AskYesNoCancel("who are you?"))
-
-    """
-    return dispatcher["AskYesNoCancel"](message=message, title=title,
-                                        default=default, informativeText=informativeText)
+    return dispatcher["AskYesNoCancel"](
+        message=message, title=title, default=default, informativeText=informativeText
+    )
 
 
-def FindGlyph(aFont, message="Search for a glyph:", title='FontParts'):
-    """
-    A dialog to search a glyph for a provided  font.
-    Optionally a `message`, `title` and `allFonts` can be provided.
+def FindGlyph(
+    aFont: BaseFont, message: str = "Search for a glyph:", title: str = "FontParts"
+) -> str:
+    """Display a dialog to search for a glyph within a provided font.
 
+    :param aFont: The font to search for a glyph in as a :class:`BaseFont`.
+    :param message: The optional message to display in the dialog as a :class:`str`.
+        Defaults to ``"Search for a glyph:"``.
+    :param title: The optional title of the dialog window as a :class:`str`.
+        Defaults to ``"FontParts"``.
+    :return: A :class:`str` representing the name of the matched glyph.
 
-        from fontParts.ui import FindGlyph
-        from fontParts.world import CurrentFont
-        glyph = FindGlyph(CurrentFont())
-        print(glyph)
+    Example::
+
+        >>> FindGlyph(myFont)
 
     """
     return dispatcher["FindGlyph"](aFont=aFont, message=message, title=title)
 
 
-def GetFile(message=None, title=None, directory=None, fileName=None,
-            allowsMultipleSelection=False, fileTypes=None):
-    """
-    An get file dialog.
-    Optionally a `message`, `title`, `directory`, `fileName` and
-    `allowsMultipleSelection` can be provided.
+def GetFile(
+    message: str | None = None,
+    title: str | None = None,
+    directory: str | None = None,
+    fileName: str | None = None,
+    allowsMultipleSelection: bool = False,
+    fileTypes: str | None = None,
+) -> str:
+    """Display a dialog to get a file path.
 
-    ::
+    :param message: The optional message to display in the dialog as a :class:`str`.
+        Defaults to :obj:`None`.
+    :param title: The optional title of the dialog window as a :class:`str`.
+        Defaults to :obj:`None`.
+    :param directory: The optional directory to start the dialog in as a :class:`str`.
+        Defaults to :obj:`None`.
+    :param fileName: The optional file name to start the dialog with as a :class:`str`.
+        Defaults to :obj:`None`.
+    :param allowsMultipleSelection: A flag to allow multiple file selection as
+        a :class:`bool`. Defaults to :obj:`False`.
+    :param fileTypes: The optional file types to filter the dialog with as
+        a :class:`str`. Defaults to :obj:`None`.
+    :return: A :class:`str` representing the path of the selected file path.
 
-        from fontParts.ui import GetFile
-        print(GetFile())
+    Example::
 
-    """
-    return dispatcher["GetFile"](message=message, title=title, directory=directory,
-                                 fileName=fileName,
-                                 allowsMultipleSelection=allowsMultipleSelection,
-                                 fileTypes=fileTypes)
-
-
-def GetFileOrFolder(message=None, title=None, directory=None, fileName=None,
-                    allowsMultipleSelection=False, fileTypes=None):
-    """
-    An get file or folder dialog.
-    Optionally a `message`, `title`, `directory`, `fileName`,
-    `allowsMultipleSelection` and `fileTypes` can be provided.
-
-    ::
-
-        from fontParts.ui import GetFileOrFolder
-        print(GetFileOrFolder())
+        >>> GetFile()
 
     """
-    return dispatcher["GetFileOrFolder"](message=message, title=title,
-                                         directory=directory, fileName=fileName,
-                                         allowsMultipleSelection=allowsMultipleSelection,
-                                         fileTypes=fileTypes)
+    return dispatcher["GetFile"](
+        message=message,
+        title=title,
+        directory=directory,
+        fileName=fileName,
+        allowsMultipleSelection=allowsMultipleSelection,
+        fileTypes=fileTypes,
+    )
 
 
-def Message(message, title='FontParts', informativeText=""):
+def GetFileOrFolder(
+    message: str | None = None,
+    title: str | None = None,
+    directory: str | None = None,
+    fileName: str | None = None,
+    allowsMultipleSelection: bool = False,
+    fileTypes: str | None = None,
+) -> str | CollectionType[str]:
+    """Display a dialog to get file or folder paths.
+
+    :param message: The optional message to display in the dialog as a :class:`str`.
+        Defaults to :obj:`None`.
+    :param title: The optional title of the dialog window as a :class:`str`.
+        Defaults to :obj:`None`.
+    :param directory: The optional directory to start the dialog in as a :class:`str`.
+        Defaults to :obj:`None`.
+    :param fileName: The optional file name to start the dialog with as a :class:`str`.
+        Defaults to :obj:`None`.
+    :param allowsMultipleSelection: A flag to allow multiple file selection as
+        a :class:`bool`. Defaults to :obj:`False`.
+    :param fileTypes: The optional file types to filter the dialog with as
+        a :class:`str`. Defaults to :obj:`None`.
+    :return: A :class:`str` representing the path of the selected file or folder,
+        or a :class:`tuple` of paths if ``allowsMultipleSelection=True``.
+
+    Example::
+
+        >>> GetFileOrFolder()
+
     """
-    An message dialog.
-    Optionally a `message`, `title` and `informativeText` can be provided.
+    return dispatcher["GetFileOrFolder"](
+        message=message,
+        title=title,
+        directory=directory,
+        fileName=fileName,
+        allowsMultipleSelection=allowsMultipleSelection,
+        fileTypes=fileTypes,
+    )
 
-    ::
 
-        from fontParts.ui import Message
-        print(Message("This is a message"))
+def Message(
+    message: str, title: str | None = "FontParts", informativeText: str | None = None
+) -> None:
+    """Display a message dialog.
+
+    :param message: The message to display in the dialog as a :class:`str`.
+    :param title: The optional title of the dialog window as a :class:`str`.
+        Defaults to ``"FontParts"``.
+    :param informativeText: The optional additional informative text to display in the
+        dialog as a :class:`str`. Defaults to :obj:`None`.
+
+    Example::
+
+        >>> Message("This is a message")
 
     """
-    return dispatcher["Message"](message=message, title=title,
-                                 informativeText=informativeText)
+    return dispatcher["Message"](
+        message=message, title=title, informativeText=informativeText
+    )
 
 
-def PutFile(message=None, fileName=None):
-    """
-    An put file dialog.
-    Optionally a `message` and `fileName` can be provided.
+def PutFile(message: str | None = None, fileName: str | None = None) -> str:
+    """Display a dialog to put a file.
 
-    ::
+    :param message: The optional message to display in the dialog as a :class:`str`.
+        Defaults to :obj:`None`.
+    :param fileName: The optional file name to start the dialog with as a :class:`str`.
+        Defaults to :obj:`None`.
+    :return: A :class:`str` representing the path of the selected file.
 
-        from fontParts.ui import PutFile
-        print(PutFile())
+    Example::
+
+        >>> PutFile()
 
     """
     return dispatcher["PutFile"](message=message, fileName=fileName)
 
 
-def SearchList(items, message="Select an item:", title='FontParts'):
-    """
-    A dialgo to search a given list.
-    Optionally a `message`, `title` and `allFonts` can be provided.
+def SearchList(
+    items: CollectionType[str],
+    message: str | None = "Select an item:",
+    title: str | None = "FontParts",
+) -> str:
+    """Display a dialog to search a given list.
 
-    ::
+    :param items: The list of items to search as a :class:`list` of :class:`str`.
+    :param message: The optional message to display in the dialog as a :class:`str`.
+        Defaults to ``"Select an item:"``.
+    :param title: The optional title of the dialog window as a :class:`str`.
+        Defaults to ``"FontParts"``.
+    :return: A :class:`str` representing the selected item.
 
-        from fontParts.ui import SearchList
-        result = SearchList(["a", "b", "c"])
-        print(result)
+    Example::
+
+        >>> SearchList(["a", "b", "c"])
 
     """
     return dispatcher["SearchList"](items=items, message=message, title=title)
 
 
-def SelectFont(message="Select a font:", title='FontParts', allFonts=None):
-    """
-    Select a font from all open fonts.
-    Optionally a `message`, `title` and `allFonts` can be provided.
-    If `allFonts` is `None` it will list all open fonts.
+def SelectFont(
+    message: str | None = "Select a font:",
+    title: str | None = "FontParts",
+    allFonts: CollectionType[str] | None = None,
+) -> str:
+    """Display a dialog to select a font from all open fonts.
 
-    ::
+    :param message: The optional message to display in the dialog as a :class:`str`.
+        Defaults to ``"Select a font:"``.
+    :param title: The optional title of the dialog window as a :class:`str`.
+        Defaults to ``"FontParts"``.
+    :param allFonts: The optional list of all open fonts as a :class:`list`
+        of :class:`str`. Defaults to :obj:`None`.
+    :return: A :class:`str` representing the selected font.
 
-        from fontParts.ui import SelectFont
-        font = SelectFont()
-        print(font)
+    Example::
+
+        >>> SelectFont()
 
     """
     return dispatcher["SelectFont"](message=message, title=title, allFonts=allFonts)
 
 
-def SelectGlyph(aFont, message="Select a glyph:", title='FontParts'):
-    """
-    Select a glyph for a given font.
-    Optionally a `message` and `title` can be provided.
+def SelectGlyph(
+    aFont: BaseFont,
+    message: str | None = "Select a glyph:",
+    title: str | None = "FontParts",
+) -> str:
+    """Display a dialog to select a glyph from a given font.
 
-    ::
+    :param aFont: The font to select a glyph from as a :class:`BaseFont`.
+    :param message: The optional message to display in the dialog as a :class:`str`.
+        Defaults to ``"Select a glyph:"``.
+    :param title: The optional title of the dialog window as a :class:`str`.
+        Defaults to ``"FontParts"``.
+    :return: A :class:`str` representing the selected glyph.
 
-        from fontParts.ui import SelectGlyph
-        font = CurrentFont()
-        glyph = SelectGlyph(font)
-        print(glyph)
+    Example::
+
+        >>> SelectGlyph(myFont)
 
     """
     return dispatcher["SelectGlyph"](aFont=aFont, message=message, title=title)
 
 
-def ProgressBar(title="RoboFab...", ticks=None, label=""):
-    """
-    A progess bar dialog.
-    Optionally a `title`, `ticks` and `label` can be provided.
+def ProgressBar(
+    title: str | None = "RoboFab...", ticks: int | None = None, label: str | None = None
+) -> None:
+    """Display a progress bar dialog.
 
-    ::
+    :param title: The optional title of the dialog window as a :class:`str`.
+        Defaults to ``"RoboFab..."``.
+    :param ticks: The optional number of ticks to display in the progress bar as
+        an :class:`int`. Defaults to :obj:`None`.
+    :param label: The optional label to display in the progress bar as a :class:`str`.
+        Defaults to :obj:`None`.
 
-        from fontParts.ui import ProgressBar
+    Example::
 
-        bar = ProgressBar()
-        # do something
-        bar.close()
+        >>> bar = ProgressBar()
+        ... # do something
+        >>> bar.close()
 
     """
     return dispatcher["ProgressBar"](title=title, ticks=ticks, label=label)
@@ -181,18 +286,20 @@ def ProgressBar(title="RoboFab...", ticks=None, label=""):
 # Dispatcher
 # ----------
 
-dispatcher = _EnvironmentDispatcher([
-    "AskString",
-    "AskYesNoCancel",
-    "FindGlyph",
-    "GetFile",
-    "GetFolder",
-    "GetFileOrFolder",
-    "Message",
-    "OneList",
-    "PutFile",
-    "SearchList",
-    "SelectFont",
-    "SelectGlyph",
-    "ProgressBar",
-])
+dispatcher = _EnvironmentDispatcher(
+    [
+        "AskString",
+        "AskYesNoCancel",
+        "FindGlyph",
+        "GetFile",
+        "GetFolder",
+        "GetFileOrFolder",
+        "Message",
+        "OneList",
+        "PutFile",
+        "SearchList",
+        "SelectFont",
+        "SelectGlyph",
+        "ProgressBar",
+    ]
+)

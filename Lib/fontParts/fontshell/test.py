@@ -22,6 +22,7 @@ from fontParts.fontshell.guideline import RGuideline
 # behavior with a small subclasses for testing
 # purposes only.
 
+
 def _get_selected(self):
     if isinstance(self, FSTestSegment):
         for point in self.points:
@@ -59,49 +60,41 @@ def _set_selected(self, value):
 
 
 class FSTestPoint(RPoint):
-
     _get_selected = _get_selected
     _set_selected = _set_selected
 
 
 class FSTestBPoint(RBPoint):
-
     _get_selected = _get_selected
     _set_selected = _set_selected
 
 
 class FSTestSegment(RSegment):
-
     _get_selected = _get_selected
     _set_selected = _set_selected
 
 
 class FSTestGuideline(RGuideline):
-
     _get_selected = _get_selected
     _set_selected = _set_selected
 
 
 class FSTestImage(RImage):
-
     _get_selected = _get_selected
     _set_selected = _set_selected
 
 
 class FSTestAnchor(RAnchor):
-
     _get_selected = _get_selected
     _set_selected = _set_selected
 
 
 class FSTestComponent(RComponent):
-
     _get_selected = _get_selected
     _set_selected = _set_selected
 
 
 class FSTestContour(RContour):
-
     segmentClass = FSTestSegment
     bPointClass = FSTestBPoint
     pointClass = FSTestPoint
@@ -110,7 +103,6 @@ class FSTestContour(RContour):
 
 
 class FSTestGlyph(RGlyph):
-
     contourClass = FSTestContour
     componentClass = FSTestComponent
     anchorClass = FSTestAnchor
@@ -120,14 +112,12 @@ class FSTestGlyph(RGlyph):
 
 
 class FSTestLayer(RLayer):
-
     glyphClass = FSTestGlyph
     _get_selected = _get_selected
     _set_selected = _set_selected
 
 
 class FSTestFont(RFont):
-
     layerClass = FSTestLayer
     guidelineClass = FSTestGuideline
     _get_selected = _get_selected
@@ -162,6 +152,7 @@ def fontshellObjectGenerator(cls):
 
 if __name__ == "__main__":
     import sys
+
     if {"-v", "--verbose"}.intersection(sys.argv):
         verbosity = 2
     else:

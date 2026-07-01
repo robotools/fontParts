@@ -178,6 +178,7 @@ Sub-Objects
     :nosignatures:
 
     BaseGlyph.lib
+    BaseGlyph.tempLib
 
 Transformations
 ===============
