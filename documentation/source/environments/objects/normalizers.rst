@@ -5,8 +5,6 @@
 Normalizers
 ###########
 
-.. autofunction:: normalizeFileFormatVersion
-
 *******
 Kerning
 *******
@@ -17,6 +15,7 @@ Kerning
 ******
 Groups
 ******
+
 .. autofunction:: normalizeGroupKey
 .. autofunction:: normalizeGroupValue
 
@@ -39,12 +38,14 @@ Layers
 
 .. autofunction:: normalizeLayerOrder
 .. autofunction:: normalizeDefaultLayer
+.. autofunction:: normalizeDefaultLayerName
 .. autofunction:: normalizeLayerName
 
 ******
 Glyphs
 ******
 
+.. autofunction:: normalizeGlyph
 .. autofunction:: normalizeGlyphOrder
 
 Identification
@@ -95,6 +96,7 @@ Components
 **********
 
 .. autofunction:: normalizeComponentIndex
+.. autofunction:: normalizeComponentScale
 
 *******
 Anchors
@@ -113,6 +115,7 @@ Note
 Guidelines
 **********
 
+.. autofunction:: normalizeGuideline
 .. autofunction:: normalizeGuidelineIndex
 .. autofunction:: normalizeGuidelineAngle
 .. autofunction:: normalizeGuidelineName
@@ -120,6 +123,8 @@ Guidelines
 *******
 Generic
 *******
+
+.. autofunction:: normalizeInternalObjectType
 
 Positions
 =========
@@ -154,9 +159,11 @@ Files
 =====
 
 .. autofunction:: normalizeFilePath
+.. autofunction:: normalizeFileFormatVersion
 
 Standard
 ========
 
 .. autofunction:: normalizeBoolean
-.. autofunction:: normalizeRounding
+.. autofunction:: normalizeVisualRounding
+

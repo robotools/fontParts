@@ -1,3 +1,2 @@
 include LICENSE
-include README.md
-include tox.ini
+include README.rst

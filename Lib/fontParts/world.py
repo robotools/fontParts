@@ -1,113 +1,236 @@
-def OpenFont(path, showInterface=True):
+# pylint: disable=C0103, C0114
+from __future__ import annotations
+import os
+import glob
+from typing import TYPE_CHECKING, Union
+from collections.abc import Callable, Iterable
+from collections.abc import Generator
+from types import FunctionType
+
+from fontParts.base.annotations import T, CollectionType
+
+if TYPE_CHECKING:
+    from fontParts.base.font import BaseFont
+    from fontParts.base.glyph import BaseGlyph
+    from fontParts.base.layer import BaseLayer
+    from fontParts.base.contour import BaseContour
+    from fontParts.base.segment import BaseSegment
+    from fontParts.base.point import BasePoint
+    from fontParts.base.component import BaseComponent
+    from fontParts.base.anchor import BaseAnchor
+    from fontParts.base.guideline import BaseGuideline
+
+SortOptionType = str | FunctionType | CollectionType[str | FunctionType]
+BaseTypes = Union[
+    "BaseFont",
+    "BaseGlyph",
+    "BaseLayer",
+    "BaseContour",
+    "BaseSegment",
+    "BasePoint",
+    "BaseComponent",
+    "BaseAnchor",
+    "BaseGuideline",
+    "BaseFontList",
+]
+
+RegistryType = dict[str, Callable[[], BaseTypes] | None]
+InfoType = str | int | float | bool
+
+
+def OpenFonts(
+    directory: str | CollectionType[str] | None = None,
+    showInterface: bool = True,
+    fileExtensions: CollectionType[str] | None = None,
+) -> Generator[BaseFont]:
+    """Open all fonts located in the specified directories.
+
+    The fonts are located within the directory using the :mod:`glob` module.
+    The patterns are created with ``os.path.join(directory, "*" + fileExtension)``
+    for every file extension in `fileExtensions`.
+
+    :param directory: The optional directory :class:`str` or the :class:`list`
+        or :class:`tuple`  of directories to search for fonts. If :obj:`None` (default),
+        a dialog for selecting a directory will be opened.
+    :param showInterface: A :class:`bool` indicating whether to show the graphical
+        interface. If :obj:`False`, the font should be opened without a graphical
+        interface. Defaults to :obj:`True`.
+    :param fileExtensions: The optional file extensions to search for as a :class:`list`
+        or :class:`tuple` of :class:`str` items. If :obj:`None` (default), the default
+        file extensions will be used.
+    :return: A :class:`generator` yielding the opened fonts.
+
+    Example::
+
+        from fontParts.world import OpenFonts
+
+        fonts = OpenFonts()
+        fonts = OpenFonts(showInterface=False)
+
     """
-    Open font located at **path**. If **showInterface**
-    is ``False``, the font should be opened without
-    graphical interface. The default for **showInterface**
-    is ``True``.
+    from fontParts.ui import GetFileOrFolder
 
-    ::
+    directories: CollectionType[str]
+    if fileExtensions is None:
+        fileExtensions = dispatcher["OpenFontsFileExtensions"]()
+    if directory is None:
+        directory = GetFileOrFolder(allowsMultipleSelection=True)
+    elif isinstance(directory, str):
+        directories = [directory]
+    else:
+        directories = directory
+    if directories:
+        globPatterns = []
+        for directory in directories:
+            if not fileExtensions:
+                continue
+            if os.path.splitext(directory)[-1] in fileExtensions:
+                globPatterns.append(directory)
+            elif not os.path.isdir(directory):
+                pass
+            else:
+                for ext in fileExtensions:
+                    globPatterns.append(os.path.join(directory, "*" + ext))
+        paths = []
+        for pattern in globPatterns:
+            paths.extend(glob.glob(pattern))
+        for path in paths:
+            yield OpenFont(path, showInterface=showInterface)
 
-        from fontParts.world import *
+
+def OpenFont(path: str, showInterface: bool = True) -> BaseFont:
+    """Open font located at the specified path.
+
+    :param path: The path to the font file to be opened as a :class:`str`
+    :param showInterface: A :class:`bool` indicating whether to show the graphical
+        interface. If :obj:`False`, the font should be opened without a graphical
+        interface. Defaults to :obj:`True`.
+    :return: The newly opened :class:`BaseFont` instance.
+
+    Example::
+
+        from fontParts.world import OpenFont
 
         font = OpenFont("/path/to/my/font.ufo")
         font = OpenFont("/path/to/my/font.ufo", showInterface=False)
+
     """
     return dispatcher["OpenFont"](pathOrObject=path, showInterface=showInterface)
 
 
-def NewFont(familyName=None, styleName=None, showInterface=True):
-    """
-    Create a new font. **familyName** will be assigned
-    to ``font.info.familyName`` and **styleName**
-    will be assigned to ``font.info.styleName``. These
-    are optional and default to ``None``. If **showInterface**
-    is ``False``, the font should be created without
-    graphical interface. The default for **showInterface**
-    is ``True``.
+def NewFont(
+    familyName: str | None = None,
+    styleName: str | None = None,
+    showInterface: bool = True,
+) -> BaseFont:
+    """Create a new font.
 
-    ::
+    :param familyName: The optional :attr:`BaseInfo.familyName` to apply to the font as
+        a :class:`str`.
+    :param styleName: The optional :attr:`BaseInfo.styleName` to apply to the font as
+        a :class:`str`.
+    :param showInterface: A :class:`bool` indicating whether to show the graphical
+        interface. If :obj:`False`, the font should be opened without a graphical
+        interface. Defaults to :obj:`True`.
+    :return: The newly created :class:`BaseFont` instance.
 
-        from fontParts.world import *
+    Example::
+
+        from fontParts.world import NewFont
 
         font = NewFont()
         font = NewFont(familyName="My Family", styleName="My Style")
         font = NewFont(showInterface=False)
+
     """
-    return dispatcher["NewFont"](familyName=familyName, styleName=styleName,
-                                 showInterface=showInterface)
+    return dispatcher["NewFont"](
+        familyName=familyName, styleName=styleName, showInterface=showInterface
+    )
 
 
-def CurrentFont():
-    """
-    Get the "current" font.
+def CurrentFont() -> BaseFont:
+    """Get the currently active font.
+
+    :return: A :class:`BaseFont` subclass instance representing the currently active
+        font.
+
     """
     return dispatcher["CurrentFont"]()
 
 
-def CurrentGlyph():
-    """
-    Get the "current" glyph from :func:`CurrentFont`.
+def CurrentGlyph() -> BaseGlyph:
+    """Get the currently active glyph from :func:`CurrentFont`.
 
-    ::
+    :return: A :class:`BaseGlyph` subclass instance representing the currently active
+        glyph.
 
-        from fontParts.world import *
+    Example::
+
+        from fontParts.world import CurrentGlyph
 
         glyph = CurrentGlyph()
     """
     return dispatcher["CurrentGlyph"]()
 
 
-def CurrentLayer():
-    """
-    Get the "current" layer from :func:`CurrentGlyph`.
+def CurrentLayer() -> BaseLayer:
+    """Get the currently active layer from :func:`CurrentGlyph`.
 
-    ::
+    :return: A :class:`BaseLayer` subclass instance representing the currently active
+        glyph layer.
 
-        from fontParts.world import *
+    Example::
+
+        from fontParts.world import CurrentLayer
 
         layer = CurrentLayer()
+
     """
     return dispatcher["CurrentLayer"]()
 
 
-def CurrentContours():
-    """
-    Get the "currently" selected contours from :func:`CurrentGlyph`.
+def CurrentContours() -> tuple[BaseContour, ...]:
+    """Get the currently selected contours from :func:`CurrentGlyph`.
 
-    ::
+    :return: A :class:`tuple` of :class:`BaseContour` subclass instances representing
+        the currently selected glyph contours. If nothing is selected, the :class:`tuple`
+        will be empty.
 
-        from fontParts.world import *
+    Example::
+
+        from fontParts.world import CurrentContours
 
         contours = CurrentContours()
 
-    This returns an immutable list, even when nothing is selected.
     """
     return dispatcher["CurrentContours"]()
 
 
-def _defaultCurrentContours():
+def _defaultCurrentContours() -> tuple[BaseContour, ...]:
     glyph = CurrentGlyph()
     if glyph is None:
         return ()
     return glyph.selectedContours
 
 
-def CurrentSegments():
-    """
-    Get the "currently" selected segments from :func:`CurrentContours`.
+def CurrentSegments() -> tuple[BaseSegment, ...]:
+    """Get the currently selected segments from :func:`CurrentContours`.
 
-    ::
+    :return: A :class:`tuple` of :class:`BaseSegments` subclass instances representing
+        the currently selected contour segments. If nothing is selected, the :class:`tuple`
+        will be empty.
 
-        from fontParts.world import *
+    Example::
+
+        from fontParts.world import CurrentSegments
 
         segments = CurrentSegments()
 
-    This returns an immutable list, even when nothing is selected.
     """
     return dispatcher["CurrentSegments"]()
 
 
-def _defaultCurrentSegments():
+def _defaultCurrentSegments() -> tuple[BaseSegment, ...]:
     glyph = CurrentGlyph()
     if glyph is None:
         return ()
@@ -117,22 +240,24 @@ def _defaultCurrentSegments():
     return tuple(segments)
 
 
-def CurrentPoints():
-    """
-    Get the "currently" selected points from :func:`CurrentContours`.
+def CurrentPoints() -> tuple[BasePoint, ...]:
+    """Get the currently selected points from :func:`CurrentContours`.
 
-    ::
+    :return: A :class:`tuple` of :class:`BasePoint` subclass instances representing
+        the currently selected contour points. If nothing is selected, the :class:`tuple`
+        will be empty.
 
-        from fontParts.world import *
+    Example::
+
+        from fontParts.world import CurrentPoints
 
         points = CurrentPoints()
 
-    This returns an immutable list, even when nothing is selected.
     """
     return dispatcher["CurrentPoints"]()
 
 
-def _defaultCurrentPoints():
+def _defaultCurrentPoints() -> tuple[BasePoint, ...]:
     glyph = CurrentGlyph()
     if glyph is None:
         return ()
@@ -142,67 +267,74 @@ def _defaultCurrentPoints():
     return tuple(points)
 
 
-def CurrentComponents():
-    """
-    Get the "currently" selected components from :func:`CurrentGlyph`.
+def CurrentComponents() -> tuple[BaseComponent, ...]:
+    """Get the currently selected components from :func:`CurrentGlyph`.
 
-    ::
+    :return: A :class:`tuple` of :class:`BaseComponent` subclass instances representing
+        the currently selected glyph components. If nothing is selected, the :class:`tuple`
+        will be empty.
 
-        from fontParts.world import *
+    Example::
+
+        from fontParts.world import CurrentComponents
 
         components = CurrentComponents()
 
-    This returns an immutable list, even when nothing is selected.
     """
     return dispatcher["CurrentComponents"]()
 
 
-def _defaultCurrentComponents():
+def _defaultCurrentComponents() -> tuple[BaseComponent, ...]:
     glyph = CurrentGlyph()
     if glyph is None:
         return ()
     return glyph.selectedComponents
 
 
-def CurrentAnchors():
-    """
-    Get the "currently" selected anchors from :func:`CurrentGlyph`.
+def CurrentAnchors() -> tuple[BaseAnchor, ...]:
+    """Get the currently selected anchors from :func:`CurrentGlyph`.
 
-    ::
+    :return: A :class:`tuple` of :class:`BaseAnchor` subclass instances representing
+        the currently selected glyph anchors. If nothing is selected, the :class:`tuple`
+        will be empty.
 
-        from fontParts.world import *
+    Example::
+
+        from fontParts.world import CurrentAnchors
 
         anchors = CurrentAnchors()
 
-    This returns an immutable list, even when nothing is selected.
     """
     return dispatcher["CurrentAnchors"]()
 
 
-def _defaultCurrentAnchors():
+def _defaultCurrentAnchors() -> tuple[BaseAnchor, ...]:
     glyph = CurrentGlyph()
     if glyph is None:
         return ()
     return glyph.selectedAnchors
 
 
-def CurrentGuidelines():
-    """
-    Get the "currently" selected guidelines from :func:`CurrentGlyph`.
+def CurrentGuidelines() -> tuple[BaseGuideline, ...]:
+    """Get the currently selected guidelines from :func:`CurrentGlyph`.
+
     This will include both font level and glyph level guidelines.
 
-    ::
+    :return: A :class:`tuple` of :class:`BaseGuideline` subclass instances representing
+        the currently selected guidelines. If nothing is selected, the :class:`tuple`
+        will be empty.
 
-        from fontParts.world import *
+    Example::
+
+        from fontParts.world import CurrentGuidelines
 
         guidelines = CurrentGuidelines()
 
-    This returns an immutable list, even when nothing is selected.
     """
     return dispatcher["CurrentGuidelines"]()
 
 
-def _defaultCurrentGuidelines():
+def _defaultCurrentGuidelines() -> tuple[BaseGuideline, ...]:
     guidelines = []
     font = CurrentFont()
     if font is not None:
@@ -213,16 +345,19 @@ def _defaultCurrentGuidelines():
     return tuple(guidelines)
 
 
-def AllFonts(sortOptions=None):
-    """
-    Get a list of all open fonts. Optionally, provide a
-    value for ``sortOptions`` to sort the fonts. See
-    :meth:`world.FontList.sortBy` for options.
+def AllFonts(sortOptions: CollectionType[str] | None = None) -> BaseFontList:
+    """Get a list of all open fonts.
 
+    Optionally, provide a value for `sortOptions` to sort the fonts. See
+    :meth:`BaseFontList.sortBy` for options.
 
-    ::
+    :param sortOptions: The optional :class:`list` or :class:`tuple` of :class:`str`
+        sort options to apply to the list. Defaults to :obj:`None`.
+    :return: A :class:`BaseFontList` instance representing all open fonts.
 
-        from fontParts.world import *
+    Example::
+
+        from fontParts.world import AllFonts
 
         fonts = AllFonts()
         for font in fonts:
@@ -235,6 +370,7 @@ def AllFonts(sortOptions=None):
         fonts = AllFonts(["familyName", "styleName"])
         for font in fonts:
             # do something
+
     """
     fontList = FontList(dispatcher["AllFonts"]())
     if sortOptions is not None:
@@ -242,11 +378,11 @@ def AllFonts(sortOptions=None):
     return fontList
 
 
-def RFont(path=None, showInterface=True):
+def RFont(path: str | None = None, showInterface: bool = True) -> fontshell.RFont:
     return dispatcher["RFont"](pathOrObject=path, showInterface=showInterface)
 
 
-def RGlyph():
+def RGlyph() -> fontshell.RGlyph:
     return dispatcher["RGlyph"]()
 
 
@@ -254,118 +390,135 @@ def RGlyph():
 # Font List
 # ---------
 
-def FontList(fonts=None):
-    """
-    Get a list with font specific methods.
 
-    ::
+def FontList(fonts: Iterable[T] | None = None):
+    """Get a list with font-specific methods.
 
-        from fontParts.world import *
+    :return: A :class:`BaseFontList` instance.
+
+    Example::
+
+        from fontParts.world import FontList
 
         fonts = FontList()
 
     Refer to :class:`BaseFontList` for full documentation.
     """
-    l = dispatcher["FontList"]()
+    list = dispatcher["FontList"]()
     if fonts:
-        l.extend(fonts)
-    return l
+        list.extend(fonts)
+    return list
 
 
 class BaseFontList(list):
+    """Represent a :class:`list` with font-specific methods."""
 
     # Sort
 
-    def sortBy(self, sortOptions, reverse=False):
-        """
-        Sort ``fonts`` with the ordering preferences defined
-        by ``sortBy``. ``sortBy`` must be one of the following:
+    def sortBy(self, sortOptions: SortOptionType, reverse: bool = False) -> None:
+        """Sort items according to specified options.
 
-        * sort description string
-        * :class:`BaseInfo` attribute name
-        * sort value function
-        * list/tuple containing sort description strings, :class:`BaseInfo`
-          attribute names and/or sort value functions
-        * ``"magic"``
+        Sorting options may be defined as follows:
 
-        Sort Description Strings
-        ------------------------
+        - A :ref:`sort description <sort-descriptions>` as a :class:`str`
+        - A :ref:`font info attribute name <info-attributes>` as a :class:`str`
+        - A custom `sort value function <sort-value-function>`
+        - A :class:`list` or :class:`tuple` containing a mix of any of the above
+        - The special keyword ``"magic"`` (see :ref:`magic-sorting`)
 
-        The sort description strings, and how they modify the sort, are:
 
-        +--------------------+--------------------------------------+
-        | ``"familyName"``   | Family names by alphabetical order.  |
-        +--------------------+--------------------------------------+
-        | ``"styleName"``    | Style names by alphabetical order.   |
-        +--------------------+--------------------------------------+
-        | ``"isItalic"``     | Italics before romans.               |
-        +--------------------+--------------------------------------+
-        | ``"isRoman"``      | Romans before italics.               |
-        +--------------------+--------------------------------------+
-        | ``"widthValue"``   | Width values by numerical order.     |
-        +--------------------+--------------------------------------+
-        | ``"weightValue"``  | Weight values by numerical order.    |
-        +--------------------+--------------------------------------+
-        | ``"monospace"``    | Monospaced before proportional.      |
-        +--------------------+--------------------------------------+
-        | ``"proportional"`` | Proportional before monospaced.      |
-        +--------------------+--------------------------------------+
+        .. _sort-descriptions:
 
-        ::
+        Sort Descriptions
+        -----------------
 
-            >>> fonts.sortBy("familyName", "styleName")
+        The following string-based sort descriptions determine sorting behavior:
 
+        +----------------------+--------------------------------------+
+        | Sort Description     | Effect                               |
+        +======================+======================================+
+        | ``"familyName"``     | Sort by family name (A-Z).           |
+        +----------------------+--------------------------------------+
+        | ``"styleName"``      | Sort by style name (A-Z).            |
+        +----------------------+--------------------------------------+
+        | ``"isItalic"``       | Sort italics before romans.          |
+        +----------------------+--------------------------------------+
+        | ``"isRoman"``        | Sort romans before italics.          |
+        +----------------------+--------------------------------------+
+        | ``"widthValue"``     | Sort by width value (low-high).      |
+        +----------------------+--------------------------------------+
+        | ``"weightValue"``    | Sort by weight value (low-high).     |
+        +----------------------+--------------------------------------+
+        | ``"monospace"``      | Sort monospaced before proportional. |
+        +----------------------+--------------------------------------+
+        | ``"isProportional"`` | Sort proportional before monospaced. |
+        +----------------------+--------------------------------------+
+
+
+        .. _info-attributes:
 
         Font Info Attribute Names
         -------------------------
 
-        Any :class:`BaseFont` attribute name may be included as
-        a sort option. For example, to sort by x-height value,
-        you'd use the ``"xHeight"`` attribute name.
+        Any attribute of :class:`BaseInfo` may be used as a sorting criterion.
+        For example, sorting by x-height value can be achieved using the
+        attribute name ``"xHeight"``.
 
-        ::
 
-            >>> fonts.sortBy("xHeight")
-
+        .. _sort-value-function:
 
         Sort Value Function
         -------------------
 
-        A sort value function must be a function that accepts
-        one argument, ``font``. This function must return
-        a sortable value for the given font. For example:
+        A sort value function is a :class:`Callable` that takes a single
+        argument, `font`, and returns a sortable value. Example::
 
-        ::
-
-            def glyphCountSortValue(font):
+            def glyph_count_sort(font):
                 return len(font)
 
-            >>> fonts.sortBy(glyphCountSortValue)
 
-        A list of sort description strings and/or sort functions
-        may also be provided. This should be in order of most
-        to least important. For example, to sort by family name
-        and then style name, do this:
+            fonts.sortBy(glyph_count_sort)
+
+        A :class:`list` or :class:`tuple` of sort descriptions and/or sort functions
+        may be provided to specify sorting precedence, from most to least important.
 
 
-        "magic"
-        -------
+        .. _magic-sorting:
 
-        If "magic" is given for ``sortBy``, the fonts will be
-        sorted based on this sort description sequence:
+        Magic Sorting
+        -------------
 
-        * ``"familyName"``
-        * ``"isProportional"``
-        * ``"widthValue"``
-        * ``"weightValue"``
-        * ``"styleName"``
-        * ``"isRoman"``
+        If ``"magic"`` is specified, fonts are sorted using the following
+        sequence of criteria:
 
-        ::
+        #. ``"familyName"``
+        #. ``"isProportional"``
+        #. ``"widthValue"``
+        #. ``"weightValue"``
+        #. ``"styleName"``
+        #. ``"isRoman"``
 
-            >>> fonts.sortBy("magic")
+
+        :param sortOptions: The sorting option(s), given as a single :class:`str`,
+            :class:`FunctionType`, or a :class:`list` or :class:`tuple` of several.
+        :param reverse: Whether to reverse the sort order. Defaults to :obj:`False`.
+        :raises TypeError: If `sortOptions` is not a :class:`str`,
+            :class:`FunctionType`, :class:`list` or :class:`tuple`.
+        :raises ValueError:
+            - If `sortOptions` does not conatain any sorting options.
+            - If `sortOptions` contains an unrecognized value or value item.
+
+        Example::
+
+            from fontParts.world import AllFonts
+
+            fonts = AllFonts()
+            fonts.sortBy("familyName")
+            fonts.sortBy(["familyName", "styleName"])
+            fonts.sortBy("magic")
+            fonts.sortBy(lambda font: len(font))
+
         """
-        from types import FunctionType
         valueGetters = dict(
             familyName=_sortValue_familyName,
             styleName=_sortValue_styleName,
@@ -374,12 +527,12 @@ class BaseFontList(list):
             widthValue=_sortValue_widthValue,
             weightValue=_sortValue_weightValue,
             isProportional=_sortValue_isProportional,
-            isMonospace=_sortValue_isMonospace
+            isMonospace=_sortValue_isMonospace,
         )
         if isinstance(sortOptions, str) or isinstance(sortOptions, FunctionType):
             sortOptions = [sortOptions]
         if not isinstance(sortOptions, (list, tuple)):
-            raise ValueError("sortOptions must a string, list or function.")
+            raise TypeError("sortOptions must be a string, list or function.")
         if not sortOptions:
             raise ValueError("At least one sort option must be defined.")
         if sortOptions == ["magic"]:
@@ -389,20 +542,22 @@ class BaseFontList(list):
                 "widthValue",
                 "weightValue",
                 "styleName",
-                "isRoman"
+                "isRoman",
             ]
         sorter = []
         for originalIndex, font in enumerate(self):
             sortable = []
             for valueName in sortOptions:
+                value = None
                 if isinstance(valueName, FunctionType):
                     value = valueName(font)
-                elif valueName in valueGetters:
-                    value = valueGetters[valueName](font)
-                elif hasattr(font.info, valueName):
-                    value = getattr(font.info, valueName)
+                elif isinstance(valueName, str):
+                    if valueName in valueGetters:
+                        value = valueGetters[valueName](font)
+                    elif hasattr(font.info, valueName):
+                        value = getattr(font.info, valueName)
                 else:
-                    raise ValueError("Unknown sort option: %s" % repr(valueName))
+                    raise ValueError(f"Unknown sort option: {repr(valueName)}")
                 sortable.append(value)
             sortable.append(originalIndex)
             sortable.append(font)
@@ -416,24 +571,34 @@ class BaseFontList(list):
 
     # Search
 
-    def getFontsByFontInfoAttribute(self, *attributeValuePairs):
-        """
-        Get a list of fonts that match the (attribute, value)
-        combinations in ``attributeValuePairs``.
+    def getFontsByFontInfoAttribute(
+        self, *attributeValuePairs: tuple[str, InfoType]
+    ) -> BaseFontList:
+        r"""Get a list of fonts that match the specified attribute-value pairs.
 
-        ::
+        This method filters fonts based on one or more ``(attribute, value)`` pairs.
+        When multiple pairs are provided, only fonts that satisfy all conditions are
+        included.
+
+        :param \*attributeValuePairs: The attribute-value pairs to search
+            for as :class:`tuple` instances, each containing a font attribute name
+            as a :class:`str` and the expected value.
+        :return: A :class:`BaseFontList` instance containing the matching fonts.
+
+        Example::
 
             >>> subFonts = fonts.getFontsByFontInfoAttribute(("xHeight", 20))
             >>> subFonts = fonts.getFontsByFontInfoAttribute(("xHeight", 20), ("descender", -150))
 
-        This will return an instance of :class:`BaseFontList`.
         """
         found = self
         for attr, value in attributeValuePairs:
             found = self._matchFontInfoAttributes(found, (attr, value))
         return found
 
-    def _matchFontInfoAttributes(self, fonts, attributeValuePair):
+    def _matchFontInfoAttributes(
+        self, fonts: BaseFontList, attributeValuePair: tuple[str, InfoType]
+    ) -> BaseFontList:
         found = self.__class__()
         attr, value = attributeValuePair
         for font in fonts:
@@ -441,29 +606,44 @@ class BaseFontList(list):
                 found.append(font)
         return found
 
-    def getFontsByFamilyName(self, familyName):
-        """
-        Get a list of fonts that match ``familyName``.
-        This will return an instance of :class:`BaseFontList`.
+    def getFontsByFamilyName(self, familyName: str) -> BaseFontList:
+        """Get a list of fonts that match the provided family name.
+
+        :param familyName: The :attr:`BaseInfo.familyName` to search for as
+            a :class:`str`.
+        :return: A :class:`BaseFontList` instance containing the matching fonts.
+
         """
         return self.getFontsByFontInfoAttribute(("familyName", familyName))
 
-    def getFontsByStyleName(self, styleName):
-        """
-        Get a list of fonts that match ``styleName``.
-        This will return an instance of :class:`BaseFontList`.
+    def getFontsByStyleName(self, styleName: str) -> BaseFontList:
+        """Get a list of fonts that match the provided style name.
+
+        :param styleName: The :attr:`BaseInfo.styleName` to search for as
+            a :class:`str`.
+        :return: A :class:`BaseFontList` instance containing the matching fonts.
+
         """
         return self.getFontsByFontInfoAttribute(("styleName", styleName))
 
-    def getFontsByFamilyNameStyleName(self, familyName, styleName):
+    def getFontsByFamilyNameStyleName(
+        self, familyName: str, styleName: str
+    ) -> BaseFontList:
+        """Get a list of fonts that match the provided family name and style name.
+
+        :param familyName: The :attr:`BaseInfo.familyName` to search for as
+            a :class:`str`.
+        :param styleName: The :attr:`BaseInfo.styleName` to search for as
+            a :class:`str`.
+        :return: A :class:`BaseFontList` instance containing the matching fonts.
+
         """
-        Get a list of fonts that match ``familyName`` and ``styleName``.
-        This will return an instance of :class:`BaseFontList`.
-        """
-        return self.getFontsByFontInfoAttribute(("familyName", familyName), ("styleName", styleName))
+        return self.getFontsByFontInfoAttribute(
+            ("familyName", familyName), ("styleName", styleName)
+        )
 
 
-def _sortValue_familyName(font):
+def _sortValue_familyName(font: BaseFont) -> str:
     """
     Returns font.info.familyName.
     """
@@ -473,7 +653,7 @@ def _sortValue_familyName(font):
     return value
 
 
-def _sortValue_styleName(font):
+def _sortValue_styleName(font: BaseFont) -> str:
     """
     Returns font.info.styleName.
     """
@@ -483,7 +663,7 @@ def _sortValue_styleName(font):
     return value
 
 
-def _sortValue_isRoman(font):
+def _sortValue_isRoman(font: BaseFont) -> int:
     """
     Returns 0 if the font is roman.
     Returns 1 if the font is not roman.
@@ -494,7 +674,7 @@ def _sortValue_isRoman(font):
     return 1
 
 
-def _sortValue_isItalic(font):
+def _sortValue_isItalic(font: BaseFont) -> int:
     """
     Returns 0 if the font is italic.
     Returns 1 if the font is not italic.
@@ -508,7 +688,7 @@ def _sortValue_isItalic(font):
     return 1
 
 
-def _sortValue_widthValue(font):
+def _sortValue_widthValue(font: BaseFont) -> int:
     """
     Returns font.info.openTypeOS2WidthClass.
     """
@@ -518,7 +698,7 @@ def _sortValue_widthValue(font):
     return value
 
 
-def _sortValue_weightValue(font):
+def _sortValue_weightValue(font: BaseFont) -> int:
     """
     Returns font.info.openTypeOS2WeightClass.
     """
@@ -528,7 +708,7 @@ def _sortValue_weightValue(font):
     return value
 
 
-def _sortValue_isProportional(font):
+def _sortValue_isProportional(font: BaseFont) -> int:
     """
     Returns 0 if the font is proportional.
     Returns 1 if the font is not proportional.
@@ -539,7 +719,7 @@ def _sortValue_isProportional(font):
     return 1
 
 
-def _sortValue_isMonospace(font):
+def _sortValue_isMonospace(font: BaseFont) -> int:
     """
     Returns 0 if the font is monospace.
     Returns 1 if the font is not monospace.
@@ -562,51 +742,53 @@ def _sortValue_isMonospace(font):
 # Dispatcher
 # ----------
 
-class _EnvironmentDispatcher(object):
 
-    def __init__(self, registryItems):
-        self._registry = {item: None for item in registryItems}
+class _EnvironmentDispatcher:
+    def __init__(self, registryItems: CollectionType[str]) -> None:
+        self._registry: RegistryType = {item: None for item in registryItems}
 
-    def __setitem__(self, name, func):
+    def __setitem__(self, name: str, func: Callable | None) -> None:
         self._registry[name] = func
 
-    def __getitem__(self, name):
+    def __getitem__(self, name: str) -> Callable:
         func = self._registry[name]
         if func is None:
             raise NotImplementedError
         return func
 
 
-dispatcher = _EnvironmentDispatcher([
-    "OpenFont",
-    "NewFont",
-    "AllFonts",
-    "CurrentFont",
-    "CurrentGlyph",
-    "CurrentLayer",
-    "CurrentContours",
-    "CurrentSegments",
-    "CurrentPoints",
-    "CurrentComponents",
-    "CurrentAnchors",
-    "CurrentGuidelines",
-    "FontList",
-    "RFont",
-    "RLayer",
-    "RGlyph",
-    "RContour",
-    "RPoint",
-    "RAnchor",
-    "RComponent",
-    "RGuideline",
-    "RImage",
-    "RInfo",
-    "RFeatures",
-    "RGroups",
-    "RKerning",
-    "RLib",
-
-])
+dispatcher = _EnvironmentDispatcher(
+    [
+        "OpenFontsFileExtensions",
+        "OpenFont",
+        "NewFont",
+        "AllFonts",
+        "CurrentFont",
+        "CurrentGlyph",
+        "CurrentLayer",
+        "CurrentContours",
+        "CurrentSegments",
+        "CurrentPoints",
+        "CurrentComponents",
+        "CurrentAnchors",
+        "CurrentGuidelines",
+        "FontList",
+        "RFont",
+        "RLayer",
+        "RGlyph",
+        "RContour",
+        "RPoint",
+        "RAnchor",
+        "RComponent",
+        "RGuideline",
+        "RImage",
+        "RInfo",
+        "RFeatures",
+        "RGroups",
+        "RKerning",
+        "RLib",
+    ]
+)
 
 # Register the default functions.
 
@@ -625,9 +807,15 @@ dispatcher["FontList"] = BaseFontList
 try:
     from fontParts import fontshell
 
+    # OpenFonts
+
+    dispatcher["OpenFontsFileExtensions"] = lambda: [".ufo", ".ufoz"]
+
     # OpenFont, RFont
 
-    def _fontshellRFont(pathOrObject=None, showInterface=True):
+    def _fontshellRFont(
+        pathOrObject: str | BaseFont | None = None, showInterface: bool = True
+    ) -> fontshell.RFont:
         return fontshell.RFont(pathOrObject=pathOrObject, showInterface=showInterface)
 
     dispatcher["OpenFont"] = _fontshellRFont
@@ -635,7 +823,11 @@ try:
 
     # NewFont
 
-    def _fontshellNewFont(familyName=None, styleName=None, showInterface=True):
+    def _fontshellNewFont(
+        familyName: str | None = None,
+        styleName: str | None = None,
+        showInterface: bool = True,
+    ) -> fontshell.RFont:
         font = fontshell.RFont(showInterface=showInterface)
         if familyName is not None:
             font.info.familyName = familyName

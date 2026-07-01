@@ -1,0 +1,113 @@
+[build-system]
+requires = ["setuptools>=42", "wheel", "setuptools_scm[toml]>=9.2.2", "vcs-versioning"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fontParts"
+description = "An API for interacting with the parts of fonts during the font development process."
+license = "MIT"
+license-files = ["LICENSE"]
+readme = "README.rst"
+requires-python = ">=3.10"
+authors = [
+    { name = "Just van Rossum, Tal Leming, Erik van Blokland, Ben Kiel, others" },
+]
+maintainers = [
+    { name = "Just van Rossum, Tal Leming, Erik van Blokland, Ben Kiel" },
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Environment :: Other Environment",
+    "Intended Audience :: Developers",
+    "Intended Audience :: End Users/Desktop",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Multimedia :: Graphics",
+    "Topic :: Multimedia :: Graphics :: Graphics Conversion",
+    "Topic :: Software Development :: Libraries",
+]
+dependencies = [
+    "FontTools[ufo,lxml,unicode]>=4.60.2",
+    "fontMath>=0.9.4",
+    "defcon[pens]>=0.12.2",
+    "booleanOperations>=0.10.0",
+]
+dynamic = ["version"]
+
+[project.urls]
+source = "http://github.com/robotools/fontParts"
+documentation = "https://fontparts.robotools.dev/"
+changelog = "https://github.com/robotools/fontParts/blob/main/NEWS.rst"
+issues = "https://github.com/robotools/fontParts/issues"
+releasenotes = "https://github.com/robotools/fontParts/releases"
+
+[tool.setuptools]
+zip-safe = true
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["Lib"]
+
+[tool.coverage.run]
+branch = true
+parallel = true
+source = ["fontParts"]
+omit = [
+    "*/__init__.py",
+    "*/test/*",
+    "*/test.py"
+]
+command_line = "Lib/fontParts/fontshell/test.py"
+
+[tool.coverage.paths]
+source = ["Lib/fontParts"]
+
+[tool.coverage.report]
+exclude_lines = [
+    # keywords to use in inline comments to skip coverage
+    "pragma: no cover",
+
+    # don't complain if tests don't hit defensive assertion code
+    "(raise|except)(\\s)?NotImplementedError",
+
+    # don't complain if non-runnable code isn't run
+    "if __name__ == .__main__.:",
+
+    # don't complain about type-checking-only imports/blocks
+    "if TYPE_CHECKING:",
+
+    # skip coverage of typing overloads
+    "@overload"
+]
+ignore_errors = true
+show_missing = true
+
+[tool.setuptools_scm]
+write_to = 'Lib/fontParts/_version.py'
+write_to_template = '__version__ = "{version}"'
+
+[tool.ruff]
+target-version = "py310"
+
+[tool.ruff.lint]
+# Ignore unused imports
+ignore = ["F401"]
+
+[tool.ruff.format]
+# Enable reformatting of code snippets in docstrings.
+docstring-code-format = true
+skip-magic-trailing-comma = true
+
+[tool.mypy]
+files = "Lib/fontParts"
+python_version = "3.10"
+strict = false
+ignore_missing_imports = true

@@ -13,9 +13,9 @@ Guidelines are reference lines in a glyph that are not part of a contour or the 
 
 ::
 
-	glyph = CurrentGlyph()
-	for guideline in glyph.guidelines:
-		print guideline
+    glyph = CurrentGlyph()
+    for guideline in glyph.guidelines:
+        print(guideline)
 
 ********
 Overview

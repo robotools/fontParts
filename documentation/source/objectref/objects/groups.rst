@@ -16,22 +16,22 @@ Groups behave like a Python dictionary. Anything you can do with a dictionary in
 ::
 
     font = CurrentFont()
-    for name, members in font.groups.keys():
-        print name
-        print members
+    for name, members in font.groups.items():
+        print(name)
+        print(members)
 
 It is important to understand that any changes to the returned group contents will not be reflected in the groups object. This means that the following will not update the font's groups:
 
 ::
 
-    group = font.groups["myGroup"]
+    group = list(font.groups["myGroup"])
     group.remove("A")
 
 If one wants to make a change to the group contents, one should do the following instead:
 
 ::
 
-    group = font.groups["myGroup"]
+    group = list(font.groups["myGroup"])
     group.remove("A")
     font.groups["myGroup"] = group
 

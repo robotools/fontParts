@@ -1,53 +1,68 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING, Any
+from collections.abc import Callable
+
 from fontTools.misc import transform
 from fontParts.base import normalizers
 from fontParts.base.base import (
-    BaseObject, TransformationMixin, InterpolationMixin, SelectionMixin,
-    PointPositionMixin, IdentifierMixin, dynamicProperty, reference
+    BaseObject,
+    TransformationMixin,
+    InterpolationMixin,
+    SelectionMixin,
+    PointPositionMixin,
+    IdentifierMixin,
+    dynamicProperty,
+    reference,
 )
 from fontParts.base.compatibility import AnchorCompatibilityReporter
 from fontParts.base.color import Color
 from fontParts.base.deprecated import DeprecatedAnchor, RemovedAnchor
+from fontParts.base.annotations import (
+    AffineTransformationLike,
+    RGBALike,
+    RGBA,
+    IntFloatType,
+)
+
+if TYPE_CHECKING:
+    from fontParts.base.font import BaseFont
+    from fontParts.base.layer import BaseLayer
+    from fontParts.base.glyph import BaseGlyph
 
 
 class BaseAnchor(
-                 BaseObject,
-                 TransformationMixin,
-                 DeprecatedAnchor,
-                 RemovedAnchor,
-                 PointPositionMixin,
-                 InterpolationMixin,
-                 SelectionMixin,
-                 IdentifierMixin
-                 ):
+    BaseObject,
+    TransformationMixin,
+    DeprecatedAnchor,
+    RemovedAnchor,
+    PointPositionMixin,
+    InterpolationMixin,
+    SelectionMixin,
+    IdentifierMixin,
+):
+    """Represent the basis for an anchor object.
 
-    """
-    An anchor object. This object is almost always
-    created with :meth:`BaseGlyph.appendAnchor`.
+    This object is almost always created with :meth:`BaseGlyph.appendAnchor`.
     An orphan anchor can be created like this::
 
         >>> anchor = RAnchor()
+
     """
 
-    def _reprContents(self):
-        contents = [
-            ("({x}, {y})".format(x=self.x, y=self.y)),
-        ]
+    def _reprContents(self) -> list[str]:
+        contents = [f"({self.x}, {self.y})"]
+
         if self.name is not None:
-            contents.append("name='%s'" % self.name)
+            contents.append(f"name='{self.name}'")
         if self.color:
-            contents.append("color=%r" % str(self.color))
+            contents.append(f"color={self.color!r}")
         return contents
 
     # ----
     # Copy
     # ----
 
-    copyAttributes = (
-        "x",
-        "y",
-        "name",
-        "color"
-    )
+    copyAttributes: tuple[str, ...] = ("x", "y", "name", "color")
 
     # -------
     # Parents
@@ -55,16 +70,32 @@ class BaseAnchor(
 
     # Glyph
 
-    _glyph = None
+    _glyph: Callable[[], BaseGlyph] | None = None
 
-    glyph = dynamicProperty("glyph", "The anchor's parent :class:`BaseGlyph`.")
+    glyph: dynamicProperty = dynamicProperty(
+        "glyph",
+        """Get or set the anchor's parent glyph object.
 
-    def _get_glyph(self):
+        The value must be a :class:`BaseGlyph` instance or :obj:`None`.
+
+        :return: The :class:`BaseGlyph` instance containing the anchor
+            or :obj:`None`.
+        :raises AssertionError: If attempting to set the glyph when it
+            has already been set.
+
+        Example::
+
+            >>> glyph = anchor.glyph
+
+        """,
+    )
+
+    def _get_glyph(self) -> BaseGlyph | None:
         if self._glyph is None:
             return None
         return self._glyph()
 
-    def _set_glyph(self, glyph):
+    def _set_glyph(self, glyph: BaseGlyph | Callable[[], BaseGlyph] | None) -> None:
         if self._glyph is not None:
             raise AssertionError("glyph for anchor already set")
         if glyph is not None:
@@ -73,18 +104,46 @@ class BaseAnchor(
 
     # Layer
 
-    layer = dynamicProperty("layer", "The anchor's parent :class:`BaseLayer`.")
+    layer: dynamicProperty = dynamicProperty(
+        "layer",
+        """Get the anchor's parent layer object.
 
-    def _get_layer(self):
+        This property is read-only.
+
+        :return: The :class:`BaseLayer` instance containing the anchor
+            or :obj:`None`.
+
+        Example::
+
+            >>> layer = anchor.layer
+
+        """,
+    )
+
+    def _get_layer(self) -> BaseLayer | None:
         if self._glyph is None:
             return None
         return self.glyph.layer
 
     # Font
 
-    font = dynamicProperty("font", "The anchor's parent :class:`BaseFont`.")
+    font: dynamicProperty = dynamicProperty(
+        "font",
+        """Get the anchor's parent font object.
 
-    def _get_font(self):
+        This property is read-only.
+
+        :return: The :class:`BaseFont` instance containing the anchor
+            or :obj:`None`.
+
+        Example::
+
+            >>> font = anchor.font
+
+        """,
+    )
+
+    def _get_font(self) -> BaseFont | None:
         if self._glyph is None:
             return None
         return self.glyph.font
@@ -97,85 +156,131 @@ class BaseAnchor(
 
     x = dynamicProperty(
         "base_x",
-        """
-        The x coordinate of the anchor.
-        It must be an :ref:`type-int-float`. ::
+        """Get or set the anchor's x-coordinate.
+
+        The value must be an :class:`int` or a :class:`float`.
+
+        :return: An :class:`int` or a :class:`float` representing the
+            x-coordinate of the anchor.
+
+        Example::
 
             >>> anchor.x
             100
             >>> anchor.x = 101
-        """
+
+        """,
     )
 
-    def _get_base_x(self):
+    def _get_base_x(self) -> IntFloatType:
         value = self._get_x()
         value = normalizers.normalizeX(value)
         return value
 
-    def _set_base_x(self, value):
+    def _set_base_x(self, value: IntFloatType) -> None:
         value = normalizers.normalizeX(value)
         self._set_x(value)
 
-    def _get_x(self):
-        """
-        This is the environment implementation of
-        :attr:`BaseAnchor.x`. This must return an
-        :ref:`type-int-float`.
+    def _get_x(self) -> IntFloatType:
+        """Get the native anchor's x-coordinate.
 
-        Subclasses must override this method.
+        This is the environment implementation of the :attr:`BaseAnchor.x` property
+        getter.
+
+        :return: An :class:`int` or a :class:`float` representing the
+            x-coordinate of the anchor. The value will be normalized
+            with :func:`normalizers.normalizeX`.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
-    def _set_x(self, value):
-        """
-        This is the environment implementation of
-        :attr:`BaseAnchor.x`. **value** will be
-        an :ref:`type-int-float`.
+    def _set_x(self, value: IntFloatType) -> None:
+        """Set the native anchor's x-coordinate.
 
-        Subclasses must override this method.
+        This is the environment implementation of the :attr:`BaseAnchor.x` property
+        setter.
+
+        :param value: The x-coordinate to set as an :class:`int` or a :class:`float`.
+            The value will have been normalized with :func:`normalizers.normalizeX`.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
     # y
 
-    y = dynamicProperty(
+    y: dynamicProperty = dynamicProperty(
         "base_y",
-        """
-        The y coordinate of the anchor.
-        It must be an :ref:`type-int-float`. ::
+        """Get or set the anchor's y-coordinate.
+
+        The value must be an :class:`int` or a :class:`float`.
+
+        :return: An :class:`int` or a :class:`float` representing the
+            y-coordinate of the anchor.
+
+        Example::
 
             >>> anchor.y
             100
             >>> anchor.y = 101
-        """
+
+        """,
     )
 
-    def _get_base_y(self):
+    def _get_base_y(self) -> IntFloatType:
         value = self._get_y()
         value = normalizers.normalizeY(value)
         return value
 
-    def _set_base_y(self, value):
+    def _set_base_y(self, value: IntFloatType) -> None:
         value = normalizers.normalizeY(value)
         self._set_y(value)
 
-    def _get_y(self):
-        """
-        This is the environment implementation of
-        :attr:`BaseAnchor.y`. This must return an
-        :ref:`type-int-float`.
+    def _get_y(self) -> IntFloatType:
+        """Get the native anchor's y-coordinate.
 
-        Subclasses must override this method.
+        This is the environment implementation of the :attr:`BaseAnchor.y` property
+        getter.
+
+        :return: An :class:`int` or a :class:`float` representing the
+            x-coordinate of the anchor. The value will be normalized
+            with :func:`normalizers.normalizeY`.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
-    def _set_y(self, value):
-        """
-        This is the environment implementation of
-        :attr:`BaseAnchor.y`. **value** will be
-        an :ref:`type-int-float`.
+    def _set_y(self, value: IntFloatType) -> None:
+        """Set the native anchor's y-coordinate.
 
-        Subclasses must override this method.
+        This is the environment implementation of the :attr:`BaseAnchor.y` property
+        setter.
+
+        :param value: The y-coordinate to set as an :class:`int` or a :class:`float`.
+            The value will have been normalized with :func:`normalizers.normalizeY`.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
@@ -185,29 +290,42 @@ class BaseAnchor(
 
     # index
 
-    index = dynamicProperty(
+    index: dynamicProperty = dynamicProperty(
         "base_index",
-        """
-        The index of the anchor within the ordered
-        list of the parent glyph's anchors. This
-        attribute is read only. ::
+        """Get the anchor's index.
 
-            >>> anchor.index
+        This property is read-only.
+
+        :return: An :class:`int` representing the index of the anchor within
+            the ordered list of the parent glyph's anchors.
+
+        Example::
+
+            >>> guideline.index
             0
-        """
+
+        """,
     )
 
-    def _get_base_index(self):
+    def _get_base_index(self) -> int | None:
         value = self._get_index()
         value = normalizers.normalizeIndex(value)
         return value
 
-    def _get_index(self):
-        """
-        Get the anchor's index.
-        This must return an ``int``.
+    def _get_index(self) -> int | None:
+        """Get the native anchor's index.
 
-        Subclasses may override this method.
+        This is the environment implementation of the :attr:`BaseAnchor.index`
+        property getter.
+
+        :return: An :class:`int` representing the index of the anchor within
+            the ordered list of the parent glyph's anchors. The value will be
+            normalized with :func:`normalizers.normalizeIndex`.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         glyph = self.glyph
         if glyph is None:
@@ -216,98 +334,137 @@ class BaseAnchor(
 
     # name
 
-    name = dynamicProperty(
+    name: dynamicProperty = dynamicProperty(
         "base_name",
-        """
-        The name of the anchor. This will be a
-        :ref:`type-string` or ``None``.
+        """Get or set the anchor's name.
+
+        The value must be a :class:`str` or :obj:`None`.
+
+        :return: A :class:`str` representing the name of the anchor, or :obj:`None`.
 
             >>> anchor.name
             'my anchor'
             >>> anchor.name = None
-        """
+
+        """,
     )
 
-    def _get_base_name(self):
+    def _get_base_name(self) -> str | None:
         value = self._get_name()
-        value = normalizers.normalizeAnchorName(value)
+        if value is not None:
+            value = normalizers.normalizeAnchorName(value)
         return value
 
-    def _set_base_name(self, value):
-        value = normalizers.normalizeAnchorName(value)
+    def _set_base_name(self, value: str | None) -> None:
+        if value is not None:
+            value = normalizers.normalizeAnchorName(value)
         self._set_name(value)
 
-    def _get_name(self):
-        """
-        This is the environment implementation of
-        :attr:`BaseAnchor.name`. This must return a
-        :ref:`type-string` or ``None``. The returned
-        value will be normalized with
-        :func:`normalizers.normalizeAnchorName`.
+    def _get_name(self) -> str | None:
+        """Get the native anchor's name.
 
-        Subclasses must override this method.
+        This is the environment implementation of the :attr:`BaseAnchor.name`
+        property getter.
+
+        :return: A :class:`str` representing the name of the anchor,
+            or :obj:`None`. The value will have been normalized
+            with :func:`normalizers.normalizeAnchorName`.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
-    def _set_name(self, value):
-        """
-        This is the environment implementation of
-        :attr:`BaseAnchor.name`. **value** will be
-        a :ref:`type-string` or ``None``. It will
-        have been normalized with
-        :func:`normalizers.normalizeAnchorName`.
+    def _set_name(self, value: str | None) -> None:
+        """Set the native anchor's name.
 
-        Subclasses must override this method.
+        This is the environment implementation of the :attr:`BaseAnchor.name`
+        property setter.
+
+        :param value: The name to set as a :class:`str` or :obj:`None`. The
+            value will have been normalized
+            with :func:`normalizers.normalizeAnchorName`.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
     # color
 
-    color = dynamicProperty(
+    color: dynamicProperty = dynamicProperty(
         "base_color",
-        """
-        The anchor's color. This will be a
-        :ref:`type-color` or ``None``. ::
+        """Get or set the anchor's color.
+
+        The value must be a :ref:`type-color` or :obj:`None`.
+
+        :return: A :ref:`type-color` representing the color of the anchor,
+            or :obj:`None`.
+
+        Example::
 
             >>> anchor.color
             None
             >>> anchor.color = (1, 0, 0, 0.5)
-        """
+
+        """,
     )
 
-    def _get_base_color(self):
+    def _get_base_color(self) -> Color | None:
         value = self._get_color()
         if value is not None:
-            value = normalizers.normalizeColor(value)
             value = Color(value)
         return value
 
-    def _set_base_color(self, value):
+    def _set_base_color(self, value: RGBALike) -> None:
         if value is not None:
             value = normalizers.normalizeColor(value)
         self._set_color(value)
 
-    def _get_color(self):
-        """
-        This is the environment implementation of
-        :attr:`BaseAnchor.color`. This must return
-        a :ref:`type-color` or ``None``. The
-        returned value will be normalized with
-        :func:`normalizers.normalizeColor`.
+    def _get_color(self) -> RGBA | None:
+        """Get the native anchor's color.
 
-        Subclasses must override this method.
+        This is the environment implementation of the :attr:`BaseAnchor.color`
+        property getter.
+
+        :return: A :ref:`type-color` representing the color of the anchor,
+            or :obj:`None`. The value will be normalized
+         with :func:`normalizers.normalizeColor`.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
-    def _set_color(self, value):
-        """
-        This is the environment implementation of
-        :attr:`BaseAnchor.color`. **value** will
-        be a :ref:`type-color` or ``None``.
-        It will have been normalized with
-        :func:`normalizers.normalizeColor`.
+    def _set_color(self, value: RGBALike | None) -> None:
+        """Set the native anchor's color.
 
-        Subclasses must override this method.
+        Description
+
+        This is the environment implementation of the :attr:`BaseAnchor.color`
+        property setter.
+
+        :param value: The :ref:`type-color` to set for the anchor or :obj:`None`.
+            The value will have been normalized with :func:`normalizers.normalizeColor`.
+        :raises NotImplementedError: If the method has not been overridden by a
+            subclass.
+
+        .. important::
+
+            Subclasses must override this method.
+
         """
         self.raiseNotImplementedError()
 
@@ -315,16 +472,19 @@ class BaseAnchor(
     # Transformation
     # --------------
 
-    def _transformBy(self, matrix, **kwargs):
-        """
-        This is the environment implementation of
-        :meth:`BaseAnchor.transformBy`.
+    def _transformBy(self, matrix: AffineTransformationLike, **kwargs: Any) -> None:
+        r"""Transform the native anchor according to the given matrix.
 
-        **matrix** will be a :ref:`type-transformation`.
-        that has been normalized with
-        :func:`normalizers.normalizeTransformationMatrix`.
+        This is the environment implementation of :meth:`BaseAnchor.transformBy`.
 
-        Subclasses may override this method.
+        :param matrix: The :ref:`type-transformation` to apply. The value will
+             be normalized with :func:`normalizers.normalizeTransformationMatrix`.
+        :param \**kwargs: Additional keyword arguments.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         t = transform.Transform(*matrix)
         x, y = t.transformPoint((self.x, self.y))
@@ -337,9 +497,19 @@ class BaseAnchor(
 
     compatibilityReporterClass = AnchorCompatibilityReporter
 
-    def isCompatible(self, other):
-        """
-        Evaluate interpolation compatibility with **other**. ::
+    def isCompatible(
+        self, other: BaseAnchor, cls=None
+    ) -> tuple[bool, AnchorCompatibilityReporter]:
+        """Evaluate interpolation compatibility with another anchor.
+
+        :param other: The other :class:`BaseAnchor` instance to check
+            compatibility with.
+        :return: A :class:`tuple` where the first element is a :class:`bool`
+            indicating compatibility, and the second element is
+            a :class:`fontParts.base.compatibility.AnchorCompatibilityReporter`
+            instance.
+
+        Example::
 
             >>> compatible, report = self.isCompatible(otherAnchor)
             >>> compatible
@@ -348,18 +518,24 @@ class BaseAnchor(
             [Warning] Anchor: "left" + "right"
             [Warning] Anchor: "left" has name left | "right" has name right
 
-        This will return a ``bool`` indicating if the anchor is
-        compatible for interpolation with **other** and a
-        :ref:`type-string` of compatibility notes.
         """
-        return super(BaseAnchor, self).isCompatible(other, BaseAnchor)
+        return super().isCompatible(other, BaseAnchor)
 
-    def _isCompatible(self, other, reporter):
-        """
-        This is the environment implementation of
-        :meth:`BaseAnchor.isCompatible`.
+    def _isCompatible(
+        self, other: BaseAnchor, reporter: AnchorCompatibilityReporter
+    ) -> None:
+        """Evaluate interpolation compatibility with another native anchor.
 
-        Subclasses may override this method.
+        This is the environment implementation of :meth:`BaseAnchor.isCompatible`.
+
+        :param other: The other :class:`BaseAnchor` instance to check
+            compatibility with.
+        :param reporter: An object used to report compatibility issues.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         anchor1 = self
         anchor2 = other
@@ -372,25 +548,30 @@ class BaseAnchor(
     # Normalization
     # -------------
 
-    def round(self):
-        """
-        Round the anchor's coordinate.
+    def round(self) -> None:
+        """Round the anchor's coordinate.
 
-            >>> anchor.round()
+        This applies to:
 
-        This applies to the following:
+        - :attr:`x`
+        - :attr:`y
 
-        * x
-        * y
+        Example::`
+
+            >>> guideline.round()
+
         """
         self._round()
 
-    def _round(self):
-        """
-        This is the environment implementation of
-        :meth:`BaseAnchor.round`.
+    def _round(self) -> None:
+        """Round the native anchor's coordinate.
 
-        Subclasses may override this method.
+        This is the environment implementation of :meth:`BaseGuideline.round`.
+
+        .. note::
+
+            Subclasses may override this method.
+
         """
         self.x = normalizers.normalizeVisualRounding(self.x)
         self.y = normalizers.normalizeVisualRounding(self.y)

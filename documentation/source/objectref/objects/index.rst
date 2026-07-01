@@ -4,7 +4,7 @@
 Objects
 ################
 
-FontParts scripts are built on with objects that represent fonts, glyphs, contours and so on. The objects are obtained through :ref:`fontparts-world`.
+FontParts scripts are built on with objects that represent fonts, glyphs, contours and so on. The objects are obtained through :ref:`fontParts.world`.
 
 .. toctree::
    :maxdepth: 1
@@ -32,152 +32,219 @@ FontParts scripts are built on with objects that represent fonts, glyphs, contou
 
 .. raw:: html
 
-    <svg id="fp-object-tree" xmlns="http://www.w3.org/2000/svg" viewBox="-12 -12 797 589">
-    <style>
-        g a:focus {
-            outline: none;
-        }
-        text, tspan {
-            pointer-events: none;
-            font-family: 'Source Sans Pro', Lucida Grande, Geneva, Arial, Verdana, sans-serif;
-        }
-        .circle {
-            stroke-width: 0;
-        }
-        .circle:hover {
-            transition: stroke-width .1s ease-in-out;
-            stroke-width: 20;
-        }
-    </style>
-    <g fill="none" fill-rule="evenodd" transform="translate(1 1)">
-        <path fill="#FFF" fill-rule="nonzero" stroke="#D5D5D5" stroke-dasharray="1" stroke-linecap="round" stroke-width="3.04" d="M217.76,105.4912 L103.8512,230.04" transform="matrix(1 0 0 -1 0 335.531)"/>
-        <path fill="#FFF" fill-rule="nonzero" stroke="#D5D5D5" stroke-dasharray="1" stroke-linecap="round" stroke-width="3.04" d="M217.76,54.48 L231.44,230.04" transform="matrix(1 0 0 -1 0 284.52)"/>
-        <path fill="#FFF" fill-rule="nonzero" stroke="#D5D5D5" stroke-dasharray="1" stroke-linecap="round" stroke-width="3.04" d="M217.76,233.84 L50.56,230.04" transform="matrix(1 0 0 -1 0 463.88)"/>
-        <path fill="#FFF" fill-rule="nonzero" stroke="#D5D5D5" stroke-dasharray="1" stroke-linecap="round" stroke-width="3.04" d="M217.76,362.1888 L101.5712,230.04" transform="matrix(1 0 0 -1 0 592.229)"/>
-        <path fill="#FFF" fill-rule="nonzero" stroke="#D5D5D5" stroke-dasharray="1" stroke-linecap="round" stroke-width="3.04" d="M218,231 L392.4124,231" transform="matrix(1 0 0 -1 0 462)"/>
-        <path fill="#FFF" fill-rule="nonzero" stroke="#D5D5D5" stroke-dasharray="1" stroke-linecap="round" stroke-width="3.04" d="M392,231 L553.4924,231" transform="matrix(1 0 0 -1 0 462)"/>
-        <path fill="#FFF" fill-rule="nonzero" stroke="#D5D5D5" stroke-dasharray="1" stroke-linecap="round" stroke-width="3.04" d="M553.6572,62.4096 L485.0216,230.4" transform="matrix(1 0 0 -1 0 292.81)"/>
-        <path fill="#FFF" fill-rule="nonzero" stroke="#D5D5D5" stroke-dasharray="1" stroke-linecap="round" stroke-width="3.04" d="M553.6572,51.0096 L620.0128,230.4" transform="matrix(1 0 0 -1 0 281.41)"/>
-        <path fill="#FFF" fill-rule="nonzero" stroke="#D5D5D5" stroke-dasharray="1" stroke-linecap="round" stroke-width="3.04" d="M553.6572,160.2444 L720.1276,230.4" transform="matrix(1 0 0 -1 0 390.644)"/>
-        <path fill="#FFF" fill-rule="nonzero" stroke="#D5D5D5" stroke-dasharray="1" stroke-linecap="round" stroke-width="3.04" d="M553.6572,290.6756 L720.1276,230.4" transform="matrix(1 0 0 -1 0 521.076)"/>
-        <path fill="#FFF" fill-rule="nonzero" stroke="#D5D5D5" stroke-dasharray="1" stroke-linecap="round" stroke-width="3.04" d="M553.6572,390.7904 L634.4528,230.4" transform="matrix(1 0 0 -1 0 621.19)"/>
-        <path fill="#FFF" fill-rule="nonzero" stroke="#D5D5D5" stroke-dasharray="1" stroke-linecap="round" stroke-width="3.04" d="M553.6572,392.3104 L492.6216,230.4" transform="matrix(1 0 0 -1 0 622.71)"/>
-        <path fill="#FFF" fill-rule="nonzero" stroke="#D5D5D5" stroke-dasharray="1" stroke-linecap="round" stroke-width="3.04" d="M492.6216,394.1724 L350.8664,392.3104" transform="matrix(1 0 0 -1 0 786.483)"/>
-        <path fill="#FFF" fill-rule="nonzero" stroke="#D5D5D5" stroke-dasharray="1" stroke-linecap="round" stroke-width="3.04" d="M492.6216,489.7964 L410.612,392.3104" transform="matrix(1 0 0 -1 0 882.107)"/>
-        <path fill="#FFF" fill-rule="nonzero" stroke="#D5D5D5" stroke-dasharray="1" stroke-linecap="round" stroke-width="3.04" d="M492.6216,513.1124 L521.6232,392.3104" transform="matrix(1 0 0 -1 0 905.423)"/>
-        <g transform="translate(53 55)">
-        <a xlink:href="info.html" target="_parent">
-        <path class="circle" fill="#3EBB53" fill-rule="nonzero" stroke="#3EBB53" stroke-width=".76" d="M86.4177,14.8257 C106.1853,34.5933 106.1853,66.6425 86.4177,86.4177 C66.6501,106.1853 34.6009,106.1853 14.8257,86.4177 C-4.9419,66.6501 -4.9419,34.6009 14.8257,14.8257 C34.5933,-4.9419 66.6425,-4.9419 86.4177,14.8257 Z" transform="matrix(1 0 0 -1 0 101.243)"/>
-        <text fill="#FFF" font-size="18" transform="translate(35.431 38.554)">
-            <tspan x=".947" y="18">info</tspan>
-        </text>
-        </g>
-        <g transform="translate(335 179)">
-        <a xlink:href="layer.html" target="_parent">
-        <path class="circle" fill="#C4BF53" fill-rule="nonzero" stroke="#C4BF53" stroke-width=".76" d="M86.4177,14.8257 C106.1853,34.5933 106.1853,66.6425 86.4177,86.4177 C66.6501,106.1853 34.6009,106.1853 14.8257,86.4177 C-4.9419,66.6501 -4.9419,34.6009 14.8257,14.8257 C34.5933,-4.9419 66.6425,-4.9419 86.4177,14.8257 Z" transform="matrix(1 0 0 -1 0 101.243)"/>
-        <text fill="#FFF" font-size="18" transform="translate(30.947 38.141)">
-            <tspan x=".343" y="18">layer</tspan>
-        </text>
-        </g>
-        <g transform="translate(52 312)">
-        <a xlink:href="features.html" target="_parent">
-        <path class="circle" fill="#3EBBBB" fill-rule="nonzero" stroke="#3EBBBB" stroke-width=".76" d="M86.4177,14.8257 C106.1853,34.5933 106.1853,66.6425 86.4177,86.4177 C66.6501,106.1853 34.6009,106.1853 14.8257,86.4177 C-4.9419,66.6501 -4.9419,34.6009 14.8257,14.8257 C34.5933,-4.9419 66.6425,-4.9419 86.4177,14.8257 Z" transform="matrix(1 0 0 -1 0 101.243)"/>
-        <text fill="#FFF" font-size="18" transform="translate(18.911 38.249)">
-            <tspan x=".864" y="18">features</tspan>
-        </text>
-        </g>
-        <g transform="translate(300 344)">
-        <a xlink:href="point.html" target="_parent">
-        <path class="circle" fill="#DB68F7" fill-rule="nonzero" stroke="#DB68F7" stroke-width=".76" d="M86.4177,14.8257 C106.1853,34.5933 106.1853,66.6425 86.4177,86.4177 C66.6501,106.1853 34.6009,106.1853 14.8257,86.4177 C-4.9419,66.6501 -4.9419,34.6009 14.8257,14.8257 C34.5933,-4.9419 66.6425,-4.9419 86.4177,14.8257 Z" transform="matrix(1 0 0 -1 0 101.243)"/>
-        <text fill="#FFF" font-size="18" transform="translate(30.122 38.227)">
-            <tspan x=".948" y="18">point</tspan>
-        </text>
-        </g>
-        <g transform="translate(670 240)">
-        <a xlink:href="image.html" target="_parent">
-        <path class="circle" fill="#F7689C" fill-rule="nonzero" stroke="#F7689C" stroke-width=".76" d="M86.4177,14.8257 C106.1853,34.5933 106.1853,66.6425 86.4177,86.4177 C66.6501,106.1853 34.6009,106.1853 14.8257,86.4177 C-4.9419,66.6501 -4.9419,34.6009 14.8257,14.8257 C34.5933,-4.9419 66.6425,-4.9419 86.4177,14.8257 Z" transform="matrix(1 0 0 -1 0 101.243)"/>
-        <text fill="#FFF" font-size="18" transform="translate(26.104 38.74)">
-            <tspan x=".843" y="18">image</tspan>
-        </text>
-        </g>
-        <g transform="translate(670 110)">
-        <a xlink:href="component.html" target="_parent">
-        <path class="circle" fill="#F76878" fill-rule="nonzero" stroke="#F76878" stroke-width=".76" d="M86.4177,14.8257 C106.1853,34.5933 106.1853,66.6425 86.4177,86.4177 C66.6501,106.1853 34.6009,106.1853 14.8257,86.4177 C-4.9419,66.6501 -4.9419,34.6009 14.8257,14.8257 C34.5933,-4.9419 66.6425,-4.9419 86.4177,14.8257 Z" transform="matrix(1 0 0 -1 0 101.243)"/>
-        <text fill="#FFF" font-size="18" transform="translate(6.824 38.303)">
-            <tspan x=".021" y="18">component</tspan>
-        </text>
-        </g>
-        <g transform="translate(181 4)">
-        <a xlink:href="lib.html" target="_parent">
-        <path class="circle" fill="#5DBB3E" fill-rule="nonzero" stroke="#5DBB3E" stroke-width=".76" d="M86.4177,14.8257 C106.1853,34.5933 106.1853,66.6425 86.4177,86.4177 C66.6501,106.1853 34.6009,106.1853 14.8257,86.4177 C-4.9419,66.6501 -4.9419,34.6009 14.8257,14.8257 C34.5933,-4.9419 66.6425,-4.9419 86.4177,14.8257 Z" transform="matrix(1 0 0 -1 0 101.243)"/>
-        <text fill="#FFF" font-size="18" transform="translate(40.099 38.54)">
-            <tspan x=".996" y="18">lib</tspan>
-        </text>
-        </g>
-        <g transform="translate(442 342)">
-        <a xlink:href="contour.html" target="_parent">
-        <path class="circle" fill="#F768E4" fill-rule="nonzero" stroke="#F768E4" stroke-width=".76" d="M86.4177,14.8257 C106.1853,34.5933 106.1853,66.6425 86.4177,86.4177 C66.6501,106.1853 34.6009,106.1853 14.8257,86.4177 C-4.9419,66.6501 -4.9419,34.6009 14.8257,14.8257 C34.5933,-4.9419 66.6425,-4.9419 86.4177,14.8257 Z" transform="matrix(1 0 0 -1 0 101.243)"/>
-        <text fill="#FFF" font-size="18" transform="translate(20.238 38.37)">
-            <tspan x=".435" y="18">contour</tspan>
-        </text>
-        </g>
-        <g transform="translate(582 340)">
-        <a xlink:href="guideline.html" target="_parent">
-        <path class="circle" fill="#F768C0" fill-rule="nonzero" stroke="#F768C0" stroke-width=".76" d="M86.4177,14.8257 C106.1853,34.5933 106.1853,66.6425 86.4177,86.4177 C66.6501,106.1853 34.6009,106.1853 14.8257,86.4177 C-4.9419,66.6501 -4.9419,34.6009 14.8257,14.8257 C34.5933,-4.9419 66.6425,-4.9419 86.4177,14.8257 Z" transform="matrix(1 0 0 -1 0 101.243)"/>
-        <text fill="#FFF" font-size="18" transform="translate(15.275 38.85)">
-            <tspan x=".499" y="18">guideline</tspan>
-        </text>
-        </g>
-        <g transform="translate(0 183)">
-        <a xlink:href="kerning.html" target="_parent">
-        <path class="circle" fill="#3EBB87" fill-rule="nonzero" stroke="#3EBB87" stroke-width=".76" d="M86.4177,14.8257 C106.1853,34.5933 106.1853,66.6425 86.4177,86.4177 C66.6501,106.1853 34.6009,106.1853 14.8257,86.4177 C-4.9419,66.6501 -4.9419,34.6009 14.8257,14.8257 C34.5933,-4.9419 66.6425,-4.9419 86.4177,14.8257 Z" transform="matrix(1 0 0 -1 0 101.243)"/>
-        <text fill="#FFF" font-size="18" transform="translate(21.458 38.901)">
-            <tspan x=".524" y="18">kerning</tspan>
-        </text>
-        </g>
-        <g transform="translate(434 12)">
-        <a xlink:href="lib.html" target="_parent">
-        <path class="circle" fill="#F79F68" fill-rule="nonzero" stroke="#F79F68" stroke-width=".76" d="M86.4177,14.8257 C106.1853,34.5933 106.1853,66.6425 86.4177,86.4177 C66.6501,106.1853 34.6009,106.1853 14.8257,86.4177 C-4.9419,66.6501 -4.9419,34.6009 14.8257,14.8257 C34.5933,-4.9419 66.6425,-4.9419 86.4177,14.8257 Z" transform="matrix(1 0 0 -1 0 101.243)"/>
-        <text fill="#FFF" font-size="18" transform="translate(40.678 38.474)">
-            <tspan x=".996" y="18">lib</tspan>
-        </text>
-        </g>
-        <g transform="translate(130 142)">
-        <a xlink:href="font.html" target="_parent">
-        <path class="circle" fill="#91BB3E" fill-rule="nonzero" stroke="#91BB3E" stroke-width=".76" d="M150.1323,25.7583 C184.4767,60.1027 184.4767,115.7879 150.1323,150.1323 C115.7879,184.4767 60.1027,184.4767 25.7583,150.1323 C-8.5861,115.7879 -8.5861,60.1027 25.7583,25.7583 C60.1027,-8.5861 115.7879,-8.5861 150.1323,25.7583 Z" transform="matrix(1 0 0 -1 0 175.89)"/>
-        <text fill="#FFF" font-size="50" transform="translate(44.895 53.185)">
-            <tspan x=".275" y="49">font</tspan>
-        </text>
-        </g>
-        <g transform="translate(471 462)">
-        <a xlink:href="segment.html" target="_parent">
-        <path class="circle" fill="#7B68F7" fill-rule="nonzero" stroke="#7B68F7" stroke-width=".76" d="M86.4177,14.8257 C106.1853,34.5933 106.1853,66.6425 86.4177,86.4177 C66.6501,106.1853 34.6009,106.1853 14.8257,86.4177 C-4.9419,66.6501 -4.9419,34.6009 14.8257,14.8257 C34.5933,-4.9419 66.6425,-4.9419 86.4177,14.8257 Z" transform="matrix(1 0 0 -1 0 101.243)"/>
-        <text fill="#FFF" font-size="18" transform="translate(17.718 39.168)">
-            <tspan x=".429" y="18">segment</tspan>
-        </text>
-        </g>
-        <g transform="translate(569)">
-        <a xlink:href="anchor.html" target="_parent">
-        <path class="circle" fill="#F77B68" fill-rule="nonzero" stroke="#F77B68" stroke-width=".76" d="M86.4177,14.8257 C106.1853,34.5933 106.1853,66.6425 86.4177,86.4177 C66.6501,106.1853 34.6009,106.1853 14.8257,86.4177 C-4.9419,66.6501 -4.9419,34.6009 14.8257,14.8257 C34.5933,-4.9419 66.6425,-4.9419 86.4177,14.8257 Z" transform="matrix(1 0 0 -1 0 101.243)"/>
-        <text fill="#FFF" font-size="18" transform="translate(24.435 39.074)">
-            <tspan x=".468" y="18">anchor</tspan>
-        </text>
-        </g>
-        <g transform="translate(360 441)">
-        <a xlink:href="bpoint.html" target="_parent">
-        <path class="circle" fill="#AB68F7" fill-rule="nonzero" stroke="#AB68F7" stroke-width=".76" d="M86.4177,14.8257 C106.1853,34.5933 106.1853,66.6425 86.4177,86.4177 C66.6501,106.1853 34.6009,106.1853 14.8257,86.4177 C-4.9419,66.6501 -4.9419,34.6009 14.8257,14.8257 C34.5933,-4.9419 66.6425,-4.9419 86.4177,14.8257 Z" transform="matrix(1 0 0 -1 0 101.243)"/>
-        <text fill="#FFF" font-size="18" transform="translate(24.31 38.856)">
-            <tspan x=".98" y="18">bPoint</tspan>
-        </text>
-        </g>
-        <g transform="translate(466 142)">
-        <a xlink:href="glyph.html" target="_parent">
-        <path class="circle" fill="#F7C368" fill-rule="nonzero" stroke="#F7C368" stroke-width=".76" d="M150.1323,25.7583 C184.4767,60.1027 184.4767,115.7879 150.1323,150.1323 C115.7879,184.4767 60.1027,184.4767 25.7583,150.1323 C-8.5861,115.7879 -8.5861,60.1027 25.7583,25.7583 C60.1027,-8.5861 115.7879,-8.5861 150.1323,25.7583 Z" transform="matrix(1 0 0 -1 0 175.89)"/>
-        <text fill="#FFF" font-size="50" transform="translate(30.673 53.545)">
-            <tspan x=".875" y="49">glyph</tspan>
-        </text>
-        </g>
-    </g>
-    </svg>
+   <?xml version="1.0" encoding="UTF-8"?>
+   <svg width="100%" viewBox="0 0 860 630" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+
+   <defs>
+   <style>@import "https://static.typemytype.com/robofont/font.css";</style>
+   <style>
+      text {
+         font-family: 'Source Sans Pro', Lucida Grande, Geneva, Arial, Verdana, sans-serif;
+         fill: white;
+         pointer-events: none;
+      }
+      .connection {
+         stroke: rgb(204, 204, 204);
+         stroke-width: 5;
+      }
+      .object {
+         stroke-width: 0;
+      }
+      .object:hover {
+         transition: stroke-width .1s ease-in-out;
+         stroke-width: 20;
+      }
+   </style>
+   </defs>
+
+   <!-- lines -->
+   <path class='connection' d="M250,373 l-43.55,174.65" transform="matrix(1,0,0,-1,0,630)"/>
+   <path class='connection' d="M250,373 l105.8,145.62" transform="matrix(1,0,0,-1,0,630)"/>
+   <path class='connection' d="M250,373 l-161.78,78.91" transform="matrix(1,0,0,-1,0,630)"/>
+   <path class='connection' d="M250,373 l-164.44,-73.21" transform="matrix(1,0,0,-1,0,630)"/>
+   <path class='connection' d="M250,373 l-49.61,-173.03" transform="matrix(1,0,0,-1,0,630)"/>
+   <path class='connection' d="M250,373 l180,0" transform="matrix(1,0,0,-1,0,630)"/>
+   <path class='connection' d="M430,373 l180,0" transform="matrix(1,0,0,-1,0,630)"/>
+   <path class='connection' d="M610,373 l-103.24,147.45" transform="matrix(1,0,0,-1,0,630)"/>
+   <path class='connection' d="M610,373 l46.59,173.87" transform="matrix(1,0,0,-1,0,630)"/>
+   <path class='connection' d="M610,373 l163.14,76.07" transform="matrix(1,0,0,-1,0,630)"/>
+   <path class='connection' d="M610,373 l163.14,-76.07" transform="matrix(1,0,0,-1,0,630)"/>
+   <path class='connection' d="M610,373 l46.59,-173.87" transform="matrix(1,0,0,-1,0,630)"/>
+   <path class='connection' d="M610,373 l-103.24,-147.45" transform="matrix(1,0,0,-1,0,630)"/>
+   <path class='connection' d="M506.76,225.55 l-155,0.0" transform="matrix(1,0,0,-1,0,630)"/>
+   <path class='connection' d="M506.76,225.55 l-85.55,-129.25" transform="matrix(1,0,0,-1,0,630)"/>
+   <path class='connection' d="M506.76,225.55 l60.56,-142.68" transform="matrix(1,0,0,-1,0,630)"/>
+
+   <!-- font -->
+   <g>
+   <a xlink:href="font.html" target="_parent">
+      <path class='object' d="M310.1,312.9 c33.19,33.19,33.19,87.01,0,120.21 c-33.19,33.19,-87.01,33.19,-120.21,0.0 c-33.19,-33.19,-33.19,-87.01,-0.0,-120.21 c33.19,-33.19,87.01,-33.19,120.21,-0.0 Z M310.1,312.9" fill="rgb(145,187,62)" stroke="rgb(145,187,62)" transform="matrix(1,0,0,-1,0,630)"/>
+      <text text-anchor="start" transform="matrix(1,0,0,1,165,-288)">
+         <tspan font-size="32" x="51.1" y="551.2">font</tspan>
+      </text>
+   </a>
+   </g>
+
+   <!-- font lib -->
+   <g>
+   <a xlink:href="lib.html" target="_parent">
+      <path class='object' d="M398.23,476.2 c23.43,23.43,23.43,61.42,0,84.85 c-23.43,23.43,-61.42,23.43,-84.85,0 c-23.43,-23.43,-23.43,-61.42,0,-84.85 c23.43,-23.43,61.42,-23.43,84.85,0 Z M398.23,476.2" fill="rgb(97,187,62)" stroke="rgb(97,187,62)" transform="matrix(1,0,0,-1,0,630)"/>
+      <text text-anchor="start" transform="matrix(1,0,0,1,295.8013454126452,-458.62305898749037)">
+         <tspan font-size="18" x="26.74" y="574.2">font lib</tspan>
+      </text>
+   </a>
+   </g>
+
+   <!-- info -->
+   <g>
+   <a xlink:href="info.html" target="_parent">
+      <path class='object' d="M248.88,505.23 c23.43,23.43,23.43,61.42,0,84.85 c-23.43,23.43,-61.42,23.43,-84.85,0 c-23.43,-23.43,-23.43,-61.42,0,-84.85 c23.43,-23.43,61.42,-23.43,84.85,0 Z M248.88,505.23" fill="rgb(62,187,74)" stroke="rgb(62,187,74)" transform="matrix(1,0,0,-1,0,630)"/>
+      <text text-anchor="start" transform="matrix(1,0,0,1,146.4540587920598,-487.6532307296793)">
+         <tspan font-size="18" x="42.04" y="574.2">info</tspan>
+      </text>
+   </a>
+   </g>
+
+   <!-- groups -->
+   <g>
+   <a xlink:href="groups.html" target="_parent">
+      <path class='object' d="M130.64,409.48 c23.43,23.43,23.43,61.42,0,84.85 c-23.43,23.43,-61.42,23.43,-84.85,0 c-23.43,-23.43,-23.43,-61.42,-0.0,-84.85 c23.43,-23.43,61.42,-23.43,84.85,0 Z M130.64,409.48" fill="rgb(62,187,122)" stroke="rgb(62,187,122)" transform="matrix(1,0,0,-1,0,630)"/>
+      <text text-anchor="start" transform="matrix(1,0,0,1,28.217071666149934,-391.9068064220339)">
+         <tspan font-size="18" x="28.14" y="574.2">groups</tspan>
+      </text>
+   </a>
+   </g>
+
+   <!-- kerning -->
+   <g>
+   <a xlink:href="kerning.html" target="_parent">
+      <path class='object' d="M127.99,257.36 c23.43,23.43,23.43,61.42,0,84.85 c-23.43,23.43,-61.42,23.43,-84.85,0 c-23.43,-23.43,-23.43,-61.42,-0.0,-84.85 c23.43,-23.43,61.42,-23.43,84.85,0 Z M127.99,257.36" fill="rgb(62,187,170)" stroke="rgb(62,187,170)" transform="matrix(1,0,0,-1,0,630)"/>
+      <text text-anchor="start" transform="matrix(1,0,0,1,25.561817624331837,-239.7874042463559)">
+         <tspan font-size="18" x="24.88" y="574.2">kerning</tspan>
+      </text>
+   </a>
+   </g>
+
+   <!-- features -->
+   <g>
+   <a xlink:href="features.html" target="_parent">
+      <path class='object' d="M242.81,157.55 c23.43,23.43,23.43,61.42,0,84.85 c-23.43,23.43,-61.42,23.43,-84.85,0 c-23.43,-23.43,-23.43,-61.42,0,-84.85 c23.43,-23.43,61.42,-23.43,84.85,0 Z M242.81,157.55" fill="rgb(62,156,187)" stroke="rgb(62,156,187)" transform="matrix(1,0,0,-1,0,630)"/>
+      <text text-anchor="start" transform="matrix(1,0,0,1,140.3852759529402,-139.97289473110254)">
+         <tspan font-size="18" x="21.04" y="574.2">features</tspan>
+      </text>
+   </a>
+   </g>
+
+   <!-- layer -->
+   <g>
+   <a xlink:href="layer.html" target="_parent">
+      <path class='object' d="M472.43,330.57 c23.43,23.43,23.43,61.42,0,84.85 c-23.43,23.43,-61.42,23.43,-84.85,0 c-23.43,-23.43,-23.43,-61.42,0,-84.85 c23.43,-23.43,61.42,-23.43,84.85,0 Z M472.43,330.57" fill="rgb(196,191,83)" stroke="rgb(196,191,83)" transform="matrix(1,0,0,-1,0,630)"/>
+      <text text-anchor="start" transform="matrix(1,0,0,1,370.0,-313.0)">
+         <tspan font-size="18" x="36.74" y="574.2">layer</tspan>
+      </text>
+   </a>
+   </g>
+
+   <!-- glyph -->
+   <g>
+   <a xlink:href="glyph.html" target="_parent">
+      <path class='object' d="M670.1,312.9 c33.19,33.19,33.19,87.01,0,120.21 c-33.19,33.19,-87.01,33.19,-120.21,0.0 c-33.19,-33.19,-33.19,-87.01,0,-120.21 c33.19,-33.19,87.01,-33.19,120.21,-0.0 Z M670.1,312.9" fill="rgb(247,195,104)" stroke="rgb(247,195,104)" transform="matrix(1,0,0,-1,0,630)"/>
+      <text text-anchor="start" transform="matrix(1,0,0,1,525.0,-288.0)">
+         <tspan font-size="32" x="41.64" y="551.2">glyph</tspan>
+      </text>
+   </a>
+   </g>
+
+   <!-- glyph lib -->
+   <g>
+   <a xlink:href="lib.html" target="_parent">
+      <path class='object' d="M549.18,478.02 c23.43,23.43,23.43,61.42,0,84.85 c-23.43,23.43,-61.42,23.43,-84.85,0 c-23.43,-23.43,-23.43,-61.42,0,-84.85 c23.43,-23.43,61.42,-23.43,84.85,0 Z M549.18,478.02" fill="rgb(247,159,104)" stroke="rgb(247,159,104)" transform="matrix(1,0,0,-1,0,630)"/>
+      <text text-anchor="start" transform="matrix(1,0,0,1,446.7562414568117,-460.4473679720186)">
+         <tspan font-size="18" x="21.43" y="574.2">glyph lib</tspan>
+      </text>
+   </a>
+   </g>
+
+   <!-- anchor -->
+   <g>
+   <a xlink:href="anchor.html" target="_parent">
+      <path class='object' d="M699.01,504.44 c23.43,23.43,23.43,61.42,0,84.85 c-23.43,23.43,-61.42,23.43,-84.85,0 c-23.43,-23.43,-23.43,-61.42,0,-84.85 c23.43,-23.43,61.42,-23.43,84.85,0 Z M699.01,504.44" fill="rgb(247,123,104)" stroke="rgb(247,123,104)" transform="matrix(1,0,0,-1,0,630)"/>
+      <text text-anchor="start" transform="matrix(1,0,0,1,596.5874281184538,-486.86664873203244)">
+         <tspan font-size="18" x="27.5" y="574.2">anchor</tspan>
+      </text>
+   </a>
+   </g>
+
+   <!-- component -->
+   <g>
+   <a xlink:href="component.html" target="_parent">
+      <path class='object' d="M815.56,406.64 c23.43,23.43,23.43,61.42,0,84.85 c-23.43,23.43,-61.42,23.43,-84.85,0 c-23.43,-23.43,-23.43,-61.42,0,-84.85 c23.43,-23.43,61.42,-23.43,84.85,0 Z M815.56,406.64" fill="rgb(247,104,120)" stroke="rgb(247,104,120)" transform="matrix(1,0,0,-1,0,630)"/>
+      <text text-anchor="start" transform="matrix(1,0,0,1,713.135401666597,-389.07128711332587)">
+         <tspan font-size="18" x="8.61" y="574.2">component</tspan>
+      </text>
+   </a>
+   </g>
+
+   <!-- image -->
+   <g>
+   <a xlink:href="image.html" target="_parent">
+      <path class='object' d="M815.56,254.5 c23.43,23.43,23.43,61.42,0,84.85 c-23.43,23.43,-61.42,23.43,-84.85,0 c-23.43,-23.43,-23.43,-61.42,0,-84.85 c23.43,-23.43,61.42,-23.43,84.85,0 Z M815.56,254.5" fill="rgb(247,104,156)" stroke="rgb(247,104,156)" transform="matrix(1,0,0,-1,0,630)"/>
+      <text text-anchor="start" transform="matrix(1,0,0,1,713.135401666597,-236.92871288667413)">
+         <tspan font-size="18" x="32.18" y="574.2">image</tspan>
+      </text>
+   </a>
+   </g>
+
+   <!-- guideline -->
+   <g>
+   <a xlink:href="guideline.html" target="_parent">
+      <path class='object' d="M699.01,156.71 c23.43,23.43,23.43,61.42,0,84.85 c-23.43,23.43,-61.42,23.43,-84.85,0 c-23.43,-23.43,-23.43,-61.42,0,-84.85 c23.43,-23.43,61.42,-23.43,84.85,0 Z M699.01,156.71" fill="rgb(247,104,192)" stroke="rgb(247,104,192)" transform="matrix(1,0,0,-1,0,630)"/>
+      <text text-anchor="start" transform="matrix(1,0,0,1,596.5874281184538,-139.13335126796767)">
+         <tspan font-size="18" x="18.02" y="574.2">guideline</tspan>
+      </text>
+   </a>
+   </g>
+
+   <!-- contour -->
+   <g>
+   <a xlink:href="contour.html" target="_parent">
+      <path class='object' d="M549.18,183.13 c23.43,23.43,23.43,61.42,0,84.85 c-23.43,23.43,-61.42,23.43,-84.85,0.0 c-23.43,-23.43,-23.43,-61.42,0,-84.85 c23.43,-23.43,61.42,-23.43,84.85,0 Z M549.18,183.13" fill="rgb(247,104,228)" stroke="rgb(247,104,228)" transform="matrix(1,0,0,-1,0,630)"/>
+      <text text-anchor="start" transform="matrix(1,0,0,1,446.7562414568117,-165.55263202798153)">
+         <tspan font-size="18" x="23.42" y="574.2">contour</tspan>
+      </text>
+   </a>
+   </g>
+
+   <!-- point -->
+   <g>
+   <a xlink:href="point.html" target="_parent">
+      <path class='object' d="M394.18,183.13 c23.43,23.43,23.43,61.42,0,84.85 c-23.43,23.43,-61.42,23.43,-84.85,0 c-23.43,-23.43,-23.43,-61.42,0,-84.85 c23.43,-23.43,61.42,-23.43,84.85,0 Z M394.18,183.13" fill="rgb(219,104,247)" stroke="rgb(219,104,247)" transform="matrix(1,0,0,-1,0,630)"/>
+      <text text-anchor="start" transform="matrix(1,0,0,1,291.7562414568117,-165.55263202798153)">
+         <tspan font-size="18" x="35.84" y="574.2">point</tspan>
+      </text>
+   </a>
+   </g>
+
+   <!-- bPoint -->
+   <g>
+   <a xlink:href="bpoint.html" target="_parent">
+      <path class='object' d="M463.63,53.87 c23.43,23.43,23.43,61.42,0,84.85 c-23.43,23.43,-61.42,23.43,-84.85,0 c-23.43,-23.43,-23.43,-61.42,0,-84.85 c23.43,-23.43,61.42,-23.43,84.85,-0.0 Z M463.63,53.87" fill="rgb(171,104,247)" stroke="rgb(171,104,247)" transform="matrix(1,0,0,-1,0,630)"/>
+      <text text-anchor="start" transform="matrix(1,0,0,1,361.2060087334427,-36.30032960757046)">
+         <tspan font-size="18" x="30.15" y="574.2">bPoint</tspan>
+      </text>
+   </a>
+   </g>
+
+   <!-- segment -->
+   <g>
+   <a xlink:href="segment.html" target="_parent">
+      <path class='object' d="M609.75,40.45 c23.43,23.43,23.43,61.42,0,84.85 c-23.43,23.43,-61.42,23.43,-84.85,0 c-23.43,-23.43,-23.43,-61.42,0,-84.85 c23.43,-23.43,61.42,-23.43,84.85,-0.0 Z M609.75,40.45" fill="rgb(123,104,247)" stroke="rgb(123,104,247)" transform="matrix(1,0,0,-1,0,630)"/>
+      <text text-anchor="start" transform="matrix(1,0,0,1,507.3195663726491,-22.874379742853193)">
+         <tspan font-size="18" x="21.21" y="574.2">segment</tspan>
+      </text>
+   </a>
+   </g>
+
+   </svg>
 
 

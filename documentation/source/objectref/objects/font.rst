@@ -20,7 +20,7 @@ Description
 
 The :class:`Font <BaseFont>` object is the central part that connects all glyphs with font information like names, key dimensions etc.
 
-:class:`Font <BaseFont>` objects behave like dictionaries: the glyph name is the key and the returned value is a :class:`Glyph <BaseGlyph>` object for that glyph. If the glyph does not exist, :class:`Font <BaseFont>` will raise an ``IndexError``.
+:class:`Font <BaseFont>` objects behave like dictionaries: the glyph name is the key and the returned value is a :class:`Glyph <BaseGlyph>` object for that glyph. If the glyph does not exist, :class:`Font <BaseFont>` will raise an :class:`IndexError`.
 
 :class:`Font <BaseFont>` has a couple of important sub-objects which are worth checking out. The font’s kerning is stored in a :class:`Kerning <BaseKerning>` object and can be reached as an attribute at ``Font.kerning``. Fontnames, key dimensions, flags etc are stored in a :class:`Info <BaseInfo>` object which is available through ``Font.info``. The ``Font.lib`` is a :class:`Lib <BaseLib>` object which behaves as a dictionary.
 
@@ -57,6 +57,7 @@ Sub-Objects
     BaseFont.kerning
     BaseFont.features
     BaseFont.lib
+    BaseFont.tempLib
 
 Layers
 ======
@@ -71,6 +72,7 @@ Layers
     BaseFont.newLayer
     BaseFont.removeLayer
     BaseFont.insertLayer
+    BaseFont.duplicateLayer
 
 Glyphs
 ======
@@ -87,6 +89,71 @@ Glyphs
     BaseFont.newGlyph
     BaseFont.insertGlyph
     BaseFont.removeGlyph
+
+Guidelines
+==========
+
+.. autosummary::
+    :nosignatures:
+
+    BaseFont.guidelines
+    BaseFont.appendGuideline
+    BaseFont.removeGuideline
+    BaseFont.clearGuidelines
+
+Interpolation
+=============
+
+.. autosummary::
+    :nosignatures:
+
+    BaseFont.isCompatible
+    BaseFont.interpolate
+
+Kerning
+=======
+
+.. autosummary::
+    :nosignatures:
+
+    BaseFont.getFlatKerning
+
+Mapping
+=======
+
+.. autosummary::
+    :nosignatures:
+
+    BaseFont.getCharacterMapping
+    BaseFont.getReverseComponentMapping
+
+Selection
+=========
+
+.. autosummary::
+    :nosignatures:
+
+    BaseFont.selectedLayers
+    BaseFont.selectedLayerNames
+    BaseFont.selectedGuidelines
+
+Normalization
+=============
+
+.. autosummary::
+    :nosignatures:
+
+    BaseFont.round
+    BaseFont.autoUnicodes
+
+Environment
+===========
+
+.. autosummary::
+    :nosignatures:
+
+    BaseFont.naked
+    BaseFont.changed
 
 *********
 Reference
@@ -115,6 +182,7 @@ Sub-Objects
 .. autoattribute:: BaseFont.kerning
 .. autoattribute:: BaseFont.features
 .. autoattribute:: BaseFont.lib
+.. autoattribute:: BaseFont.tempLib
 
 Layers
 ======
@@ -122,10 +190,13 @@ Layers
 .. autoattribute:: BaseFont.layers
 .. autoattribute:: BaseFont.layerOrder
 .. autoattribute:: BaseFont.defaultLayer
+.. autoattribute:: BaseFont.defaultLayerName
 .. automethod:: BaseFont.getLayer
 .. automethod:: BaseFont.newLayer
 .. automethod:: BaseFont.removeLayer
 .. automethod:: BaseFont.insertLayer
+.. automethod:: BaseFont.duplicateLayer
+.. automethod:: BaseFont.swapLayerNames
 
 Glyphs
 ======
@@ -161,6 +232,24 @@ Interpolation
 
 .. automethod:: BaseFont.isCompatible
 .. automethod:: BaseFont.interpolate
+
+Kerning
+=======
+
+.. automethod:: BaseFont.getFlatKerning
+
+Mapping
+=======
+
+.. automethod:: BaseFont.getCharacterMapping
+.. automethod:: BaseFont.getReverseComponentMapping
+
+Selection
+=========
+
+.. autoattribute:: BaseFont.selectedLayers
+.. autoattribute:: BaseFont.selectedLayerNames
+.. autoattribute:: BaseFont.selectedGuidelines
 
 Normalization
 =============

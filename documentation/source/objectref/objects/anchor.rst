@@ -13,9 +13,9 @@ Anchors are single points in a glyph which are not part of a contour. They can b
 
 ::
 
-	glyph = CurrentGlyph()
-	for anchor in glyph.anchors:
-		print anchor
+    glyph = CurrentGlyph()
+    for anchor in glyph.anchors:
+        print(anchor)
 
 ********
 Overview
