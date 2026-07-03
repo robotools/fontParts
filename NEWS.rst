@@ -1,3 +1,23 @@
+1.1.0 (released 2026-07-3)
+--------------------------
+Adding in Bounds object, `insertContour` method along with more tests, bug fixes, and cleanup.
+
+- .ufo extension is removed on `font.generate` (#925), thanks @knutnergaard!
+- Added `insertContour` to `BaseGlyph` (#916), thanks @knutnergaard!
+- Added Bounds object (#912), thanks @knutnergaard!
+- Added in _autoStartSegment code from Robofab (#494), thanks @VivaRado!
+- Added in robofab examples (#606), Thanks @driehuis!
+- Bug fixes in `BaseContour` (#919), thanks @knutnergaard!
+- Change: `get_area` returns `None` when pen.value is zero (#927), thanks @knutnergaard!
+- Change: repr displays segment index as int (#931), thanks @knutnergaard!
+- CHange: `Color` consistent with new `Bounds` object (#913), thanks @knutnergaard!
+- Cleanup of unused imports and typing (#915), thanks @knutnergaard!
+- Fixed IndexError on orphan segament access (#933), thanks @knutnergaard!
+- Fixup of `dynamicProperty` name arguments (#911), thanks @knutnergaard!
+- Improved test coverage for `BaseFont`, `Base Contour`, `BaseKerning`, and `BaseSegment` (#928, #923, #929, #934), thanks @knutnergaard!
+- Improvement to `BaseKerning`: docs and getting rid of a while loop (#930), thanks @knutnergaard!
+
+
 1.0.1 (released 2026-06-2)
 --------------------------
 Tweaks to setup and documentation.
