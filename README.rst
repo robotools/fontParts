@@ -22,6 +22,9 @@ Thank you! Please see the `CONTRIBUTING.rst <https://github.com/robotools/fontPa
 Also, feedback is very much welcome, please open an issue when you run
 into something that you wish fontParts did/didn't do.
 
+We ask that you work against the dev branch, the main branch is for
+releases only as of July 2026.
+
 
 Installation
 ~~~~~~~~~~~~
