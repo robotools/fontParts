@@ -1,6 +1,12 @@
 name: Build and Publish Python Package
 
-on: push
+on:
+  push:
+    branches:
+      - 'main'
+      - 'dev'
+    tags:
+      - '[0-9].*'
 
 jobs:
 
@@ -40,7 +46,7 @@ jobs:
     runs-on: ubuntu-latest
 
     environment:
-      name: pypi
+      name: publish-to-pypi
       url: https://pypi.org/p/fontParts
 
     permissions:
@@ -57,6 +63,7 @@ jobs:
 
   publish-to-testpypi:
     name: Publish to TestPyPI
+    if: startsWith(github.ref, 'refs/heads/dev')
     needs:
     - build
     runs-on: ubuntu-latest
