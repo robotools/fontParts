@@ -93,6 +93,11 @@ show_missing = true
 [tool.setuptools_scm]
 write_to = 'Lib/fontParts/_version.py'
 write_to_template = '__version__ = "{version}"'
+local_scheme = "no-local-version-strict"
+
+[tool.setuptools_scm.tag]
+prefix = ""
+strict = true
 
 [tool.ruff]
 target-version = "py310"
