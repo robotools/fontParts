@@ -57,7 +57,7 @@ include-package-data = true
 where = ["Lib"]
 
 [tool.setuptools_scm]
-version_scheme: "no-local-version-strict"
+version_scheme = "no-local-version-strict"
 
 [tool.setuptools_scm.tag]
 prefix = ""
