@@ -54,7 +54,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
     """
 
     def __init__(
-        self, pathOrObject: str | BaseFont | None = None, showInterface: bool = True
+        self, pathOrObject: str | os.PathLike | BaseFont | None = None, showInterface: bool = True
     ) -> None:
         super().__init__(pathOrObject=pathOrObject, showInterface=showInterface)
 
@@ -221,7 +221,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
 
     def save(
         self,
-        path: str | None = None,
+        path: str | os.PathLike | None = None,
         showProgress: bool = False,
         formatVersion: int | None = None,
         fileStructure: str | None = None,
@@ -285,7 +285,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
 
     def _save(
         self,
-        path: str | None,
+        path: str | os.PathLike | None,
         showProgress: bool,
         formatVersion: int | None,
         fileStructure: str | None,
