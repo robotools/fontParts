@@ -5,6 +5,7 @@ from collections import Counter
 from fontTools.misc.fixedTools import otRound
 from pathlib import Path
 import datetime
+import os
 
 from fontParts.base.annotations import (
     InterpolationFactorLike,
@@ -1164,7 +1165,7 @@ def normalizeGlyphNote(value: str) -> str:
 # File Path
 
 
-def normalizeFilePath(value: str | Path) -> str:
+def normalizeFilePath(value: str | os.PathLike) -> str:
     """Normalize a file path.
 
     :param value: The file path to normalize as a :class:`str` or :class:`pathlib.Path`.
