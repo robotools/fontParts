@@ -463,7 +463,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
                 "The file cannot be generated because an output path was not defined."
             )
         elif path is None:
-            path = os.path.splitext(self.path)[0]
+            path = os.path.splitext(os.fsdecode(self.path))[0]
             path += ext
         elif os.path.isdir(path):
             if self.path is None:
