@@ -55,7 +55,7 @@ class RFont(RBaseObject, BaseFont):
 
     def _save(
         self,
-        path: str | None = None,
+        path: str | os.PathLike | None = None,
         showProgress: bool = False,
         formatVersion: int | None = None,
         fileStructure: str | None = None,

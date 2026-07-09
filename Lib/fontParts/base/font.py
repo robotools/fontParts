@@ -54,7 +54,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
     """
 
     def __init__(
-        self, pathOrObject: str | BaseFont | None = None, showInterface: bool = True
+        self, pathOrObject: str | os.PathLike | BaseFont | None = None, showInterface: bool = True
     ) -> None:
         super().__init__(pathOrObject=pathOrObject, showInterface=showInterface)
 
@@ -221,7 +221,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
 
     def save(
         self,
-        path: str | None = None,
+        path: str | os.PathLike | None = None,
         showProgress: bool = False,
         formatVersion: int | None = None,
         fileStructure: str | None = None,
@@ -285,7 +285,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
 
     def _save(
         self,
-        path: str | None,
+        path: str | os.PathLike | None,
         showProgress: bool,
         formatVersion: int | None,
         fileStructure: str | None,
@@ -405,7 +405,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         return formatToExtension.get(format, fallbackFormat)
 
     def generate(
-        self, format: str, path: str | None = None, **environmentOptions: Any
+        self, format: str, path: str | os.PathLike | None = None, **environmentOptions: Any
     ) -> None:
         r"""Generate the font in another format.
 
@@ -463,7 +463,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
                 "The file cannot be generated because an output path was not defined."
             )
         elif path is None:
-            path = os.path.splitext(self.path)[0]
+            path = os.path.splitext(os.fsdecode(self.path))[0]
             path += ext
         elif os.path.isdir(path):
             if self.path is None:
@@ -501,7 +501,7 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         return False
 
     def _generate(
-        self, format: str, path: str | None, environmentOptions: dict, **kwargs: object
+        self, format: str, path: str | os.PathLike | None, environmentOptions: dict, **kwargs: object
     ) -> None:
         """Generate the native font in another format.
 
