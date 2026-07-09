@@ -5,7 +5,7 @@
 from fontParts.world import OpenFont
 
 font = OpenFont("test.ufo")
-glyph = font['A']
+glyph = font["A"]
 contour = glyph[0]
 print(contour.points)
 print(countours.segments)

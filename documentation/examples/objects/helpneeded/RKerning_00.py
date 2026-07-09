@@ -12,6 +12,6 @@ print(f.kerning)
 # kerning for the V,A kern pair through a kerning class.
 
 # getting a value from the kerning dictionary
-print(f.kerning[('V', 'A')])
-print(f.kerning[('T', 'X')])
+print(f.kerning[("V", "A")])
+print(f.kerning[("T", "X")])
 print(list(f.kerning.keys()))

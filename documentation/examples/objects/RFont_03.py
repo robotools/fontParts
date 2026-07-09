@@ -5,6 +5,7 @@
 # are actually stored in RFont.info
 
 from fontParts.world import OpenFont
+
 f = OpenFont("test.ufo")
 print(f.info.unitsPerEm)
 

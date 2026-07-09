@@ -8,7 +8,7 @@ from fontParts.world import SelectFont, NewFont
 font1 = SelectFont("Select font 1")
 font2 = SelectFont("Select font 2")
 # these are the interpolation factors:
-values = [.3, .6]
+values = [0.3, 0.6]
 
 for value in values:
     # make a new font

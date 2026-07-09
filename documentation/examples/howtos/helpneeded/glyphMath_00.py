@@ -2,7 +2,7 @@
 # Glyphmath howto
 # Fun examples
 
-#FLM: Fun with GlyphMath
+# FLM: Fun with GlyphMath
 
 # this example is meant to run with the RoboFab Demo Font
 # as the Current Font. So, if you're doing this in FontLab
@@ -20,9 +20,9 @@ diff = wideLight - condensedLight
 
 destination = f.newGlyph("a#deltaexperiment")
 destination.clear()
-x = wideBold + (condensedLight-wideLight)*random()
+x = wideBold + (condensedLight - wideLight) * random()
 
-destination.appendGlyph( x)
+destination.appendGlyph(x)
 destination.width = x.width
 
 f.update()

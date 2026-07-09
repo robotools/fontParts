@@ -26,13 +26,13 @@ for thing in instances:
     dst.interpolate(value, font1, font2, doProgress=True)
     # this interpolates the kerning
     # comment this line out of you're just testing
-    #dst.kerning.interpolate(font1.kerning, font2.kerning, value)
+    # dst.kerning.interpolate(font1.kerning, font2.kerning, value)
     dst.info.familyName = "MyBigFamily"
     dst.info.styleName = name
     dst.info.autoNaming()
     dst.update()
     fileName = dst.info.familyName + "-" + dst.info.styleName + ".vfb"
     path = os.path.join(where, fileName)
-    print('saving at', path)
+    print("saving at", path)
     dst.save(path)
     dst.close()

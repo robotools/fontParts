@@ -5,6 +5,7 @@
 # stems will get their original thickness
 
 from fontParts.world import OpenFont
+
 f = OpenFont("test.ufo")
 
 # these are measurements you have to take

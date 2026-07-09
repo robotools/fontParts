@@ -3,6 +3,7 @@
 # on positions A and B.
 
 from fontParts.world import OpenFont
+
 f = OpenFont("test.ufo")
 
 # glyphmath
@@ -31,7 +32,7 @@ d = a - b
 f.insertGlyph(d, name="A.A_minus_B")
 
 # combination: interpolation!
-d = a + .5 * (b-a)
+d = a + 0.5 * (b - a)
 f.insertGlyph(d, name="A.A_interpolate_B")
 
 f.update()

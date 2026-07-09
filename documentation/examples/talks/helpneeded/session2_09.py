@@ -13,19 +13,21 @@ source = f[sourceGlyph]
 xMin, yMin, xMax, yMax = source.box
 
 # create a new glyph
-dest = f.newGlyph(sourceGlyph+".silly")
+dest = f.newGlyph(sourceGlyph + ".silly")
 dest.width = source.width
 
 # get a pen to draw in the new glyph
 myPen = dest.getPen()
 
+
 # a function which draws a rectangle at a specified place
 def drawRect(pen, x, y, size=50):
-    pen.moveTo((x-.5*size, y-.5*size))
-    pen.lineTo((x+.5*size, y-.5*size))
-    pen.lineTo((x+.5*size, y+.5*size))
-    pen.lineTo((x-.5*size, y+.5*size))
+    pen.moveTo((x - 0.5 * size, y - 0.5 * size))
+    pen.lineTo((x + 0.5 * size, y - 0.5 * size))
+    pen.lineTo((x + 0.5 * size, y + 0.5 * size))
+    pen.lineTo((x - 0.5 * size, y + 0.5 * size))
     pen.closePath()
+
 
 # the size of the raster unit
 resolution = 30
@@ -39,7 +41,7 @@ for y in yValues:
     for x in range(xMin, xMax, resolution):
         # check the source glyph is white or black at x,y
         if source.pointInside((x, y)):
-            drawRect(myPen, x, y, resolution-5)
+            drawRect(myPen, x, y, resolution - 5)
     # update for each line if you like the animation
     # otherwise move the update() out of the loop
     dest.update()

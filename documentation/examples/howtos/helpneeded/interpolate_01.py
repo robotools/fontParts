@@ -1,4 +1,5 @@
 from fontParts.world import OpenFont
+
 f = OpenFont("test.ufo")
 a = f["a"]
 # fontParts RGlyph.isCompatible doesn't take the boolean argument.

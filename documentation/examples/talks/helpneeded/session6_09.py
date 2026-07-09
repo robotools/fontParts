@@ -5,5 +5,5 @@ from fontParts.world import OpenFont
 f = OpenFont("test.ufo")
 print(f.naked())
 
-g =  f["A"]
+g = f["A"]
 print(g.naked())

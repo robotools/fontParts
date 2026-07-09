@@ -8,6 +8,6 @@ from fontParts.pens.digestPen import DigestPointPen
 f = OpenFont("test.ufo")
 
 myPen = DigestPointPen()
-f['period'].drawPoints(myPen)
+f["period"].drawPoints(myPen)
 
 print(myPen.getDigest())

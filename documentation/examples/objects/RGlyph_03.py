@@ -6,6 +6,7 @@
 # This assumes that there will only be
 # one component that needs to be remapped.
 
+
 def remapComponent(glyph, oldBaseGlyph, newBaseGlyph):
     foundComponent = None
     for component in glyph.components:
@@ -18,4 +19,3 @@ def remapComponent(glyph, oldBaseGlyph, newBaseGlyph):
     scale = foundComponent.scale
     glyph.removeComponent(component)
     glyph.appendComponent(newBaseGlyph, offset=offset, scale=scale)
-

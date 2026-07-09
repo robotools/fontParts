@@ -54,7 +54,9 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
     """
 
     def __init__(
-        self, pathOrObject: str | os.PathLike | BaseFont | None = None, showInterface: bool = True
+        self,
+        pathOrObject: str | os.PathLike | BaseFont | None = None,
+        showInterface: bool = True,
     ) -> None:
         super().__init__(pathOrObject=pathOrObject, showInterface=showInterface)
 
@@ -405,7 +407,10 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         return formatToExtension.get(format, fallbackFormat)
 
     def generate(
-        self, format: str, path: str | os.PathLike | None = None, **environmentOptions: Any
+        self,
+        format: str,
+        path: str | os.PathLike | None = None,
+        **environmentOptions: Any,
     ) -> None:
         r"""Generate the font in another format.
 
@@ -501,7 +506,11 @@ class BaseFont(_BaseGlyphVendor, InterpolationMixin, DeprecatedFont, RemovedFont
         return False
 
     def _generate(
-        self, format: str, path: str | os.PathLike | None, environmentOptions: dict, **kwargs: object
+        self,
+        format: str,
+        path: str | os.PathLike | None,
+        environmentOptions: dict,
+        **kwargs: object,
     ) -> None:
         """Generate the native font in another format.
 

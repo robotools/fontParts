@@ -9,4 +9,4 @@ f = OpenFont("test.ufo")
 print(list(f.kerning.keys()))
 
 # get the value for this pair
-print(f.kerning[('MMK_L_baseserif', 'n')])
+print(f.kerning[("MMK_L_baseserif", "n")])

@@ -26,13 +26,13 @@ for glyphName in commonNames:
     digest2 = pointPen.getDigest()
 
     if digest1 != digest2:
-        print('> alt >', glyphName)
-        glyph3 = font1.insertGlyph(glyph2, name=glyphName+'.alt')
+        print("> alt >", glyphName)
+        glyph3 = font1.insertGlyph(glyph2, name=glyphName + ".alt")
         glyph3.mark = 1
         glyph3.update()
 
 for glyphName in uncommonNames:
-    print('>', glyphName)
+    print(">", glyphName)
     glyph = font1.insertGlyph(font2[glyphName])
     glyph.mark = 60
     glyph.update()

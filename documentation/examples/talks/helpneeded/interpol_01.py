@@ -10,8 +10,8 @@ f = OpenFont("test.ufo")
 # syntax f[name].interpolate(...) on a non-existing f[name], which doesn't
 # work in fontParts. But neither does this attempt to make it work.
 for i in range(0, 10):
-    factor = i*.1
-    name = "result_%f"%factor
+    factor = i * 0.1
+    name = "result_%f" % factor
     print("interpolating", name)
     f[name] = RGlyph()
     f[name].interpolate(factor, f["A"], f["B"])

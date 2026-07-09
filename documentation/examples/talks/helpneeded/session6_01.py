@@ -15,11 +15,11 @@ for font in AllFonts():
     text.append(str(font.info.unitsPerEm))
     text.append(str(font.info.ascender))
     text.append(str(font.info.descender))
-    text.append('')
+    text.append("")
 
-text = '\n'.join(text)
-path = PutFile('Save file as:')
+text = "\n".join(text)
+path = PutFile("Save file as:")
 if path:
-    file = open(path, 'w')
+    file = open(path, "w")
     file.write(text)
     file.close()

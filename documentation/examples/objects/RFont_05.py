@@ -3,6 +3,7 @@
 # method examples, available in FontLab
 
 from fontParts.world import OpenFont
+
 f = OpenFont("test.ufo")
 
 # the keys() method returns a list of glyphnames:

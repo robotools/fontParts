@@ -3,13 +3,14 @@
 # attribute examples
 
 from fontParts.world import OpenFont, CurrentGlyph
+
 f = OpenFont("test.ufo")
 
 # create a glyph object by asking the font
 g = f["Adieresis"]
 
 # alternatively, create a glyph object for the current glyph
-#g = CurrentGlyph()
+# g = CurrentGlyph()
 
 # get the width
 print(g.width)

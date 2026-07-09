@@ -17,18 +17,19 @@ import string
 
 theList = [
     # caps
-    'AEacute',
-    'AEmacron',
-    'Aacute',
-    'Abreve',
+    "AEacute",
+    "AEmacron",
+    "Aacute",
+    "Abreve",
     # add all the accents you want in this list
 ]
 
 con = readGlyphConstructions()
 theList.sort()
 
+
 def accentify(f, preflight=False):
-    print('start accentification', f.info.fullName)
+    print("start accentification", f.info.fullName)
     slots = list(con.keys())
     slots.sort()
     for k in theList:
@@ -52,5 +53,6 @@ def accentify(f, preflight=False):
         f[k].update()
     f.update()
 
+
 accentify(f)
-print('done')
+print("done")

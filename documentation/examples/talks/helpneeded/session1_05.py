@@ -10,7 +10,7 @@ font.info.familyName = "MyFamily"
 print(font.info.familyName)
 font.info.styleName = "Roman"
 print(font.info.styleName)
-font.info.fullName = font.info.familyName + '-' + font.info.styleName
+font.info.fullName = font.info.familyName + "-" + font.info.styleName
 print(font.info.fullName)
 
 # dimension attributes
