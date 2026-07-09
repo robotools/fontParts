@@ -1,3 +1,8 @@
+1.1.1 (released 2026-07-9)
+--------------------------
+- Include os.PathLike in path types, thanks @adbac! (#940)
+
+
 1.1.0 (released 2026-07-3)
 --------------------------
 Adding in Bounds object, `insertContour` method along with more tests, bug fixes, and cleanup.
