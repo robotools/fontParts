@@ -1,6 +1,7 @@
-#FLM: Get and set font level PostScript hint data.
+# FLM: Get and set font level PostScript hint data.
 
 from fontParts.world import OpenFont
+
 """
 This script shows the way to get to the font level postscript hint values.
 These values were available from the fl layer, but not in RoboFab.
@@ -21,7 +22,7 @@ print("This script shows the attributes of psHints:", f.psHints)
 # blueScale, blueShift, blueFuzz and forceBold are all single values.
 
 print("blueScale", f.psHints.blueScale)
-f.psHints.blueScale = .5
+f.psHints.blueScale = 0.5
 print("blueScale changed", f.psHints.blueScale)
 
 print("blueShift", f.psHints.blueShift)

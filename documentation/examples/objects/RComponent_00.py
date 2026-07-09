@@ -4,7 +4,7 @@
 from fontParts.world import OpenFont
 
 f = OpenFont("test.ufo")
-g = f['gbreve']
+g = f["gbreve"]
 
 for c in g.components:
     print(c)

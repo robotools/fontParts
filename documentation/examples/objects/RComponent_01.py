@@ -6,11 +6,11 @@ from fontParts.world import OpenFont
 
 f = OpenFont("test.ufo")
 
-print(f['gbreve'].components[0].baseGlyph)
-print(f['gbreve'].components[1].baseGlyph)
+print(f["gbreve"].components[0].baseGlyph)
+print(f["gbreve"].components[1].baseGlyph)
 
 # move the component in the base glyph
-f['gbreve'].components[1].offset = (100,100)
+f["gbreve"].components[1].offset = (100, 100)
 
 # scale the component in the base glyph
-f['gbreve'].components[0].scale = (.5, .25)
+f["gbreve"].components[0].scale = (0.5, 0.25)

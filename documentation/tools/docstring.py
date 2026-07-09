@@ -996,8 +996,7 @@ def insertDocstring(obj: Any, newDocstring: str, preserveVariadics: bool = True)
         return updatedSourceCode
     except TypeError as exc:
         raise TypeError(
-            f"The source of a {obj.__class__.__name__} "
-            "instance can not be inspected."
+            f"The source of a {obj.__class__.__name__} instance can not be inspected."
         ) from exc
 
 

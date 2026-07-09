@@ -18,4 +18,3 @@ print(f.info.openTypeNameLicenseURL)
 # but you can set the values as well
 f.info.postscriptUniqueID = 4309359
 f.info.openTypeNameDesigner = "Eric Gill"
-

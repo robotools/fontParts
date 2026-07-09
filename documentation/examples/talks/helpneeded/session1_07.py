@@ -5,7 +5,7 @@ from fontParts.world import OpenFont
 
 font = OpenFont("test.ufo")
 
-print(font['A'])
-print(font['Adieresis'])
-print(font['two'])
-print(font['afii12934'])
+print(font["A"])
+print(font["Adieresis"])
+print(font["two"])
+print(font["afii12934"])

@@ -5,6 +5,6 @@
 from fontParts.world import OpenFont
 
 f = OpenFont("test.ufo")
-g = f['a']
+g = f["a"]
 for aPt in g[0].bPoints:
     print(aPt)

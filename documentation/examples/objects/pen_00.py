@@ -5,7 +5,7 @@
 from fontParts.world import OpenFont
 
 f = OpenFont("test.ufo")
-g = f['a']
+g = f["a"]
 
 pen = g.getPen()
 

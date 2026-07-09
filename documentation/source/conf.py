@@ -92,9 +92,7 @@ intersphinx_mapping = {"python": ("https://docs.python.org/3/", None)}
 autodoc_member_order = "bysource"
 autoclass_content = "both"
 
-autodoc_type_aliases = {
-    "LibValueType": "~fontParts.base.annotations.LibValue"
-}
+autodoc_type_aliases = {"LibValueType": "~fontParts.base.annotations.LibValue"}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -285,13 +283,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (
-        master_doc,
-        "FontParts.tex",
-        "FontParts Documentation",
-        "Dr. Rob O. Fab",
-        "manual",
-    ),
+    (master_doc, "FontParts.tex", "FontParts Documentation", "Dr. Rob O. Fab", "manual")
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -339,7 +331,7 @@ texinfo_documents = [
         "FontParts",
         "One line description of project.",
         "Miscellaneous",
-    ),
+    )
 ]
 
 # Documents to append as an appendix to all manuals.

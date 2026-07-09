@@ -4,4 +4,4 @@
 from fontParts.world import AllFonts
 
 for font in AllFonts():
-    font.generate('otfcff')
+    font.generate("otfcff")

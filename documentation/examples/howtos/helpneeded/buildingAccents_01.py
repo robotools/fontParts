@@ -8,10 +8,10 @@ from fontParts.accentBuilder import AccentTools, buildRelatedAccentList
 font = OpenFont("test.ufo")
 
 # a list of accented glyphs that you want to build
-myList = ['Aacute', 'aacute']
+myList = ["Aacute", "aacute"]
 
 # search for glyphs related to glyphs in myList and add them to myList
-myList = buildRelatedAccentList(font, myList)+myList
+myList = buildRelatedAccentList(font, myList) + myList
 
 # start the class
 at = AccentTools(font, myList)

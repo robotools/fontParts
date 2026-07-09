@@ -5,14 +5,16 @@ from fontParts.interface.all.dialogs import GetFolder
 from fontParts.world import RFont, OpenFont
 import os
 
+
 def collectSources(root):
     files = []
-    ext = ['.vfb']
+    ext = [".vfb"]
     names = os.listdir(root)
     for n in names:
         if os.path.splitext(n)[1] in ext:
             files.append(os.path.join(root, n))
     return files
+
 
 # A little function for making folders. we'll need it later.
 def makeFolder(path):
@@ -20,14 +22,17 @@ def makeFolder(path):
     if not os.path.exists(path):
         os.makedirs(path)
 
+
 def makeDestination(root):
-    macPath = os.path.join(root, 'FabFonts', 'ForMac')
+    macPath = os.path.join(root, "FabFonts", "ForMac")
     makeFolder(macPath)
     return macPath
 
+
 def generateOne(f, dstDir):
-    print("generating %s"%f.info.fullName)
-    f.generate('otfcff',  dstDir)
+    print("generating %s" % f.info.fullName)
+    f.generate("otfcff", dstDir)
+
 
 f = GetFolder()
 
@@ -43,4 +48,4 @@ if f is not None:
         finally:
             if font is not None:
                 font.close(False)
-    print('done')
+    print("done")

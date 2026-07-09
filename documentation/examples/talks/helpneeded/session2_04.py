@@ -4,7 +4,7 @@
 from fontParts.world import OpenFont
 
 font = OpenFont("test.ufo")
-glyph = font['A']
+glyph = font["A"]
 print("glyph has %d contours" % len(glyph))
 for contour in glyph.contours:
     print(contour)

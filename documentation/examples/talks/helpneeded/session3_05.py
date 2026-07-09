@@ -16,9 +16,7 @@ font = OpenFont("test.ufo")
 # each tuple has the name of the accent as first element
 # and the name of the anchor which to use as the second element
 
-accentList = [("dieresis", "top"),
-    ("acute", "top"),
-    ("cedilla", "bottom")]
+accentList = [("dieresis", "top"), ("acute", "top"), ("cedilla", "bottom")]
 
 # The accents are compiled in this order, so first
 #    "dieresis" connects to "a" using "top" anchor

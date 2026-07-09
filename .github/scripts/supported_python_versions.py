@@ -39,10 +39,7 @@ def supported_versions() -> list[str]:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "which",
-        nargs="?",
-        default="all",
-        choices=["all", "oldest", "newest"],
+        "which", nargs="?", default="all", choices=["all", "oldest", "newest"]
     )
     args = parser.parse_args()
 

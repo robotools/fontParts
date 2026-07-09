@@ -6,10 +6,11 @@
 from fontParts.world import OpenFont
 
 f = OpenFont("test.ufo")
-g = f['a']
+g = f["a"]
 
 # suppose you've done the right imports
 # different ways of creating glyphs
 # a new empty glyph object
 from fontParts.world import RGlyph
+
 g = RGlyph()

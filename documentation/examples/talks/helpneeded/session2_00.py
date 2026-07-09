@@ -4,7 +4,7 @@
 from fontParts.world import OpenFont
 
 font = OpenFont("test.ufo")
-glyph = font['A']
+glyph = font["A"]
 
 print(glyph.name)
 print(glyph.width)

@@ -6,7 +6,7 @@ from fontParts.world import OpenFont
 
 f = OpenFont("test.ufo")
 
-newGlyph = f.newGlyph('demoDrawGlyph', clear=True)
+newGlyph = f.newGlyph("demoDrawGlyph", clear=True)
 newGlyph.width = 1000
 
 # hey, what's this:

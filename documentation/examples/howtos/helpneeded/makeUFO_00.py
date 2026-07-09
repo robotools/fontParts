@@ -5,7 +5,7 @@
 from fontParts.tools.toolsAll import fontToUFO
 from fontParts.interface.all.dialogs import GetFile, PutFile
 
-srcPath = GetFile('Select the source')
-dstPath = PutFile('Save as...')
+srcPath = GetFile("Select the source")
+dstPath = PutFile("Save as...")
 
 fontToUFO(srcPath, dstPath)

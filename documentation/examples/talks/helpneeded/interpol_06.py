@@ -8,7 +8,7 @@ font1 = SelectFont("Select font 1")
 font2 = SelectFont("Select font 2")
 
 value = AskString("What percentage?")
-value = int(value) * .01
+value = int(value) * 0.01
 
 destination = NewFont()
 
