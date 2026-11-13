@@ -1,3 +1,9 @@
+import plistlib
+import tempfile
+import unittest
+from pathlib import Path
+from unittest.mock import Mock
+
 from fontParts.test import testEnvironment
 from fontParts.fontshell.font import RFont
 from fontParts.fontshell.info import RInfo
@@ -150,6 +156,97 @@ def fontshellObjectGenerator(cls):
     return obj, unrequested
 
 
+class TestRKerning(unittest.TestCase):
+    def test_round_scaled_values_are_int(self):
+        font = RFont()
+        font.kerning.update({("A", "V"): -24, ("V", "A"): 10})
+        font.kerning.scaleBy(2)
+        font.kerning.round()
+        self.assertEqual(dict(font.kerning.items()), {("A", "V"): -48, ("V", "A"): 20})
+        for value in font.kerning.values():
+            self.assertIs(type(value), int)
+
+    def test_round_integral_float_values(self):
+        for multiple in (1, 2, 5, -2):
+            with self.subTest(multiple=multiple):
+                kerning = RKerning()
+                kerning.update(
+                    {
+                        ("A", "V"): -10.0,
+                        ("V", "A"): 10.0,
+                        ("T", "o"): 0.0,
+                        ("V", "T"): -0.0,
+                    }
+                )
+                kerning.round(multiple)
+                self.assertEqual(
+                    dict(kerning.items()),
+                    {("A", "V"): -10, ("V", "A"): 10, ("T", "o"): 0, ("V", "T"): 0},
+                )
+                for value in kerning.values():
+                    self.assertIs(type(value), int)
+
+    def test_round_preserves_native_kerning(self):
+        font = RFont()
+        kerning = font.kerning
+        nativeKerning = kerning.naked()
+        kerning[("A", "V")] = -20.0
+        nativeKerning.dirty = False
+        observer = Mock()
+        nativeKerning.addObserver(
+            observer, "changed", nativeKerning.updateNotificationName
+        )
+        try:
+            kerning.round()
+            self.assertIs(font.kerning.naked(), nativeKerning)
+            self.assertIs(type(nativeKerning[("A", "V")]), int)
+            self.assertTrue(nativeKerning.dirty)
+            observer.changed.assert_called_once()
+            nativeKerning.dirty = False
+            observer.reset_mock()
+            kerning.round()
+            self.assertFalse(nativeKerning.dirty)
+            observer.changed.assert_not_called()
+        finally:
+            nativeKerning.removeObserver(observer, nativeKerning.updateNotificationName)
+
+    def test_round_empty_kerning(self):
+        kerning = RKerning()
+        kerning.naked().dirty = False
+        kerning.round()
+        self.assertEqual(dict(kerning.items()), {})
+        self.assertFalse(kerning.naked().dirty)
+
+    def test_round_ufo_round_trip(self):
+        font = RFont()
+        font.kerning.update(
+            {
+                ("A", "V"): -48.0,
+                ("V", "A"): 20.0,
+                ("T", "o"): 0.0,
+                ("L", "T"): float(-(1 << 63)),
+                ("T", "L"): float(1 << 64),
+                ("A", "A"): 1e300,
+                ("V", "V"): -1e300,
+            }
+        )
+        font.kerning.round()
+        expected = dict(font.kerning.items())
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "test.ufo"
+            font.save(path)
+            with (path / "kerning.plist").open("rb") as stream:
+                saved = plistlib.load(stream)
+            reopened = RFont(path)
+            self.assertEqual(dict(reopened.kerning.items()), expected)
+            for left, right in (("A", "V"), ("V", "A"), ("T", "o"), ("L", "T")):
+                self.assertIs(type(saved[left][right]), int)
+                self.assertIs(type(reopened.kerning[(left, right)]), int)
+            for left, right in (("T", "L"), ("A", "A"), ("V", "V")):
+                self.assertIs(type(saved[left][right]), float)
+                self.assertIs(type(reopened.kerning[(left, right)]), float)
+
+
 if __name__ == "__main__":
     import sys
 
@@ -157,4 +254,7 @@ if __name__ == "__main__":
         verbosity = 2
     else:
         verbosity = 1
-    testEnvironment(fontshellObjectGenerator, verbosity=verbosity)
+    nativeSuite = unittest.defaultTestLoader.loadTestsFromTestCase(TestRKerning)
+    nativeResult = unittest.TextTestRunner(verbosity=verbosity).run(nativeSuite)
+    success = testEnvironment(fontshellObjectGenerator, verbosity=verbosity, inApp=True)
+    sys.exit(not (success and nativeResult.wasSuccessful()))
