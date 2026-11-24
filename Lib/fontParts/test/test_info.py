@@ -8,6 +8,24 @@ class TestInfo(unittest.TestCase):
         info.unitsPerEm = 1000
         return info
 
+    # -------
+    # Parents
+    # -------
+
+    def test_set_parent_sameFont(self):
+        font, _ = self.objectGenerator("font")
+        info = font.info
+        info.font = font
+        self.assertEqual(info.font, font)
+
+    def test_set_parent_differentFont(self):
+        font, _ = self.objectGenerator("font")
+        fontB, _ = self.objectGenerator("font")
+        info = font.info
+        with self.assertRaises(AssertionError):
+            info.font = fontB
+        self.assertEqual(info.font, font)
+
     # ----------
     # Dimensions
     # ----------

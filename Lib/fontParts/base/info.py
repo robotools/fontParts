@@ -495,7 +495,7 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
         :return: The :class:`BaseFont` instance containing the info
             or :obj:`None`.
         :raises AssertionError: If attempting to set the font when it
-            has already been set.
+            has already been set and is not the same as the provided font.
 
         Example::
 
@@ -510,7 +510,7 @@ class BaseInfo(BaseObject, DeprecatedInfo, RemovedInfo):
         return self._font()
 
     def _set_font(self, font: BaseFont | Callable[[], BaseFont] | None) -> None:
-        if self._font is not None and self._font != font:
+        if self._font is not None and self._font() != font:
             raise AssertionError("font for info already set and is not same as font")
         if font is not None:
             font = reference(font)

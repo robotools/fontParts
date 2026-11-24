@@ -58,6 +58,12 @@ class TestGroups(unittest.TestCase):
         self.assertIsNotNone(groups.font)
         self.assertEqual(groups.font, font)
 
+    def test_set_parent_sameFont(self):
+        font, _ = self.objectGenerator("font")
+        groups = font.groups
+        groups.font = font
+        self.assertEqual(groups.font, font)
+
     def test_set_parent_font_none(self):
         groups, _ = self.objectGenerator("groups")
         groups.font = None
@@ -72,6 +78,7 @@ class TestGroups(unittest.TestCase):
 
         with self.assertRaises(AssertionError):
             groups.font = fontB
+        self.assertEqual(groups.font, font)
 
     # ---
     # len
